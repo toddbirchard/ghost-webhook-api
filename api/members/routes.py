@@ -29,4 +29,4 @@ def subscriber_welcome_email():
     mail = Mail(sender, "Welcome to Hackers & Slackers", Email(recipient))
     mail.template_id = api.config['SENDGRID_TEMPLATE_ID']
     sg.client.mail.send.post(request_body=mail.get())
-    return make_response(jsonify({'SUCCESS': data}))
+    return make_response(jsonify({'SUCCESS': f'Email sent to {recipient}'}))
