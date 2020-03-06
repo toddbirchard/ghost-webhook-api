@@ -34,6 +34,12 @@ class Config:
     GOOGLE_APPLICATION_CREDENTIALS = './creds/gcloud.json'
     GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
 
+    # Google PyBigQuery
+    GCP_PROJECT = environ.get('GCP_PROJECT')
+    GCP_BIGQUERY_TABLE = environ.get('GCP_BIGQUERY_TABLE')
+    GCP_BIGQUERY_DATASET = environ.get('GCP_BIGQUERY_DATASET')
+    GCP_BIGQUERY_URI = f'bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}'
+
     # Ghost
     GHOST_API_BASE_URL = environ.get('GHOST_API_BASE_URL')
     GHOST_API_USERNAME = environ.get('GHOST_API_USERNAME')
