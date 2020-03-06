@@ -25,7 +25,7 @@ def subscriber_welcome_email():
     sg = SendGridAPIClient(api_key=api.config['SENDGRID_API_KEY'])
     sender = Email(api.config['SENDGRID_FROM_EMAIL'])
     data = request.get_json()
-    subscribers = data['subscribers']
+    subscribers = data.get('member').get('current').get('email')
     for subscriber in subscribers:
         recipient = Email(subscriber['email'])
         subject = "Welcome to Hackers & Slackers"
