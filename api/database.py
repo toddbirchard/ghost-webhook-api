@@ -1,8 +1,8 @@
+"""Database client."""
 from sqlalchemy import create_engine, MetaData, Table
 
 
 class Database:
-    """Database connection class."""
 
     def __init__(self, db_uri, db_args):
         self.engines = {

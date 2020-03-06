@@ -1,3 +1,4 @@
+"""Fetch data from Algolia REST API."""
 import requests
 from flask import current_app as api
 

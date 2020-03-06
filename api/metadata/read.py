@@ -1,4 +1,4 @@
-"""Read SQL files."""
+"""Read queries from local SQL files."""
 from os import listdir
 from os.path import isfile, join
 from flask import current_app as api

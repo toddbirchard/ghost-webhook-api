@@ -6,7 +6,7 @@ from api import db
 
 @api.route('/metadata', methods=['GET'])
 def maintenance_queries():
-    """Metadata maintenance queries."""
+    """Execute queries to optimize post metadata."""
     queries = get_queries()
     results = db.run_query(queries)
     headers = {'Content-Type': 'application/json'}

@@ -16,6 +16,7 @@ Python-dotenv = "*"
 pyjwt="*"
 PyBigQuery = "*"
 Mixpanel = "*"
+Sendgrid = "*"
 
 [dev-packages]
 pytest = "*"

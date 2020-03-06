@@ -1,4 +1,4 @@
-"""BigQuery Engine."""
+"""BigQuery Client."""
 from sqlalchemy.engine import create_engine
 from sqlalchemy import MetaData, Table
 

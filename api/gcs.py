@@ -1,4 +1,4 @@
-"""Connect to remote GCP bucket containing images."""
+"""Connect to remote Google Cloud Storage bucket."""
 from google.cloud import storage
 
 

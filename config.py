@@ -46,3 +46,8 @@ class Config:
     GHOST_API_PASSWORD = environ.get('GHOST_API_PASSWORD')
     GHOST_API_KEY = environ.get('GHOST_API_KEY')
     GHOST_API_EXPORT_URL = f'{GHOST_API_BASE_URL}/admin/db/'
+
+    # SendGrid
+    SENDGRID_API_KEY = environ.get("SENDGRID_API_KEY")
+    SENDGRID_FROM_EMAIL = environ.get("SENDGRID_FROM_EMAIL")
+    SENDGRID_TEMPLATE_ID = environ.get("SENDGRID_TEMPLATE_ID")
