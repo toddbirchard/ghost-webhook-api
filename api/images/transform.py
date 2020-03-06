@@ -40,7 +40,7 @@ class ImageTransformer:
                 standard_image_name = image_blob.name.replace('@2x', '')
                 standard_image = self.__fetch_image_via_http(standard_image_name)
                 if standard_image is not None:
-                    new_blob = gcs.copy_blob(image_blob, self.bucket, standard_image_name)
+                    new_blob = gcs.copy_blob(image_blob, gcs, standard_image_name)
                     self.standard_images_transformed.append(new_blob.name)
         return self.standard_images_transformed
 
@@ -52,7 +52,7 @@ class ImageTransformer:
             new_image_name = image_blob.name.split('.')[0] + '.webp'
             image_file = self.__fetch_image_via_http(new_image_name)
             if image_file is not None:
-                new_blob = gcs.copy_blob(image_blob, self.bucket, new_image_name)
+                new_blob = gcs.copy_blob(image_blob, gcs, new_image_name)
                 self.webp_images_transformed.append(new_blob.name)
         return self.webp_images_transformed
 
@@ -62,7 +62,7 @@ class ImageTransformer:
         im = Image.open(BytesIO(original_image))
         width, height = im.size
         if width > 1000:
-            new_blob = gcs.copy_blob(image_blob, self.bucket, new_image_name)
+            new_blob = gcs.copy_blob(image_blob, gcs, new_image_name)
             self.retina_images_transformed.append(new_blob.name)
 
     def __fetch_image_via_http(self, url):

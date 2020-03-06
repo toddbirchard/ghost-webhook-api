@@ -17,9 +17,6 @@ class Database:
         """Execute SQL query."""
         affected_rows = 0
         for k, v in sql_queries.items():
-            if 'SELECT' in v:
-                results = self.engines['blog'].execute(v).fetchall()
-                affected_rows = len(results)
             results = self.engines['blog'].execute(v)
             affected_rows = results.rowcount
         return self.__construct_response(affected_rows)

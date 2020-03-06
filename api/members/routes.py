@@ -16,13 +16,13 @@ def subscriber_mixpanel():
         body = {'$name': name, '$email': email}
         mp.people_set(email, body)
         return make_response(jsonify({'CREATED': body}))
-    return make_response(jsonify({'DENIED': body}))
+    return make_response(jsonify({'DENIED': data}))
 
 
 @api.route('/members/welcome', methods=['POST'])
 def subscriber_welcome_email():
     """Send welcome email to newsletter subscribers."""
-    sg = SendGridAPIClient(apikey=api.config['SENDGRID_API_KEY'])
+    sg = SendGridAPIClient(api_key=api.config['SENDGRID_API_KEY'])
     sender = Email(api.config['SENDGRID_FROM_EMAIL'])
     data = request.get_json()
     subscribers = data['subscribers']
