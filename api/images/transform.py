@@ -2,7 +2,7 @@
 import requests
 from io import BytesIO
 from PIL import Image
-from api import logger
+from flask import current_app as api
 
 
 class ImageTransformer:
@@ -19,12 +19,11 @@ class ImageTransformer:
         self.standard_images_transformed = []
         self.webp_images_transformed = []
 
-    @logger.catch
     def retina_transform(self):
         """Find images missing a retina-quality counterpart."""
         for image_blob in self.standard_images:
             self.num_images_checked += 1
-            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             dot_position = image_blob.name.rfind('.')
             new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
             existing_image_file = self.__fetch_image_via_http(new_image_name)
@@ -32,12 +31,11 @@ class ImageTransformer:
                 self.__create_retina_image(image_blob, new_image_name)
         return self.retina_images_transformed
 
-    @logger.catch
     def standard_transform(self):
         """Find images missing a standard-res counterpart."""
         for image_blob in self.retina_images:
             self.num_images_checked += 1
-            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             if '@2x' in image_blob.name:
                 standard_image_name = image_blob.name.replace('@2x', '')
                 standard_image = self.__fetch_image_via_http(standard_image_name)
@@ -46,12 +44,11 @@ class ImageTransformer:
                     self.standard_images_transformed.append(new_blob.name)
         return self.standard_images_transformed
 
-    @logger.catch
     def webp_transform(self):
         """Find images missing a webp counterpart."""
         for image_blob in self.retina_images:
             self.num_images_checked += 1
-            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             new_image_name = image_blob.name.split('.')[0] + '.webp'
             image_file = self.__fetch_image_via_http(new_image_name)
             if image_file is not None:

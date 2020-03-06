@@ -1,10 +1,8 @@
 from flask import current_app as api
 from datetime import datetime as date
 import jwt
-from api import logger
 
 
-@logger.catch
 def get_session_token():
     """Generate token for Ghost admin API."""
     id, secret = api.config['GHOST_API_KEY'].split(':')

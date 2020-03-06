@@ -1,9 +1,7 @@
 import requests
 from flask import current_app as api
-from api import logger
 
 
-@logger.catch
 def weekly_searches():
     """Fetch single week of analytics from Algolia API."""
     endpoint = f'{api.config["ALGOLIA_BASE_URL"]}/searches'

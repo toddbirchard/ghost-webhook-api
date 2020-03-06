@@ -8,5 +8,5 @@ from .fetch import weekly_searches
 def top_searches():
     """Fetch top searches for the current week."""
     records = weekly_searches()
-    upload = db.insert_records(records)
+    upload = db.insert_records(records, 'algolia_top_searches')
     return make_response(jsonify(upload), 200)

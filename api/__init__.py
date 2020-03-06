@@ -1,15 +1,11 @@
 """Initialize api."""
-import sys
 from flask import Flask
 from api.database import Database
 from api.gcs import GCS
 from config import Config
-from loguru import logger
 
 db = Database(Config.SQLALCHEMY_DATABASE_URI, Config.SQLALCHEMY_ENGINE_OPTIONS)
 gcs = GCS(Config.GCP_BUCKET_NAME)
-logger.add(sys.stdout, format="{time} {message}", level="INFO")
-logger.add('logs/{date}.log', format="{time} {message}", level="ERROR", catch=True)
 
 
 def init_api():

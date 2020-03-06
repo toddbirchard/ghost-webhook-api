@@ -1,9 +1,8 @@
 from flask import current_app as api
 from random import randint
-from api import gcs, logger
+from api import gcs
 
 
-@logger.catch
 def get_random_image():
     """Fetch random Lynx image from GCS."""
     lynx_images = gcs.list_blobs(prefix='lynx/')

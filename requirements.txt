@@ -12,7 +12,6 @@ googleapis-common-protos==1.51.0
 idna==2.9
 itsdangerous==1.1.0
 Jinja2==2.11.1
-loguru==0.4.1
 MarkupSafe==1.1.1
 Pillow==7.0.0
 protobuf==3.11.3
