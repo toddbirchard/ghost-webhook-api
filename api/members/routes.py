@@ -23,10 +23,10 @@ def subscriber_mixpanel():
 def subscriber_welcome_email():
     """Send welcome email to newsletter subscribers."""
     sg = SendGridAPIClient(api_key=api.config['SENDGRID_API_KEY'])
-    sender = Email(api.config['SENDGRID_FROM_EMAIL'])
+    sender = api.config['SENDGRID_FROM_EMAIL']
     data = request.get_json()
     recipient = data.get('member').get('current').get('email')
-    mail = Mail(sender, "Welcome to Hackers & Slackers", Email(recipient))
+    mail = Mail(from_email=sender, subject="Welcome to Hackers & Slackers", to_emails=recipient)
     mail.template_id = api.config['SENDGRID_TEMPLATE_ID']
     sg.client.mail.send.post(request_body=mail.get())
     return make_response(jsonify({'SUCCESS': f'Email sent to {recipient}'}))
