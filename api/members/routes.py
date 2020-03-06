@@ -25,11 +25,8 @@ def subscriber_welcome_email():
     sg = SendGridAPIClient(api_key=api.config['SENDGRID_API_KEY'])
     sender = Email(api.config['SENDGRID_FROM_EMAIL'])
     data = request.get_json()
-    subscribers = data.get('member').get('current').get('email')
-    for subscriber in subscribers:
-        recipient = Email(subscriber['email'])
-        subject = "Welcome to Hackers & Slackers"
-        mail = Mail(sender, subject, recipient)
-        mail.template_id = api.config['SENDGRID_TEMPLATE_ID']
-        sg.client.mail.send.post(request_body=mail.get())
+    recipient = data.get('member').get('current').get('email')
+    mail = Mail(sender, "Welcome to Hackers & Slackers", Email(recipient))
+    mail.template_id = api.config['SENDGRID_TEMPLATE_ID']
+    sg.client.mail.send.post(request_body=mail.get())
     return make_response(jsonify({'SUCCESS': data}))
