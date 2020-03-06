@@ -24,5 +24,6 @@ def init_api():
         from api.lynx import routes
         from api.algolia import routes
         from api.analytics import routes
+        from api.members import routes
 
         return api

@@ -15,6 +15,7 @@ webp-converter = "*"
 Python-dotenv = "*"
 pyjwt="*"
 PyBigQuery = "*"
+Mixpanel = "*"
 
 [dev-packages]
 pytest = "*"
