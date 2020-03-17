@@ -36,7 +36,7 @@ class ImageTransformer:
 
     def transform_single_image(self, image_url):
         image_path = image_url.replace(self.bucket_url, '/')
-        print('image_path = "', image_path, '"')
+        print(image_path)
         image_blob = gcs.bucket.get_blob(image_path, client=gcs.client)
         print('image_blob = ', image_blob)
         new_image_name = image_blob.name.replace('.', '@2x.')
