@@ -41,7 +41,7 @@ class ImageTransformer:
         dot_position = image_blob.name.rfind('.')
         new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
         print('new_image_name = ', new_image_name)
-        gcs.bucket.copy_blob(image_blob, gcs.bucket, new_name=new_image_name)
+        self.__create_retina_image(image_blob, new_image_name)
         return f'Successfully created {new_image_name}.'
 
     def retina_transform(self, standard_images):
