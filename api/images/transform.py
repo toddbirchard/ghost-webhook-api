@@ -36,7 +36,7 @@ class ImageTransformer:
 
     def transform_single_image(self, image_url):
         image_path = image_url.replace(self.bucket_url, '/')
-        image_blob = gcs.client.Blob(image_path, self.bucket_name)
+        image_blob = gcs.bucket.get_blob(image_path)
         new_image_name = image_blob.name.replace('.', '@2x.')
         self.__create_retina_image(image_blob, new_image_name)
         return f'Successfully created {new_image_name}.'
