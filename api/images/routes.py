@@ -18,6 +18,7 @@ def transform_recent_images():
     """Apply image transformations to images in the current month."""
     retina_imgs, standard_imgs = fetch_recent_images(api.config['GCP_BUCKET_FOLDER'])
     clean_unwanted_images(retina_imgs, standard_imgs)
+    retina_imgs, standard_imgs = fetch_recent_images(api.config['GCP_BUCKET_FOLDER'])
     response = transformer.bulk_transform_images(retina_from_standard=standard_imgs)
     return make_response(jsonify(response))
 

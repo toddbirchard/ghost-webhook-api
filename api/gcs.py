@@ -1,9 +1,16 @@
-"""Connect to remote Google Cloud Storage bucket."""
+"""Connect to remote Google Cloud Storage client."""
 from google.cloud import storage
 
 
-def GCS(bucket_name):
-    """Return a GCP bucket."""
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(bucket_name)
-    return bucket
+class GCS:
+
+    def __init__(self, bucket_name):
+        self.bucket_name = bucket_name
+
+    @property
+    def client(self):
+        return storage.Client()
+
+    @property
+    def bucket(self):
+        return self.client.get_bucket(self.bucket_name)
