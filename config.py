@@ -33,7 +33,7 @@ class Config:
     GOOGLE_APPLICATION_CREDENTIALS = './creds/gcloud.json'
     GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
 
-    # Google PyBigQuery
+    # Google BigQuery
     GCP_PROJECT = environ.get('GCP_PROJECT')
     GCP_BIGQUERY_TABLE = environ.get('GCP_BIGQUERY_TABLE')
     GCP_BIGQUERY_DATASET = environ.get('GCP_BIGQUERY_DATASET')
