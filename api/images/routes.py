@@ -26,7 +26,7 @@ def transform_single_image():
     """Transform a single image upon post update."""
     data = request.get_json()
     print('data = ', data)
-    return make_response(jsonify(data))
+    return make_response(data)
 
 
 @api.route('/images/lynx', methods=['POST'])
