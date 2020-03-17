@@ -26,7 +26,7 @@ def transform_recent_images():
 @api.route('/images/transform', methods=['POST'])
 def transform_image():
     """Transform a single image upon post update."""
-    data = json.dumps(request.get_json())
+    data = request.get_json()
     fearured_image = data['post']['current'].get('feature_image')
     if fearured_image:
         response = transformer.transform_single_image(fearured_image)
