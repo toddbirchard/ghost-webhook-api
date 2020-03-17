@@ -6,6 +6,7 @@ from api import ghst
 from .fetch import fetch_recent_images, fetch_random_image
 from .cleanup import clean_unwanted_images
 from .transform import ImageTransformer
+import json
 
 
 transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
@@ -22,11 +23,13 @@ def transform_recent_images():
 
 
 @api.route('/images/transform', methods=['POST'])
-def transform_single_image():
+def transform_image():
     """Transform a single image upon post update."""
-    data = request.get_json(force=True)
-    print('data = ', data)
-    return make_response(data)
+    data = json.dumps(request.get_json())
+    fearured_image = data['post']['current'].get('feature_image')
+    if fearured_image:
+        response = transformer.transform_single_image(fearured_image)
+    return make_response(jsonify(response))
 
 
 @api.route('/images/lynx', methods=['POST'])

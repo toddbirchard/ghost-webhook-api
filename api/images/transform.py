@@ -34,6 +34,13 @@ class ImageTransformer:
             'total': len(self.webp_images_transformed)
         }
 
+    def transform_single_image(self, image_url):
+        image_path = image_url.replace(self.bucket_url, '/')
+        image_blob = gcs.Blob(image_path, self.bucket_name)
+        new_image_name = image_blob.name.replace('.', '@2x.')
+        self.__create_retina_image(image_blob, new_image_name)
+        return f'Successfully created {new_image_name}.'
+
     def retina_transform(self, standard_images):
         """Find images missing a retina-quality counterpart."""
         for image_blob in standard_images:
