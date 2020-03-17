@@ -2,7 +2,7 @@ from flask import current_app as api
 from flask import make_response, request, jsonify
 from mixpanel import Mixpanel
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Email, Mail
+from sendgrid.helpers.mail import Mail
 
 
 @api.route('/members/mixpanel', methods=['POST'])

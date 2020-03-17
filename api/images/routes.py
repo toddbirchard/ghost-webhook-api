@@ -8,20 +8,25 @@ from .cleanup import clean_unwanted_images
 from .transform import ImageTransformer
 
 
-@api.route('/images/transform')
-def transform_images():
-    """Transform image objects."""
+transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
+                               api.config['GCP_BUCKET_URL'])
+
+
+@api.route('/images/transform', methods=['GET'])
+def transform_recent_images():
+    """Apply image transformations to images in the current month."""
     retina_imgs, standard_imgs = fetch_recent_images(api.config['GCP_BUCKET_FOLDER'])
     clean_unwanted_images(retina_imgs, standard_imgs)
-    transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
-                                   api.config['GCP_BUCKET_URL'],
-                                   retina_imgs,
-                                   standard_imgs)
-    response = {
-        'retina': len(transformer.retina_transform()),
-        'standard': len(transformer.standard_transform())
-    }
+    response = transformer.bulk_transform_images(retina_from_standard=standard_imgs)
     return make_response(jsonify(response))
+
+
+@api.route('/images/transform', methods=['POST'])
+def transform_single_image():
+    """Transform a single image upon post update."""
+    data = request.get_json()
+    print('data = ', data)
+    return make_response(jsonify(data))
 
 
 @api.route('/images/lynx', methods=['POST'])
