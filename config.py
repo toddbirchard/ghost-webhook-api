@@ -9,7 +9,6 @@ load_dotenv(dotenv_path=env_path)
 
 
 class Config:
-    """Set Flask configuration vars from .env file."""
     dt = datetime.datetime.today()
 
     # General Config
