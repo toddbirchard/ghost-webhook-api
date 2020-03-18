@@ -10,5 +10,4 @@ def maintenance_queries():
     queries = get_queries()
     results = db.run_query(queries)
     headers = {'Content-Type': 'application/json'}
-    response = {'results': f'Ran {len(results)} queries successfully.'}
-    return make_response(jsonify(response), 200, headers)
+    return make_response(jsonify(results), 200, headers)

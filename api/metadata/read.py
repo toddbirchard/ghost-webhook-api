@@ -6,9 +6,10 @@ from flask import current_app as api
 
 def get_queries():
     """Neatly package local queries to be run against database."""
-    files = fetch_sql_files()
-    sql = read_sql_queries(files)
-    query_dict = dict(zip(files, sql))
+    sql_file_paths = fetch_sql_files()
+    sql_queries = read_sql_queries(sql_file_paths)
+    sql_file_names = [file.split('/')[-1] for file in sql_file_paths]
+    query_dict = dict(zip(sql_file_names, sql_queries))
     return query_dict
 
 
@@ -21,10 +22,10 @@ def fetch_sql_files():
     return files
 
 
-def read_sql_queries(files):
+def read_sql_queries(sql_file_paths):
     """Read SQL query from .sql file."""
     queries = []
-    for file in files:
+    for file in sql_file_paths:
         fd = open(file, 'r')
         query = fd.read()
         queries.append(query)

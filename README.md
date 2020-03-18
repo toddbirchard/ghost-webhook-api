@@ -17,6 +17,7 @@ Standalone API to automate tasks upon Gatsby build triggers.
 * **GET /analytics/week**: Migrate post analytics from BigQuery to generate "trending this week" widget.
 * **GET /analytics/month**: Migrate post analytics from BigQuery to generate "trending this month" widget.
 * **GET /images/transform**: Generates missing retina, mobile, and webp images for all posts.
+* **POST /images/transform**: Generates missing image types for a single feature image upon post update.
 * **POST /images/lynx**: Auto-assign a feature image upon post update, randomly selected from a CDN directory.
 * **POST /members/mixpanel**: Create Mixpanel profile for new subscribers.
 * **POST /members/welcome**: Send welcome email to newsletter subscribers via Sendgrid.

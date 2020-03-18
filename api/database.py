@@ -9,17 +9,20 @@ class Database:
             'analytics': create_engine(db_uri + 'analytics', connect_args=db_args, echo=False),
             'blog': create_engine(db_uri + 'hackers_prod', connect_args=db_args, echo=False)
         }
-        self.tables = {'weekly_stats': Table('weekly_stats', MetaData(bind=self.engines['analytics']), autoload=True),
-                       'monthly_stats': Table('monthly_stats', MetaData(bind=self.engines['analytics']), autoload=True),
-                       'algolia_top_searches': Table('algolia_top_searches', MetaData(bind=self.engines['analytics']), autoload=True)}
+        self.weekly_stats_table = Table('weekly_stats', MetaData(bind=self.engines['analytics']), autoload=True)
+        self.monthly_stats_table = Table('monthly_stats', MetaData(bind=self.engines['analytics']), autoload=True)
+        self.top_searches_table = Table('algolia_top_searches', MetaData(bind=self.engines['analytics']), autoload=True)
+        self.tables = {'weekly_stats': self.weekly_stats_table,
+                       'monthly_stats': self.monthly_stats_table,
+                       'algolia_top_searches': self.top_searches_table}
 
     def run_query(self, sql_queries):
         """Execute SQL query."""
-        affected_rows = 0
+        results = {}
         for k, v in sql_queries.items():
-            results = self.engines['blog'].execute(v)
-            affected_rows = results.rowcount
-        return self.__construct_response(affected_rows)
+            query_result = self.engines['blog'].execute(v)
+            results[k] = f'{query_result.rowcount} rows affected.'
+        return results
 
     def fetch_records(self, query):
         """Fetch all rows via query."""
