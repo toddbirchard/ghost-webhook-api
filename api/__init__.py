@@ -9,7 +9,7 @@ from config import Config
 db = Database(Config.SQLALCHEMY_DATABASE_URI, Config.SQLALCHEMY_ENGINE_OPTIONS)
 gcs = GCS(Config.GCP_BUCKET_NAME)
 gbq = BigQuery(Config.GCP_BIGQUERY_URI)
-ghst = Ghost(Config.GHOST_API_KEY)
+ghost = Ghost(Config.GHOST_API_KEY)
 
 
 def init_api():
@@ -18,7 +18,7 @@ def init_api():
     api.config.from_object('config.Config')
 
     with api.app_context():
-        from api.metadata import routes
+        from api.data import routes
         from api.images import routes
         from api.algolia import routes
         from api.analytics import routes

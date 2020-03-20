@@ -2,7 +2,7 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 import requests
 from datetime import datetime
-from api import ghst
+from api import ghost
 from .fetch import fetch_recent_images, fetch_random_image
 from .cleanup import clean_unwanted_images
 from .transform import ImageTransformer
@@ -37,7 +37,7 @@ def transform_image():
 def set_lynx_image():
     post_id = request.get_json()['post']['current']['id']
     if 'lynx' in request.get_json()['post']['current']['title'].lower():
-        token = ghst.get_session_token()
+        token = ghost.get_session_token()
         image = fetch_random_image()
         body = {
             "posts": [{

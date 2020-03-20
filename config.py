@@ -40,6 +40,7 @@ class Config:
     GCP_BIGQUERY_URI = f'bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}'
 
     # Ghost
+    GHOST_BASE_URL = environ.get('GHOST_BASE_URL')
     GHOST_API_BASE_URL = environ.get('GHOST_API_BASE_URL')
     GHOST_API_USERNAME = environ.get('GHOST_API_USERNAME')
     GHOST_API_PASSWORD = environ.get('GHOST_API_PASSWORD')
