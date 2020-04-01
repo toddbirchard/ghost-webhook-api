@@ -33,7 +33,10 @@ class Ghost:
 
     def get_json_backup(self, url, key):
         self._https_session(url, key)
-        headers = {'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\
+                                q=0.9,image/webp,image/apng,*/*;\
+                                q=0.8,application/signed-exchange;\
+                                v=b3;q=0.9',
                    'accept-encoding': 'gzip, deflate, br',
                    'Origin': 'hackersandslackers.tools',
                    'Authority': 'hackersandslackers.tools'}
