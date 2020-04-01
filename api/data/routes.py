@@ -16,5 +16,5 @@ def maintenance_queries():
 @api.route('/data/backup', methods=['GET'])
 def backup_database():
     """Save JSON backup of database."""
-    json = ghost.get_json_backup(api.config['GHOST_BASE_URL'], api.config['GHOST_API_BASE_URL'])
+    json = ghost.get_json_backup(api.config['GHOST_BASE_URL'], api.config['GHOST_API_KEY'])
     return json
