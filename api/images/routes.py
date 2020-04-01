@@ -14,10 +14,11 @@ transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images in the current month."""
+    folder = request.args['prefix'] if request.args.get('prefix', None) else api.config['GCP_BUCKET_FOLDER']
     substrings = ['@2x@2x', '_o']
-    images = gcs.get(api.config['GCP_BUCKET_FOLDER'])
+    images = gcs.get(folder)
     gcs.purge_images(substrings, images)
-    retina_imgs, standard_imgs = fetch_recent_images(api.config['GCP_BUCKET_FOLDER'])
+    retina_imgs, standard_imgs = fetch_recent_images(folder)
     response = transformer.bulk_transform_images(retina_from_standard=standard_imgs)
     return make_response(jsonify(response))
 
