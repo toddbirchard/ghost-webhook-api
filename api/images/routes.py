@@ -2,9 +2,8 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 import requests
 from datetime import datetime
-from api import ghost
+from api import ghost, gcs
 from .fetch import fetch_recent_images, fetch_random_image
-from .cleanup import clean_unwanted_images
 from .transform import ImageTransformer
 
 
@@ -15,8 +14,9 @@ transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images in the current month."""
-    retina_imgs, standard_imgs = fetch_recent_images(api.config['GCP_BUCKET_FOLDER'])
-    clean_unwanted_images(retina_imgs, standard_imgs)
+    substrings = ['@2x@2x', '_o']
+    images = gcs.get(api.config['GCP_BUCKET_FOLDER'])
+    gcs.purge_images(substrings, images)
     retina_imgs, standard_imgs = fetch_recent_images(api.config['GCP_BUCKET_FOLDER'])
     response = transformer.bulk_transform_images(retina_from_standard=standard_imgs)
     return make_response(jsonify(response))

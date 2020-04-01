@@ -9,17 +9,14 @@ class Database:
             'analytics': create_engine(db_uri + 'analytics', connect_args=db_args, echo=False),
             'blog': create_engine(db_uri + 'hackers_prod', connect_args=db_args, echo=False)
         }
-        self.weekly_stats_table = Table('weekly_stats', MetaData(bind=self.engines['analytics']), autoload=True)
-        self.monthly_stats_table = Table('monthly_stats', MetaData(bind=self.engines['analytics']), autoload=True)
-        self.top_searches_table = Table('algolia_top_searches', MetaData(bind=self.engines['analytics']), autoload=True)
-        self.tables = {'weekly_stats': self.weekly_stats_table,
-                       'monthly_stats': self.monthly_stats_table,
-                       'algolia_top_searches': self.top_searches_table}
 
-    def run_query(self, sql_queries):
+    def _table(self, table_name):
+        return Table(table_name, MetaData(bind=self.engines['analytics']), autoload=True)
+
+    def execute_queries(self, queries):
         """Execute SQL query."""
         results = {}
-        for k, v in sql_queries.items():
+        for k, v in queries.items():
             query_result = self.engines['blog'].execute(v)
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
@@ -33,11 +30,11 @@ class Database:
         """Insert rows into table."""
         if replace:
             self.engines['analytics'].execute(f'TRUNCATE TABLE {table_name}')
-        table = self.tables[table_name]
+        table = self._table(table_name)
         self.engines['analytics'].execute(table.insert(), rows)
-        return self.__construct_response(len(rows))
+        return self._construct_response(len(rows))
 
     @staticmethod
-    def __construct_response(affected_rows):
+    def _construct_response(affected_rows):
         """Summarize results of an executed query."""
         return f'Modified {affected_rows} rows.'

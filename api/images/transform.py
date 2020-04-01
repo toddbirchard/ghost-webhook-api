@@ -40,7 +40,7 @@ class ImageTransformer:
         image_blob = storage.Blob(image_path, gcs.bucket)
         dot_position = image_blob.name.rfind('.')
         new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
-        self.__create_retina_image(image_blob, new_image_name)
+        self._create_retina_image(image_blob, new_image_name)
         return f'Successfully created {new_image_name}.'
 
     def retina_transform(self, standard_images):
@@ -50,9 +50,9 @@ class ImageTransformer:
             api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             dot_position = image_blob.name.rfind('.')
             new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
-            existing_image_file = self.__fetch_image_via_http(new_image_name)
+            existing_image_file = self._fetch_image_via_http(new_image_name)
             if existing_image_file is None:
-                self.__create_retina_image(image_blob, new_image_name)
+                self._create_retina_image(image_blob, new_image_name)
         return self.retina_images_transformed
 
     def standard_transform(self, retina_images):
@@ -62,7 +62,7 @@ class ImageTransformer:
             api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             if '@2x' in image_blob.name:
                 standard_image_name = image_blob.name.replace('@2x', '')
-                standard_image = self.__fetch_image_via_http(standard_image_name)
+                standard_image = self._fetch_image_via_http(standard_image_name)
                 if standard_image is not None:
                     new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, standard_image_name)
                     self.standard_images_transformed.append(new_blob.name)
@@ -74,22 +74,22 @@ class ImageTransformer:
             self.num_images_checked += 1
             api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             new_image_name = image_blob.name.split('.')[0] + '.webp'
-            image_file = self.__fetch_image_via_http(new_image_name)
+            image_file = self._fetch_image_via_http(new_image_name)
             if image_file is not None:
                 new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, new_image_name)
                 self.webp_images_transformed.append(new_blob.name)
         return self.webp_images_transformed
 
-    def __create_retina_image(self, image_blob, new_image_name):
+    def _create_retina_image(self, image_blob, new_image_name):
         """Create retina versions of standard-res images."""
-        original_image = self.__fetch_image_via_http(image_blob.name)
+        original_image = self._fetch_image_via_http(image_blob.name)
         im = Image.open(BytesIO(original_image))
         width, height = im.size
         if width > 1000:
             new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, new_image_name)
             self.retina_images_transformed.append(new_blob.name)
 
-    def __fetch_image_via_http(self, url):
+    def _fetch_image_via_http(self, url):
         """Determine if image exists via HTTP request."""
         image_request = requests.get(self.bucket_url + url)
         if image_request.headers['Content-Type'] in ('application/octet-stream', 'image/jpeg'):

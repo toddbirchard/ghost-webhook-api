@@ -4,30 +4,30 @@ from random import randint
 from api import gcs
 
 
-def fetch_recent_images(bucket_image_folder_prefixes):
+def fetch_recent_images(prefixes):
     """Fetch all images from GCP bucket."""
-    retina_images = fetch_retina_images(bucket_image_folder_prefixes)
-    standard_images = fetch_standard_images(bucket_image_folder_prefixes)
+    retina_images = fetch_retina_images(prefixes)
+    standard_images = fetch_standard_images(prefixes)
     api.logger.info(f'Checking {len(retina_images)} retina and \
                 {len(standard_images)} standard images \
-                in {bucket_image_folder_prefixes}')
+                in {prefixes}')
     return retina_images, standard_images
 
 
-def fetch_standard_images(bucket_image_folder_prefixes):
+def fetch_standard_images(prefixes):
     """List all standard-res images in bucket."""
     images = []
-    for prefix in bucket_image_folder_prefixes:
+    for prefix in prefixes:
         files = gcs.bucket.list_blobs(prefix=prefix)
         file_list = [file for file in files if '@2x' not in file.name and '.jpg' in file.name]
         images.extend(file_list)
     return images
 
 
-def fetch_retina_images(bucket_image_folder_prefixes):
+def fetch_retina_images(prefixes):
     """List all retina images in bucket."""
     images = []
-    for prefix in bucket_image_folder_prefixes:
+    for prefix in prefixes:
         files = gcs.bucket.list_blobs(prefix=prefix)
         file_list = [file for file in files if '@2x' in file.name and 'webp' not in file.name]
         images.extend(file_list)

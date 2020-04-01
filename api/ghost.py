@@ -1,5 +1,6 @@
 """Ghost admin client."""
 from datetime import datetime as date
+import requests
 import jwt
 
 
@@ -9,6 +10,13 @@ class Ghost:
         self.api_key = api_key
         self.id = api_key.split(':')[0]
         self.secret = api_key.split(':')[1]
+
+    def _https_session(self, url, key):
+        token = f'Ghost {key}'
+        endpoint = f'{url}/ghost/api/v3/admin/session/'
+        headers = {'Origin': 'hackersandslackers.tools', 'Authorization': token}
+        r = requests.post(endpoint, headers=headers)
+        print(r.status_code)
 
     def get_session_token(self):
         """Generate token for Ghost admin API."""
@@ -22,3 +30,13 @@ class Ghost:
                            algorithm='HS256',
                            headers=headers)
         return token
+
+    def get_json_backup(self, url, key):
+        self._https_session(url, key)
+        headers = {'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                   'accept-encoding': 'gzip, deflate, br',
+                   'Origin': 'hackersandslackers.tools',
+                   'Authority': 'hackersandslackers.tools'}
+        endpoint = f'{url}/ghost/api/v3/admin/db/'
+        r = requests.get(endpoint, headers=headers)
+        return r.json()

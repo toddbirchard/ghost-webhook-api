@@ -1,4 +1,4 @@
-# Ghost Blog Automation API
+# JAMStack Automations
 
 ![Python](https://img.shields.io/badge/python-^3.8-blue.svg?longCache=true&style=flat-square&colorA=4c566a&colorB=5e81ac)
 ![Ghost](https://img.shields.io/badge/Ghost-^v3.0.0-lightgrey.svg?longCache=true&style=flat-square&logo=ghost&logoColor=white&colorB=656c82&colorA=4c566a)
@@ -7,17 +7,19 @@
 [![GitHub Stars](https://img.shields.io/github/stars/toddbirchard/ghost-automation-api.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/ghost-automation-api/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/toddbirchard/ghost-automation-api.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/ghost-automation-api/network)
 
-Standalone API to automate tasks upon Gatsby build triggers.
+Automations for your JAMStack site to generate optimized image sizes, clean SEO metadata, handle user signups, and wayyy more!
 
 
 ## Endpoints
 
-* **GET /metadata**: Performs a collection of SQL queries against all posts to clean and fill in missing metadata.
-* **GET /searches**: Pull top searches from Algolia to generate search suggestions based on popularity.
-* **GET /analytics/week**: Migrate post analytics from BigQuery to generate "trending this week" widget.
-* **GET /analytics/month**: Migrate post analytics from BigQuery to generate "trending this month" widget.
-* **GET /images/transform**: Generates missing retina, mobile, and webp images for all posts.
+* **GET /data/posts**: Format or fill-in missing metadata for all posts.
+* **GET /data/backup**: Fetch JSON backup of all blog data.
+* **GET /searches/week**: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
+* **GET /searches/historical**: Append current week's Algolia searches to a historical table of all searches.
+* **GET /analytics/week**: Migrate site analytics data from BigQuery to MySQL table (powers "trending this week" widget).
+* **GET /analytics/month**: Migrate site analytics data from BigQuery to MySQL table (powers "trending this month" widget).
+* **GET /images/transform**: Generates missing retina, mobile, and .webp images for all posts.
 * **POST /images/transform**: Generates missing image types for a single feature image upon post update.
-* **POST /images/lynx**: Auto-assign a feature image upon post update, randomly selected from a CDN directory.
-* **POST /members/mixpanel**: Create Mixpanel profile for new subscribers.
-* **POST /members/welcome**: Send welcome email to newsletter subscribers via Sendgrid.
+* **POST /images/lynx**: Auto-assign a random feature image from a CDN upon post update.
+* **POST /members/mixpanel**: Create Mixpanel profile for new subscriber.
+* **POST /members/welcome**: Send welcome email to newsletter subscriber via Sendgrid.
