@@ -11,7 +11,8 @@ class Ghost:
         self.id = api_key.split(':')[0]
         self.secret = api_key.split(':')[1]
 
-    def _https_session(self, url, key):
+    @staticmethod
+    def _https_session(url, key):
         token = f'Ghost {key}'
         endpoint = f'{url}/ghost/api/v3/admin/session/'
         headers = {'Origin': 'hackersandslackers.tools', 'Authorization': token}

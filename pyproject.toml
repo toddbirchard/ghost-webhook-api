@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = "Optimization tasks for JAMStack-based sites triggered via webhooks."
+authors = ["Todd Birchard <toddbirchard@gmail.com>"]
+maintainers = ["Todd Birchard <toddbirchard@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/hackersandslackers/jamstack-automations/"
+repository = "https://github.com/hackersandslackers/jamstack-automations/"
+documentation = "https://hackersandslackers.com/jamstack-automations/"
+keywords = ["API",
+            "JAMStack",
+            "Automation",
+            "Optimization",
+            "Flask"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+flask = "*"
+sqlalchemy = "*"
+pymysql = "*"
+requests = "*"
+google-cloud-storage = "*"
+pillow = "*"
+python-resize-image = "*"
+webp-converter = "*"
+python-dotenv = "*"
+pyjwt="*"
+pybigquery = "*"
+mixpanel = "*"
+sendgrid = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+run = "wsgi:api"
+
+[tool.poetry.urls]
+issues = "https://github.com/hackersandslackers/jamstack-automations/issues"
