@@ -43,7 +43,6 @@ def transform_image():
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
     post = request.get_json()['post']['current']['id']
-    logger.info(post)
     if 'roundup' in post['tags'][0]['slug'].lower() and post['feature_image'] is None:
         token = ghost.get_session_token()
         image = fetch_random_image()
