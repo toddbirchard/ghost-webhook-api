@@ -68,7 +68,9 @@ def set_lynx_image():
 def set_all_lynx_images():
     """Update all missing Lynx feature images."""
     updated = []
-    results = db.execute_query("SELECT id FROM posts WHERE title LIKE '%%lynx%%' AND feature_image IS NULL;")
+    file = open('api/images/sql/lynx_missing_images.sql', 'r')
+    sql = file.read()
+    results = db.execute_query(sql)
     posts = [result[0] for result in results]
     for post_id in posts:
         updated.append(update_post(post_id))
