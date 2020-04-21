@@ -7,6 +7,7 @@ from api import gcs
 from google.cloud import storage
 
 
+
 class ImageTransformer:
 
     def __init__(self, bucket_name, bucket_url):

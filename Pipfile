@@ -17,6 +17,7 @@ pyjwt="*"
 PyBigQuery = "*"
 Mixpanel = "*"
 Sendgrid = "*"
+Loguru = "*"
 
 [dev-packages]
 pytest = "*"

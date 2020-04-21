@@ -105,6 +105,7 @@ venv.bak/
 
 # misc
 .DS_Store
+docs
 
 # Credentials
 creds/
@@ -116,4 +117,4 @@ ca-certificate.crt
 .idea/
 
 # logs
-logs/
+logs/*

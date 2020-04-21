@@ -51,3 +51,7 @@ class Config:
     SENDGRID_API_KEY = environ.get("SENDGRID_API_KEY")
     SENDGRID_FROM_EMAIL = environ.get("SENDGRID_FROM_EMAIL")
     SENDGRID_TEMPLATE_ID = environ.get("SENDGRID_TEMPLATE_ID")
+
+    # Static Assets
+    STATIC_FOLDER = environ.get('STATIC_FOLDER')
+    TEMPLATES_FOLDER = environ.get('TEMPLATES_FOLDER')

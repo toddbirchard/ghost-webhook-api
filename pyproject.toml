@@ -30,6 +30,7 @@ pyjwt="*"
 pybigquery = "*"
 mixpanel = "*"
 sendgrid = "*"
+loguru = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

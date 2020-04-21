@@ -5,10 +5,13 @@ from datetime import datetime
 from api import ghost, gcs
 from .fetch import fetch_recent_images, fetch_random_image
 from .transform import ImageTransformer
+from loguru import logger
 
 
 transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
                                api.config['GCP_BUCKET_URL'])
+
+logger.add("logs/errors.log", colorize=True, rotation="500 MB", format="<green>{time}</green> <level>{message}</level>")
 
 
 @api.route('/images/transform', methods=['GET'])
@@ -23,21 +26,24 @@ def transform_recent_images():
     return make_response(jsonify(response))
 
 
+@logger.catch
 @api.route('/images/transform', methods=['POST'])
 def transform_image():
     """Transform a single image upon post update."""
     data = request.get_json()
-    fearured_image = data['post']['current'].get('feature_image')
-    if fearured_image:
-        response = transformer.transform_single_image(fearured_image)
+    featured_image = data['post']['current'].get('feature_image')
+    if featured_image:
+        response = transformer.transform_single_image(featured_image)
         return make_response(jsonify(response))
     return make_response(jsonify('FAILED'))
 
 
+@logger.catch
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
-    post_id = request.get_json()['post']['current']['id']
-    if 'lynx' in request.get_json()['post']['current']['title'].lower():
+    post = request.get_json()['post']['current']['id']
+    logger.info(post)
+    if 'roundup' in post['tags'][0]['slug'].lower() and post['feature_image'] is None:
         token = ghost.get_session_token()
         image = fetch_random_image()
         body = {
@@ -47,10 +53,12 @@ def set_lynx_image():
             }]
         }
         headers = {'Authorization': 'Ghost {}'.format(token.decode())}
-        r = requests.put(f'{api.config["GHOST_API_BASE_URL"]}/posts/{post_id}/',
+        r = requests.put(f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
                          json=body,
                          headers=headers)
         if r.status_code == 200:
             return make_response(jsonify({'SUCCESS': request.get_json()}))
-        return make_response(jsonify({'FAILED': r.json()}))
+        else:
+            logger.error(r.json())
+            return make_response(jsonify({'FAILED': r.json()}))
     return make_response(request.get_json())
