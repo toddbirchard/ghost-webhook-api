@@ -52,6 +52,10 @@ class Config:
     SENDGRID_FROM_EMAIL = environ.get("SENDGRID_FROM_EMAIL")
     SENDGRID_TEMPLATE_ID = environ.get("SENDGRID_TEMPLATE_ID")
 
+    # Celery
+    # CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
+    # CELERY_RESULT_BACKEND = environ.get('CELERY_RESULT_BACKEND')
+
     # Static Assets
     STATIC_FOLDER = environ.get('STATIC_FOLDER')
     TEMPLATES_FOLDER = environ.get('TEMPLATES_FOLDER')

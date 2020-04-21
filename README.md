@@ -19,6 +19,7 @@ Automations for your JAMStack site to generate optimized image sizes, clean SEO 
 * **GET /analytics/week**: Migrate site analytics data from BigQuery to MySQL table (powers "trending this week" widget).
 * **GET /analytics/month**: Migrate site analytics data from BigQuery to MySQL table (powers "trending this month" widget).
 * **GET /images/transform**: Generates missing retina, mobile, and .webp images for all posts.
+* **GET /images/lynx/all**: Assign missing feature images to all Lynx posts missing an image.
 * **POST /images/transform**: Generates missing image types for a single feature image upon post update.
 * **POST /images/lynx**: Auto-assign a random feature image from a CDN upon post update.
 * **POST /members/mixpanel**: Create Mixpanel profile for new subscriber.

@@ -21,6 +21,10 @@ class Database:
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
+    def execute_query(self, query):
+        """Execute single SQL query."""
+        return self.engines['blog'].execute(query)
+
     def fetch_records(self, query):
         """Fetch all rows via query."""
         rows = self.engines['analytics'].execute(query).fetchall()

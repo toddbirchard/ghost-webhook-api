@@ -5,6 +5,8 @@ from datetime import datetime
 from api import ghost, gcs
 from .fetch import fetch_recent_images, fetch_random_image
 from .transform import ImageTransformer
+from .update import update_post
+from api import gbq, db
 from loguru import logger
 
 
@@ -38,7 +40,6 @@ def transform_image():
     return make_response(jsonify('FAILED'))
 
 
-@logger.catch
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
     post = request.get_json()['post']['current']['id']
@@ -62,3 +63,14 @@ def set_lynx_image():
             logger.error(r.json())
             return make_response(jsonify({'FAILED': r.json()}))
     return make_response(request.get_json())
+
+
+@api.route('/images/lynx/all', methods=['GET'])
+def set_all_lynx_images():
+    """Update all missing Lynx feature images."""
+    updated = []
+    results = db.execute_query("SELECT id FROM posts WHERE title LIKE '%%lynx%%' AND feature_image IS NULL;")
+    posts = [result[0] for result in results]
+    for post_id in posts:
+        updated.append(update_post(post_id))
+    return make_response(jsonify({'UPDATED': updated}))
