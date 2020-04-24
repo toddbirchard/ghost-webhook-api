@@ -40,6 +40,7 @@ def transform_image():
     return make_response(jsonify('FAILED'))
 
 
+@logger.catch
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
     post = request.get_json()['post']['current']['id']
@@ -64,6 +65,7 @@ def set_lynx_image():
     return make_response(request.get_json())
 
 
+@logger.catch
 @api.route('/images/lynx/all', methods=['GET'])
 def set_all_lynx_images():
     """Update all missing Lynx feature images."""

@@ -1,5 +1,5 @@
 UPDATE
-    posts,
+  posts,
 	posts_meta
 SET
 	posts_meta.og_title = posts.title
