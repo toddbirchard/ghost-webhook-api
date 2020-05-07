@@ -2,11 +2,10 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 import requests
 from datetime import datetime
-from api import ghost, gcs
+from api import ghost, gcs, db
 from .fetch import fetch_recent_images, fetch_random_image
 from .transform import ImageTransformer
 from .update import update_post
-from api import gbq, db
 from loguru import logger
 
 
@@ -70,8 +69,7 @@ def set_lynx_image():
 def set_all_lynx_images():
     """Update all missing Lynx feature images."""
     updated = []
-    file = open('api/images/sql/lynx_missing_images.sql', 'r')
-    sql = file.read()
+    sql = open('api/images/sql/lynx_missing_images.sql', 'r').read()
     results = db.execute_query(sql)
     posts = [result[0] for result in results]
     for post_id in posts:
