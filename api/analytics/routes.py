@@ -2,8 +2,10 @@ from flask import current_app as api
 from flask import jsonify, make_response
 from api import gbq, db
 from .read import read_sql_queries
+from api.log import logger
 
 
+@logger.catch
 @api.route('/analytics/week', methods=['GET'])
 def analytics_week():
     """Fetch top searches for the current week."""
@@ -13,6 +15,7 @@ def analytics_week():
     return make_response(jsonify(results))
 
 
+@logger.catch
 @api.route('/analytics/month', methods=['GET'])
 def analytics_month():
     """Fetch top searches for the current month."""

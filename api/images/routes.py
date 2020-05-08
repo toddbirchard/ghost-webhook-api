@@ -6,15 +6,14 @@ from api import ghost, gcs, db
 from .fetch import fetch_recent_images, fetch_random_image
 from .transform import ImageTransformer
 from .update import update_post
-from loguru import logger
+from api.log import logger
 
 
 transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
                                api.config['GCP_BUCKET_URL'])
 
-logger.add("logs/errors.log", colorize=True, rotation="500 MB", format="<green>{time}</green> <level>{message}</level>")
 
-
+@logger.catch
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images in the current month."""
@@ -53,9 +52,11 @@ def set_lynx_image():
             }]
         }
         headers = {'Authorization': 'Ghost {}'.format(token.decode())}
-        r = requests.put(f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
-                         json=body,
-                         headers=headers)
+        r = requests.put(
+            f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
+            json=body,
+            headers=headers
+        )
         if r.status_code == 200:
             return make_response(jsonify({'SUCCESS': request.get_json()}))
         else:

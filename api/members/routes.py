@@ -3,8 +3,10 @@ from flask import make_response, request, jsonify
 from mixpanel import Mixpanel
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from api.log import logger
 
 
+@logger.catch
 @api.route('/members/mixpanel', methods=['POST'])
 def subscriber_mixpanel():
     """Create Mixpanel profile for new subscriber."""
@@ -19,6 +21,7 @@ def subscriber_mixpanel():
     return make_response(jsonify({'DENIED': data}))
 
 
+@logger.catch
 @api.route('/members/welcome', methods=['POST'])
 def subscriber_welcome_email():
     """Send welcome email to newsletter subscribers."""

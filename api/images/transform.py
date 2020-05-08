@@ -2,9 +2,9 @@
 import requests
 from io import BytesIO
 from PIL import Image
-from flask import current_app as api
 from api import gcs
 from google.cloud import storage
+from api.log import logger
 
 
 class ImageTransformer:
@@ -47,7 +47,7 @@ class ImageTransformer:
         """Find images missing a retina-quality counterpart."""
         for image_blob in standard_images:
             self.num_images_checked += 1
-            api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             dot_position = image_blob.name.rfind('.')
             new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
             existing_image_file = self._fetch_image_via_http(new_image_name)
@@ -59,7 +59,7 @@ class ImageTransformer:
         """Find images missing a standard-res counterpart."""
         for image_blob in retina_images:
             self.num_images_checked += 1
-            api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             if '@2x' in image_blob.name:
                 standard_image_name = image_blob.name.replace('@2x', '')
                 standard_image = self._fetch_image_via_http(standard_image_name)
@@ -72,7 +72,7 @@ class ImageTransformer:
         """Find images missing a webp counterpart."""
         for image_blob in retina_images:
             self.num_images_checked += 1
-            api.logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             new_image_name = image_blob.name.split('.')[0] + '.webp'
             image_file = self._fetch_image_via_http(new_image_name)
             if image_file is not None:

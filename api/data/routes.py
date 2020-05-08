@@ -2,8 +2,10 @@ from flask import current_app as api
 from flask import jsonify, make_response
 from .read import get_queries
 from api import ghost, db
+from api.log import logger
 
 
+@logger.catch
 @api.route('/data/posts', methods=['GET'])
 def maintenance_queries():
     """Execute queries to optimize post data."""
@@ -13,6 +15,7 @@ def maintenance_queries():
     return make_response(jsonify(results), 200, headers)
 
 
+@logger.catch
 @api.route('/data/backup', methods=['GET'])
 def backup_database():
     """Save JSON backup of database."""
