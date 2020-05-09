@@ -1,11 +1,10 @@
 """App configuration."""
-from os import environ
+from os import environ, path
 import datetime
-from pathlib import Path
 from dotenv import load_dotenv
 
-env_path = Path('.') / '.env'
-load_dotenv(dotenv_path=env_path)
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
 
 class Config:
@@ -47,15 +46,13 @@ class Config:
     GHOST_API_KEY = environ.get('GHOST_API_KEY')
     GHOST_API_EXPORT_URL = f'{GHOST_API_BASE_URL}/admin/db/'
 
-    # SendGrid
-    SENDGRID_API_KEY = environ.get("SENDGRID_API_KEY")
-    SENDGRID_FROM_EMAIL = environ.get("SENDGRID_FROM_EMAIL")
-    SENDGRID_TEMPLATE_ID = environ.get("SENDGRID_TEMPLATE_ID")
+    # Mailgun
+    MAILGUN_EMAIL_SERVER = environ.get("MAILGUN_EMAIL_SERVER")
+    MAILGUN_EMAIL_TEMPLATE = environ.get("MAILGUN_EMAIL_TEMPLATE")
+    MAILGUN_API_KEY = environ.get("MAILGUN_API_KEY")
+    MAILGUN_FROM_SENDER = environ.get("MAILGUN_FROM_SENDER")
+    MAILGUN_SUBJECT_LINE = 'To Hack or to Slack; That is the Question.'
 
     # Celery
     # CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
     # CELERY_RESULT_BACKEND = environ.get('CELERY_RESULT_BACKEND')
-
-    # Static Assets
-    STATIC_FOLDER = environ.get('STATIC_FOLDER')
-    TEMPLATES_FOLDER = environ.get('TEMPLATES_FOLDER')

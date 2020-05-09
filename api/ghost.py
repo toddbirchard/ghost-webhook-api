@@ -13,6 +13,7 @@ class Ghost:
 
     @staticmethod
     def _https_session(url, key):
+        """Authorize HTTPS session with Ghost admin."""
         token = f'Ghost {key}'
         endpoint = f'{url}/ghost/api/v3/admin/session/'
         headers = {'Origin': 'hackersandslackers.tools', 'Authorization': token}
