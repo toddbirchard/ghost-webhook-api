@@ -1,5 +1,5 @@
 """App configuration."""
-from os import environ, path
+from os import environ, path, getenv
 import datetime
 from dotenv import load_dotenv
 
@@ -52,6 +52,12 @@ class Config:
     MAILGUN_API_KEY = environ.get("MAILGUN_API_KEY")
     MAILGUN_FROM_SENDER = environ.get("MAILGUN_FROM_SENDER")
     MAILGUN_SUBJECT_LINE = 'To Hack or to Slack; That is the Question.'
+
+    # Twilio
+    TWILIO_SENDER_PHONE = getenv('TWILIO_SENDER_PHONE')
+    TWILIO_RECIPIENT_PHONE = getenv('TWILIO_RECIPIENT_PHONE')
+    TWILIO_AUTH_TOKEN = getenv('TWILIO_AUTH_TOKEN')
+    TWILIO_ACCOUNT_SID = getenv('TWILIO_ACCOUNT_SID')
 
     # Celery
     # CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')

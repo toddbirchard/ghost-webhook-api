@@ -40,3 +40,5 @@ def newsletter_welcome_message():
         data=body,
     )
     return make_response(jsonify(r.json()), 200)
+
+

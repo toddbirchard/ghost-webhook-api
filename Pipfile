@@ -18,6 +18,7 @@ PyBigQuery = "*"
 Mixpanel = "*"
 Sendgrid = "*"
 Loguru = "*"
+Twilio = "*"
 
 [dev-packages]
 pytest = "*"

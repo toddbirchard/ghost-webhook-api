@@ -31,6 +31,7 @@ pybigquery = "*"
 mixpanel = "*"
 sendgrid = "*"
 loguru = "*"
+twilio = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
