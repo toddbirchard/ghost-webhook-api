@@ -9,7 +9,7 @@ from api.log import logger
 @logger.catch
 @api.route('/members/mixpanel', methods=['POST'])
 def subscriber_mixpanel():
-    """Create Mixpanel profile for new subscriber."""
+    """Create Mixpanel record for new subscriber."""
     mp = Mixpanel(api.config['mixpanel_api_token'])
     data = request.get_json()
     email = data.get('email')
@@ -17,6 +17,7 @@ def subscriber_mixpanel():
     if email:
         body = {'$name': name, '$email': email}
         mp.people_set(email, body)
+        logger.info(f'Created Mixpanel record for subscriber {name}, ({email}).')
         return make_response(jsonify({'CREATED': body}))
     return make_response(jsonify({'DENIED': data}))
 
@@ -24,6 +25,7 @@ def subscriber_mixpanel():
 @logger.catch
 @api.route('/members/newsletter/welcome', methods=['POST'])
 def newsletter_welcome_message():
+    """Send welcome email to newsletter subscriber."""
     endpoint = f'https://api.mailgun.net/v3/{api.config["MAILGUN_EMAIL_SERVER"]}/messages'
     email = request.json.get('email')
     name = request.json.get('name').title()

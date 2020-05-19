@@ -16,7 +16,6 @@ Python-dotenv = "*"
 pyjwt="*"
 PyBigQuery = "*"
 Mixpanel = "*"
-Sendgrid = "*"
 Loguru = "*"
 Twilio = "*"
 

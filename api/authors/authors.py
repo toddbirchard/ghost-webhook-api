@@ -19,7 +19,7 @@ def author_created_post_notification():
         if status != 'draft':
             action = 'PUBLISHED'
         msg = f'{author_name} just {action} `{title}`: {excerpt}.'
-        if image is None:
+        if image is None and data['primary_tag']['slug'] != 'roundup':
             msg = msg.join([msg, 'Needs feature image.'])
             logger.info(f'Message sent: {msg}')
             sms.send_message(msg)

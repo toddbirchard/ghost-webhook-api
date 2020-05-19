@@ -7,7 +7,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/network)
 
-Automation for your JAMStack site to generate optimized image sizes, clean SEO metadata, handle user signups, and way more!
+Automation for your JAMStack site to generate optimized image sizes, clean SEO metadata, handle user sign-ups, and much more.
 
 
 ## Endpoints

@@ -23,6 +23,7 @@ def transform_recent_images():
     gcs.purge_images(substrings, images)
     retina_imgs, standard_imgs = fetch_recent_images(folder)
     response = transformer.bulk_transform_images(retina_from_standard=standard_imgs)
+    logger.info(f'Transformed images successfully: {response}')
     return make_response(jsonify(response))
 
 
@@ -30,8 +31,8 @@ def transform_recent_images():
 @api.route('/images/transform', methods=['POST'])
 def transform_image():
     """Transform a single image upon post update."""
-    data = request.get_json()
-    featured_image = data['post']['current'].get('feature_image')
+    post = request.get_json()['post']['current']
+    featured_image = post.get('feature_image')
     if featured_image:
         response = transformer.transform_single_image(featured_image)
         return make_response(jsonify(response))
@@ -41,8 +42,9 @@ def transform_image():
 @logger.catch
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
-    post = request.get_json()['post']['current']['id']
-    if 'roundup' in post['tags'][0]['slug'].lower() and post['feature_image'] is None:
+    """Update Lynx post with random image if `feature_image` is empty."""
+    post = request.get_json()['post']['current']
+    if post['primary_tag']['slug'] == 'roundup' and post['feature_image'] is None:
         token = ghost.get_session_token()
         image = fetch_random_image()
         body = {
@@ -58,6 +60,7 @@ def set_lynx_image():
             headers=headers
         )
         if r.status_code == 200:
+            logger.info(f'Updated Lynx post `{post["feature_image"]}` with image {image}.')
             return make_response(jsonify({'SUCCESS': request.get_json()}))
         else:
             logger.error(r.json())
@@ -68,11 +71,12 @@ def set_lynx_image():
 @logger.catch
 @api.route('/images/lynx', methods=['GET'])
 def set_all_lynx_images():
-    """Update all missing Lynx feature images."""
+    """Update Lynx posts which are missing a feature image."""
     updated = []
     sql = open('api/images/sql/lynx_missing_images.sql', 'r').read()
     results = db.execute_query(sql)
     posts = [result[0] for result in results]
     for post in posts:
         updated.append(update_post_image(post.title))
+    logger.info(f'Updated {len(updated)} Lynx posts with images.')
     return make_response(jsonify({'UPDATED': updated}))

@@ -29,7 +29,6 @@ python-dotenv = "*"
 pyjwt="*"
 pybigquery = "*"
 mixpanel = "*"
-sendgrid = "*"
 loguru = "*"
 twilio = "*"
 

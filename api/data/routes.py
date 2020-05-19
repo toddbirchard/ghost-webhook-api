@@ -12,6 +12,7 @@ def maintenance_queries():
     queries = get_queries()
     results = db.execute_queries(queries)
     headers = {'Content-Type': 'application/json'}
+    logger.info(f'Successfully ran queries: {queries}')
     return make_response(jsonify(results), 200, headers)
 
 
