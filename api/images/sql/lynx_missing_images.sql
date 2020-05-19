@@ -1,5 +1,6 @@
 SELECT
 	posts.id,
+    posts.title,
 	tags.slug
 FROM
 	posts

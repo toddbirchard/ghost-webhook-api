@@ -1,10 +1,11 @@
-import sys
+"""Custom logger."""
 from loguru import logger
 
 logger.remove()
-logger.add(sys.stderr,
+logger.add('logs/info.log',
            colorize=True,
            level="INFO",
+           rotation="500 MB",
            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
                   + "<light-green>{level}</light-green>: "
                   + "<light-white>{message}</light-white>"

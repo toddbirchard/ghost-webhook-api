@@ -16,6 +16,12 @@ class GCS:
         return self.client.get_bucket(self.bucket_name)
 
     def get(self, prefix):
+        """
+        Retrieve all blobs in a bucket containing a prefix.
+
+        :param prefix: Substring to match against filenames.
+        :type prefix: str
+        """
         return self.bucket.list_blobs(prefix=prefix)
 
     def purge_images(self, substrings, image_blobs):

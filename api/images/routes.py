@@ -5,7 +5,7 @@ from datetime import datetime
 from api import ghost, gcs, db
 from .fetch import fetch_recent_images, fetch_random_image
 from .transform import ImageTransformer
-from .update import update_post
+from .update import update_post_image
 from api.log import logger
 
 
@@ -66,13 +66,13 @@ def set_lynx_image():
 
 
 @logger.catch
-@api.route('/images/lynx/all', methods=['GET'])
+@api.route('/images/lynx', methods=['GET'])
 def set_all_lynx_images():
     """Update all missing Lynx feature images."""
     updated = []
     sql = open('api/images/sql/lynx_missing_images.sql', 'r').read()
     results = db.execute_query(sql)
     posts = [result[0] for result in results]
-    for post_id in posts:
-        updated.append(update_post(post_id))
+    for post in posts:
+        updated.append(update_post_image(post.title))
     return make_response(jsonify({'UPDATED': updated}))

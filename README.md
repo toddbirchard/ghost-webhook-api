@@ -16,10 +16,10 @@ Automation for your JAMStack site to generate optimized image sizes, clean SEO m
 * **GET /data/backup**: Fetch JSON backup of all blog data.
 * **GET /searches/week**: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
 * **GET /searches/historical**: Append current week's Algolia searches to a historical table of all searches.
-* **GET /analytics/week**: Migrate site analytics data from BigQuery to MySQL table (powers "trending this week" widget).
-* **GET /analytics/month**: Migrate site analytics data from BigQuery to MySQL table (powers "trending this month" widget).
+* **GET /analytics/week**: Migrate site analytics data from BigQuery to MySQL table ("trending this week" widget).
+* **GET /analytics/month**: Migrate site analytics data from BigQuery to MySQL table ("trending this month" widget).
 * **GET /images/transform**: Generates missing retina, mobile, and `.webp` images for all posts.
-* **GET /images/lynx/all**: Assign missing feature images to all Lynx posts missing an image.
+* **GET /images/lynx**: Assign missing feature images to all Lynx posts missing an image.
 * **POST /images/transform**: Generates missing image types for a single feature image upon post update.
 * **POST /images/lynx**: Auto-assign a random feature image from a CDN upon post update.
 * **POST /members/mixpanel**: Create Mixpanel profile for new newsletter subscriber.
