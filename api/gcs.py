@@ -9,10 +9,12 @@ class GCS:
 
     @property
     def client(self):
+        """Google Cloud Storage client."""
         return storage.Client()
 
     @property
     def bucket(self):
+        """Google Cloud Storage bucket where memes are stored."""
         return self.client.get_bucket(self.bucket_name)
 
     def get(self, prefix):

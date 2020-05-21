@@ -5,6 +5,7 @@ from config import Config
 
 
 def create_logger():
+    """Create custom logger depending on environment."""
     loguru.remove()
     if Config.FLASK_ENV == 'production':
         loguru.add('logs/info.log',

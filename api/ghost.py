@@ -35,6 +35,7 @@ class Ghost:
         return token
 
     def get_json_backup(self, url, key):
+        """Attempt to extract JSON snapshot of Ghost database."""
         self._https_session(url, key)
         headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\
                                 q=0.9,image/webp,image/apng,*/*;\
