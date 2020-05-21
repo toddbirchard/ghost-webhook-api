@@ -18,16 +18,17 @@ class ImageTransformer:
         self.standard_images_transformed = []
         self.webp_images_transformed = []
 
-    def bulk_transform_images(self, **kwargs):
+    def bulk_transform_images(self, folder, **kwargs):
         """Queue image transformation jobs."""
+        self._purge_unwanted_images(folder)
         for key, value in kwargs.items():
             self.images_total += len(value)
         if kwargs.get('retina_from_standard'):
-            self.retina_transform(kwargs.get('retina_from_standard'))
+            self.retina_transformations(kwargs.get('retina_from_standard'))
         if kwargs.get('standard_from_retina'):
-            self.standard_transform(kwargs.get('standard_from_retina'))
+            self.standard_transformations(kwargs.get('standard_from_retina'))
         if kwargs.get('webp_from_standard'):
-            self.webp_transform(kwargs.get('webp_from_standard'))
+            self.webp_transformations(kwargs.get('webp_from_standard'))
         return {
             'retina': len(self.retina_images_transformed),
             'standard': len(self.standard_images_transformed),
@@ -35,16 +36,9 @@ class ImageTransformer:
             'total': len(self.webp_images_transformed)
         }
 
-    def transform_single_image(self, image_url):
-        image_path = image_url.replace(self.bucket_url, '')
-        image_blob = storage.Blob(image_path, gcs.bucket)
-        dot_position = image_blob.name.rfind('.')
-        new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
-        self._create_retina_image(image_blob, new_image_name)
-        return f'Successfully created {new_image_name}.'
-
-    def retina_transform(self, standard_images):
+    def retina_transformations(self, standard_images):
         """Find images missing a retina-quality counterpart."""
+        logger.info('Step 2: Generating retina images...')
         for image_blob in standard_images:
             self.num_images_checked += 1
             logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
@@ -55,8 +49,9 @@ class ImageTransformer:
                 self._create_retina_image(image_blob, new_image_name)
         return self.retina_images_transformed
 
-    def standard_transform(self, retina_images):
+    def standard_transformations(self, retina_images):
         """Find images missing a standard-res counterpart."""
+        logger.info('Step 3: Generating standard resolution images...')
         for image_blob in retina_images:
             self.num_images_checked += 1
             logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
@@ -68,8 +63,9 @@ class ImageTransformer:
                     self.standard_images_transformed.append(new_blob.name)
         return self.standard_images_transformed
 
-    def webp_transform(self, retina_images):
+    def webp_transformations(self, retina_images):
         """Find images missing a webp counterpart."""
+        logger.info('Step 3: Generating webp images...')
         for image_blob in retina_images:
             self.num_images_checked += 1
             logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
@@ -79,6 +75,24 @@ class ImageTransformer:
                 new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, new_image_name)
                 self.webp_images_transformed.append(new_blob.name)
         return self.webp_images_transformed
+
+    def transform_single_image(self, image_url):
+        image_path = image_url.replace(self.bucket_url, '')
+        image_blob = storage.Blob(image_path, gcs.bucket)
+        dot_position = image_blob.name.rfind('.')
+        new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
+        self._create_retina_image(image_blob, new_image_name)
+        return f'Successfully created {new_image_name}.'
+
+    @staticmethod
+    def _purge_unwanted_images(folder):
+        logger.info('Step 1: Purging unwanted images...')
+        substrings = ['@2x@2x', '_o', 'psd', '?']
+        image_blobs = gcs.get(folder)
+        for image_blob in image_blobs:
+            if any(substr in image_blob.name for substr in substrings):
+                gcs.bucket.delete_blob(image_blob.name)
+                logger.info(f'Deleted {image_blob.name}.')
 
     def _create_retina_image(self, image_blob, new_image_name):
         """Create retina versions of standard-res images."""
@@ -95,3 +109,4 @@ class ImageTransformer:
         if image_request.headers['Content-Type'] in ('application/octet-stream', 'image/jpeg'):
             return image_request.content
         return None
+

@@ -2,10 +2,9 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 import requests
 from datetime import datetime
-from api import ghost, gcs, db
-from .fetch import fetch_recent_images, fetch_random_image
+from api import ghost, db
+from .fetch import fetch_image_blobs, fetch_random_lynx_image
 from .transform import ImageTransformer
-from .update import update_post_image
 from api.log import logger
 
 
@@ -17,12 +16,9 @@ transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images in the current month."""
-    folder = request.args['prefix'] if request.args.get('prefix', None) else api.config['GCP_BUCKET_FOLDER']
-    substrings = ['@2x@2x', '_o']
-    images = gcs.get(folder)
-    gcs.purge_images(substrings, images)
-    retina_imgs, standard_imgs = fetch_recent_images(folder)
-    response = transformer.bulk_transform_images(retina_from_standard=standard_imgs)
+    folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
+    retina_imgs, standard_imgs = fetch_image_blobs(folder)
+    response = transformer.bulk_transform_images(folder, retina_from_standard=standard_imgs)
     logger.info(f'Transformed images successfully: {response}')
     return make_response(jsonify(response))
 
@@ -46,7 +42,7 @@ def set_lynx_image():
     post = request.get_json()['post']['current']
     if post['primary_tag']['slug'] == 'roundup' and post['feature_image'] is None:
         token = ghost.get_session_token()
-        image = fetch_random_image()
+        image = fetch_random_lynx_image()
         body = {
             "posts": [{
                 "feature_image": image,
@@ -72,11 +68,10 @@ def set_lynx_image():
 @api.route('/images/lynx', methods=['GET'])
 def set_all_lynx_images():
     """Update Lynx posts which are missing a feature image."""
-    updated = []
     sql = open('api/images/sql/lynx_missing_images.sql', 'r').read()
     results = db.execute_query(sql)
-    posts = [result[0] for result in results]
+    posts = [result.id for result in results]
     for post in posts:
-        updated.append(update_post_image(post.title))
-    logger.info(f'Updated {len(updated)} Lynx posts with images.')
-    return make_response(jsonify({'UPDATED': updated}))
+        image = fetch_random_lynx_image()
+        db.update_post_image(image, post)
+    return make_response('Updated Lynx posts successfully.')

@@ -2,10 +2,11 @@
 from flask import current_app as api
 from random import randint
 from api import gcs
+from api.log import logger
 
 
-def fetch_recent_images(prefixes):
-    """Fetch all images from GCP bucket."""
+def fetch_image_blobs(prefixes):
+    """List all images from GCP bucket."""
     retina_images = fetch_retina_images(prefixes)
     standard_images = fetch_standard_images(prefixes)
     api.logger.info(f'Checking {len(retina_images)} retina and \
@@ -15,7 +16,7 @@ def fetch_recent_images(prefixes):
 
 
 def fetch_standard_images(prefixes):
-    """List all standard-res images in bucket."""
+    """List all standard resolution images in bucket."""
     images = []
     for prefix in prefixes:
         files = gcs.bucket.list_blobs(prefix=prefix)
@@ -34,10 +35,11 @@ def fetch_retina_images(prefixes):
     return images
 
 
-def fetch_random_image():
+def fetch_random_lynx_image():
     """Fetch random Lynx image from GCS."""
-    lynx_images = gcs.bucket.list_blobs(prefix='lynx/')
+    lynx_images = gcs.bucket.list_blobs(prefix=f'{api.config["GCP_LYNX_DIRECTORY"]}/')
     images = [f"{api.config['GCP_BUCKET_URL']}{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
     rand = randint(0, len(images) - 1)
     image = images[rand]
+    logger.info(f'Selected random lynx image {image}')
     return image

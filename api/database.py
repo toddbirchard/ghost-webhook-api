@@ -38,6 +38,12 @@ class Database:
         self.engines['analytics'].execute(table.insert(), rows)
         return self._construct_response(len(rows))
 
+    def update_post_image(self, image, post):
+        """Set post feature image to desired image."""
+        sql = f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';"
+        self.execute_query(sql)
+        return {post: image}
+
     @staticmethod
     def _construct_response(affected_rows):
         """Summarize results of an executed query."""

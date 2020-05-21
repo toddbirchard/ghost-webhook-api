@@ -31,6 +31,7 @@ class Config:
     GCP_BUCKET_NAME = environ.get('GCP_BUCKET_NAME')
     GOOGLE_APPLICATION_CREDENTIALS = './creds/gcloud.json'
     GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
+    GCP_LYNX_DIRECTORY = 'roundup'
 
     # Google BigQuery
     GCP_PROJECT = environ.get('GCP_PROJECT')

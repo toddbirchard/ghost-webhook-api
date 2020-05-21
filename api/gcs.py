@@ -24,9 +24,3 @@ class GCS:
         """
         return self.bucket.list_blobs(prefix=prefix)
 
-    def purge_images(self, substrings, image_blobs):
-        """Remove unused images."""
-        for image_blob in image_blobs:
-            if any(substr in image_blob.name for substr in substrings):
-                self.bucket.delete_blob(image_blob.name)
-                print(f'deleted {image_blob.name}')
