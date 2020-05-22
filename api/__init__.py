@@ -21,7 +21,7 @@ def init_api():
     api.config.from_object('config.Config')
 
     with api.app_context():
-        from api.data import routes
+        from api.posts import routes
         from api.images import routes
         from api.algolia import routes
         from api.analytics import routes
