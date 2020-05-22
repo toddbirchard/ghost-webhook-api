@@ -23,7 +23,7 @@ class Database:
 
     def execute_query(self, query):
         """Execute single SQL query."""
-        return self.engines['blog'].execute(text(query))
+        return self.engines['blog'].execute(query)
 
     def fetch_records(self, query, table_name='analytics'):
         """Fetch all rows via query."""
