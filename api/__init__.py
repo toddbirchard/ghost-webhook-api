@@ -11,7 +11,7 @@ from config import Config
 db = Database(Config.SQLALCHEMY_DATABASE_URI, Config.SQLALCHEMY_ENGINE_OPTIONS)
 gcs = GCS(Config.GCP_BUCKET_NAME)
 gbq = BigQuery(Config.GCP_BIGQUERY_URI)
-ghost = Ghost(Config.GHOST_API_KEY)
+ghost = Ghost(Config.GHOST_API_KEY, Config.GHOST_API_BASE_URL)
 sms = Twilio(Config)
 
 

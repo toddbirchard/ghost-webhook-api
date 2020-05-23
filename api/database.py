@@ -6,12 +6,24 @@ class Database:
 
     def __init__(self, db_uri, db_args):
         self.engines = {
-            'analytics': create_engine(db_uri + 'analytics', connect_args=db_args, echo=False),
-            'blog': create_engine(db_uri + 'hackers_prod', connect_args=db_args, echo=False)
+            'analytics': create_engine(
+                db_uri + 'analytics',
+                connect_args=db_args,
+                echo=False
+            ),
+            'blog': create_engine(
+                db_uri + 'hackers_prod',
+                connect_args=db_args,
+                echo=False
+            )
         }
 
     def _table(self, table_name):
-        return Table(table_name, MetaData(bind=self.engines['analytics']), autoload=True)
+        return Table(
+            table_name,
+            MetaData(bind=self.engines['analytics']),
+            autoload=True
+        )
 
     def execute_queries(self, queries):
         """Execute SQL query."""
@@ -23,7 +35,8 @@ class Database:
 
     def execute_query(self, query):
         """Execute single SQL query."""
-        return self.engines['blog'].execute(query)
+        result = self.engines['blog'].execute(query)
+        return result.__dict__
 
     def fetch_records(self, query, table_name='analytics'):
         """Fetch all rows via query."""

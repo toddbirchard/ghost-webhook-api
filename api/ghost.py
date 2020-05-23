@@ -7,36 +7,57 @@ from api.log import logger
 
 class Ghost:
 
-    def __init__(self, api_key):
+    def __init__(self, api_key, url):
         self.api_key = api_key
         self.id = api_key.split(':')[0]
         self.secret = api_key.split(':')[1]
+        self.url = url
+        self.token = None
 
-    @staticmethod
-    def _https_session(url, key):
+    def _https_session(self):
         """Authorize HTTPS session with Ghost admin."""
-        token = f'Ghost {key}'
-        endpoint = f'{url}/ghost/api/v3/admin/session/'
-        headers = {'Origin': 'hackersandslackers.tools', 'Authorization': token}
+        token = f'Ghost {self._get_session_token()}'
+        endpoint = f'{self.url}/session/'
+        headers = {'Authorization': token}
         r = requests.post(endpoint, headers=headers)
         logger.info(f'Authorization resulted in status code {r.status_code}.')
 
-    def get_session_token(self):
+    def _get_session_token(self):
         """Generate token for Ghost admin API."""
         iat = int(date.now().timestamp())
-        headers = {'alg': 'HS256', 'typ': 'JWT', 'kid': self.id}
+        header = {
+            'alg': 'HS256',
+            'typ': 'JWT',
+            'kid': self.id
+        }
         payload = {'iat': iat,
                    'exp': iat + 5 * 60,
                    'aud': '/v3/admin/'}
-        token = jwt.encode(payload,
-                           bytes.fromhex(self.secret),
-                           algorithm='HS256',
-                           headers=headers)
-        return token
+        token = jwt.encode(
+            payload,
+            bytes.fromhex(self.secret),
+            algorithm='HS256',
+            headers=header
+        )
+        return f'Ghost {token.decode()}'
 
-    def get_json_backup(self, url, key):
+    def get_post(self, post_id):
+        """Fetch post JSON by ID."""
+        token = self._get_session_token()
+        headers = {'Authorization': token}
+        r = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
+        return r.json()
+
+    def update_post(self, post_id, body):
+        """Update post."""
+        token = self._get_session_token()
+        headers = {'Authorization': token}
+        r = requests.put(f"{self.url}/posts/{post_id}", json=body, headers=headers)
+        return r.json()
+
+    def get_json_backup(self):
         """Attempt to extract JSON snapshot of Ghost database."""
-        self._https_session(url, key)
+        self._https_session()
         headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\
                                 q=0.9,image/webp,image/apng,*/*;\
                                 q=0.8,application/signed-exchange;\
@@ -44,6 +65,7 @@ class Ghost:
                    'accept-encoding': 'gzip, deflate, br',
                    'Origin': 'hackersandslackers.tools',
                    'Authority': 'hackersandslackers.tools'}
-        endpoint = f'{url}/ghost/api/v3/admin/db/'
+        endpoint = f'{self.url}/db/'
         r = requests.get(endpoint, headers=headers)
         return r.json()
+
