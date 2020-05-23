@@ -37,7 +37,7 @@ def fetch_retina_images(prefixes):
 
 def fetch_random_lynx_image():
     """Fetch random Lynx image from GCS."""
-    lynx_images = gcs.bucket.list_blobs(prefix=f'{api.config["GCP_LYNX_DIRECTORY"]}/')
+    lynx_images = gcs.bucket.list_blobs(prefix=f'{api.config["GCP_BUCKET_FOLDER"]}/')
     images = [f"{api.config['GCP_BUCKET_URL']}{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
     rand = randint(0, len(images) - 1)
     image = images[rand]
