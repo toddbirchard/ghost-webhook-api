@@ -9,8 +9,10 @@ from .transform import ImageTransformer
 from api.log import logger
 
 
-transformer = ImageTransformer(api.config['GCP_BUCKET_NAME'],
-                               api.config['GCP_BUCKET_URL'])
+transformer = ImageTransformer(
+    api.config['GCP_BUCKET_NAME'],
+    api.config['GCP_BUCKET_URL']
+)
 
 
 @logger.catch

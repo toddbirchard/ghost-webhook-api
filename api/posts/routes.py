@@ -1,6 +1,6 @@
 """Routes to transform post data."""
 import re
-from datetime import datetime as date
+from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response
 from .read import get_queries, read_sql_queries
@@ -30,11 +30,11 @@ def format_lynx_posts():
         links = re.findall('<a href="(.*?)"', result['html'])
         html = ''.join([f'<p><a href="{link}">{link}</a></p>' for link in links])
         post_id = result["id"]
-        date_stamp = str(date.now()).replace(' ', 'T').split('.')[0] + '.000Z'
+        date = datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
         post_body = {
             "posts": [{
                 "html": html,
-                "updated_at": date_stamp
+                "updated_at": date
             }]
         }
         updated_post = ghost.update_post(post_id, post_body)

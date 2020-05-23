@@ -1,5 +1,5 @@
 """Database client."""
-from sqlalchemy import create_engine, MetaData, Table, text
+from sqlalchemy import create_engine, MetaData, Table
 
 
 class Database:
