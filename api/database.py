@@ -36,7 +36,7 @@ class Database:
     def execute_query(self, query):
         """Execute single SQL query."""
         result = self.engines['blog'].execute(query)
-        return result.__dict__
+        return result
 
     def fetch_records(self, query, table_name='analytics'):
         """Fetch all rows via query."""

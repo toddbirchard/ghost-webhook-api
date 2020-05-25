@@ -27,6 +27,17 @@ def transform_recent_images():
 
 
 @logger.catch
+@api.route('/images/transform/lynx', methods=['GET'])
+def transform_lynx_images():
+    """Apply image transformations to lynx images."""
+    folder = request.args.get('directory', 'roundup')
+    retina_imgs, standard_imgs = fetch_image_blobs(folder)
+    response = transformer.bulk_transform_images(folder, retina_from_standard=standard_imgs)
+    logger.info(f'Transformed images successfully: {response}')
+    return make_response(jsonify(response))
+
+
+@logger.catch
 @api.route('/images/transform', methods=['POST'])
 def transform_image():
     """Transform a single image upon post update."""
