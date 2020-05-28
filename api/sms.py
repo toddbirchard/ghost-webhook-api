@@ -3,6 +3,7 @@ from twilio.rest import Client
 
 
 class Twilio:
+    """Twilio SMS Client."""
 
     def __init__(self, Config):
         self.sid = Config.TWILIO_ACCOUNT_SID
