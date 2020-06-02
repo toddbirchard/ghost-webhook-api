@@ -77,6 +77,7 @@ class ImageTransformer:
         return self.webp_images_transformed
 
     def transform_single_image(self, image_url):
+        """Create retina version of single image."""
         image_path = image_url.replace(self.bucket_url, '')
         image_blob = storage.Blob(image_path, gcs.bucket)
         dot_position = image_blob.name.rfind('.')
