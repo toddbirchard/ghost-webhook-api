@@ -1,3 +1,4 @@
+"""Compile analytics for trending posts."""
 from flask import current_app as api
 from flask import jsonify, make_response
 from api import gbq, db
