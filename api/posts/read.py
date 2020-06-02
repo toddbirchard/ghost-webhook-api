@@ -18,7 +18,7 @@ def fetch_sql_files():
     folder = 'api/posts/queries'
     directory = listdir(folder)
     files = [folder + '/' + f for f in directory if isfile(join(folder, f)) if '.sql' in f]
-    api.logger.info(f'Found {len(files)} queries from the `/queries` directory.')
+    api.LOGGER.info(f'Found {len(files)} queries from the `/queries` directory.')
     return files
 
 
@@ -26,8 +26,8 @@ def read_sql_queries(sql_file_paths):
     """Read SQL query from .sql file."""
     queries = []
     for file in sql_file_paths:
-        fd = open(file, 'r')
-        query = fd.read()
+        sql_file = open(file, 'r')
+        query = sql_file.read()
         queries.append(query)
-        fd.close()
+        sql_file.close()
     return queries

@@ -1,11 +1,11 @@
 from flask import current_app as api
 from flask import jsonify, make_response
 from api import db
-from api.log import logger
+from api.log import LOGGER
 from .fetch import fetch_weekly_searches
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/searches/week', methods=['GET'])
 def week_searches():
     """Save top Algolia searches for the current week."""
@@ -14,7 +14,7 @@ def week_searches():
     return make_response(jsonify(upload), 200)
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/searches/historical', methods=['GET'])
 def historical_searches():
     """Save Algolia searches to persistent database."""

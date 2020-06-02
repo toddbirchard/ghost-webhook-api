@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, MetaData, Table
 
 
 class Database:
+    """Blog database connection client."""
 
     def __init__(self, db_uri, db_args):
         self.engines = {

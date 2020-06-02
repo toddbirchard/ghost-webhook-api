@@ -2,7 +2,7 @@
 from datetime import datetime as date
 import requests
 import jwt
-from api.log import logger
+from api.log import LOGGER
 
 
 class Ghost:
@@ -20,7 +20,7 @@ class Ghost:
         endpoint = f'{self.url}/session/'
         headers = {'Authorization': token}
         r = requests.post(endpoint, headers=headers)
-        logger.info(f'Authorization resulted in status code {r.status_code}.')
+        LOGGER.info(f'Authorization resulted in status code {r.status_code}.')
 
     def _get_session_token(self):
         """Generate token for Ghost admin API."""

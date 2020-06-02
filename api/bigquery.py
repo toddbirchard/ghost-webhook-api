@@ -4,6 +4,8 @@ from sqlalchemy import MetaData, Table
 
 
 class BigQuery:
+    """BigQuery Client."""
+
     def __init__(self, bigquery_uri):
         self.engine = create_engine(bigquery_uri)
         self.metadata = MetaData(bind=self.engine)
@@ -11,6 +13,7 @@ class BigQuery:
 
     @property
     def table(self):
+        """Load SQL table into DataFrame."""
         if self.table_name:
             return Table(self.table_name, self.metadata, autoload=True)
         return None

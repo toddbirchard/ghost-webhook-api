@@ -8,6 +8,7 @@ load_dotenv(path.join(basedir, '.env'))
 
 
 class Config:
+    """Flask API config."""
     dt = datetime.datetime.today()
 
     # General Config
@@ -15,7 +16,7 @@ class Config:
     FLASK_APP = environ.get('FLASK_APP')
     FLASK_ENV = environ.get('FLASK_ENV')
 
-    # Flask-SQLAlchemy
+    # Database
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_DATABASE_PEM = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
     SQLALCHEMY_TRACK_MODIFICATIONS = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')

@@ -4,7 +4,7 @@ from io import BytesIO
 from PIL import Image
 from api import gcs
 from google.cloud import storage
-from api.log import logger
+from api.log import LOGGER
 
 
 class ImageTransformer:
@@ -38,10 +38,10 @@ class ImageTransformer:
 
     def retina_transformations(self, standard_images):
         """Find images missing a retina-quality counterpart."""
-        logger.info('Step 2: Generating retina images...')
+        LOGGER.info('Step 2: Generating retina images...')
         for image_blob in standard_images:
             self.num_images_checked += 1
-            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            LOGGER.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             dot_position = image_blob.name.rfind('.')
             new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
             existing_image_file = self._fetch_image_via_http(new_image_name)
@@ -51,10 +51,10 @@ class ImageTransformer:
 
     def standard_transformations(self, retina_images):
         """Find images missing a standard-res counterpart."""
-        logger.info('Step 3: Generating standard resolution images...')
+        LOGGER.info('Step 3: Generating standard resolution images...')
         for image_blob in retina_images:
             self.num_images_checked += 1
-            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            LOGGER.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             if '@2x' in image_blob.name:
                 standard_image_name = image_blob.name.replace('@2x', '')
                 standard_image = self._fetch_image_via_http(standard_image_name)
@@ -65,10 +65,10 @@ class ImageTransformer:
 
     def webp_transformations(self, retina_images):
         """Find images missing a webp counterpart."""
-        logger.info('Step 3: Generating webp images...')
+        LOGGER.info('Step 3: Generating webp images...')
         for image_blob in retina_images:
             self.num_images_checked += 1
-            logger.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            LOGGER.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
             new_image_name = image_blob.name.split('.')[0] + '.webp'
             image_file = self._fetch_image_via_http(new_image_name)
             if image_file is not None:
@@ -86,13 +86,13 @@ class ImageTransformer:
 
     @staticmethod
     def _purge_unwanted_images(folder):
-        logger.info('Step 1: Purging unwanted images...')
+        LOGGER.info('Step 1: Purging unwanted images...')
         substrings = ['@2x@2x', '_o', 'psd', '?']
         image_blobs = gcs.get(folder)
         for image_blob in image_blobs:
             if any(substr in image_blob.name for substr in substrings):
                 gcs.bucket.delete_blob(image_blob.name)
-                logger.info(f'Deleted {image_blob.name}.')
+                LOGGER.info(f'Deleted {image_blob.name}.')
 
     def _create_retina_image(self, image_blob, new_image_name):
         """Create retina versions of standard-res images."""

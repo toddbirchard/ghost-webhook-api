@@ -6,7 +6,7 @@ from datetime import datetime
 from api import ghost, db
 from .fetch import fetch_image_blobs, fetch_random_lynx_image
 from .transform import ImageTransformer
-from api.log import logger
+from api.log import LOGGER
 
 
 transformer = ImageTransformer(
@@ -15,29 +15,29 @@ transformer = ImageTransformer(
 )
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images in the current month."""
     folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
     retina_imgs, standard_imgs = fetch_image_blobs(folder)
     response = transformer.bulk_transform_images(folder, retina_from_standard=standard_imgs)
-    logger.info(f'Transformed images successfully: {response}')
+    LOGGER.info(f'Transformed images successfully: {response}')
     return make_response(jsonify(response))
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/images/transform/lynx', methods=['GET'])
 def transform_lynx_images():
     """Apply image transformations to lynx images."""
     folder = request.args.get('directory', 'roundup')
     retina_imgs, standard_imgs = fetch_image_blobs(folder)
     response = transformer.bulk_transform_images(folder, retina_from_standard=standard_imgs)
-    logger.info(f'Transformed images successfully: {response}')
+    LOGGER.info(f'Transformed images successfully: {response}')
     return make_response(jsonify(response))
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/images/transform', methods=['POST'])
 def transform_image():
     """Transform a single image upon post update."""
@@ -49,7 +49,7 @@ def transform_image():
     return make_response(jsonify('FAILED'))
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
     """Update Lynx post with random image if `feature_image` is empty."""
@@ -70,15 +70,15 @@ def set_lynx_image():
             headers=headers
         )
         if r.status_code == 200:
-            logger.info(f'Updated Lynx post `{post["feature_image"]}` with image {image}.')
+            LOGGER.info(f'Updated Lynx post `{post["feature_image"]}` with image {image}.')
             return make_response(jsonify({'SUCCESS': request.get_json()}))
         else:
-            logger.error(r.json())
+            LOGGER.error(r.json())
             return make_response(jsonify({'FAILED': r.json()}))
     return make_response(request.get_json())
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/images/lynx', methods=['GET'])
 def set_all_lynx_images():
     """Update Lynx posts which are missing a feature image."""

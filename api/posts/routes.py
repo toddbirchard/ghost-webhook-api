@@ -5,21 +5,21 @@ from flask import current_app as api
 from flask import jsonify, make_response
 from .read import get_queries, read_sql_queries
 from api import ghost, db
-from api.log import logger
+from api.log import LOGGER
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/posts/metadata', methods=['GET'])
 def maintenance_queries():
     """Execute queries to optimize post posts."""
     queries = get_queries()
     results = db.execute_queries(queries)
     headers = {'Content-Type': 'application/json'}
-    logger.info(f'Successfully ran queries: {queries}')
+    LOGGER.info(f'Successfully ran queries: {queries}')
     return make_response(jsonify(results), 200, headers)
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/posts/lynx', methods=['GET'])
 def format_lynx_posts():
     """Replace <a> tags in Lynx posts."""
@@ -43,7 +43,7 @@ def format_lynx_posts():
     return make_response(jsonify({'updated': updated_posts}), 200, headers)
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/posts/backup', methods=['GET'])
 def backup_database():
     """Save JSON backup of database."""

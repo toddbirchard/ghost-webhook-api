@@ -1,12 +1,13 @@
+"""Subscribers and Ghost member management."""
 from flask import current_app as api
 from flask import make_response, request, jsonify
 from mixpanel import Mixpanel
 import requests
 import json
-from api.log import logger
+from api.log import LOGGER
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/members/mixpanel', methods=['POST'])
 def subscriber_mixpanel():
     """Create Mixpanel record for new subscriber."""
@@ -17,12 +18,12 @@ def subscriber_mixpanel():
     if email:
         body = {'$name': name, '$email': email}
         mp.people_set(email, body)
-        logger.info(f'Created Mixpanel record for subscriber {name}, ({email}).')
+        LOGGER.info(f'Created Mixpanel record for subscriber {name}, ({email}).')
         return make_response(jsonify({'CREATED': body}))
     return make_response(jsonify({'DENIED': data}))
 
 
-@logger.catch
+@LOGGER.catch
 @api.route('/members/newsletter/welcome', methods=['POST'])
 def newsletter_welcome_message():
     """Send welcome email to newsletter subscriber."""
