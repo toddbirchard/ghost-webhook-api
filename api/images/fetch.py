@@ -9,7 +9,7 @@ def fetch_image_blobs(prefixes):
     """List all images from GCP bucket."""
     retina_images = fetch_retina_images(prefixes)
     standard_images = fetch_standard_images(prefixes)
-    api.LOGGER.info(f'Checking {len(retina_images)} retina and \
+    LOGGER.info(f'Checking {len(retina_images)} retina and \
                 {len(standard_images)} standard images \
                 in {prefixes}')
     return retina_images, standard_images

@@ -1,7 +1,7 @@
 """Read queries from local SQL files."""
 from os import listdir
 from os.path import isfile, join
-from flask import current_app as api
+from api.log import LOGGER
 
 
 def get_queries():
@@ -18,7 +18,7 @@ def fetch_sql_files():
     folder = 'api/posts/queries'
     directory = listdir(folder)
     files = [folder + '/' + f for f in directory if isfile(join(folder, f)) if '.sql' in f]
-    api.LOGGER.info(f'Found {len(files)} queries from the `/queries` directory.')
+    LOGGER.info(f'Found {len(files)} queries from the `/queries` directory.')
     return files
 
 
