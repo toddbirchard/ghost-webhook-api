@@ -66,7 +66,7 @@ def set_post_metadata():
             "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
          }]
     }
-    headers = {'Authorization': 'Ghost {}'.format(token)}
+    headers = {'Authorization': token}
     r = requests.put(
         f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
         json=body,
