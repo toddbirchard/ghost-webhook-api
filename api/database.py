@@ -8,12 +8,12 @@ class Database:
     def __init__(self, db_uri, db_args):
         self.engines = {
             'analytics': create_engine(
-                db_uri + 'analytics',
+                f'{db_uri}analytics',
                 connect_args=db_args,
                 echo=False
             ),
             'blog': create_engine(
-                db_uri + 'hackers_prod',
+                f'{db_uri}hackers_prod',
                 connect_args=db_args,
                 echo=False
             )

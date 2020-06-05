@@ -72,9 +72,8 @@ def set_lynx_image():
         if r.status_code == 200:
             LOGGER.info(f'Updated Lynx post `{post["feature_image"]}` with image {image}.')
             return make_response(jsonify({'SUCCESS': request.get_json()}))
-        else:
-            LOGGER.error(r.json())
-            return make_response(jsonify({'FAILED': r.json()}))
+        LOGGER.error(r.json())
+        return make_response(jsonify({'FAILED': r.json()}))
     return make_response(request.get_json())
 
 

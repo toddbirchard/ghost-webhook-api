@@ -2,7 +2,8 @@
 import re
 from datetime import datetime
 from flask import current_app as api
-from flask import jsonify, make_response
+from flask import jsonify, make_response, request
+import requests
 from .read import get_queries, read_sql_queries
 from api import ghost, db
 from api.log import LOGGER
@@ -41,6 +42,41 @@ def format_lynx_posts():
         updated_posts.append(updated_post)
     headers = {'Content-Type': 'application/json'}
     return make_response(jsonify({'updated': updated_posts}), 200, headers)
+
+
+@LOGGER.catch
+@api.route('/posts/metadata', methods=['POST'])
+def set_post_metadata():
+    """Update post metadata where empty."""
+    post = request.get_json()['post']['current']
+    token = ghost.get_session_token()
+    title = post.get('title')
+    feature_image = post.get('feature_image')
+    custom_excerpt = post.get('custom_excerpt')
+    body = {
+        "posts": [{
+            "twitter_image": feature_image,
+            "twitter_title": title,
+            "twitter_description": custom_excerpt,
+            "og_image": feature_image,
+            "og_title": title,
+            "og_description": custom_excerpt,
+            "meta_title": title,
+            "meta_description": custom_excerpt,
+            "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
+         }]
+    }
+    headers = {'Authorization': 'Ghost {}'.format(token.decode())}
+    r = requests.put(
+        f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
+        json=body,
+        headers=headers
+    )
+    if r.status_code == 200:
+        LOGGER.info(f'Updated post metadata for `{title}`.')
+        return make_response(jsonify({'SUCCESS': body}))
+    LOGGER.error(r.json())
+    return make_response(jsonify({'FAILED': r.json()}))
 
 
 @LOGGER.catch

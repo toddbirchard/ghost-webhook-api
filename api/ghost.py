@@ -6,6 +6,7 @@ from api.log import LOGGER
 
 
 class Ghost:
+    """Ghost admin client."""
 
     def __init__(self, api_key, url):
         self.api_key = api_key
@@ -16,13 +17,13 @@ class Ghost:
 
     def _https_session(self):
         """Authorize HTTPS session with Ghost admin."""
-        token = f'Ghost {self._get_session_token()}'
+        token = f'Ghost {self.get_session_token()}'
         endpoint = f'{self.url}/session/'
         headers = {'Authorization': token}
         r = requests.post(endpoint, headers=headers)
         LOGGER.info(f'Authorization resulted in status code {r.status_code}.')
 
-    def _get_session_token(self):
+    def get_session_token(self):
         """Generate token for Ghost admin API."""
         iat = int(date.now().timestamp())
         header = {
@@ -43,14 +44,14 @@ class Ghost:
 
     def get_post(self, post_id):
         """Fetch post JSON by ID."""
-        token = self._get_session_token()
+        token = self.get_session_token()
         headers = {'Authorization': token}
         r = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return r.json()
 
     def update_post(self, post_id, body):
         """Update post."""
-        token = self._get_session_token()
+        token = self.get_session_token()
         headers = {'Authorization': token}
         r = requests.put(f"{self.url}/posts/{post_id}", json=body, headers=headers)
         return r.json()
