@@ -13,9 +13,10 @@ Automation for your JAMStack site to generate optimized image sizes, clean SEO m
 ## Endpoints
 
 #### Posts
-  * **GET** `/posts/metadata`: Format or fill-in missing metadata for all posts.
+  * **GET** `/posts/metadata`: Fill in missing metadata (titles, decriptions, etc.) for all posts.
   * **GET** `/posts/lynx`: Replace Lynx `<a>` tags with URL targets - not names.
   * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
+  * **POST** `/posts/metadata`: Fill in missing metadata (titles, decriptions, etc.) for a single post.
 #### Searches
   * **GET** `/searches/week`: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
   * **GET** `/searches/historical`: Append current week's Algolia searches to a historical table of all searches.
