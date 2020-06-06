@@ -18,6 +18,9 @@ PyBigQuery = "*"
 Mixpanel = "*"
 Loguru = "*"
 Twilio = "*"
+Beautifulsoup4 = "*"
+metadata_parser = "*"
+extruct = "*"
 
 [dev-packages]
 pytest = "*"

@@ -1,10 +1,10 @@
 """Routes to transform post data."""
-import re
 from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response, request
 import requests
-from .read import get_queries, read_sql_queries
+from .read import get_queries
+from .lynx.cards import format_lynx_posts
 from api import ghost, db
 from api.log import LOGGER
 
@@ -21,36 +21,13 @@ def maintenance_queries():
 
 
 @LOGGER.catch
-@api.route('/posts/lynx', methods=['GET'])
-def format_lynx_posts():
-    """Replace <a> tags in Lynx posts."""
-    updated_posts = []
-    query = read_sql_queries(['api/posts/queries/lynx-bookmarks.sql'])
-    results = db.fetch_records(query[0], table_name='blog')
-    for result in results:
-        links = re.findall('<a href="(.*?)"', result['html'])
-        html = ''.join([f'<p><a href="{link}">{link}</a></p>' for link in links])
-        post_id = result["id"]
-        date = datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
-        post_body = {
-            "posts": [{
-                "html": html,
-                "updated_at": date
-            }]
-        }
-        updated_post = ghost.update_post(post_id, post_body)
-        updated_posts.append(updated_post)
-    headers = {'Content-Type': 'application/json'}
-    return make_response(jsonify({'updated': updated_posts}), 200, headers)
-
-
-@LOGGER.catch
 @api.route('/posts/metadata', methods=['POST'])
 def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
     token = ghost.get_session_token()
     title = post.get('title')
+    slug = post.get('slug')
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     body = {
@@ -66,6 +43,9 @@ def set_post_metadata():
             "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
          }]
     }
+    if slug == 'roundup':
+        doc = format_lynx_posts(post)
+        body['posts'][0]['mobiledoc'] = doc
     headers = {'Authorization': token}
     r = requests.put(
         f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',

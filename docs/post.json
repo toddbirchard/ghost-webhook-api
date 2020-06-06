@@ -6,7 +6,7 @@
       "title": "Test post title",
       "slug": "test",
       "mobiledoc": "{\"version\":\"0.3.1\",\"atoms\":[],\"cards\":[],\"markups\":[],\"sections\":[[1,\"p\",[[0,[],0,\"This is the body of our post!!\"]]]]}",
-      "html": "<p>This is the body of our post!!</p>",
+      "html": "<a href=\"https://www.reddit.com/r/MachineLearning/comments/eiio4k/p_a_modern_introduction_to_online_learning/\">This is the body of our post!</a><a href=\"https://medium.com/@ODSC/data-ops-running-ml-models-in-production-the-right-way-a634c9a66610\">my link</a><a href=\"https://www.bbc.com/news/science-environment-38224564\">fnjbhgffsjvdfhs</a><a href=\"https://www.chronicle.com/article/Assessment-Is-an-Enormous/245937\">fnjbhgffsjvdfhs</a><a href=\"https://www.technologyreview.com/2019/11/05/75199/googles-new-chip-protects-the-cloud-where-its-most-vulnerable/\">fnjbhgffsjvdfhs</a><a href=\"https://phys.org/news/2020-03-mathematicians-theory-real-world-randomness.html\">fnjbhgffsjvdfhs</a><a href=\"https://github.com/benedekrozemberczki/karateclub\">fnjbhgffsjvdfhs</a><a href=\"https://www.cnn.com/interactive/2019/09/politics/inequality-in-america/index.html\">fnjbhgffsjvdfhs</a><a href=\"https://www.edx.org/course/economic-democracy-the-cooperative-alternative\">fnjbhgffsjvdfhs</a>",
       "comment_id": "5e7145e6ee8b46717b577ff7",
       "plaintext": "This is the body of our post!!",
       "feature_image": "https://hackersandslackers-cdn.storage.googleapis.com/2020/03/234-3.jpg",
@@ -146,7 +146,7 @@
     "previous": {
       "mobiledoc": "{\"version\":\"0.3.1\",\"atoms\":[],\"cards\":[],\"markups\":[],\"sections\":[[1,\"p\",[[0,[],0,\"This is the body of our post!\"]]]]}",
       "updated_at": "2020-03-17T21:59:10.000Z",
-      "html": "<p>This is the body of our post!</p>",
+      "html": "<a href=\"https://www.reddit.com/r/MachineLearning/comments/eiio4k/p_a_modern_introduction_to_online_learning/\">This is the body of our post!</a>",
       "plaintext": "This is the body of our post!"
     }
   }

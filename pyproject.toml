@@ -31,6 +31,9 @@ pybigquery = "*"
 mixpanel = "*"
 loguru = "*"
 twilio = "*"
+beautifulsoup4 = "*"
+metadata_parser = "*"
+extruct = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

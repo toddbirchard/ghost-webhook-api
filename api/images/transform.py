@@ -110,4 +110,3 @@ class ImageTransformer:
         if image_request.headers['Content-Type'] in ('application/octet-stream', 'image/jpeg'):
             return image_request.content
         return None
-
