@@ -27,7 +27,6 @@ def set_post_metadata():
     post = request.get_json()['post']['current']
     token = ghost.get_session_token()
     title = post.get('title')
-    primary_tag = post.get('primary_tag')
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     body = {
@@ -43,6 +42,31 @@ def set_post_metadata():
             "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
          }]
     }
+    headers = {'Authorization': token}
+    r = requests.put(
+        f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
+        json=body,
+        headers=headers
+    )
+    if r.status_code == 200:
+        LOGGER.info(f'Updated post metadata for `{title}`: {r.json()}.')
+        return make_response(jsonify({'SUCCESS': body}))
+    LOGGER.error(f'request: {r.json()} response: {body}')
+    return make_response(jsonify({'FAILED': r.json()}))
+
+
+@LOGGER.catch
+@api.route('/posts/metadata/lynx', methods=['POST'])
+def set_lynx_metadata():
+    """Update post metadata where empty."""
+    post = request.get_json()['post']['current']
+    token = ghost.get_session_token()
+    primary_tag = post.get('primary_tag')
+    body = {
+        "posts": [{
+            "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
+         }]
+    }
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body['posts'][0].update({'mobiledoc': doc})
@@ -53,7 +77,7 @@ def set_post_metadata():
         headers=headers
     )
     if r.status_code == 200:
-        LOGGER.info(f'Updated post metadata for `{title}`: {r.json()}.')
+        LOGGER.info(f'Updated lynx: {r.json()}.')
         return make_response(jsonify({'SUCCESS': body}))
     LOGGER.error(f'request: {r.json()} response: {body}')
     return make_response(jsonify({'FAILED': r.json()}))
