@@ -27,7 +27,7 @@ def set_post_metadata():
     post = request.get_json()['post']['current']
     token = ghost.get_session_token()
     title = post.get('title')
-    slug = post.get('slug')
+    primary_tag = post.get('primary_tag')
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     body = {
@@ -43,7 +43,7 @@ def set_post_metadata():
             "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
          }]
     }
-    if slug == 'roundup':
+    if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body['posts'][0].update({'mobiledoc': doc})
     headers = {'Authorization': token}
