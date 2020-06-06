@@ -42,7 +42,7 @@ class Database:
     def fetch_records(self, query, table_name='analytics'):
         """Fetch all rows via query."""
         rows = self.engines[table_name].execute(query).fetchall()
-        return [{column: value for column, value in row.items()} for row in rows]
+        return [row.items() for row in rows]
 
     def insert_records(self, rows, table_name, replace=None):
         """Insert rows into table."""

@@ -20,8 +20,8 @@ class Ghost:
         token = f'Ghost {self.get_session_token()}'
         endpoint = f'{self.url}/session/'
         headers = {'Authorization': token}
-        r = requests.post(endpoint, headers=headers)
-        LOGGER.info(f'Authorization resulted in status code {r.status_code}.')
+        req = requests.post(endpoint, headers=headers)
+        LOGGER.info(f'Authorization resulted in status code {req.status_code}.')
 
     def get_session_token(self):
         """Generate token for Ghost admin API."""
@@ -46,15 +46,15 @@ class Ghost:
         """Fetch post JSON by ID."""
         token = self.get_session_token()
         headers = {'Authorization': token}
-        r = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
-        return r.json()
+        req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
+        return req.json()
 
     def update_post(self, post_id, body):
         """Update post."""
         token = self.get_session_token()
         headers = {'Authorization': token}
-        r = requests.put(f"{self.url}/posts/{post_id}", json=body, headers=headers)
-        return r.json()
+        req = requests.put(f"{self.url}/posts/{post_id}", json=body, headers=headers)
+        return req.json()
 
     def get_json_backup(self):
         """Attempt to extract JSON snapshot of Ghost database."""
@@ -67,6 +67,6 @@ class Ghost:
                    'Origin': 'hackersandslackers.tools',
                    'Authority': 'hackersandslackers.tools'}
         endpoint = f'{self.url}/db/'
-        r = requests.get(endpoint, headers=headers)
-        return r.json()
+        req = requests.get(endpoint, headers=headers)
+        return req.json()
 

@@ -27,18 +27,18 @@ def scrape_links(link):
         json_ld_data = json_ld_data[0]
     page = metadata_parser.MetadataParser(url=link, url_headers=headers, search_head_only=False)
     card = ["bookmark", {
-              "type": "bookmark",
-              "url": get_canonical(page),
-              "metadata": {
+                "type": "bookmark",
                 "url": get_canonical(page),
-                "title": get_title(page),
-                "description": get_description(page),
-                "author": get_author(page, html, json_ld_data),
-                "publisher": get_publisher(json_ld_data),
-                "thumbnail": get_image(page),
-                "icon": get_favicon(page, html, get_domain(link))
-              }
-            }]
+                "metadata": {
+                    "url": get_canonical(page),
+                    "title": get_title(page),
+                    "description": get_description(page),
+                    "author": get_author(page, html, json_ld_data),
+                    "publisher": get_publisher(json_ld_data),
+                    "thumbnail": get_image(page),
+                    "icon": get_favicon(page, html, get_domain(link))
+                    }
+                }]
     return card
 
 

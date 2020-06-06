@@ -37,9 +37,9 @@ def newsletter_welcome_message():
         "template": api.config["MAILGUN_EMAIL_TEMPLATE"],
         "h:X-Mailgun-Variables": json.dumps({"name": name})
     }
-    r = requests.post(
+    req = requests.post(
         endpoint,
         auth=("api", api.config["MAILGUN_API_KEY"]),
         data=body,
     )
-    return make_response(jsonify(r.json()), 200)
+    return make_response(jsonify(req.json()), 200)

@@ -1,9 +1,9 @@
 """Replace <a> tags in Lynx posts with cards."""
 import re
 import json
+from api.log import LOGGER
 from .scrape import scrape_links
 from .doc import mobile_doc
-from api.log import LOGGER
 
 
 @LOGGER.catch
