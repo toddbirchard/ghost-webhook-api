@@ -45,7 +45,7 @@ def set_post_metadata():
     }
     if slug == 'roundup':
         doc = format_lynx_posts(post)
-        body['posts'][0]['mobiledoc'] = doc
+        body['posts'][0].update({'mobiledoc': doc})
     headers = {'Authorization': token}
     r = requests.put(
         f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
