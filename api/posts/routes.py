@@ -53,9 +53,9 @@ def set_post_metadata():
         headers=headers
     )
     if r.status_code == 200:
-        LOGGER.info(f'Updated post metadata for `{title}`.')
+        LOGGER.info(f'Updated post metadata for `{title}`: {body}.')
         return make_response(jsonify({'SUCCESS': body}))
-    LOGGER.error(r.json())
+    LOGGER.error(f'request: {r.json()} response: {body})
     return make_response(jsonify({'FAILED': r.json()}))
 
 
