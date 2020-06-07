@@ -7,7 +7,7 @@ from api.log import LOGGER
 
 
 @LOGGER.catch
-def scrape_links(link):
+def scrape_link(link):
     """Get link metadata."""
     headers = {
         'Access-Control-Allow-Origin': '*',
@@ -18,13 +18,7 @@ def scrape_links(link):
     }
     req = requests.get(link, headers=headers)
     html = BeautifulSoup(req.content, 'html.parser')
-    json_ld_data = extruct.extract(
-        str(req.text),
-        base_url=get_domain(link),
-        syntaxes=['json-ld'],
-        uniform=True)['json-ld']
-    if len(json_ld_data) >= 1:
-        json_ld_data = json_ld_data[0]
+    json_ld_data = render_json_ltd(link, req.text)
     page = metadata_parser.MetadataParser(url=link, url_headers=headers, search_head_only=False)
     card = ["bookmark", {
                 "type": "bookmark",
@@ -40,6 +34,17 @@ def scrape_links(link):
                     }
                 }]
     return card
+
+
+def render_json_ltd(link, html):
+    json_ld_data = extruct.extract(
+        str(html),
+        base_url=get_domain(link),
+        syntaxes=['json-ld'],
+        uniform=True)['json-ld']
+    if len(json_ld_data) >= 1:
+        json_ld_data = json_ld_data[0]
+    return json_ld_data
 
 
 def get_title(page):

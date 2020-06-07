@@ -21,9 +21,11 @@ Twilio = "*"
 Beautifulsoup4 = "*"
 metadata_parser = "*"
 extruct = "*"
+simplejson = "*"
 
 [dev-packages]
 pytest = "*"
+mock = "*"
 
 [requires]
 python_version = "3.8"

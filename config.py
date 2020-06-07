@@ -30,7 +30,7 @@ class Config:
     # Google Cloud storage
     GCP_BUCKET_URL = environ.get('GCP_BUCKET_URL')
     GCP_BUCKET_NAME = environ.get('GCP_BUCKET_NAME')
-    GOOGLE_APPLICATION_CREDENTIALS = './creds/gcloud.json'
+    GOOGLE_APPLICATION_CREDENTIALS = './gcloud.json'
     GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY = 'roundup'
 

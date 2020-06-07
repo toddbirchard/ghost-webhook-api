@@ -1,5 +1,5 @@
 """Subscribers and Ghost member management."""
-import json
+import simplejson as json
 from flask import current_app as api
 from flask import make_response, request, jsonify
 import requests
