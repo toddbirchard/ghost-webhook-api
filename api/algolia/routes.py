@@ -11,6 +11,7 @@ def week_searches():
     """Save top Algolia searches for the current week."""
     records = fetch_weekly_searches()
     upload = db.insert_records(records, 'algolia_searches_week', replace=True)
+    LOGGER.info(upload)
     return make_response(jsonify(upload), 200)
 
 
@@ -20,4 +21,5 @@ def historical_searches():
     """Save Algolia searches to persistent database."""
     records = fetch_weekly_searches()
     upload = db.insert_records(records, 'algolia_searches_historical')
+    LOGGER.info(upload)
     return make_response(jsonify(upload), 200)

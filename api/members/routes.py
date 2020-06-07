@@ -1,9 +1,9 @@
 """Subscribers and Ghost member management."""
+import json
 from flask import current_app as api
 from flask import make_response, request, jsonify
-from mixpanel import Mixpanel
 import requests
-import json
+from mixpanel import Mixpanel
 from api.log import LOGGER
 
 

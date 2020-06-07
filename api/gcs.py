@@ -26,4 +26,3 @@ class GCS:
         :type prefix: str
         """
         return self.bucket.list_blobs(prefix=prefix)
-

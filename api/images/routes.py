@@ -1,12 +1,12 @@
 """Routes to transform post images."""
+from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response, request
 import requests
-from datetime import datetime
 from api import ghost, db
+from api.log import LOGGER
 from .fetch import fetch_image_blobs, fetch_random_lynx_image
 from .transform import ImageTransformer
-from api.log import LOGGER
 
 
 transformer = ImageTransformer(
@@ -64,16 +64,16 @@ def set_lynx_image():
             }]
         }
         headers = {'Authorization': 'Ghost {}'.format(token.decode())}
-        r = requests.put(
+        req = requests.put(
             f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
             json=body,
             headers=headers
         )
-        if r.status_code == 200:
+        if req.status_code == 200:
             LOGGER.info(f'Updated Lynx post `{post["feature_image"]}` with image {image}.')
             return make_response(jsonify({'SUCCESS': request.get_json()}))
-        LOGGER.error(r.json())
-        return make_response(jsonify({'FAILED': r.json()}))
+        LOGGER.error(req.json())
+        return make_response(jsonify({'FAILED': req.json()}))
     return make_response(request.get_json())
 
 

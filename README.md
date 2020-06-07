@@ -7,7 +7,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/network)
 
-Automation for your JAMStack site to generate optimized image sizes, clean SEO metadata, handle user sign-ups, and much more.
+Supplementary API to optimize JAMStack sites via webhooks. Listens for site updates to clean metadata, optimize images, handle user sign-ups, and much more.
 
 
 ## Endpoints
@@ -33,3 +33,5 @@ Automation for your JAMStack site to generate optimized image sizes, clean SEO m
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
+#### Authors
+  * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.

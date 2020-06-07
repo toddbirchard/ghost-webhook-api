@@ -69,4 +69,3 @@ class Ghost:
         endpoint = f'{self.url}/db/'
         req = requests.get(endpoint, headers=headers)
         return req.json()
-
