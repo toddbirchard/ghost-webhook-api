@@ -1,4 +1,3 @@
-attrs==19.3.0
 beautifulsoup4==4.9.1
 cachetools==4.1.0
 certifi==2020.4.5.2
@@ -26,20 +25,14 @@ MarkupSafe==1.1.1
 metadata-parser==0.10.0
 mf2py==1.1.2
 mixpanel==4.5.0
-mock==4.0.2
-more-itertools==8.3.0
-packaging==20.4
 Pillow==7.1.2
-pluggy==0.13.1
 protobuf==3.12.2
-py==1.8.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pybigquery==0.4.15
 PyJWT==1.7.1
 PyMySQL==0.9.3
 pyparsing==2.4.7
-pytest==5.4.3
 python-dotenv==0.13.0
 python-resize-image==1.1.19
 pytz==2020.1
@@ -55,7 +48,6 @@ SQLAlchemy==1.3.17
 twilio==6.41.0
 urllib3==1.25.9
 w3lib==1.22.0
-wcwidth==0.2.3
 webencodings==0.5.1
 webp-converter==4.0.1
 Werkzeug==1.0.1
