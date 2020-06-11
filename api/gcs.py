@@ -1,4 +1,4 @@
-"""Connect to remote Google Cloud Storage client."""
+"""Remote Google Cloud Storage client."""
 from google.cloud import storage
 
 

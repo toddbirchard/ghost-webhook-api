@@ -24,7 +24,7 @@ class Ghost:
         LOGGER.info(f'Authorization resulted in status code {req.status_code}.')
 
     def get_session_token(self):
-        """Generate token for Ghost admin API."""
+        """Generate session token for Ghost admin API."""
         iat = int(date.now().timestamp())
         header = {
             'alg': 'HS256',
@@ -43,14 +43,14 @@ class Ghost:
         return f'Ghost {token.decode()}'
 
     def get_post(self, post_id):
-        """Fetch post JSON by ID."""
+        """Fetch post data by ID."""
         token = self.get_session_token()
         headers = {'Authorization': token}
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
     def update_post(self, post_id, body):
-        """Update post."""
+        """Update post by ID."""
         token = self.get_session_token()
         headers = {'Authorization': token}
         req = requests.put(f"{self.url}/posts/{post_id}", json=body, headers=headers)

@@ -1,4 +1,4 @@
-"""Author post management."""
+"""Author management."""
 from flask import current_app as api
 from flask import make_response, request, jsonify
 from api.log import LOGGER
@@ -8,7 +8,7 @@ from api import sms
 @LOGGER.catch
 @api.route('/authors/posts/created', methods=['POST'])
 def author_created_post_notification():
-    """Notify upon author post creation."""
+    """Notify editor upon author post creation."""
     data = request.get_json()['post']['current']
     title = data['title']
     image = data.get('feature_image', None)

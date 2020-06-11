@@ -5,7 +5,7 @@ from config import Config
 
 
 def create_logger():
-    """Create custom logger depending on environment."""
+    """Create custom loggers."""
     logger.remove()
     if Config.FLASK_ENV == 'production':
         logger.add(
@@ -27,6 +27,7 @@ def create_logger():
             + "<light-white>{message}</light-white>"
         )
     else:
+        # Output logs to console while in development
         logger.add(
             stdout,
             colorize=True,

@@ -5,7 +5,7 @@ from api.log import LOGGER
 
 
 def get_queries():
-    """Neatly package local queries to be run against database."""
+    """Create dict of queries to be run against database."""
     sql_file_paths = fetch_sql_files()
     sql_queries = read_sql_queries(sql_file_paths)
     sql_file_names = [file.split('/')[-1] for file in sql_file_paths]
@@ -23,7 +23,7 @@ def fetch_sql_files():
 
 
 def read_sql_queries(sql_file_paths):
-    """Read SQL query from .sql file."""
+    """Read SQL queries from .sql files."""
     queries = []
     for file in sql_file_paths:
         sql_file = open(file, 'r')

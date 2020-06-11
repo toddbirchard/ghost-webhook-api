@@ -8,7 +8,7 @@ from .doc import mobile_doc
 
 @LOGGER.catch
 def format_lynx_posts(post):
-    """Replace <a> tags in Lynx posts."""
+    """Replace <a> tags in Lynx posts with link previews."""
     html = post.get('html')
     links = re.findall('<a href="(.*?)"', html)
     link_previews = [scrape_link(link) for link in links]

@@ -6,7 +6,7 @@ from api.log import LOGGER
 
 
 def fetch_image_blobs(prefixes):
-    """List all images from GCP bucket."""
+    """List all images from GCS bucket."""
     retina_images = fetch_retina_images(prefixes)
     standard_images = fetch_standard_images(prefixes)
     LOGGER.info(f'Checking {len(retina_images)} retina and \
@@ -16,7 +16,7 @@ def fetch_image_blobs(prefixes):
 
 
 def fetch_standard_images(prefixes):
-    """List all standard resolution images in bucket."""
+    """List all standard resolution images in GCS bucket."""
     images = []
     for prefix in prefixes:
         files = gcs.bucket.list_blobs(prefix=prefix)
@@ -26,7 +26,7 @@ def fetch_standard_images(prefixes):
 
 
 def fetch_retina_images(prefixes):
-    """List all retina images in bucket."""
+    """List all retina images in GCS bucket."""
     images = []
     for prefix in prefixes:
         files = gcs.bucket.list_blobs(prefix=prefix)
@@ -36,7 +36,7 @@ def fetch_retina_images(prefixes):
 
 
 def fetch_random_lynx_image():
-    """Fetch random Lynx image from GCS."""
+    """Fetch random Lynx image from GCS bucket."""
     lynx_images = gcs.bucket.list_blobs(prefix=f'{api.config["GCP_BUCKET_FOLDER"]}/')
     images = [f"{api.config['GCP_BUCKET_URL']}{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
     rand = randint(0, len(images) - 1)

@@ -9,11 +9,10 @@ from .read import get_queries
 from .lynx.cards import format_lynx_posts
 
 
-
 @LOGGER.catch
 @api.route('/posts/metadata', methods=['GET'])
 def maintenance_queries():
-    """Execute queries to optimize post posts."""
+    """Execute SQL queries to fill missing post metadata."""
     queries = get_queries()
     results = db.execute_queries(queries)
     headers = {'Content-Type': 'application/json'}
@@ -59,29 +58,30 @@ def set_post_metadata():
 @LOGGER.catch
 @api.route('/posts/metadata/lynx', methods=['POST'])
 def set_lynx_metadata():
-    """Update post metadata where empty."""
+    """Replace <a> tags with embedded link previews."""
     post = request.get_json()['post']['current']
     token = ghost.get_session_token()
     primary_tag = post.get('primary_tag')
-    body = {
-        "posts": [{
-            "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
-            }]
-    }
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
-        body['posts'][0].update({'mobiledoc': doc})
-    headers = {'Authorization': token}
-    req = requests.put(
-        f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
-        json=body,
-        headers=headers
-    )
-    if req.status_code == 200:
-        LOGGER.info(f'Updated lynx: {req.json()}.')
-        return make_response(jsonify({'SUCCESS': body}))
-    LOGGER.error(f'request: {req.json()} response: {body}')
-    return make_response(jsonify({'FAILED': req.json()}))
+        body = {
+            "posts": [{
+                "mobiledoc": doc,
+                "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
+            }]
+        }
+        headers = {'Authorization': token}
+        req = requests.put(
+            f'{api.config["GHOST_API_BASE_URL"]}/posts/{post["id"]}/',
+            json=body,
+            headers=headers
+        )
+        if req.status_code == 200:
+            LOGGER.info(f'Updated lynx: {req.json()}.')
+            return make_response(jsonify({'SUCCESS': body}))
+        LOGGER.error(f'request: {req.json()} response: {body}')
+        return make_response(jsonify({'FAILED': req.json()}))
+    return make_response(jsonify({'RESULT': 'Ignored non-lynx post.'}), 204)
 
 
 @LOGGER.catch

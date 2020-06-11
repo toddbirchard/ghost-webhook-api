@@ -1,4 +1,4 @@
-"""Parse individual Lynx URLs."""
+"""Scrape URLs found in body of Lynx posts for metadata."""
 import requests
 import metadata_parser
 from bs4 import BeautifulSoup
@@ -8,7 +8,7 @@ from api.log import LOGGER
 
 @LOGGER.catch
 def scrape_link(link):
-    """Get link metadata."""
+    """Scrape links embedded in post for metadata to build preview cards."""
     headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
@@ -37,6 +37,7 @@ def scrape_link(link):
 
 
 def render_json_ltd(link, html):
+    """Fetch structured data."""
     json_ld_data = extruct.extract(
         str(html),
         base_url=get_domain(link),
@@ -48,7 +49,7 @@ def render_json_ltd(link, html):
 
 
 def get_title(page):
-    """Attempt to get a title."""
+    """Scrape page title."""
     title = None
     if page.get_metadatas('title'):
         title = page.get_metadatas('title')
@@ -62,7 +63,7 @@ def get_title(page):
 
 
 def get_image(page):
-    """Attempt to get a title."""
+    """Scrape page `share image`."""
     image = None
     if page.get_metadatas('og:image'):
         image = page.get_metadatas('og:image')[0]
@@ -72,7 +73,7 @@ def get_image(page):
 
 
 def get_description(page):
-    """Attempt to get description."""
+    """Scrape page description."""
     description = None
     if page.get_metadatas('description'):
         description = page.get_metadatas('description')[0]
@@ -100,7 +101,7 @@ def get_author(page, html, json_ld_data):
 
 
 def get_publisher(json_ld_data):
-    """Scrape author name."""
+    """Scrape publisher name."""
     publisher = None
     if bool(json_ld_data) and json_ld_data.get('publisher'):
         publisher = json_ld_data['publisher'].get('name')
@@ -108,7 +109,7 @@ def get_publisher(json_ld_data):
 
 
 def get_favicon(page, html, base_url):
-    """Attempt to get favicon."""
+    """Scrape favicon image."""
     favicon = None
     if page.get_metadatas('shortcut icon'):
         favicon = page.get_metadatas('shortcut icon')[0]
@@ -143,7 +144,7 @@ def get_domain(url):
 
 
 def get_canonical(page):
-    """Get canonical URL."""
+    """Get page canonical URL."""
     canonical = None
     if page.get_metadatas('canonical'):
         canonical = page.get_metadatas('canonical')[0]

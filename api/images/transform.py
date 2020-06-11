@@ -8,6 +8,7 @@ from api.log import LOGGER
 
 
 class ImageTransformer:
+    """Transform post feature images."""
 
     def __init__(self, bucket_name, bucket_url):
         self.bucket_name = bucket_name
@@ -19,7 +20,7 @@ class ImageTransformer:
         self.webp_images_transformed = []
 
     def bulk_transform_images(self, folder, **kwargs):
-        """Queue image transformation jobs."""
+        """Image transformation jobs."""
         self._purge_unwanted_images(folder)
         for key, value in kwargs.items():
             self.images_total += len(value)
@@ -87,6 +88,7 @@ class ImageTransformer:
 
     @staticmethod
     def _purge_unwanted_images(folder):
+        """Delete images which have been compressed or generated multiple times."""
         LOGGER.info('Step 1: Purging unwanted images...')
         substrings = ['@2x@2x', '_o', 'psd', '?']
         image_blobs = gcs.get(folder)
