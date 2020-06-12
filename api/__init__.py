@@ -27,5 +27,6 @@ def init_api():
         from api.analytics import routes
         from api.members import routes
         from api.authors import authors
+        from api.github import routes
 
         return api

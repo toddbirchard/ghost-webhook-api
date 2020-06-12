@@ -53,6 +53,7 @@ class Config:
     MAILGUN_API_KEY = environ.get("MAILGUN_API_KEY")
     MAILGUN_FROM_SENDER = environ.get("MAILGUN_FROM_SENDER")
     MAILGUN_SUBJECT_LINE = 'To Hack or to Slack; That is the Question.'
+    MAILGUN_PERSONAL_EMAIL = environ.get("MAILGUN_PERSONAL_EMAIL")
 
     # Twilio
     TWILIO_SENDER_PHONE = getenv('TWILIO_SENDER_PHONE')
