@@ -9,6 +9,7 @@ from api.log import LOGGER
 @api.route('/github/issue', methods=['POST'])
 def maintenance_queries():
     """Send notification upon Github issue creation."""
+    LOGGER.info('Github endpoint hit successfully.')
     issue = request.get_json()
     endpoint = f'https://api.mailgun.net/v3/{api.config["MAILGUN_EMAIL_SERVER"]}/messages'
     body = {
