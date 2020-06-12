@@ -7,7 +7,7 @@ from api.log import LOGGER
 
 @LOGGER.catch
 @api.route('/github/issue', methods=['POST'])
-def maintenance_queries():
+def github_issue_receivedå():
     """Send notification upon Github issue creation."""
     LOGGER.info('Github endpoint hit successfully.')
     issue = request.get_json()
