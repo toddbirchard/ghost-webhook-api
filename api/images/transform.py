@@ -42,7 +42,7 @@ class ImageTransformer:
         LOGGER.info('Step 2: Generating retina images...')
         for image_blob in standard_images:
             self.num_images_checked += 1
-            LOGGER.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
+            LOGGER.info(f"{self.num_images_checked} of {self.images_total} ({image_blob.name}).")
             dot_position = image_blob.name.rfind('.')
             new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
             existing_image_file = self._fetch_image_via_http(new_image_name)
@@ -86,6 +86,7 @@ class ImageTransformer:
         self._create_retina_image(image_blob, new_image_name)
         return f'Successfully created {new_image_name}.'
 
+    @LOGGER.catch
     @staticmethod
     def _purge_unwanted_images(folder):
         """Delete images which have been compressed or generated multiple times."""
@@ -97,6 +98,7 @@ class ImageTransformer:
                 gcs.bucket.delete_blob(image_blob.name)
                 LOGGER.info(f'Deleted {image_blob.name}.')
 
+    @LOGGER.catch
     def _create_retina_image(self, image_blob, new_image_name):
         """Create retina versions of standard-res images."""
         original_image = self._fetch_image_via_http(image_blob.name)
@@ -106,6 +108,7 @@ class ImageTransformer:
             new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, new_image_name)
             self.retina_images_transformed.append(new_blob.name)
 
+    @LOGGER.catch
     def _fetch_image_via_http(self, url):
         """Determine if image exists via HTTP request."""
         image_request = requests.get(self.bucket_url + url)

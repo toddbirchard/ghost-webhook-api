@@ -3,7 +3,7 @@
 
 def read_sql_queries(file):
     """Read SQL query from .sql file."""
-    file = open(f'api/analytics/queries/{file}', 'r')
-    query = file.read()
-    file.close()
+    sql_file = open(f'api/analytics/queries/{file}', 'r')
+    query = sql_file.read()
+    sql_file.close()
     return query

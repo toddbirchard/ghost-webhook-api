@@ -15,7 +15,6 @@ transformer = ImageTransformer(
 )
 
 
-@LOGGER.catch
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images uploaded in the current month."""
@@ -26,7 +25,6 @@ def transform_recent_images():
     return make_response(jsonify(response))
 
 
-@LOGGER.catch
 @api.route('/images/transform/lynx', methods=['GET'])
 def transform_lynx_images():
     """Apply image transformations to `Lynx` images."""
@@ -37,19 +35,20 @@ def transform_lynx_images():
     return make_response(jsonify(response))
 
 
-@LOGGER.catch
 @api.route('/images/transform', methods=['POST'])
 def transform_image():
     """Transform single post image upon update."""
     post = request.get_json()['post']['current']
     featured_image = post.get('feature_image')
+    title = post.get('title')
     if featured_image:
         response = transformer.transform_single_image(featured_image)
+        LOGGER.info(f'Generated retina image for post `{title}`: {featured_image}')
         return make_response(jsonify(response))
+    LOGGER.error(f'FAILED to generate retina image for post `{title}`: {featured_image}. {response}')
     return make_response(jsonify('FAILED'))
 
 
-@LOGGER.catch
 @api.route('/images/lynx', methods=['POST'])
 def set_lynx_image():
     """Update single Lynx post with random image if `feature_image` is empty."""
@@ -77,7 +76,6 @@ def set_lynx_image():
     return make_response(request.get_json())
 
 
-@LOGGER.catch
 @api.route('/images/lynx', methods=['GET'])
 def set_all_lynx_images():
     """Assign random image to Lynx posts which are missing a feature image."""
@@ -87,4 +85,5 @@ def set_all_lynx_images():
     for post in posts:
         image = fetch_random_lynx_image()
         db.update_post_image(image, post)
+    LOGGER.info(f'Updated {len(posts)} lynx posts with images.')
     return make_response('Updated Lynx posts successfully.')
