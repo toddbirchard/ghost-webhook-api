@@ -7,9 +7,8 @@ from api.log import LOGGER
 
 @LOGGER.catch
 @api.route('/github/issue', methods=['POST'])
-def github_issue_receivedå():
+def github_issue_received():
     """Send notification upon Github issue creation."""
-    LOGGER.info('Github endpoint hit successfully.')
     issue = request.get_json()
     endpoint = f'https://api.mailgun.net/v3/{api.config["MAILGUN_EMAIL_SERVER"]}/messages'
     body = {
