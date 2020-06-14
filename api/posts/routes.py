@@ -12,7 +12,6 @@ from .lynx.cards import format_lynx_posts
 @api.route('/post/update', methods=['POST'])
 def set_post_metadata():
     """Update post metadata where empty."""
-    LOGGER.info(request.get_json())
     post = request.get_json()['posts'][0]
     id = post.get('id')
     title = post.get('title')
@@ -53,6 +52,7 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
+    LOGGER.info('feature_image = ', feature_image)
     response = ghost.update_post(id, body)
     return make_response(jsonify(response))
 
