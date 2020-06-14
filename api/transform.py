@@ -2,7 +2,6 @@
 import requests
 from io import BytesIO
 from PIL import Image
-from api import gcs
 from google.cloud import storage
 from api.log import LOGGER
 
@@ -10,32 +9,43 @@ from api.log import LOGGER
 class ImageTransformer:
     """Transform post feature images."""
 
-    def __init__(self, bucket_name, bucket_url):
-        self.bucket_name = bucket_name
-        self.bucket_url = bucket_url
+    def __init__(self, google_cloud_storage):
+        self.gcs = google_cloud_storage
         self.num_images_checked = 0
         self.images_total = 0
         self.retina_images_transformed = []
         self.standard_images_transformed = []
         self.webp_images_transformed = []
 
-    def bulk_transform_images(self, folder, **kwargs):
-        """Image transformation jobs."""
-        self._purge_unwanted_images(folder)
-        for key, value in kwargs.items():
-            self.images_total += len(value)
-        if kwargs.get('retina_from_standard'):
-            self.retina_transformations(kwargs.get('retina_from_standard'))
-        if kwargs.get('standard_from_retina'):
-            self.standard_transformations(kwargs.get('standard_from_retina'))
-        if kwargs.get('webp_from_standard'):
-            self.webp_transformations(kwargs.get('webp_from_standard'))
-        return {
-            'retina': len(self.retina_images_transformed),
-            'standard': len(self.standard_images_transformed),
-            'webp': len(self.webp_images_transformed),
-            'total': len(self.webp_images_transformed)
+    def fetch_image_blobs(self, folder,  type=None):
+        files = self.gcs.bucket.list_blobs(prefix=folder)
+        filter = {
+            'remove': None,
+            'require': None
         }
+        if type == 'retina':
+            filter['remove'] = '@2x'
+            filter['require'] = '.jpg'
+        elif type == 'standard':
+            filter['remove'] = '.webp'
+            filter['require'] = '@2x'
+        else:
+            return [file for file in files]
+        file_list = [file for file in files if filter['remove'] in file.name and filter['require'] not in file.name]
+        return file_list
+
+    def bulk_transform_images(self, folder, images, transformation=None):
+        """Image transformation jobs."""
+        transformed = None
+        self.images_total = images
+        self._purge_unwanted_images(folder)
+        if transformation == 'retina':
+            transformed = self.retina_transformations(images)
+        elif transformation == 'standard':
+            transformed = self.standard_transformations(images)
+        elif transformation == 'webp':
+            transformed = self.webp_transformations(images)
+        return len(transformed)
 
     def retina_transformations(self, standard_images):
         """Find images missing a retina-quality counterpart."""
@@ -60,7 +70,7 @@ class ImageTransformer:
                 standard_image_name = image_blob.name.replace('@2x', '')
                 standard_image = self._fetch_image_via_http(standard_image_name)
                 if standard_image is not None:
-                    new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, standard_image_name)
+                    new_blob = self.gcs.bucket.copy_blob(image_blob, self.gcs.bucket, standard_image_name)
                     self.standard_images_transformed.append(new_blob.name)
         return self.standard_images_transformed
 
@@ -73,45 +83,46 @@ class ImageTransformer:
             new_image_name = image_blob.name.split('.')[0] + '.webp'
             image_file = self._fetch_image_via_http(new_image_name)
             if image_file is not None:
-                new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, new_image_name)
+                new_blob = self.gcs.bucket.copy_blob(image_blob, self.gcs.bucket, new_image_name)
                 self.webp_images_transformed.append(new_blob.name)
         return self.webp_images_transformed
 
     def transform_single_image(self, image_url):
         """Create retina version of single image."""
-        image_path = image_url.replace(self.bucket_url, '')
-        image_blob = storage.Blob(image_path, gcs.bucket)
+        image_path = image_url.replace(self.gcs.bucket_url, '')
+        image_blob = storage.Blob(image_path, self.gcs.bucket)
         dot_position = image_blob.name.rfind('.')
         new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
         self._create_retina_image(image_blob, new_image_name)
         return f'Successfully created {new_image_name}.'
 
     @LOGGER.catch
-    @staticmethod
-    def _purge_unwanted_images(folder):
+    def _purge_unwanted_images(self, folder):
         """Delete images which have been compressed or generated multiple times."""
         LOGGER.info('Step 1: Purging unwanted images...')
         substrings = ['@2x@2x', '_o', 'psd', '?']
-        image_blobs = gcs.get(folder)
+        image_blobs = self.gcs.get(folder)
         for image_blob in image_blobs:
             if any(substr in image_blob.name for substr in substrings):
-                gcs.bucket.delete_blob(image_blob.name)
+                self.gcs.bucket.delete_blob(image_blob.name)
                 LOGGER.info(f'Deleted {image_blob.name}.')
+        return self.gcs.get(folder)
 
     @LOGGER.catch
     def _create_retina_image(self, image_blob, new_image_name):
         """Create retina versions of standard-res images."""
-        original_image = self._fetch_image_via_http(image_blob.name)
-        im = Image.open(BytesIO(original_image))
-        width, height = im.size
-        if width > 1000:
-            new_blob = gcs.bucket.copy_blob(image_blob, gcs.bucket, new_image_name)
-            self.retina_images_transformed.append(new_blob.name)
+        original_image = self._fetch_image_via_http(new_image_name)
+        if original_image:
+            im = Image.open(BytesIO(original_image))
+            width, height = im.size
+            if width > 1000:
+                new_blob = self.gcs.bucket.copy_blob(image_blob, self.gcs.bucket, new_image_name)
+                self.retina_images_transformed.append(new_blob.name)
 
     @LOGGER.catch
-    def _fetch_image_via_http(self, url):
+    def _fetch_image_via_http(self, new_image_name):
         """Determine if image exists via HTTP request."""
-        image_request = requests.get(self.bucket_url + url)
+        image_request = requests.get(self.gcs.bucket_http_url, new_image_name)
         if image_request.headers['Content-Type'] in ('application/octet-stream', 'image/jpeg'):
             return image_request.content
         return None

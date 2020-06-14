@@ -5,7 +5,7 @@ from config import Config
 
 
 def create_logger():
-    """Create custom loggers."""
+    """Create custom logger."""
     logger.remove()
     if Config.FLASK_ENV == 'production':
         logger.add(

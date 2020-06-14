@@ -53,8 +53,19 @@ class Ghost:
         """Update post by ID."""
         token = self.get_session_token()
         headers = {'Authorization': token}
-        req = requests.put(f"{self.url}/posts/{post_id}", json=body, headers=headers)
-        return req.json()
+        req = requests.put(
+            f'{self.url}/posts/{post_id}/',
+            json=body,
+            headers=headers
+        )
+        if req.status_code == 200:
+            response = f'Updated post metadata for `{post_id}`: {req.json()["title"]}.'
+            LOGGER.info(response)
+            return {'SUCCESS': response}
+        else:
+            response = f'Failed to update post {post_id}: {req.json()}'
+            LOGGER.error(response)
+            return {'FAILED': response}
 
     def get_json_backup(self):
         """Attempt to extract JSON snapshot of Ghost database."""
