@@ -16,7 +16,7 @@ def set_post_metadata():
     post = request.get_json()['post']['current']
     id = post.get('id')
     title = post.get('title')
-    feature_image = post.get('feature_image')
+    feature_image = post.get('feature_image', None)
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
     body = {
@@ -33,15 +33,28 @@ def set_post_metadata():
             }
         ]
     }
-    if feature_image is not None:
+    if feature_image is None and primary_tag.get('slug') == 'roundup':
+        # Assign random image to new Lynx post
+        feature_image = gcs.fetch_random_lynx_image()
+        body['posts'][0].update({
+            "feature_image": feature_image,
+            "og_image": feature_image,
+            "twitter_image": feature_image
+        })
+    elif feature_image is not None and '@2x' not in feature_image:
+        # Create retina image for new post
         feature_image = optimize_feature_image(feature_image)
-        body['posts'][0].update({"feature_image": feature_image})
-        body['posts'][0]['og_image'] = feature_image
-        body['posts'][0]['twitter_image'] = feature_image
+        body['posts'][0].update({
+            "feature_image": feature_image,
+            "og_image": feature_image,
+            "twitter_image": feature_image
+        })
     else:
-        if primary_tag.get('slug') == 'roundup':
-            feature_image = gcs.fetch_random_lynx_image()
-            body['posts'][0].update({"feature_image": feature_image})
+        # Sync social images with feature image
+        body['posts'][0].update({
+            "og_image": feature_image,
+            "twitter_image": feature_image
+        })
     response = ghost.update_post(id, body)
     return make_response(jsonify(response))
 

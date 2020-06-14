@@ -39,6 +39,12 @@ class Database:
         result = self.engines['blog'].execute(query)
         return result
 
+    def execute_query_from_file(self, query):
+        """Execute single SQL query."""
+        sql = open(query, 'r').read()
+        result = self.engines['blog'].execute(query)
+        return result
+
     def fetch_records(self, query, table_name='analytics'):
         """Fetch all rows via query."""
         rows = self.engines[table_name].execute(query).fetchall()

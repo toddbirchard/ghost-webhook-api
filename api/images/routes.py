@@ -34,8 +34,7 @@ def transform_lynx_images():
 @api.route('/images/lynx', methods=['GET'])
 def assign_missing_lynx_images():
     """Assign random image to Lynx posts which are missing a feature image."""
-    sql = open('api/images/sql/lynx_missing_images.sql', 'r').read()
-    results = db.execute_query(sql)
+    results = db.execute_query_from_file('api/images/sql/lynx_missing_images.sql')
     posts = [result.id for result in results]
     for post in posts:
         new_feature_image = image.fetch_random_lynx_image()

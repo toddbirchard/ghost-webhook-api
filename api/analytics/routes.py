@@ -1,16 +1,15 @@
-"""Fetch analytics to determine trending posts."""
+"""Fetch site analytics data to determine trending posts."""
 from flask import current_app as api
 from flask import jsonify, make_response
 from api import gbq, db
 from api.log import LOGGER
-from .read import read_sql_queries
 
 
 @LOGGER.catch
 @api.route('/analytics/week', methods=['GET'])
 def analytics_week():
     """Fetch top searches for the current week."""
-    query = read_sql_queries('top_pages_weekly.sql')
+    query = gbq.parse_query_from_file('api/analytics/queries/top_pages_weekly.sql')
     rows = gbq.fetch_rows(query)
     results = db.insert_records(rows, 'weekly_stats', replace=True)
     LOGGER.info(results)
@@ -21,7 +20,7 @@ def analytics_week():
 @api.route('/analytics/month', methods=['GET'])
 def analytics_month():
     """Fetch top searches for the current month."""
-    query = read_sql_queries('top_pages_monthly.sql')
+    query = gbq.parse_query_from_file('api/analytics/queries/top_pages_monthly.sql')
     rows = gbq.fetch_rows(query)
     results = db.insert_records(rows, 'monthly_stats', replace=True)
     LOGGER.info(results)

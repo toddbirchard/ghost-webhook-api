@@ -32,6 +32,14 @@ class BigQuery:
         return rows
 
     @staticmethod
+    def parse_query_from_file(filename):
+        """Read SQL query from .sql file."""
+        sql_file = open(filename, 'r')
+        query = sql_file.read()
+        sql_file.close()
+        return query
+
+    @staticmethod
     def construct_response(rows, table):
         """Summarize results of an executed query."""
         columns = rows[0].keys()

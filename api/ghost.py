@@ -1,4 +1,4 @@
-"""Ghost admin client."""
+"""Ghost admin."""
 from datetime import datetime as date
 import requests
 import jwt
@@ -31,9 +31,11 @@ class Ghost:
             'typ': 'JWT',
             'kid': self.id
         }
-        payload = {'iat': iat,
-                   'exp': iat + 5 * 60,
-                   'aud': '/v3/admin/'}
+        payload = {
+            'iat': iat,
+            'exp': iat + 5 * 60,
+            'aud': '/v3/admin/'
+        }
         token = jwt.encode(
             payload,
             bytes.fromhex(self.secret),

@@ -11,9 +11,9 @@ from .fetch import fetch_weekly_searches
 def week_searches():
     """Save top Algolia searches for the current week."""
     records = fetch_weekly_searches()
-    upload = db.insert_records(records, 'algolia_searches_week', replace=True)
-    LOGGER.info(upload)
-    return make_response(jsonify(upload), 200)
+    response = db.insert_records(records, 'algolia_searches_week', replace=True)
+    LOGGER.info(response)
+    return make_response(jsonify(response), 200)
 
 
 @LOGGER.catch
@@ -21,6 +21,6 @@ def week_searches():
 def historical_searches():
     """Save and persist top Algolia searches for the current month."""
     records = fetch_weekly_searches()
-    upload = db.insert_records(records, 'algolia_searches_historical')
-    LOGGER.info(upload)
-    return make_response(jsonify(upload), 200)
+    response = db.insert_records(records, 'algolia_searches_historical')
+    LOGGER.info(response)
+    return make_response(jsonify(response), 200)
