@@ -2,10 +2,9 @@
 from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response, request
-from api import ghost, db, gcs
+from api import ghost, db, image
 from api.log import LOGGER
 from .read import get_queries
-from .feature_image import optimize_feature_image
 from .lynx.cards import format_lynx_posts
 
 
@@ -13,7 +12,8 @@ from .lynx.cards import format_lynx_posts
 @api.route('/post/update', methods=['POST'])
 def set_post_metadata():
     """Update post metadata where empty."""
-    post = request.get_json()['post']['current']
+    LOGGER.info(request.get_json())
+    post = request.get_json()['posts'][0]
     id = post.get('id')
     title = post.get('title')
     feature_image = post.get('feature_image', None)
@@ -21,21 +21,19 @@ def set_post_metadata():
     primary_tag = post.get('primary_tag')
     body = {
         "posts": [{
-            "twitter_image": feature_image,
-            "twitter_title": title,
-            "twitter_description": custom_excerpt,
-            "og_image": feature_image,
-            "og_title": title,
-            "og_description": custom_excerpt,
             "meta_title": title,
+            "og_title": title,
+            "twitter_title": title,
             "meta_description": custom_excerpt,
+            "twitter_description": custom_excerpt,
+            "og_description": custom_excerpt,
             "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
             }
         ]
     }
     if feature_image is None and primary_tag.get('slug') == 'roundup':
         # Assign random image to new Lynx post
-        feature_image = gcs.fetch_random_lynx_image()
+        feature_image = image.fetch_random_lynx_image()
         body['posts'][0].update({
             "feature_image": feature_image,
             "og_image": feature_image,
@@ -43,7 +41,7 @@ def set_post_metadata():
         })
     elif feature_image is not None and '@2x' not in feature_image:
         # Create retina image for new post
-        feature_image = optimize_feature_image(feature_image)
+        feature_image = image.transform_single_image(feature_image)
         body['posts'][0].update({
             "feature_image": feature_image,
             "og_image": feature_image,

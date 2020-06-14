@@ -32,6 +32,7 @@ def create_logger():
             stdout,
             colorize=True,
             level="INFO",
+            catch=True,
             format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
             + "<light-green>{level}</light-green>: "
             + "<light-white>{message}</light-white>"

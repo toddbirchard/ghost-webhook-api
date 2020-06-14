@@ -1,4 +1,5 @@
 """Creates missing image formats in a Google Cloud CDN."""
+from random import randint
 import requests
 from io import BytesIO
 from PIL import Image
@@ -17,16 +18,16 @@ class ImageTransformer:
         self.standard_images_transformed = []
         self.webp_images_transformed = []
 
-    def fetch_image_blobs(self, folder,  type=None):
+    def fetch_image_blobs(self, folder, image_type=None):
         files = self.gcs.bucket.list_blobs(prefix=folder)
         filter = {
             'remove': None,
             'require': None
         }
-        if type == 'retina':
+        if image_type == 'retina':
             filter['remove'] = '@2x'
             filter['require'] = '.jpg'
-        elif type == 'standard':
+        elif image_type == 'standard':
             filter['remove'] = '.webp'
             filter['require'] = '@2x'
         else:
@@ -87,6 +88,7 @@ class ImageTransformer:
                 self.webp_images_transformed.append(new_blob.name)
         return self.webp_images_transformed
 
+    @LOGGER.catch
     def transform_single_image(self, image_url):
         """Create retina version of single image."""
         image_path = image_url.replace(self.gcs.bucket_url, '')
@@ -94,7 +96,16 @@ class ImageTransformer:
         dot_position = image_blob.name.rfind('.')
         new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
         self._create_retina_image(image_blob, new_image_name)
-        return f'Successfully created {new_image_name}.'
+        return f'{self.gcs.bucket_http_url}{new_image_name}'
+
+    def fetch_random_lynx_image(self):
+        """Fetch random Lynx image from GCS bucket."""
+        lynx_images = self.gcs.bucket.list_blobs(prefix='roundup')
+        images = [f"{self.gcs.bucket_http_url }{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
+        rand = randint(0, len(images) - 1)
+        image = images[rand]
+        LOGGER.info(f'Selected random Lynx image {image}')
+        return image
 
     @LOGGER.catch
     def _purge_unwanted_images(self, folder):
