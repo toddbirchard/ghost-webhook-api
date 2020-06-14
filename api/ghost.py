@@ -1,4 +1,5 @@
 """Ghost admin."""
+from time import sleep
 from datetime import datetime as date
 import requests
 from requests.exceptions import RequestException
@@ -56,6 +57,7 @@ class Ghost:
         """Update post by ID."""
         result = None
         title = body['posts'][0]
+        sleep(1)
         try:
             req = requests.put(
                 f'{self.url}/posts/{post_id}/',
