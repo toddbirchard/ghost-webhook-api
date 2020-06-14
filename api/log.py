@@ -12,7 +12,7 @@ def create_logger():
             'logs/info.log',
             colorize=True,
             level="INFO",
-            rotation="500 MB",
+            rotation="200 MB",
             format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
             + "<light-green>{level}</light-green>: "
             + "<light-white>{message}</light-white>"
@@ -21,7 +21,7 @@ def create_logger():
             'logs/errors.log',
             colorize=True,
             level="ERROR",
-            rotation="500 MB",
+            rotation="200 MB",
             format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
             + "<light-red>{level}</light-red>: "
             + "<light-white>{message}</light-white>"

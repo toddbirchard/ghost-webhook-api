@@ -3,7 +3,6 @@ from datetime import datetime as date
 import requests
 from requests.exceptions import RequestException
 import jwt
-from api import celery
 from api.log import LOGGER
 
 
@@ -52,7 +51,7 @@ class Ghost:
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
-    @celery.task(autoretry_for=(RequestException,), retry_backoff=True, retry_kwargs={'max_retries': 5})
+    # @celery.task(autoretry_for=(RequestException,), retry_backoff=True, retry_kwargs={'max_retries': 5})
     def update_post(self, post_id, body):
         """Update post by ID."""
         result = None
