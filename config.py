@@ -62,5 +62,5 @@ class Config:
     TWILIO_ACCOUNT_SID = getenv('TWILIO_ACCOUNT_SID')
 
     # Celery
-    # CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
-    # CELERY_RESULT_BACKEND = environ.get('CELERY_RESULT_BACKEND')
+    CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
+    CELERY_RESULT_BACKEND = environ.get('CELERY_RESULT_BACKEND')

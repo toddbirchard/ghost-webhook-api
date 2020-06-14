@@ -1,5 +1,6 @@
 """Initialize api."""
 from flask import Flask
+from celery import Celery
 from api.database import Database
 from api.gcs import GCS
 from api.bigquery import BigQuery
@@ -15,12 +16,14 @@ gbq = BigQuery(Config.GCP_BIGQUERY_URI)
 ghost = Ghost(Config.GHOST_API_KEY, Config.GHOST_API_BASE_URL)
 sms = Twilio(Config)
 image = ImageTransformer(gcs)
+celery = Celery()
 
 
 def init_api():
     """Construct the core application."""
     api = Flask(__name__, instance_relative_config=False)
     api.config.from_object('config.Config')
+    celery.conf.update(api.config)
 
     with api.app_context():
         from api.posts import routes

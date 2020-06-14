@@ -46,7 +46,7 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    else:
+    elif feature_image is not None:
         # Sync social images with feature image
         body['posts'][0].update({
             "og_image": feature_image,
@@ -62,6 +62,7 @@ def set_post_metadata():
 def set_lynx_metadata():
     """Replace <a> tags with embedded link previews."""
     post = request.get_json()['post']['current']
+    id = post.get('id')
     primary_tag = post.get('primary_tag')
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)

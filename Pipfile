@@ -22,6 +22,7 @@ Beautifulsoup4 = "*"
 metadata_parser = "*"
 extruct = "*"
 simplejson = "*"
+celery = "*"
 
 [dev-packages]
 pytest = "*"

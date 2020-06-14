@@ -1,7 +1,9 @@
 """Ghost admin."""
 from datetime import datetime as date
 import requests
+from requests.exceptions import RequestException
 import jwt
+from api import celery
 from api.log import LOGGER
 
 
@@ -17,13 +19,13 @@ class Ghost:
 
     def _https_session(self):
         """Authorize HTTPS session with Ghost admin."""
-        token = f'Ghost {self.get_session_token()}'
         endpoint = f'{self.url}/session/'
-        headers = {'Authorization': token}
+        headers = {'Authorization': self.session_token}
         req = requests.post(endpoint, headers=headers)
         LOGGER.info(f'Authorization resulted in status code {req.status_code}.')
 
-    def get_session_token(self):
+    @property
+    def session_token(self):
         """Generate session token for Ghost admin API."""
         iat = int(date.now().timestamp())
         header = {
@@ -46,28 +48,27 @@ class Ghost:
 
     def get_post(self, post_id):
         """Fetch post data by ID."""
-        token = self.get_session_token()
-        headers = {'Authorization': token}
+        headers = {'Authorization': self.session_token}
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
+    @celery.task(autoretry_for=(RequestException,), retry_backoff=True, retry_kwargs={'max_retries': 5})
     def update_post(self, post_id, body):
         """Update post by ID."""
-        token = self.get_session_token()
-        headers = {'Authorization': token}
-        req = requests.put(
-            f'{self.url}/posts/{post_id}/',
-            json=body,
-            headers=headers
-        )
-        if req.status_code == 200:
-            response = f'Updated post metadata for `{post_id}`: {req.json()["title"]}.'
-            LOGGER.info(response)
-            return {'SUCCESS': response}
-        else:
-            response = f'Failed to update post {post_id}: {req.json()}'
-            LOGGER.error(response)
-            return {'FAILED': response}
+        result = None
+        title = body['posts'][0]
+        try:
+            req = requests.put(
+                f'{self.url}/posts/{post_id}/',
+                json=body,
+                headers={'Authorization': self.session_token}
+            )
+            result = req.json()
+        except RequestException as e:
+            LOGGER.error(e)
+        finally:
+            LOGGER.info(result)
+            return {post_id: f'Received code {result.status_code} when updating `{title}`.'}
 
     def get_json_backup(self):
         """Attempt to extract JSON snapshot of Ghost database."""
