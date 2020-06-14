@@ -27,7 +27,7 @@ metadata-parser==0.10.0
 mf2py==1.1.2
 mixpanel==4.5.0
 mock==4.0.2
-more-itertools==8.3.0
+more-itertools==8.4.0
 packaging==20.4
 Pillow==7.1.2
 pluggy==0.13.1
