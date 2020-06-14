@@ -1,5 +1,5 @@
 """Routes to transform post data."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import ghost, db, image
@@ -26,7 +26,7 @@ def set_post_metadata():
             "meta_description": custom_excerpt,
             "twitter_description": custom_excerpt,
             "og_description": custom_excerpt,
-            "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
+            "updated_at": (datetime.now() + timedelta(seconds=1)).strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
             }
         ]
     }
