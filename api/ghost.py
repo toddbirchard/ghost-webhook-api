@@ -62,7 +62,7 @@ class Ghost:
                 json=body,
                 headers={'Authorization': self.session_token}
             )
-            result = req.json()
+            result = req
         except RequestException as e:
             LOGGER.error(e)
         finally:
