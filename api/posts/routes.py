@@ -12,7 +12,7 @@ from .lynx.cards import format_lynx_posts
 @api.route('/post/update', methods=['POST'])
 def set_post_metadata():
     """Update post metadata where empty."""
-    post = request.get_json()['posts'][0]
+    post = request.get_json()['post']['current']
     id = post.get('id')
     title = post.get('title')
     feature_image = post.get('feature_image', None)
