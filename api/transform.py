@@ -96,6 +96,7 @@ class ImageTransformer:
         dot_position = image_blob.name.rfind('.')
         new_image_name = image_blob.name[:dot_position] + '@2x' + image_blob.name[dot_position:]
         self._create_retina_image(image_blob, new_image_name)
+        LOGGER.info(f'Created retina image {self.gcs.bucket_http_url}{new_image_name}')
         return f'{self.gcs.bucket_http_url}{new_image_name}'
 
     def fetch_random_lynx_image(self):
