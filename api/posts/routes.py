@@ -14,7 +14,7 @@ from .lynx.cards import format_lynx_posts
 def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
-    time = (datetime.now(tz=pytz.timezone('America/New_York'))).strftime("%Y-%m-%dT%H:%M:%S.%z").replace(' ', '')
+    time = (datetime.now(tz=pytz.timezone('America/New_York'))).strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
     id = post.get('id')
     title = post.get('title')
     feature_image = post.get('feature_image', None)
