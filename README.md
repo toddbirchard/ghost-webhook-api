@@ -9,15 +9,13 @@
 
 Supplementary API to optimize JAMStack sites via webhooks. Listens for site updates to clean metadata, optimize images, handle user sign-ups, and much more.
 
-
 ## Endpoints
 
 #### Posts
-  * **GET** `/posts/metadata`: Fill in missing metadata (titles, descriptions, etc.) for all posts.
-  * **GET** `/posts/lynx`: Replace Lynx `<a>` tags with URL targets - not names.
-  * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
-  * **POST** `/posts/metadata`: Fill in missing metadata (titles, descriptions, etc.) for a single post.
-  * **POST** `/posts/metadata/lynx`: Replace URLs with link embeds.
+  * **GET** `/post/metadata`: Fill in missing metadata (titles, descriptions, etc.) for all posts.
+  * **GET** `/post/backup`: Fetch JSON backup of all blog data.
+  * **POST** `/post/update`: Fill in missing metadata (titles, descriptions, etc.) for a single post.
+  * **POST** `/post/lynx`: Replace URLs with link embeds.
 #### Searches
   * **GET** `/searches/week`: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
   * **GET** `/searches/historical`: Append current week's Algolia searches to a historical table of all searches.
@@ -28,8 +26,6 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
   * **GET** `/images/transform` Generates missing retina, mobile, and `.webp` images for all posts.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
   * **GET** `/images/lynx`: Assign feature images to all Lynx posts which are missing them.
-  * **POST** `/images/transform`: Generates missing image types for a single feature image upon post update.
-  * **POST** `/images/lynx`: Auto-assign a random feature image from a CDN upon post update.
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.

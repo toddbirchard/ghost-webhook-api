@@ -1,6 +1,5 @@
 """Routes to transform post data."""
-from datetime import datetime, timedelta, timezone, tzinfo
-import pytz
+from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import ghost, db, image
@@ -14,12 +13,6 @@ from .lynx.cards import format_lynx_posts
 def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
-    LOGGER.info(f'post json: {request.get_json()}')
-    LOGGER.info(f'post string: {str(request.get_json())}')
-    LOGGER.info(f'post type: {type(request.get_json())}')
-    LOGGER.info(f'post data:: {request.data}')
-    LOGGER.info(f'post headers: {request.headers}')
-    LOGGER.info(f'feature_image: {post.get("feature_image")}')
     time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
     id = post.get('id')
     title = post.get('title')
