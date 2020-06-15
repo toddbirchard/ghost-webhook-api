@@ -44,11 +44,6 @@ def set_post_metadata():
     elif feature_image is not None and '@2x' not in feature_image:
         # Create retina image for new post
         feature_image = image.transform_single_image(feature_image)
-        body['posts'][0].update({
-            "feature_image": feature_image,
-            "og_image": feature_image,
-            "twitter_image": feature_image
-        })
     elif feature_image is not None:
         # Sync social images with feature image
         body['posts'][0].update({
