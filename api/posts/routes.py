@@ -15,10 +15,15 @@ def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
     LOGGER.info('post json:', request.get_json())
+    LOGGER.info('post string:', str(request.get_json()))
+    LOGGER.info('post type:', type(request.get_json()))
+    LOGGER.info('post data:', request.data)
+    LOGGER.info('post headers:', request.headers)
+    LOGGER.info('feature_image = ', post.get('feature_image'))
     time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
     id = post.get('id')
     title = post.get('title')
-    feature_image = post.get('feature_image', None)
+    feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
     body = {
@@ -50,7 +55,6 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    LOGGER.info('feature_image = ', feature_image)
     response = ghost.update_post(id, body)
     return make_response(jsonify(response))
 
