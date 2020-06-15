@@ -1,5 +1,6 @@
 """Routes to transform post data."""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone, tzinfo
+import pytz
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import ghost, db, image
@@ -13,6 +14,7 @@ from .lynx.cards import format_lynx_posts
 def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
+    time = (datetime.now(tz=pytz.timezone('America/New_York')) + timedelta(seconds=1)).strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
     id = post.get('id')
     title = post.get('title')
     feature_image = post.get('feature_image', None)
@@ -26,7 +28,7 @@ def set_post_metadata():
             "meta_description": custom_excerpt,
             "twitter_description": custom_excerpt,
             "og_description": custom_excerpt,
-            "updated_at": (datetime.now() + timedelta(seconds=1)).strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
+            "updated_at": time
             }
         ]
     }
