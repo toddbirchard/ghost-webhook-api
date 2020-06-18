@@ -22,4 +22,4 @@ def github_issue_received():
         auth=("api", api.config["MAILGUN_API_KEY"]),
         data=body,
     )
-    return make_response(jsonify(issue), 200)
+    return make_response(jsonify({req.status_code: issue}), 200)

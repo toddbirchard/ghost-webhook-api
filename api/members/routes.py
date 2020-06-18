@@ -11,7 +11,7 @@ from api.log import LOGGER
 @api.route('/members/mixpanel', methods=['POST'])
 def subscriber_mixpanel():
     """Create Mixpanel record for new subscriber."""
-    mp = Mixpanel(api.config['mixpanel_api_token'])
+    mp = Mixpanel(api.config['MIXPANEL_API_TOKEN'])
     data = request.get_json()
     email = data.get('email')
     name = data.get('name')

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "api"
 version = "0.1.0"
-description = "Optimization tasks for JAMStack-based sites triggered via webhooks."
+description = "Webhook endpoints to optimize your JAMStack static site."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
 maintainers = ["Todd Birchard <toddbirchard@gmail.com>"]
 license = "MIT"
@@ -9,11 +9,13 @@ readme = "README.md"
 homepage = "https://github.com/hackersandslackers/jamstack-automations/"
 repository = "https://github.com/hackersandslackers/jamstack-automations/"
 documentation = "https://hackersandslackers.com/jamstack-automations/"
-keywords = ["API",
-            "JAMStack",
-            "Automation",
-            "Optimization",
-            "Flask"]
+keywords = [
+  "API",
+  "JAMStack",
+  "Automation",
+  "Optimization",
+  "Flask"
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"

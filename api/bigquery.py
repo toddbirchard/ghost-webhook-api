@@ -44,4 +44,5 @@ class BigQuery:
         """Summarize results of an executed query."""
         columns = rows[0].keys()
         column_names = ", ".join(columns)
-        return f'Inserted {len(rows)} rows into `{table}` with {len(columns)} columns: {column_names}'
+        return f'Inserted {len(rows)} rows into `{table}` \
+                with {len(columns)} columns: {column_names}'

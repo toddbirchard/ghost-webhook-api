@@ -55,6 +55,9 @@ class Config:
     MAILGUN_SUBJECT_LINE = 'To Hack or to Slack; That is the Question.'
     MAILGUN_PERSONAL_EMAIL = environ.get("MAILGUN_PERSONAL_EMAIL")
 
+    # Mixpanel
+    MIXPANEL_API_TOKEN = environ.get('MIXPANEL_API_TOKEN')
+
     # Twilio
     TWILIO_SENDER_PHONE = getenv('TWILIO_SENDER_PHONE')
     TWILIO_RECIPIENT_PHONE = getenv('TWILIO_RECIPIENT_PHONE')

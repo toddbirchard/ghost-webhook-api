@@ -39,9 +39,9 @@ class Database:
         result = self.engines['blog'].execute(query)
         return result
 
-    def execute_query_from_file(self, query):
+    def execute_query_from_file(self, sql_file):
         """Execute single SQL query."""
-        sql = open(query, 'r').read()
+        query = open(sql_file, 'r').read()
         result = self.engines['blog'].execute(query)
         return result
 

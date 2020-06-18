@@ -19,20 +19,21 @@ class ImageTransformer:
         self.webp_images_transformed = []
 
     def fetch_image_blobs(self, folder, image_type=None):
+        """Retrieve images from GCS bucket matching directory & filter conditions."""
         files = self.gcs.bucket.list_blobs(prefix=folder)
-        filter = {
+        image_filter = {
             'remove': None,
             'require': None
         }
         if image_type == 'retina':
-            filter['remove'] = '@2x'
-            filter['require'] = '.jpg'
+            image_filter['remove'] = '@2x'
+            image_filter['require'] = '.jpg'
         elif image_type == 'standard':
-            filter['remove'] = '.webp'
-            filter['require'] = '@2x'
+            image_filter['remove'] = '.webp'
+            image_filter['require'] = '@2x'
         else:
             return [file for file in files]
-        file_list = [file for file in files if filter['remove'] in file.name and filter['require'] not in file.name]
+        file_list = [file for file in files if image_filter['remove'] in file.name and image_filter['require'] not in file.name]
         return file_list
 
     def bulk_transform_images(self, folder, images, transformation=None):
@@ -47,6 +48,18 @@ class ImageTransformer:
         elif transformation == 'webp':
             transformed = self.webp_transformations(images)
         return len(transformed)
+
+    @LOGGER.catch
+    def _purge_unwanted_images(self, folder):
+        """Delete images which have been compressed or generated multiple times."""
+        LOGGER.info('Step 1: Purging unwanted images...')
+        substrings = ['@2x@2x', '_o', 'psd', '?']
+        image_blobs = self.gcs.get(folder)
+        for image_blob in image_blobs:
+            if any(substr in image_blob.name for substr in substrings):
+                self.gcs.bucket.delete_blob(image_blob.name)
+                LOGGER.info(f'Deleted {image_blob.name}.')
+        return self.gcs.get(folder)
 
     def retina_transformations(self, standard_images):
         """Find images missing a retina-quality counterpart."""
@@ -77,7 +90,7 @@ class ImageTransformer:
 
     def webp_transformations(self, retina_images):
         """Find images missing a webp counterpart."""
-        LOGGER.info('Step 3: Generating webp images...')
+        LOGGER.info('Step 4: Generating webp images...')
         for image_blob in retina_images:
             self.num_images_checked += 1
             LOGGER.info(f'{self.num_images_checked} of {self.images_total} ({image_blob.name})')
@@ -107,18 +120,6 @@ class ImageTransformer:
         image = images[rand]
         LOGGER.info(f'Selected random Lynx image {image}')
         return image
-
-    @LOGGER.catch
-    def _purge_unwanted_images(self, folder):
-        """Delete images which have been compressed or generated multiple times."""
-        LOGGER.info('Step 1: Purging unwanted images...')
-        substrings = ['@2x@2x', '_o', 'psd', '?']
-        image_blobs = self.gcs.get(folder)
-        for image_blob in image_blobs:
-            if any(substr in image_blob.name for substr in substrings):
-                self.gcs.bucket.delete_blob(image_blob.name)
-                LOGGER.info(f'Deleted {image_blob.name}.')
-        return self.gcs.get(folder)
 
     @LOGGER.catch
     def _create_retina_image(self, image_blob, new_image_name):

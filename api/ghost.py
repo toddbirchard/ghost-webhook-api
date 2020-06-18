@@ -11,7 +11,7 @@ class Ghost:
 
     def __init__(self, api_key, url):
         self.api_key = api_key
-        self.id = api_key.split(':')[0]
+        self.client_id = api_key.split(':')[0]
         self.secret = api_key.split(':')[1]
         self.url = url
         self.token = None
@@ -30,7 +30,7 @@ class Ghost:
         header = {
             'alg': 'HS256',
             'typ': 'JWT',
-            'kid': self.id
+            'kid': self.client_id
         }
         payload = {
             'iat': iat,
@@ -51,10 +51,8 @@ class Ghost:
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
-    # @celery.task(autoretry_for=(RequestException,), retry_backoff=True, retry_kwargs={'max_retries': 5})
     def update_post(self, post_id, body):
         """Update post by ID."""
-        result = None
         title = body['posts'][0]
         try:
             req = requests.put(
@@ -62,12 +60,9 @@ class Ghost:
                 json=body,
                 headers={'Authorization': self.session_token}
             )
-            result = req
+            return {post_id: f'Received code {req.status_code} when updating `{title}`.'}
         except RequestException as e:
             LOGGER.error(e)
-        finally:
-            LOGGER.info(result)
-            return {post_id: f'Received code {result.status_code} when updating `{title}`.'}
 
     def get_json_backup(self):
         """Attempt to extract JSON snapshot of Ghost database."""
