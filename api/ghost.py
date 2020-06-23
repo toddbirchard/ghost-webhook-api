@@ -4,6 +4,7 @@ import requests
 from requests.exceptions import RequestException
 import jwt
 from api.log import LOGGER
+from api.tasks import celery
 
 
 class Ghost:
@@ -51,6 +52,7 @@ class Ghost:
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
+    @celery.task(name='ghost-post-update', autoretry_for=RequestException, retry_kwargs={'max_retries': 5})
     def update_post(self, post_id, body):
         """Update post by ID."""
         title = body['posts'][0]
@@ -61,8 +63,9 @@ class Ghost:
                 headers={'Authorization': self.session_token}
             )
             return {post_id: f'Received code {req.status_code} when updating `{title}`.'}
-        except RequestException as e:
-            LOGGER.error(e)
+        except RequestException as exc:
+            LOGGER.error(exc)
+            raise exc
 
     def get_json_backup(self):
         """Attempt to extract JSON snapshot of Ghost database."""

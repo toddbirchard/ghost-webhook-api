@@ -37,6 +37,7 @@ beautifulsoup4 = "*"
 metadata_parser = "*"
 extruct = "*"
 simplejson = "*"
+celery = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
