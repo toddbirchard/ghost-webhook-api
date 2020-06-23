@@ -1,4 +1,5 @@
 """Scrape URLs found in body of Lynx posts for metadata."""
+from typing import List
 import requests
 import metadata_parser
 import extruct
@@ -100,8 +101,11 @@ def get_description(page, json_ld_data):
 def get_author(page, html, json_ld_data):
     """Scrape author name."""
     author = None
-    if bool(json_ld_data) and json_ld_data.get('author'):
-        author = json_ld_data['author'].get('name')
+    if bool(json_ld_data):
+        json_ld_author = json_ld_data.get('author')
+        if type(json_ld_data['author']) == List:
+            json_ld_author = json_ld_author[0]
+        author = json_ld_author.get('name')
     elif page.get_metadatas('author'):
         author = page.get_metadatas('author')[0]
     elif page.get_metadatas('article:author'):
@@ -116,8 +120,11 @@ def get_author(page, html, json_ld_data):
 def get_publisher(json_ld_data):
     """Scrape publisher name."""
     publisher = None
-    if bool(json_ld_data) and json_ld_data.get('publisher'):
-        publisher = json_ld_data['publisher'].get('name')
+    if bool(json_ld_data):
+        json_ld_publisher = json_ld_data.get('publisher')
+        if type(json_ld_data['publisher']) == List:
+            json_ld_publisher = json_ld_publisher[0]
+        publisher = json_ld_publisher.get('name')
     return publisher
 
 
