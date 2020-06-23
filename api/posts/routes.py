@@ -41,7 +41,7 @@ def set_post_metadata():
         })
     elif feature_image is not None and '@2x' not in feature_image:
         # Create retina image for new post
-        feature_image = image.transform_single_image(feature_image)
+        feature_image = image.create_single_retina_image(feature_image)
         body['posts'][0].update({
             "feature_image": feature_image,
             "og_image": feature_image,
@@ -69,7 +69,7 @@ def set_lynx_metadata():
         body = {
             "posts": [{
                 "mobiledoc": doc,
-                "updated_at": datetime.now().strftime("%Y-%m-%dT%I:%M:%S.000Z").replace(' ', '')
+                "updated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
             }]
         }
         response = ghost.update_post(id, body)

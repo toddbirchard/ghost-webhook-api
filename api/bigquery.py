@@ -6,8 +6,8 @@ from sqlalchemy import MetaData, Table
 class BigQuery:
     """BigQuery Client."""
 
-    def __init__(self, bigquery_uri):
-        self.engine = create_engine(bigquery_uri)
+    def __init__(self, big_query_uri):
+        self.engine = create_engine(big_query_uri)
         self.metadata = MetaData(bind=self.engine)
         self.table_name = None
 

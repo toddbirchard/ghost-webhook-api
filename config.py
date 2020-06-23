@@ -1,8 +1,10 @@
 """App configuration."""
-from os import environ, path, getenv
+from os import environ, path
 import datetime
 from dotenv import load_dotenv
 
+
+# Load variables from .env
 basedir = path.abspath(path.dirname(__file__))
 load_dotenv(path.join(basedir, '.env'))
 
@@ -29,7 +31,7 @@ class Config:
     # Google Cloud storage
     GCP_BUCKET_URL = environ.get('GCP_BUCKET_URL')
     GCP_BUCKET_NAME = environ.get('GCP_BUCKET_NAME')
-    GOOGLE_APPLICATION_CREDENTIALS = './gcloud.json'
+    GOOGLE_APPLICATION_CREDENTIALS = path.join(basedir, 'gcloud.json')
     GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY = 'roundup'
 
@@ -59,10 +61,10 @@ class Config:
     MIXPANEL_API_TOKEN = environ.get('MIXPANEL_API_TOKEN')
 
     # Twilio
-    TWILIO_SENDER_PHONE = getenv('TWILIO_SENDER_PHONE')
-    TWILIO_RECIPIENT_PHONE = getenv('TWILIO_RECIPIENT_PHONE')
-    TWILIO_AUTH_TOKEN = getenv('TWILIO_AUTH_TOKEN')
-    TWILIO_ACCOUNT_SID = getenv('TWILIO_ACCOUNT_SID')
+    TWILIO_SENDER_PHONE = environ.get('TWILIO_SENDER_PHONE')
+    TWILIO_RECIPIENT_PHONE = environ.get('TWILIO_RECIPIENT_PHONE')
+    TWILIO_AUTH_TOKEN = environ.get('TWILIO_AUTH_TOKEN')
+    TWILIO_ACCOUNT_SID = environ.get('TWILIO_ACCOUNT_SID')
 
     # Celery
     # CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
