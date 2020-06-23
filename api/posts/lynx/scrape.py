@@ -103,6 +103,7 @@ def get_author(page, html, json_ld_data):
     """Scrape author name."""
     author = None
     if bool(json_ld_data):
+        LOGGER.info(type(json_ld_data['author']))
         if type(json_ld_data['author']) == List:
             json_ld_author = json_ld_data['author'][0]
             author = json_ld_author.get('name')
@@ -123,6 +124,7 @@ def get_publisher(json_ld_data):
     """Scrape publisher name."""
     publisher = None
     if bool(json_ld_data):
+        LOGGER.info(type(json_ld_data['publisher']))
         if type(json_ld_data['publisher']) == List:
             json_ld_publisher = json_ld_data['publisher'][0]
             publisher = json_ld_publisher.get('name')
