@@ -107,7 +107,7 @@ def get_author(page, html, json_ld_data):
         if type(json_ld_data['author']) == list:
             json_ld_author = json_ld_data['author'][0]
             author = json_ld_author.get('name')
-        else:
+        elif type(json_ld_data['author']) == dict:
             author = json_ld_data['author'].get('name')
     elif page.get_metadatas('author'):
         author = page.get_metadatas('author')[0]
@@ -128,7 +128,7 @@ def get_publisher(json_ld_data):
         if type(json_ld_data['publisher']) == list:
             json_ld_publisher = json_ld_data['publisher'][0]
             publisher = json_ld_publisher.get('name')
-        else:
+        elif type(json_ld_data['publisher']) == dict:
             publisher = json_ld_data['publisher'].get('name')
     return publisher
 
