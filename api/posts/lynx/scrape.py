@@ -1,5 +1,4 @@
 """Scrape URLs found in body of Lynx posts for metadata."""
-from typing import List
 import requests
 import metadata_parser
 import extruct
@@ -51,7 +50,6 @@ def render_json_ltd(link, html):
         uniform=True)['json-ld']
     if len(json_ld_data) >= 1:
         json_ld_data = json_ld_data[0]
-    LOGGER.info(f'JSON_LD for {get_domain(link)} looks like: {json_ld_data}')
     return json_ld_data
 
 
@@ -103,7 +101,6 @@ def get_author(page, html, json_ld_data):
     """Scrape author name."""
     author = None
     if bool(json_ld_data):
-        LOGGER.info(type(json_ld_data['author']))
         if type(json_ld_data['author']) == list:
             json_ld_author = json_ld_data['author'][0]
             author = json_ld_author.get('name')
@@ -124,7 +121,6 @@ def get_publisher(json_ld_data):
     """Scrape publisher name."""
     publisher = None
     if bool(json_ld_data):
-        LOGGER.info(type(json_ld_data['publisher']))
         if type(json_ld_data['publisher']) == list:
             json_ld_publisher = json_ld_data['publisher'][0]
             publisher = json_ld_publisher.get('name')
