@@ -51,6 +51,7 @@ def render_json_ltd(link, html):
         uniform=True)['json-ld']
     if len(json_ld_data) >= 1:
         json_ld_data = json_ld_data[0]
+    LOGGER.info(f'JSON_LD for {get_domain(link)} looks like: {json_ld_data}')
     return json_ld_data
 
 
