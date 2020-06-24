@@ -5,5 +5,5 @@ SELECT
 FROM
 	posts
 WHERE
-	feature_image IS NULL
+	feature_image = ''
 	AND title LIKE '%%Lynx%%';
