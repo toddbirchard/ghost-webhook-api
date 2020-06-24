@@ -25,10 +25,8 @@ def transform_recent_images():
     retina_images = image.fetch_image_blobs(folder, 'retina')
     standard_images = image.fetch_image_blobs(folder, 'standard')
     LOGGER.info(f'Checking {len(retina_images)} retina and {len(standard_images)} standard images in {folder}')
-    retina_result = image.bulk_transform_images(folder, standard_images, transformation='retina')
-    standard_images = image.bulk_transform_images(folder, retina_images, transformation='standard')
-    webp_images = image.bulk_transform_images(folder, retina_images, transformation='webp')
-    response = {'retina': retina_result, 'standard': standard_images, 'webp': webp_images}
+    standard, retina, webp = image.bulk_transform_images(folder, standard_images, retina_images)
+    response = {'retina': retina, 'standard': standard, 'webp': webp}
     LOGGER.info(f'Transformed images successfully: {response}')
     return make_response(jsonify(response))
 

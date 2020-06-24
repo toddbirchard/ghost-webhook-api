@@ -33,19 +33,15 @@ class ImageTransformer:
         file_list = [file for file in files if image_filter['remove'] in file.name and image_filter['require'] not in file.name]
         return file_list
 
-    def bulk_transform_images(self, folder, images, transformation=None):
+    def bulk_transform_images(self, folder, standard_images, retina_images):
         """Image transformation jobs."""
         self.num_images_checked = 0
-        num_images_transformed = 0
-        self.images_total = len(images)
+        self.images_total = len(standard_images) + len(retina_images)
         self._purge_unwanted_images(folder)
-        if transformation == 'retina':
-            num_images_transformed = self.retina_transformations(images)
-        elif transformation == 'standard':
-            num_images_transformed = self.standard_transformations(images)
-        elif transformation == 'webp':
-            num_images_transformed = self.webp_transformations(images)
-        return num_images_transformed
+        retina_transformed = self.retina_transformations(standard_images)
+        standard_transformed = self.standard_transformations(retina_images)
+        webp_transformed = self.webp_transformations(retina_images)
+        return retina_transformed, standard_transformed, webp_transformed
 
     @LOGGER.catch
     def _purge_unwanted_images(self, folder):
