@@ -122,7 +122,7 @@ class ImageTransformer:
     def fetch_random_lynx_image(self):
         """Fetch random Lynx image from GCS bucket."""
         lynx_images = self.gcs.bucket.list_blobs(prefix='roundup')
-        images = [f"{self.gcs.bucket_http_url }{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
+        images = [f"{self.gcs.bucket_http_url}{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
         rand = randint(0, len(images) - 1)
         image = images[rand]
         LOGGER.info(f'Selected random Lynx image {image}')
