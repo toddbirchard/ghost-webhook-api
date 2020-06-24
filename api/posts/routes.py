@@ -39,14 +39,6 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    elif feature_image is not None and '@2x' not in feature_image:
-        # Create retina image for new post
-        feature_image = image.create_single_retina_image(feature_image)
-        body['posts'][0].update({
-            "feature_image": feature_image,
-            "og_image": feature_image,
-            "twitter_image": feature_image
-        })
     elif feature_image is not None:
         # Sync social images with feature image
         body['posts'][0].update({
@@ -58,7 +50,7 @@ def set_post_metadata():
 
 
 @LOGGER.catch
-@api.route('/post/lynx', methods=['POST'])
+@api.route('/post/lynx/previews', methods=['POST'])
 def set_lynx_metadata():
     """Replace <a> tags with embedded link previews."""
     post = request.get_json()['post']['current']

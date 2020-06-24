@@ -44,6 +44,3 @@ def test_render_json_ltd(link_url, link_html, link_json):
     """Verify JSON-LD content."""
     test_json_ld = render_json_ltd(link_url.url, link_html.text)
     assert test_json_ld == link_json.data
-
-
-

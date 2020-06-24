@@ -5,6 +5,19 @@ from api import db, image
 from api.log import LOGGER
 
 
+@LOGGER.catch
+@api.route('/image/transform', methods=['POST'])
+def create_post_retina_image():
+    """Create single retina image upon post update."""
+    post = request.get_json()['post']['current']
+    feature_image = post.get('feature_image')
+    title = post.get('title')
+    if feature_image is not None and '@2x' not in feature_image:
+        LOGGER.info(f'Creating images for updated post {title}.')
+        new_image = image.create_single_retina_image(feature_image)
+        return make_response(jsonify({title: new_image}))
+
+
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
     """Apply image transformations to images uploaded in the current month."""
