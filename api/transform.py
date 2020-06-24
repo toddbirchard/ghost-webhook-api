@@ -141,6 +141,7 @@ class ImageTransformer:
     @LOGGER.catch
     def _fetch_image_via_http(self, new_image_name):
         """Determine if image exists via HTTP request."""
+        LOGGER.info(f'Checking {self.gcs.bucket_http_url}{new_image_name}')
         image_request = requests.get(self.gcs.bucket_http_url, new_image_name)
         if image_request.headers['Content-Type'] in ('application/octet-stream', 'image/jpeg'):
             return image_request.content
