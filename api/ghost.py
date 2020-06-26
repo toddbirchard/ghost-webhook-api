@@ -16,7 +16,7 @@ class Ghost:
         self.url = url
         self.token = None
 
-    def _https_session(self):
+    def __https_session(self):
         """Authorize HTTPS session with Ghost admin."""
         endpoint = f'{self.url}/session/'
         headers = {'Authorization': self.session_token}
@@ -66,7 +66,7 @@ class Ghost:
             raise exc
 
     def get_json_backup(self):
-        """Attempt to extract JSON snapshot of Ghost database."""
+        """Download JSON snapshot of Ghost database."""
         self._https_session()
         headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\
                                 q=0.9,image/webp,image/apng,*/*;\
