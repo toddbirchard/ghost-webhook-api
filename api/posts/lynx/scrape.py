@@ -4,18 +4,12 @@ import metadata_parser
 import extruct
 from bs4 import BeautifulSoup
 from api.log import LOGGER
+from .utils import headers
 
 
 @LOGGER.catch
 def scrape_link(link):
     """Scrape links embedded in post for metadata to build preview cards."""
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-    }
     req = requests.get(link, headers=headers)
     html = BeautifulSoup(req.content, 'html.parser')
     json_ld_data = render_json_ltd(link, req.text)
