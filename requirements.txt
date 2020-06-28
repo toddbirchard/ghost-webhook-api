@@ -19,7 +19,7 @@ google-resumable-media==0.5.1
 googleapis-common-protos==1.52.0
 html-text==0.5.1
 html5lib==1.1
-idna==2.9
+idna==2.10
 isodate==0.6.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
