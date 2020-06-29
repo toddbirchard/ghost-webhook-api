@@ -6,9 +6,9 @@ from api.log import LOGGER
 
 
 @LOGGER.catch
-@api.route('/image/transform', methods=['POST'])
+@api.route('/images/transform', methods=['POST'])
 def create_post_retina_image():
-    """Create single retina image upon post update."""
+    """Create retina image on post update."""
     post = request.get_json()['post']['current']
     feature_image = post.get('feature_image')
     title = post.get('title')
@@ -20,7 +20,7 @@ def create_post_retina_image():
 
 @api.route('/images/transform', methods=['GET'])
 def transform_recent_images():
-    """Apply image transformations to images uploaded in the current month."""
+    """Apply transformations to images uploaded within the current month."""
     folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
     retina_images = image.fetch_image_blobs(folder, 'retina')
     standard_images = image.fetch_image_blobs(folder, 'standard')
@@ -33,7 +33,7 @@ def transform_recent_images():
 
 @api.route('/images/transform/lynx', methods=['GET'])
 def transform_lynx_images():
-    """Apply image transformations to all `Lynx` images."""
+    """Apply transformations to all `Lynx` images."""
     folder = 'roundup'
     lynx_images = image.fetch_image_blobs(folder)
     LOGGER.info(f'Checking {len(lynx_images)} images in {folder}')
@@ -42,7 +42,7 @@ def transform_lynx_images():
     return make_response(jsonify({'SUCCESS': f'Transformed {response} images successfully!'}))
 
 
-@api.route('/images/lynx', methods=['GET'])
+@api.route('/images/assign/lynx', methods=['GET'])
 def assign_missing_lynx_images():
     """Assign random image to Lynx posts which are missing a feature image."""
     results = db.execute_query_from_file('api/images/sql/lynx_missing_images.sql')

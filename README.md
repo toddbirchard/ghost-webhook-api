@@ -12,10 +12,10 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 ## Endpoints
 
 #### Posts
-  * **GET** `/post/metadata`: Fill in missing metadata (titles, descriptions, etc.) for all posts.
-  * **GET** `/post/backup`: Fetch JSON backup of all blog data.
-  * **POST** `/post/update`: Fill in missing metadata (titles, descriptions, etc.) for a single post.
-  * **POST** `/post/lynx`: Replace URLs with link embeds.
+  * **GET** `/post/all/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.)
+  *  **GET** `/post/backup`: Fetch JSON backup of all blog data.
+  * **POST** `/post/metadata`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.)
+  * **POST** `/post/lynx/previews`: Replace HTML anchor tags with rich-content link embeds.
 #### Searches
   * **GET** `/searches/week`: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
   * **GET** `/searches/historical`: Append current week's Algolia searches to a historical table of all searches.
@@ -23,9 +23,10 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
   * **GET** `/analytics/week`: Migrate site analytics data from BigQuery to MySQL table ("trending this week" widget).
   * **GET** `/analytics/month`: Migrate site analytics data from BigQuery to MySQL table ("trending this month" widget).
 #### Images
-  * **GET** `/images/transform` Generates missing retina, mobile, and `.webp` images for all posts.
+  * **GET** `/images/transform`: Generates missing retina, mobile, and *.webp* images for all posts published in the current month. Accepts a *?directory=* parameter to force transformations for images in other directories.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
-  * **GET** `/images/lynx`: Assign feature images to all Lynx posts which are missing them.
+  * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
+  * **POST** `/images/transform`: Generates retina feature image for single post upon update. 
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
