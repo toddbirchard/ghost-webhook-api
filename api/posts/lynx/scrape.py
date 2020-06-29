@@ -4,18 +4,18 @@ import metadata_parser
 import extruct
 from bs4 import BeautifulSoup
 from api.log import LOGGER
-from .utils import headers
+from api.posts.lynx.utils import http_headers
 
 
 @LOGGER.catch
 def scrape_link(link):
     """Scrape links embedded in post for metadata to build preview cards."""
-    req = requests.get(link, headers=headers)
+    req = requests.get(link, headers=http_headers)
     html = BeautifulSoup(req.content, 'html.parser')
     json_ld = render_json_ltd(link, req.text)
     page = metadata_parser.MetadataParser(
         url=link,
-        url_headers=headers,
+        url_headers=http_headers,
         search_head_only=False
     )
     card = ["bookmark", {

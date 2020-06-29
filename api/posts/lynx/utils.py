@@ -1,4 +1,6 @@
-headers = {
+"""HTTP headers to simulate a browser request."""
+
+http_headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
         'Access-Control-Allow-Headers': 'Content-Type',
