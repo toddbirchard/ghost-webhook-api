@@ -18,7 +18,7 @@ def scrape_link(link):
     }
     req = requests.get(link, headers=headers)
     html = BeautifulSoup(req.content, 'html.parser')
-    json_ld_data = render_json_ltd(link, req.text)
+    json_ld = render_json_ltd(link, req.text)
     page = metadata_parser.MetadataParser(
         url=link,
         url_headers=headers,
@@ -29,37 +29,37 @@ def scrape_link(link):
                 "url": get_canonical(page),
                 "metadata": {
                     "url": get_canonical(page),
-                    "title": get_title(page, json_ld_data),
-                    "description": get_description(page, json_ld_data),
-                    "author": get_author(page, html, json_ld_data),
-                    "publisher": get_publisher(json_ld_data),
-                    "thumbnail": get_image(page, json_ld_data),
-                    "icon": get_favicon(page, html, json_ld_data, get_domain(link))
+                    "title": get_title(page, json_ld),
+                    "description": get_description(page, json_ld),
+                    "author": get_author(page, html, json_ld),
+                    "publisher": get_publisher(json_ld),
+                    "thumbnail": get_image(page, json_ld),
+                    "icon": get_favicon(page, html, json_ld, get_domain(link))
                     }
                 }
             ]
     return card
 
 
-def render_json_ltd(link, html):
-    """Fetch structured data."""
-    json_ld_data = extruct.extract(
+def render_json_ltd(url, html):
+    """Fetch JSON-LD structured data."""
+    data = extruct.extract(
         str(html),
-        base_url=get_domain(link),
+        base_url=get_domain(url),
         syntaxes=['json-ld'],
         uniform=True)['json-ld']
-    if len(json_ld_data) >= 1:
-        json_ld_data = json_ld_data[0]
-    return json_ld_data
+    if len(data) >= 1:
+        data = data[0]
+    return data
 
 
-def get_title(page, json_ld_data):
+def get_title(page, _data):
     """Scrape page title."""
     title = None
-    if bool(json_ld_data) and json_ld_data.get('title'):
-        title = json_ld_data['title']
-    elif bool(json_ld_data) and json_ld_data.get('headline'):
-        title = json_ld_data['headline']
+    if bool(_data) and _data.get('title'):
+        title = _data['title']
+    elif bool(_data) and _data.get('headline'):
+        title = _data['headline']
     elif page.get_metadatas('title'):
         title = page.get_metadatas('title')
     elif page.get_metadatas('og:title'):
@@ -71,11 +71,11 @@ def get_title(page, json_ld_data):
     return title
 
 
-def get_image(page, json_ld_data):
+def get_image(page, _data):
     """Scrape page `share image`."""
     image = None
-    if bool(json_ld_data) and json_ld_data.get('image'):
-        image = json_ld_data['image'].get('url')
+    if bool(_data) and _data.get('image'):
+        image = _data['image'].get('url')
     elif page.get_metadatas('og:image'):
         image = page.get_metadatas('og:image')[0]
     elif page.get_metadatas('twitter:image'):
@@ -83,11 +83,11 @@ def get_image(page, json_ld_data):
     return image
 
 
-def get_description(page, json_ld_data):
+def get_description(page, _data):
     """Scrape page description."""
     description = None
-    if bool(json_ld_data) and json_ld_data.get('description'):
-        description = json_ld_data['description']
+    if bool(_data) and _data.get('description'):
+        description = _data['description']
     elif page.get_metadatas('description'):
         description = page.get_metadatas('description')[0]
     elif page.get_metadatas('og:description'):
@@ -97,15 +97,15 @@ def get_description(page, json_ld_data):
     return description
 
 
-def get_author(page, html, json_ld_data):
+def get_author(page, html, _data):
     """Scrape author name."""
     author = None
-    if bool(json_ld_data):
-        if type(json_ld_data['author']) == list:
-            json_ld_author = json_ld_data['author'][0]
-            author = json_ld_author.get('name')
-        elif type(json_ld_data['author']) == dict:
-            author = json_ld_data['author'].get('name')
+    if bool(_data):
+        if type(_data['author']) == list:
+            _author = _data['author'][0]
+            author = _author.get('name')
+        elif type(_data['author']) == dict:
+            author = _data['author'].get('name')
     elif page.get_metadatas('author'):
         author = page.get_metadatas('author')[0]
     elif page.get_metadatas('article:author'):
@@ -117,23 +117,23 @@ def get_author(page, html, json_ld_data):
     return author
 
 
-def get_publisher(json_ld_data):
+def get_publisher(_data):
     """Scrape publisher name."""
     publisher = None
-    if bool(json_ld_data):
-        if type(json_ld_data['publisher']) == list:
-            json_ld_publisher = json_ld_data['publisher'][0]
-            publisher = json_ld_publisher.get('name')
-        elif type(json_ld_data['publisher']) == dict:
-            publisher = json_ld_data['publisher'].get('name')
+    if bool(_data):
+        if type(_data['publisher']) == list:
+            _publisher = _data['publisher'][0]
+            publisher = _publisher.get('name')
+        elif type(_data['publisher']) == dict:
+            publisher = _data['publisher'].get('name')
     return publisher
 
 
-def get_favicon(page, html, json_ld_data, base_url):
+def get_favicon(page, html, _data, base_url):
     """Scrape favicon image."""
     favicon = None
-    if bool(json_ld_data) and json_ld_data.get('logo'):
-        favicon = json_ld_data['logo'].get('url')
+    if bool(_data) and _data.get('logo'):
+        favicon = _data['logo'].get('url')
     if page.get_metadatas('shortcut icon'):
         favicon = page.get_metadatas('shortcut icon')[0]
     elif page.get_metadatas('icon'):
