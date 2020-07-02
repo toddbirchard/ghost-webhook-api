@@ -6,7 +6,7 @@ from api.log import LOGGER
 
 
 @LOGGER.catch
-@api.route('/images/transform', methods=['POST'])
+@api.route('/image/transform', methods=['POST'])
 def create_post_retina_image():
     """Create retina image on post update."""
     post = request.get_json()['post']['current']

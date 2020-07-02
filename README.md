@@ -26,9 +26,42 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
   * **GET** `/images/transform`: Generates missing retina, mobile, and *.webp* images for all posts published in the current month. Accepts a *?directory=* parameter to force transformations for images in other directories.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
-  * **POST** `/images/transform`: Generates retina feature image for single post upon update. 
+  * **POST** `/image/transform`: Generates retina feature image for single post upon update. 
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
 #### Authors
   * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.
+  
+## Installation
+
+**Installation via `requirements.txt`**:
+
+```shell
+$ git clone https://github.com/toddbirchard/jamstack-automations.git
+$ cd jamstack-automations
+$ python3 -m venv myenv
+$ source myenv/bin/activate
+$ pip3 install -r requirements.txt
+$ python3 main.py
+```
+
+**Installation via [Pipenv](https://pipenv-fork.readthedocs.io/en/latest/)**:
+
+```shell
+$ git clone https://github.com/toddbirchard/jamstack-automations.git
+$ cd jamstack-automations
+$ pipenv shell
+$ pipenv update
+$ python3 main.py
+```
+
+**Installation via [Poetry](https://python-poetry.org/)**:
+
+```shell
+$ git clone https://github.com/toddbirchard/jamstack-automations.git
+$ cd jamstack-automations
+$ poetry shell
+$ poetry update
+$ poetry run
+```

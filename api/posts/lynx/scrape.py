@@ -8,13 +8,13 @@ from api.posts.lynx.utils import http_headers
 
 
 @LOGGER.catch
-def scrape_link(link):
+def scrape_link(url):
     """Scrape links embedded in post for metadata to build preview cards."""
-    req = requests.get(link, headers=http_headers)
+    req = requests.get(url, headers=http_headers)
     html = BeautifulSoup(req.content, 'html.parser')
-    json_ld = render_json_ltd(link, req.text)
+    json_ld = render_json_ltd(url, req.text)
     page = metadata_parser.MetadataParser(
-        url=link,
+        url=url,
         url_headers=http_headers,
         search_head_only=False
     )
@@ -28,7 +28,7 @@ def scrape_link(link):
                     "author": get_author(page, html, json_ld),
                     "publisher": get_publisher(json_ld),
                     "thumbnail": get_image(page, json_ld),
-                    "icon": get_favicon(page, html, json_ld, get_domain(link))
+                    "icon": get_favicon(page, html, json_ld, get_domain(url))
                     }
                 }
             ]
@@ -37,14 +37,13 @@ def scrape_link(link):
 
 def render_json_ltd(url, html):
     """Fetch JSON-LD structured data."""
-    data = extruct.extract(
-        str(html),
+    metadata = extruct.extract(
+        html,
         base_url=get_domain(url),
         syntaxes=['json-ld'],
-        uniform=True)['json-ld']
-    if len(data) >= 1:
-        data = data[0]
-    return data
+        uniform=True
+    )['json-ld'][0]
+    return metadata
 
 
 def get_title(page, _data):
