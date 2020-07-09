@@ -25,7 +25,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 kombu==4.6.11
 loguru==0.5.1
-lxml==4.5.1
+lxml==4.5.2
 MarkupSafe==1.1.1
 metadata-parser==0.10.0
 mf2py==1.1.2
