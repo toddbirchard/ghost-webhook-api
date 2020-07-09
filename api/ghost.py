@@ -67,7 +67,7 @@ class Ghost:
 
     def get_json_backup(self):
         """Download JSON snapshot of Ghost database."""
-        self._https_session()
+        self.__https_session()
         headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\
                                 q=0.9,image/webp,image/apng,*/*;\
                                 q=0.8,application/signed-exchange;\
