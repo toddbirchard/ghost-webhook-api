@@ -71,6 +71,7 @@ def set_lynx_metadata():
                 "updated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
             }]
         }
+        LOGGER.info(f'time = {datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")}')
         ghost.update_post(id, body)
 
 
