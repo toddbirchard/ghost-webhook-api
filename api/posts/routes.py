@@ -20,7 +20,7 @@ def set_post_metadata():
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
     LOGGER.info(
-        f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}'
+        f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
     body = {
         "posts": [{
@@ -59,7 +59,7 @@ def set_lynx_metadata():
     id = post.get('id')
     primary_tag = post.get('primary_tag')
     LOGGER.info(
-        f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}'
+        f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
@@ -70,8 +70,6 @@ def set_lynx_metadata():
             }]
         }
         ghost.update_post(id, body)
-    else:
-        return make_response(jsonify({'IGNORED': 'Non-lynx post.'}), 204)
 
 
 @LOGGER.catch
