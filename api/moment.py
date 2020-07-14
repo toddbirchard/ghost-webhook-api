@@ -1,8 +1,9 @@
 """Get current EST time."""
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
-def get_current_time():
+def get_current_time(updated_at):
 	"""Get current EST time"""
-	return datetime.now(tz=pytz.timezone('America/New_York')).strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
+	updated_time = datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(seconds=1)
+	return updated_time.strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')

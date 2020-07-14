@@ -19,7 +19,8 @@ def set_post_metadata():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
-    time = get_current_time()
+    updated_at = post.get('updated_at')
+    time = get_current_time(updated_at)
     LOGGER.info(
         f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
@@ -59,7 +60,8 @@ def set_lynx_metadata():
     post = request.get_json()['post']['current']
     id = post.get('id')
     primary_tag = post.get('primary_tag')
-    time = get_current_time()
+    updated_at = post.get('updated_at')
+    time = get_current_time(updated_at)
     LOGGER.info(
         f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
