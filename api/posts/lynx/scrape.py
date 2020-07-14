@@ -45,7 +45,9 @@ def render_json_ltd(url, html):
         syntaxes=['json-ld'],
         uniform=True
     )['json-ld']
-    print('type(metadata)' , type(metadata))
+    LOGGER.info('-----------------------------------')
+    LOGGER.info(f'type(metadata) {type(metadata)}')
+    LOGGER.info('-----------------------------------')
     if type(metadata) is List:
         metadata = metadata[0]
     return metadata
