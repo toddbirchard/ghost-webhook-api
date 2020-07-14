@@ -43,8 +43,10 @@ def render_json_ltd(url, html):
         syntaxes=['json-ld'],
         uniform=True
     )['json-ld']
-    if type(metadata) is list:
+    try:
         metadata = metadata[0]
+    except IndexError:
+        pass
     return metadata
 
 
