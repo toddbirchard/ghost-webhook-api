@@ -14,6 +14,7 @@ def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
     id = post.get('id')
+    slug = post.get('slug')
     title = post.get('title')
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
@@ -46,7 +47,7 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    ghost.update_post(id, body)
+    ghost.update_post(id, body, slug)
 
 
 @LOGGER.catch
@@ -55,6 +56,7 @@ def set_lynx_metadata():
     """Replace <a> tags with embedded link previews."""
     post = request.get_json()['post']['current']
     id = post.get('id')
+    slug = post.get('slug')
     primary_tag = post.get('primary_tag')
     updated_at = post.get('updated_at')
     time = get_current_time(updated_at)
@@ -67,7 +69,7 @@ def set_lynx_metadata():
             }]
         }
         LOGGER.info(f'updated_at: {updated_at} vs time: {time}')
-        ghost.update_post(id, body)
+        ghost.update_post(id, body, slug)
 
 
 @LOGGER.catch

@@ -51,16 +51,15 @@ class Ghost:
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
-    def update_post(self, post_id, body):
+    def update_post(self, post_id, body: dict, slug: str):
         """Update post by ID."""
-        post = body['posts'][0]
         try:
             req = requests.put(
                 f'{self.url}/posts/{post_id}/',
                 json=body,
                 headers={'Authorization': self.session_token}
             )
-            LOGGER.info(f'Received code {req.status_code} when updating `{post["slug"]}`.')
+            LOGGER.info(f'Received code {req.status_code} when updating `{slug}`.')
         except RequestException as exc:
             LOGGER.error(exc)
             raise exc
