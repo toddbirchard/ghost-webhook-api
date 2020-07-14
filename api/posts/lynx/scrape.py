@@ -45,7 +45,7 @@ def render_json_ltd(url, html):
         syntaxes=['json-ld'],
         uniform=True
     )['json-ld']
-    if type(metadata) > List:
+    if type(metadata) is List:
         metadata = metadata[0]
     return metadata
 
