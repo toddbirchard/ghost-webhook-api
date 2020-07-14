@@ -1,5 +1,4 @@
 """Routes to transform post data."""
-from time import sleep
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import ghost, db, image
@@ -21,9 +20,6 @@ def set_post_metadata():
     primary_tag = post.get('primary_tag')
     updated_at = post.get('updated_at')
     time = get_current_time(updated_at)
-    LOGGER.info(
-        f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
-    )
     body = {
         "posts": [{
             "meta_title": title,
@@ -62,10 +58,6 @@ def set_lynx_metadata():
     primary_tag = post.get('primary_tag')
     updated_at = post.get('updated_at')
     time = get_current_time(updated_at)
-    LOGGER.info(
-        f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
-    )
-    sleep(5)
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body = {
