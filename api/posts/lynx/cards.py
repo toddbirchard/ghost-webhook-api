@@ -11,9 +11,7 @@ def format_lynx_posts(post):
     """Replace <a> tags in Lynx posts with link previews."""
     html = post.get('html')
     links = re.findall('<a href="(.*?)"', html)
-    LOGGER.info('Starting loop....')
     link_previews = [scrape_link(link) for link in links]
-    LOGGER.info('Ended loop.')
     try:
         link_previews.remove(None)
     except ValueError:

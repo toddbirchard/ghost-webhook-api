@@ -56,6 +56,7 @@ def set_lynx_metadata():
     post = request.get_json()['post']['current']
     id = post.get('id')
     primary_tag = post.get('primary_tag')
+    LOGGER.catch(f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}')
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body = {
