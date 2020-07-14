@@ -1,10 +1,9 @@
 """Routes to transform post data."""
-from time import sleep
-from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import ghost, db, image
 from api.log import LOGGER
+from api.moment import get_current_time
 from .read import get_queries
 from .lynx.cards import format_lynx_posts
 
@@ -14,7 +13,6 @@ from .lynx.cards import format_lynx_posts
 def set_post_metadata():
     """Update post metadata where empty."""
     post = request.get_json()['post']['current']
-    time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
     id = post.get('id')
     title = post.get('title')
     feature_image = post.get('feature_image')
@@ -31,7 +29,7 @@ def set_post_metadata():
             "meta_description": custom_excerpt,
             "twitter_description": custom_excerpt,
             "og_description": custom_excerpt,
-            "updated_at": time
+            "updated_at": get_current_time
             }
         ]
     }
@@ -62,16 +60,15 @@ def set_lynx_metadata():
     LOGGER.info(
         f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
-    sleep(1)
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body = {
             "posts": [{
                 "mobiledoc": doc,
-                "updated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
+                "updated_at": get_current_time
             }]
         }
-        LOGGER.info(f'time = {datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")}')
+        LOGGER.info(f'time = {get_current_time}')
         ghost.update_post(id, body)
 
 
