@@ -47,7 +47,8 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    ghost.update_post(id, body, slug)
+    response, code = ghost.update_post(id, body, slug)
+    make_response(jsonify(response), code)
 
 
 @LOGGER.catch
@@ -69,7 +70,8 @@ def set_lynx_metadata():
             }]
         }
         LOGGER.info(f'updated_at: {updated_at} vs time: {time}')
-        ghost.update_post(id, body, slug)
+        response, code = ghost.update_post(id, body, slug)
+        make_response(jsonify(response), code)
 
 
 @LOGGER.catch
