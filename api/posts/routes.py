@@ -19,8 +19,7 @@ def set_post_metadata():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
-    updated_at = post.get('updated_at')
-    time = get_current_time(updated_at)
+    time = get_current_time()
     body = {
         "posts": [{
             "meta_title": title,
@@ -59,8 +58,7 @@ def set_lynx_metadata():
     id = post.get('id')
     slug = post.get('slug')
     primary_tag = post.get('primary_tag')
-    updated_at = post.get('updated_at')
-    time = get_current_time(updated_at)
+    time = get_current_time()
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body = {
@@ -69,7 +67,6 @@ def set_lynx_metadata():
                 "updated_at": time
             }]
         }
-        LOGGER.info(f'updated_at: {updated_at} vs time: {time}')
         response, code = ghost.update_post(id, body, slug)
         return make_response(jsonify(response), code)
 
