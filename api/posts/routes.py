@@ -48,8 +48,7 @@ def set_post_metadata():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    response = ghost.update_post(id, body)
-    return make_response(jsonify(response))
+    ghost.update_post(id, body)
 
 
 @LOGGER.catch
@@ -70,8 +69,7 @@ def set_lynx_metadata():
                 "updated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z").replace(' ', '')
             }]
         }
-        response = ghost.update_post(id, body)
-        return make_response(jsonify(response))
+        ghost.update_post(id, body)
     else:
         return make_response(jsonify({'IGNORED': 'Non-lynx post.'}), 204)
 
