@@ -18,6 +18,7 @@ def set_post_metadata():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
+    time = get_current_time()
     LOGGER.info(
         f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
@@ -29,7 +30,7 @@ def set_post_metadata():
             "meta_description": custom_excerpt,
             "twitter_description": custom_excerpt,
             "og_description": custom_excerpt,
-            "updated_at": get_current_time
+            "updated_at": time
             }
         ]
     }
@@ -57,6 +58,7 @@ def set_lynx_metadata():
     post = request.get_json()['post']['current']
     id = post.get('id')
     primary_tag = post.get('primary_tag')
+    time = get_current_time()
     LOGGER.info(
         f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
@@ -65,10 +67,10 @@ def set_lynx_metadata():
         body = {
             "posts": [{
                 "mobiledoc": doc,
-                "updated_at": get_current_time
+                "updated_at": time
             }]
         }
-        LOGGER.info(f'time = {get_current_time}')
+        LOGGER.info(f'time = {time}')
         ghost.update_post(id, body)
 
 
