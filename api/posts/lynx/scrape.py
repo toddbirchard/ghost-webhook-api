@@ -42,7 +42,9 @@ def render_json_ltd(url, html):
         base_url=get_domain(url),
         syntaxes=['json-ld'],
         uniform=True
-    )['json-ld'][0]
+    )['json-ld']
+    if len(metadata) > 1:
+        metadata = metadata[0]
     return metadata
 
 
@@ -93,7 +95,7 @@ def get_description(page, _data):
 def get_author(page, html, _data):
     """Scrape author name."""
     author = None
-    if bool(_data):
+    if bool(_data) and _data.get('author'):
         if type(_data['author']) == list:
             _author = _data['author'][0]
             author = _author.get('name')
@@ -113,7 +115,7 @@ def get_author(page, html, _data):
 def get_publisher(_data):
     """Scrape publisher name."""
     publisher = None
-    if bool(_data):
+    if bool(_data) and _data.get('publisher'):
         if type(_data['publisher']) == list:
             _publisher = _data['publisher'][0]
             publisher = _publisher.get('name')
@@ -143,20 +145,18 @@ def get_favicon(page, html, _data, base_url):
         favicon = html.find("link", attrs={"rel": "icon"}).get('href')
     elif html.find("link", attrs={"rel": "shortcut icon"}):
         favicon = html.find("link", attrs={"rel": "shortcut icon"}).get('href')
-    if favicon and favicon[0] == '/':
+    if favicon and favicon[0] != 'http':
         favicon = base_url + favicon
-    if favicon and favicon[0] != 'h':
-        favicon = base_url + '/' + favicon
     if favicon is None:
-        favicon = base_url + 'favicon.ico'
+        favicon = base_url + '/favicon.ico'
     return favicon
 
 
 def get_domain(url):
     """Get site root domain name."""
-    domain = url.split('//')[1]
+    domain = url.split('://')[1]
     name = domain.split('/')[0]
-    return f'https://{name}/'
+    return f'https://{name}'
 
 
 def get_canonical(page):

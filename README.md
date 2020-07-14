@@ -13,7 +13,7 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 
 #### Posts
   * **GET** `/post/all/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.)
-  *  **GET** `/post/backup`: Fetch JSON backup of all blog data.
+  * **GET** `/post/backup`: Fetch JSON backup of all blog data.
   * **POST** `/post/metadata`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.)
   * **POST** `/post/lynx/previews`: Replace HTML anchor tags with rich-content link embeds.
 #### Searches
