@@ -11,6 +11,9 @@ from api.posts.lynx.utils import http_headers
 def scrape_link(url):
     """Scrape links embedded in post for metadata to build preview cards."""
     req = requests.get(url, headers=http_headers)
+    if req.status_code != 200:
+        LOGGER.error(f'Invalid Lynx URL threw {req.status_code}: {url}')
+        return None
     html = BeautifulSoup(req.content, 'html.parser')
     json_ld = render_json_ltd(url, req.text)
     page = metadata_parser.MetadataParser(
