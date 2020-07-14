@@ -60,7 +60,7 @@ class Ghost:
                 json=body,
                 headers={'Authorization': self.session_token}
             )
-            return {post_id: f'Received code {req.status_code} when updating `{title}`.'}
+            LOGGER.info(f'Received code {req.status_code} when updating `{title}`.')
         except RequestException as exc:
             LOGGER.error(exc)
             raise exc
