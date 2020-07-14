@@ -66,7 +66,7 @@ def set_lynx_metadata():
                 "updated_at": time
             }]
         }
-        LOGGER.info(f'time = {time}')
+        LOGGER.info(f'updated_at: {updated_at} vs time: {time}')
         ghost.update_post(id, body)
 
 
