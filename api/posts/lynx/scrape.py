@@ -35,6 +35,7 @@ def scrape_link(url):
                     }
                 }
             ]
+    LOGGER.info(f'Got card: {card}')
     return card
 
 
