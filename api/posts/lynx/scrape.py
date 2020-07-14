@@ -1,4 +1,6 @@
 """Scrape URLs found in body of Lynx posts for metadata."""
+from typing import List
+
 import requests
 import metadata_parser
 import extruct
@@ -43,7 +45,7 @@ def render_json_ltd(url, html):
         syntaxes=['json-ld'],
         uniform=True
     )['json-ld']
-    if len(metadata) > 1:
+    if type(metadata) > List:
         metadata = metadata[0]
     return metadata
 
