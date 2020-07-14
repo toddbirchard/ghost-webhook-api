@@ -1,4 +1,5 @@
 """Routes to transform post data."""
+from time import sleep
 from datetime import datetime
 from flask import current_app as api
 from flask import jsonify, make_response, request
@@ -61,6 +62,7 @@ def set_lynx_metadata():
     LOGGER.info(
         f'POST received for {post["title"]}, HEADERS: {request.headers}, HOST: {request.host_url}, ENVIRON: {request.environ}, DATA: {request.data}'
     )
+    sleep(1)
     if primary_tag.get('slug') == 'roundup':
         doc = format_lynx_posts(post)
         body = {
