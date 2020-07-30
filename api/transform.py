@@ -17,7 +17,7 @@ class ImageTransformer:
 
     def fetch_image_blobs(self, folder, image_type=None):
         """Retrieve images from GCS bucket matching directory & filter conditions."""
-        files = self.gcs.get(prefix=folde)
+        files = self.gcs.get(prefix=folder)
         image_filter = {
             'remove': None,
             'require': None
