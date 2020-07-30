@@ -36,7 +36,6 @@ def transform_lynx_images():
     """Apply transformations to all `Lynx` images."""
     folder = 'roundup'
     lynx_images = image.fetch_image_blobs(folder)
-    LOGGER.info(f'Checking {len(lynx_images)} images in {folder}')
     response = image.bulk_transform_images(folder, lynx_images, transformation='retina')
     LOGGER.info(f'Transformed {response} images successfully!')
     return make_response(jsonify({'SUCCESS': f'Transformed {response} images successfully!'}))
