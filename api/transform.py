@@ -17,7 +17,7 @@ class ImageTransformer:
 
     def fetch_image_blobs(self, folder, image_type=None):
         """Retrieve images from GCS bucket matching directory & filter conditions."""
-        files = self.gcs.bucket.list_blobs(prefix=folder)
+        files = self.gcs.client.list_blobs(prefix=folder)
         image_filter = {
             'remove': None,
             'require': None
@@ -117,7 +117,7 @@ class ImageTransformer:
 
     def fetch_random_lynx_image(self):
         """Fetch random Lynx image from GCS bucket."""
-        lynx_images = self.gcs.bucket.list_blobs(prefix='roundup')
+        lynx_images = self.gcs.client.list_blobs(prefix='roundup')
         images = [f"{self.gcs.bucket_http_url}{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
         rand = randint(0, len(images) - 1)
         image = images[rand]
