@@ -66,7 +66,7 @@ class Ghost:
             LOGGER.error(exc)
             raise exc
 
-    def get_json_backup(self):
+    def get_json_backup(self) -> dict:
         """Download JSON snapshot of Ghost database."""
         self.__https_session()
         headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\

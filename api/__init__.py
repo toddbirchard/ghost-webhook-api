@@ -8,7 +8,7 @@ from api.sms import Twilio
 from api.transform import ImageTransformer
 from config import Config
 
-
+# Initialize clients
 db = Database(Config.SQLALCHEMY_DATABASE_URI, Config.SQLALCHEMY_ENGINE_OPTIONS)
 gcs = GCS(Config.GCP_BUCKET_NAME, Config.GCP_BUCKET_URL, Config.GCP_LYNX_DIRECTORY)
 gbq = BigQuery(Config.GCP_BIGQUERY_URI)

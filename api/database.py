@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, MetaData, Table
 class Database:
     """Blog database connection client."""
 
-    def __init__(self, db_uri, db_args):
+    def __init__(self, db_uri: str, db_args: dict):
         self.engines = {
             'analytics': create_engine(
                 f'{db_uri}analytics',
@@ -19,14 +19,14 @@ class Database:
             )
         }
 
-    def _table(self, table_name):
+    def _table(self, table_name: str) -> Table:
         return Table(
             table_name,
             MetaData(bind=self.engines['analytics']),
             autoload=True
         )
 
-    def execute_queries(self, queries):
+    def execute_queries(self, queries: dict) -> dict:
         """Execute SQL query."""
         results = {}
         for k, v in queries.items():
@@ -34,12 +34,12 @@ class Database:
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
-    def execute_query(self, query):
+    def execute_query(self, query: str):
         """Execute single SQL query."""
         result = self.engines['blog'].execute(query)
         return result
 
-    def execute_query_from_file(self, sql_file):
+    def execute_query_from_file(self, sql_file: str):
         """Execute single SQL query."""
         query = open(sql_file, 'r').read()
         result = self.engines['blog'].execute(query)
@@ -50,7 +50,7 @@ class Database:
         rows = self.engines[table_name].execute(query).fetchall()
         return [row.items() for row in rows]
 
-    def insert_records(self, rows, table_name, replace=None):
+    def insert_records(self, rows, table_name: str, replace=None):
         """Insert rows into table."""
         if replace:
             self.engines['analytics'].execute(f'TRUNCATE TABLE {table_name}')
@@ -58,13 +58,13 @@ class Database:
         self.engines['analytics'].execute(table.insert(), rows)
         return self._construct_response(len(rows))
 
-    def update_post_image(self, image, post):
+    def update_post_image(self, image: str, post: str) -> dict:
         """Set post feature image to desired image."""
         sql = f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';"
         self.execute_query(sql)
         return {post: image}
 
     @staticmethod
-    def _construct_response(affected_rows):
+    def _construct_response(affected_rows) -> str:
         """Summarize results of an executed query."""
         return f'Modified {affected_rows} rows.'

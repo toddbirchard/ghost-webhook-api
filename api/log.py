@@ -4,7 +4,7 @@ from loguru import logger
 from config import Config
 
 
-def create_logger():
+def create_logger() -> logger:
     """Create custom logger."""
     logger.remove()
     if Config.FLASK_ENV == 'production':

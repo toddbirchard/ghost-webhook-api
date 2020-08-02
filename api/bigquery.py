@@ -1,4 +1,5 @@
 """BigQuery Client."""
+from typing import List
 from sqlalchemy.engine import create_engine
 from sqlalchemy import MetaData, Table
 
@@ -26,13 +27,13 @@ class BigQuery:
         self.engine.execute(self.table.insert(), rows)
         return self.construct_response(rows, table)
 
-    def fetch_rows(self, query):
+    def fetch_rows(self, query: str) -> List[str]:
         """Fetch all rows via query."""
         rows = self.engine.execute(query).fetchall()
         return rows
 
     @staticmethod
-    def parse_query_from_file(filename):
+    def parse_query_from_file(filename) -> str:
         """Read SQL query from .sql file."""
         sql_file = open(filename, 'r')
         query = sql_file.read()
@@ -40,7 +41,7 @@ class BigQuery:
         return query
 
     @staticmethod
-    def construct_response(rows, table):
+    def construct_response(rows, table) -> str:
         """Summarize results of an executed query."""
         columns = rows[0].keys()
         column_names = ", ".join(columns)
