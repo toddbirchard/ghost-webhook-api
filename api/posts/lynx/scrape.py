@@ -1,4 +1,5 @@
 """Scrape URLs found in body of Lynx posts for metadata."""
+from typing import Optional, List
 import requests
 import metadata_parser
 import extruct
@@ -8,7 +9,7 @@ from api.posts.lynx.utils import http_headers
 
 
 @LOGGER.catch
-def scrape_link(url):
+def scrape_link(url) -> Optional[List[dict]]:
     """Scrape links embedded in post for metadata to build preview cards."""
     req = requests.get(url, headers=http_headers)
     if req.status_code != 200:
@@ -38,7 +39,7 @@ def scrape_link(url):
     return card
 
 
-def render_json_ltd(url, html):
+def render_json_ltd(url, html) -> Optional[dict]:
     """Fetch JSON-LD structured data."""
     metadata = extruct.extract(
         html,
@@ -53,7 +54,7 @@ def render_json_ltd(url, html):
     return metadata
 
 
-def get_title(page, _data):
+def get_title(page, _data) -> Optional[str]:
     """Scrape page title."""
     title = None
     if bool(_data) and _data.get('title'):
@@ -71,7 +72,7 @@ def get_title(page, _data):
     return title
 
 
-def get_image(page, _data):
+def get_image(page, _data) -> Optional[str]:
     """Scrape page `share image`."""
     image = None
     if bool(_data) and _data.get('image'):
@@ -83,7 +84,7 @@ def get_image(page, _data):
     return image
 
 
-def get_description(page, _data):
+def get_description(page, _data) -> Optional[str]:
     """Scrape page description."""
     description = None
     if bool(_data) and _data.get('description'):
@@ -97,7 +98,7 @@ def get_description(page, _data):
     return description
 
 
-def get_author(page, html, _data):
+def get_author(page, html, _data) -> Optional[str]:
     """Scrape author name."""
     author = None
     if bool(_data) and _data.get('author'):
@@ -117,7 +118,7 @@ def get_author(page, html, _data):
     return author
 
 
-def get_publisher(_data):
+def get_publisher(_data) -> Optional[str]:
     """Scrape publisher name."""
     publisher = None
     if bool(_data) and _data.get('publisher'):
@@ -129,7 +130,7 @@ def get_publisher(_data):
     return publisher
 
 
-def get_favicon(page, html, _data, base_url):
+def get_favicon(page, html, _data, base_url) -> Optional[str]:
     """Scrape favicon image."""
     favicon = None
     if bool(_data) and _data.get('logo'):
@@ -157,14 +158,14 @@ def get_favicon(page, html, _data, base_url):
     return favicon
 
 
-def get_domain(url):
+def get_domain(url) -> Optional[str]:
     """Get site root domain name."""
     domain = url.split('://')[1]
     name = domain.split('/')[0]
     return f'https://{name}'
 
 
-def get_canonical(page):
+def get_canonical(page) -> Optional[str]:
     """Get page canonical URL."""
     canonical = None
     if page.get_metadatas('canonical'):

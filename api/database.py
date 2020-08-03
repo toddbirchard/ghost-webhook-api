@@ -1,4 +1,5 @@
 """Database client."""
+from typing import List
 from sqlalchemy import create_engine, MetaData, Table
 
 
@@ -45,12 +46,12 @@ class Database:
         result = self.engines['blog'].execute(query)
         return result
 
-    def fetch_records(self, query, table_name='analytics'):
+    def fetch_records(self, query, table_name='analytics') -> List[str]:
         """Fetch all rows via query."""
         rows = self.engines[table_name].execute(query).fetchall()
         return [row.items() for row in rows]
 
-    def insert_records(self, rows, table_name: str, replace=None):
+    def insert_records(self, rows, table_name: str, replace=None) -> str:
         """Insert rows into table."""
         if replace:
             self.engines['analytics'].execute(f'TRUNCATE TABLE {table_name}')

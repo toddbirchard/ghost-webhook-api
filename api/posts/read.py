@@ -1,10 +1,11 @@
 """Read queries from local SQL files."""
+from typing import List
 from os import listdir
 from os.path import isfile, join
 from api.log import LOGGER
 
 
-def get_queries():
+def get_queries() -> dict:
     """Create dict of queries to be run against database."""
     sql_file_paths = fetch_sql_files()
     sql_queries = read_sql_queries(sql_file_paths)
@@ -13,7 +14,7 @@ def get_queries():
     return query_dict
 
 
-def fetch_sql_files():
+def fetch_sql_files() -> List[str]:
     """Fetch all SQL query files in folder."""
     folder = 'api/posts/queries'
     directory = listdir(folder)
@@ -22,7 +23,7 @@ def fetch_sql_files():
     return files
 
 
-def read_sql_queries(sql_file_paths):
+def read_sql_queries(sql_file_paths) -> List[str]:
     """Read SQL queries from .sql files."""
     queries = []
     for file in sql_file_paths:

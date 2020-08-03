@@ -1,8 +1,10 @@
 """Ghost admin."""
+from typing import Tuple
 from datetime import datetime as date
 import requests
 from requests.exceptions import RequestException
 import jwt
+
 from api.log import LOGGER
 
 
@@ -16,7 +18,7 @@ class Ghost:
         self.url = url
         self.token = None
 
-    def __https_session(self):
+    def __https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
         endpoint = f'{self.url}/session/'
         headers = {'Authorization': self.session_token}
@@ -24,7 +26,7 @@ class Ghost:
         LOGGER.info(f'Authorization resulted in status code {req.status_code}.')
 
     @property
-    def session_token(self):
+    def session_token(self) -> str:
         """Generate session token for Ghost admin API."""
         iat = int(date.now().timestamp())
         header = {
@@ -45,13 +47,13 @@ class Ghost:
         )
         return f'Ghost {token.decode()}'
 
-    def get_post(self, post_id):
+    def get_post(self, post_id) -> dict:
         """Fetch post data by ID."""
         headers = {'Authorization': self.session_token}
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
-    def update_post(self, post_id, body: dict, slug: str):
+    def update_post(self, post_id, body: dict, slug: str) -> Tuple[dict, int]:
         """Update post by ID."""
         try:
             req = requests.put(

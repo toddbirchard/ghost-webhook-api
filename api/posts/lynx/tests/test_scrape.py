@@ -1,4 +1,4 @@
-"""Parsing individual URLs and verfify JSON-LD is returned."""
+"""Parsing individual URLs and verify JSON-LD is returned."""
 import simplejson as json
 import pytest
 import requests
@@ -7,7 +7,7 @@ from api.posts.lynx.scrape import render_json_ltd
 
 
 @pytest.fixture
-def headers():
+def headers() -> dict:
     """Spoofed browser headers."""
     return {
         'Access-Control-Allow-Origin': '*',
