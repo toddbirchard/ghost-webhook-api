@@ -1,6 +1,6 @@
 """Database client."""
 from typing import List
-from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy import create_engine, MetaData, Table, text
 from api.log import LOGGER
 
 
@@ -40,7 +40,7 @@ class Database:
     @LOGGER.catch
     def execute_query(self, query: str):
         """Execute single SQL query."""
-        result = self.engines['blog'].execute(query)
+        result = self.engines['blog'].execute(text(query))
         return result
 
     @LOGGER.catch
