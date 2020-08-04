@@ -45,11 +45,8 @@ def set_post_metadata():
         # Parse link previews
         if 'kg-card' not in mobiledoc:
             doc = generate_link_previews(post)
-            body['posts'][0].update({
-                "posts": [{
-                    "mobiledoc": doc,
-                }]
-            })
+            db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = {id};")
+            LOGGER.info()
     # Update image meta tags
     elif feature_image is not None:
         body['posts'][0].update({

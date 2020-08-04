@@ -1,6 +1,7 @@
 """Database client."""
 from typing import List
 from sqlalchemy import create_engine, MetaData, Table
+from api.log import LOGGER
 
 
 class Database:
@@ -27,6 +28,7 @@ class Database:
             autoload=True
         )
 
+    @LOGGER.catch
     def execute_queries(self, queries: dict) -> dict:
         """Execute SQL query."""
         results = {}
@@ -35,22 +37,26 @@ class Database:
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
+    @LOGGER.catch
     def execute_query(self, query: str):
         """Execute single SQL query."""
         result = self.engines['blog'].execute(query)
         return result
 
+    @LOGGER.catch
     def execute_query_from_file(self, sql_file: str):
         """Execute single SQL query."""
         query = open(sql_file, 'r').read()
         result = self.engines['blog'].execute(query)
         return result
 
+    @LOGGER.catch
     def fetch_records(self, query, table_name='analytics') -> List[str]:
         """Fetch all rows via query."""
         rows = self.engines[table_name].execute(query).fetchall()
         return [row.items() for row in rows]
 
+    @LOGGER.catch
     def insert_records(self, rows, table_name: str, replace=None) -> str:
         """Insert rows into table."""
         if replace:
@@ -59,6 +65,7 @@ class Database:
         self.engines['analytics'].execute(table.insert(), rows)
         return self._construct_response(len(rows))
 
+    @LOGGER.catch
     def update_post_image(self, image: str, post: str) -> dict:
         """Set post feature image to desired image."""
         sql = f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';"
