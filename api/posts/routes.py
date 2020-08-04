@@ -11,7 +11,7 @@ from .lynx.cards import format_lynx_posts
 @LOGGER.catch
 @api.route('/post/update', methods=['POST'])
 def set_post_metadata():
-    """Update post metadata where empty."""
+    """Update post metadata & render Lynx previews."""
     post = request.get_json()['post']['current']
     id = post.get('id')
     slug = post.get('slug')
@@ -19,6 +19,7 @@ def set_post_metadata():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
+    mobiledoc = post.get('mobiledoc')
     time = get_current_time()
     body = {
         "posts": [{
@@ -32,49 +33,38 @@ def set_post_metadata():
             }
         ]
     }
-    if feature_image is None and primary_tag.get('slug') == 'roundup':
-        # Assign random image to new Lynx post
-        feature_image = image.fetch_random_lynx_image()
-        body['posts'][0].update({
-            "feature_image": feature_image,
-            "og_image": feature_image,
-            "twitter_image": feature_image
-        })
+    if primary_tag.get('slug') == 'roundup':
+        # Assign random image to Lynx post
+        if feature_image is None:
+            feature_image = image.fetch_random_lynx_image()
+            body['posts'][0].update({
+                "feature_image": feature_image,
+                "og_image": feature_image,
+                "twitter_image": feature_image
+            })
+        # Parse link previews
+        if 'kg-card' not in mobiledoc:
+            doc = format_lynx_posts(post)
+            body['posts'][0].update({
+                "posts": [{
+                    "mobiledoc": doc,
+                }]
+            })
+    # Update image meta tags
     elif feature_image is not None:
-        # Sync social images with feature image
         body['posts'][0].update({
             "og_image": feature_image,
             "twitter_image": feature_image
         })
     response, code = ghost.update_post(id, body, slug)
+    LOGGER.info(f'Post Updated with code {code}: {response}')
     return make_response(jsonify(response), code)
 
 
 @LOGGER.catch
-@api.route('/post/lynx/previews', methods=['POST'])
-def set_lynx_metadata():
-    """Replace <a> tags with embedded link previews."""
-    post = request.get_json()['post']['current']
-    id = post.get('id')
-    slug = post.get('slug')
-    primary_tag = post.get('primary_tag')
-    time = get_current_time()
-    if primary_tag.get('slug') == 'roundup':
-        doc = format_lynx_posts(post)
-        body = {
-            "posts": [{
-                "mobiledoc": doc,
-                "updated_at": time
-            }]
-        }
-        response, code = ghost.update_post(id, body, slug)
-        return make_response(jsonify(response), code)
-
-
-@LOGGER.catch
 @api.route('/post/metadata', methods=['GET'])
-def maintenance_queries():
-    """Execute SQL queries to fill missing post metadata."""
+def post_metadata_sanitize():
+    """Mass update post metadata."""
     queries = get_queries()
     results = db.execute_queries(queries)
     headers = {'Content-Type': 'application/json'}
