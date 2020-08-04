@@ -10,10 +10,10 @@ from .lynx.cards import generate_link_previews
 
 @LOGGER.catch
 @api.route('/post/update', methods=['POST'])
-def set_post_metadata():
+def update_post():
     """Update post metadata & render Lynx previews."""
     post = request.get_json()['post']['current']
-    id = post.get('id')
+    post_id = post.get('id')
     slug = post.get('slug')
     title = post.get('title')
     feature_image = post.get('feature_image')
@@ -46,14 +46,14 @@ def set_post_metadata():
         if 'kg-card' not in mobiledoc:
             doc = generate_link_previews(post)
             LOGGER.info(f'Lynx mobile doc: {doc}')
-            # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{id}';")
+            # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
     # Update image meta tags
     elif feature_image is not None:
         body['posts'][0].update({
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    response, code = ghost.update_post(id, body, slug)
+    response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(jsonify(response), code)
 
