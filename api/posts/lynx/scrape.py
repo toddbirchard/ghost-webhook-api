@@ -50,11 +50,11 @@ def render_json_ltd(url, html) -> Optional[dict]:
     try:
         metadata = metadata[0]
     except IndexError:
-        pass
+        metadata = metadata
     return metadata
 
 
-def get_title(page, _data) -> Optional[str]:
+def get_title(page, _data: dict) -> Optional[str]:
     """Scrape page title."""
     title = None
     if bool(_data) and _data.get('title'):
@@ -72,11 +72,11 @@ def get_title(page, _data) -> Optional[str]:
     return title
 
 
-def get_image(page, _data) -> Optional[str]:
+def get_image(page, _data: dict) -> Optional[str]:
     """Scrape page `share image`."""
     image = None
     if bool(_data) and _data.get('image'):
-        image = _data['image'].get('url')
+        image = _data['image'].get('image')
     elif page.get_metadatas('og:image'):
         image = page.get_metadatas('og:image')[0]
     elif page.get_metadatas('twitter:image'):
@@ -84,7 +84,7 @@ def get_image(page, _data) -> Optional[str]:
     return image
 
 
-def get_description(page, _data) -> Optional[str]:
+def get_description(page, _data: dict) -> Optional[str]:
     """Scrape page description."""
     description = None
     if bool(_data) and _data.get('description'):
@@ -98,7 +98,7 @@ def get_description(page, _data) -> Optional[str]:
     return description
 
 
-def get_author(page, html, _data) -> Optional[str]:
+def get_author(page, html, _data: dict) -> Optional[str]:
     """Scrape author name."""
     author = None
     if bool(_data) and _data.get('author'):
@@ -118,7 +118,7 @@ def get_author(page, html, _data) -> Optional[str]:
     return author
 
 
-def get_publisher(_data) -> Optional[str]:
+def get_publisher(_data: dict) -> Optional[str]:
     """Scrape publisher name."""
     publisher = None
     if bool(_data) and _data.get('publisher'):
@@ -130,7 +130,7 @@ def get_publisher(_data) -> Optional[str]:
     return publisher
 
 
-def get_favicon(page, html, _data, base_url) -> Optional[str]:
+def get_favicon(page, html, _data: dict, base_url: str) -> Optional[str]:
     """Scrape favicon image."""
     favicon = None
     if bool(_data) and _data.get('logo'):
@@ -158,7 +158,7 @@ def get_favicon(page, html, _data, base_url) -> Optional[str]:
     return favicon
 
 
-def get_domain(url) -> Optional[str]:
+def get_domain(url: str) -> Optional[str]:
     """Get site root domain name."""
     domain = url.split('://')[1]
     name = domain.split('/')[0]
