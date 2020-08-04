@@ -7,7 +7,7 @@ from .doc import mobile_doc
 
 
 @LOGGER.catch
-def format_lynx_posts(post) -> str:
+def generate_link_previews(post) -> str:
     """Replace <a> tags in Lynx posts with link previews."""
     html = post.get('html')
     links = re.findall('<a href="(.*?)"', html)
@@ -15,4 +15,5 @@ def format_lynx_posts(post) -> str:
     mobile_doc['cards'] = link_previews
     for i, link in enumerate(link_previews):
         mobile_doc['sections'].append([10, i])
+    LOGGER.info(f'Rendered link previews: {mobile_doc}')
     return json.dumps(mobile_doc)

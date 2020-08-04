@@ -5,7 +5,7 @@ from api import ghost, db, image
 from api.log import LOGGER
 from api.moment import get_current_time
 from .read import get_queries
-from .lynx.cards import format_lynx_posts
+from .lynx.cards import generate_link_previews
 
 
 @LOGGER.catch
@@ -44,7 +44,7 @@ def set_post_metadata():
             })
         # Parse link previews
         if 'kg-card' not in mobiledoc:
-            doc = format_lynx_posts(post)
+            doc = generate_link_previews(post)
             body['posts'][0].update({
                 "posts": [{
                     "mobiledoc": doc,
@@ -57,7 +57,7 @@ def set_post_metadata():
             "twitter_image": feature_image
         })
     response, code = ghost.update_post(id, body, slug)
-    LOGGER.info(f'Post Updated with code {code}: {response}')
+    LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(jsonify(response), code)
 
 
