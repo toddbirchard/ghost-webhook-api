@@ -50,4 +50,4 @@ def assign_missing_lynx_images():
         new_feature_image = image.fetch_random_lynx_image()
         db.update_post_image(new_feature_image, post)
     LOGGER.info(f'Updated {len(posts)} lynx posts with images.')
-    return make_response('Updated Lynx posts successfully.')
+    return make_response(f'Updated {len(posts)} lynx posts with images.')

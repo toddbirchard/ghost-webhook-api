@@ -5,5 +5,5 @@ SELECT
 FROM
 	posts
 WHERE
-	feature_image = ''
-	AND title LIKE '%%Lynx%%';
+	feature_image IS NULL
+	AND slug LIKE '%%roundup%%';
