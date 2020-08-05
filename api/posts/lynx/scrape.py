@@ -48,10 +48,6 @@ def render_json_ltd(url, html) -> Optional[dict]:
         uniform=True
     )['json-ld'][0]
     LOGGER.info(f'metadata =  {metadata}')
-    try:
-        metadata = metadata[0]
-    except IndexError:
-        metadata = metadata
     return metadata
 
 
