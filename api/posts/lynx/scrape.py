@@ -46,7 +46,8 @@ def render_json_ltd(url, html) -> Optional[dict]:
         base_url=get_domain(url),
         syntaxes=['json-ld'],
         uniform=True
-    )['json-ld']
+    )['json-ld'][0]
+    LOGGER.info(f'metadata =  {metadata}')
     try:
         metadata = metadata[0]
     except IndexError:
