@@ -16,7 +16,7 @@ def scrape_link(url) -> Optional[List[dict]]:
         LOGGER.error(f'Invalid Lynx URL threw {req.status_code}: {url}')
         return None
     html = BeautifulSoup(req.content, 'html.parser')
-    json_ld = render_json_ltd(url, req.text)
+    json_ld = render_json_ltd(url, req.content)
     parsed_metadata = metadata_parser.MetadataParser(
         url=url,
         url_headers=http_headers,
