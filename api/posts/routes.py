@@ -45,7 +45,7 @@ def update_post():
         # Parse link previews
         if 'kg-card' not in mobiledoc:
             doc = generate_link_previews(post)
-            LOGGER.info(f'Lynx mobile doc: {jsonify(doc)}')
+            LOGGER.info(f'Lynx mobile doc: {doc}')
             # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
     # Update image meta tags
     elif feature_image is not None:

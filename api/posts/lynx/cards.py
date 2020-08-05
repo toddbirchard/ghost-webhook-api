@@ -16,5 +16,4 @@ def generate_link_previews(post) -> str:
     for i, link in enumerate(link_previews):
         mobile_doc['sections'].append([10, i])
     doc = json.dumps(mobile_doc)
-    LOGGER.info(f'Rendered link previews: {doc}')
     return doc
