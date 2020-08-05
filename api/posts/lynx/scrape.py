@@ -39,7 +39,7 @@ def scrape_link(url) -> Optional[List[dict]]:
     return card
 
 
-def render_json_ltd(url, html) -> Optional[dict]:
+def render_json_ltd(url: str, html) -> Optional[dict]:
     """Fetch JSON-LD structured data."""
     metadata = extruct.extract(
         html,
