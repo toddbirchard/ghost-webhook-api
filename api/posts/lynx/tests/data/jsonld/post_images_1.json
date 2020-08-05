@@ -1,0 +1,54 @@
+{
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "image": [
+      "https://miro.medium.com/max/1200/1*_rYEpi3Crp_pX0lWBbFeOg.jpeg"
+    ],
+    "url": "https://towardsdatascience.com/https-medium-com-risingdeveloper-easy-data-analysis-visualization-and-modeling-using-datasist-part1-8b26526dbe01",
+    "dateCreated": "2019-12-03T04:24:06.239Z",
+    "datePublished": "2019-12-03T04:24:06.239Z",
+    "dateModified": "2020-06-22T08:16:13.466Z",
+    "headline": "Easy Data Analysis, Visualization and Modeling using Datasist (PART 1)",
+    "name": "Easy Data Analysis, Visualization and Modeling using Datasist (PART 1)",
+    "description": "Perform easy and quick data analysis, visualization, cleaning and modeling with the datasist library in Python. (Part 1)",
+    "identifier": "8b26526dbe01",
+    "keywords": [
+      "Lite:true",
+      "Tag:Data Science",
+      "Tag:Feature Engineering",
+      "Tag:Data Visualization",
+      "Tag:Data Analysis",
+      "Tag:Machine Learning",
+      "Topic:Data Science",
+      "Publication:towards-data-science",
+      "Elevated:false",
+      "LockedPostSource:LOCKED_POST_SOURCE_UGC",
+      "LayerCake:0"
+    ],
+    "author": {
+      "@type": "Person",
+      "name": "Rising Odegua",
+      "url": "https://towardsdatascience.com/@risingdeveloper"
+    },
+    "creator": [
+      "Rising Odegua"
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Towards Data Science",
+      "url": "towardsdatascience.com",
+      "logo": {
+        "@type": "ImageObject",
+        "width": 165,
+        "height": 60,
+        "url": "https://miro.medium.com/max/330/1*mG6i4Bh_LgixUYXJgQpYsg@2x.png"
+      }
+    },
+    "mainEntityOfPage": "https://towardsdatascience.com/https-medium-com-risingdeveloper-easy-data-analysis-visualization-and-modeling-using-datasist-part1-8b26526dbe01",
+    "isAccessibleForFree": "False",
+    "hasPart": {
+      "@type": "WebPageElement",
+      "isAccessibleForFree": "False",
+      "cssSelector": ".meteredContent"
+    }
+  }
