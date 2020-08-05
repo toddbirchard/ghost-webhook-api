@@ -48,7 +48,7 @@ def update_post():
             LOGGER.info(f'Lynx mobile doc: {doc}')
             # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
     # Update image meta tags
-    elif feature_image is not None:
+    if feature_image is not None:
         body['posts'][0].update({
             "og_image": feature_image,
             "twitter_image": feature_image
