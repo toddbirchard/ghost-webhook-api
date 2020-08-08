@@ -16,10 +16,10 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 ## Endpoints
 
 #### Posts
-  * **GET** `/posts/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.)
+  * **GET** `/posts/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.).
   * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
-  * **POST** `/posts/update`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.)
-  * **POST** `/posts/lynx/previews`: Replace HTML anchor tags with rich-content link embeds.
+  * **POST** `/posts/update`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.).
+  * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds.
 #### Searches
   * **GET** `/searches/week`: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
   * **GET** `/searches/historical`: Append current week's Algolia searches to a historical table of all searches.
@@ -34,10 +34,10 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
+  * **POST** `/members/donation`: Consumes a payload sent by BuyMeACoffee each time a donation is made & saves the result.
 #### Authors
   * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.
 #### Donations
-  * **POST** `/donation`: Consumes a payload sent by BuyMeACoffee each time a donation is made & saves the result.
     
 ## Installation
 

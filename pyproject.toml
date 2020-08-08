@@ -20,10 +20,13 @@ keywords = [
 [tool.poetry.dependencies]
 python = "^3.8"
 flask = "*"
+pandas = "*"
 sqlalchemy = "*"
 pymysql = "*"
 requests = "*"
 google-cloud-storage = "*"
+google-cloud-bigquery = "*"
+google-cloud-bigquery-storage = "*"
 pillow = "*"
 python-resize-image = "*"
 webp-converter = "*"

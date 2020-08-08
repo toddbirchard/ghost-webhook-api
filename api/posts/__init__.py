@@ -1,9 +1,10 @@
 """Routes to transform post data."""
 from flask import current_app as api
 from flask import jsonify, make_response, request
-from api import ghost, db, image
+from api import db, image
 from api.log import LOGGER
 from api.moment import get_current_time
+from api import ghost
 from .read import get_queries
 from .lynx.cards import generate_link_previews
 
@@ -19,7 +20,6 @@ def update_post():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
-    mobile_doc = post.get('mobiledoc')
     time = get_current_time()
     body = {
         "posts": [{
@@ -33,30 +33,40 @@ def update_post():
             }
         ]
     }
-    if primary_tag.get('slug') == 'roundup':
-        # Assign random image to Lynx post
-        if feature_image is None:
-            feature_image = image.fetch_random_lynx_image()
-            body['posts'][0].update({
-                "feature_image": feature_image,
-                "og_image": feature_image,
-                "twitter_image": feature_image
-            })
-        # Parse link previews
-        if 'kg-card' not in mobile_doc:
-            doc = generate_link_previews(post)
-            LOGGER.info(f'Lynx mobile doc: {doc}')
-            # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
+    if primary_tag.get('slug') == 'roundup' and feature_image is None:
+        feature_image = image.fetch_random_lynx_image()
+        body['posts'][0].update({
+            "feature_image": feature_image,
+            "og_image": feature_image,
+            "twitter_image": feature_image
+         })
     # Update image meta tags
-    if feature_image is not None:
+    elif feature_image is not None:
         body['posts'][0].update({
             "og_image": feature_image,
             "twitter_image": feature_image
         })
+    ghost.posts.update(post.id, title='Updated title')
     response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(jsonify(response), code)
 
+
+@LOGGER.catch
+@api.route('/posts/embed', methods=['POST'])
+def generate_embedded_link_previews():
+    """Update post metadata & render Lynx previews."""
+    post = request.get_json()['post']['current']
+    post_id = post.get('id')
+    slug = post.get('slug')
+    mobile_doc = post.get('mobiledoc')
+    if 'kg-card' not in mobile_doc:
+        doc = generate_link_previews(post)
+        LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
+        # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
+        return make_response(f'Generated Previews for Lynx post {slug}: {doc}', 200)
+    return make_response(f'Lynx post {slug} already contains previews.', 200)
+    
 
 @LOGGER.catch
 @api.route('/posts/metadata', methods=['GET'])

@@ -4,6 +4,7 @@ from flask import current_app as api
 from flask import make_response, request, jsonify
 import requests
 from mixpanel import Mixpanel
+from api import db
 from api.log import LOGGER
 
 
@@ -43,3 +44,13 @@ def newsletter_welcome_message():
         data=body,
     )
     return make_response(jsonify(req.json()), 200)
+
+
+@LOGGER.catch
+@api.route('/members/donation', methods=['POST'])
+def donation_received():
+    """Parse incoming donations."""
+    donation = request.get_json()
+    results = db.insert_records(donation, 'coffee', replace=False)
+    LOGGER.info(results)
+    return make_response(jsonify(results))

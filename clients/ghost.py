@@ -10,12 +10,24 @@ from api.log import LOGGER
 class Ghost:
     """Ghost admin client."""
 
-    def __init__(self, api_key, url):
-        self.api_key = api_key
-        self.client_id = api_key.split(':')[0]
-        self.secret = api_key.split(':')[1]
-        self.url = url
-        self.token = None
+    def __init__(
+            self,
+            base_url,
+            version,
+            client_id,
+            client_secret
+    ):
+        """
+        Creates a new Ghost API client.
+
+        :param base_url: The base url of the server
+        :param version: The server version to use
+        :param client_id: Self-supplied client ID
+        :param client_secret: Self-supplied client secret
+        """
+        self.client_id = client_id
+        self.secret = client_secret
+        self.url = f'{base_url}/ghost/api/v{version}'
 
     def __https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
@@ -80,3 +92,4 @@ class Ghost:
         endpoint = f'{self.url}/db/'
         req = requests.get(endpoint, headers=headers)
         return req.json()
+

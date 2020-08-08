@@ -5,7 +5,12 @@ from google.cloud import storage
 class GCS:
     """Google Cloud Storage client."""
 
-    def __init__(self, bucket_name: str, bucket_url: str, bucket_lynx: str):
+    def __init__(
+            self,
+            bucket_name: str,
+            bucket_url: str,
+            bucket_lynx: str
+    ):
         self.bucket_name = bucket_name
         self.bucket_url = bucket_url
         self.bucket_lynx = bucket_lynx

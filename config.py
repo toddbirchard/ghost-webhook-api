@@ -46,7 +46,8 @@ class Config:
     GHOST_API_BASE_URL = environ.get('GHOST_API_BASE_URL')
     GHOST_API_USERNAME = environ.get('GHOST_API_USERNAME')
     GHOST_API_PASSWORD = environ.get('GHOST_API_PASSWORD')
-    GHOST_API_KEY = environ.get('GHOST_API_KEY')
+    GHOST_CLIENT_ID = environ.get('GHOST_CLIENT_ID')
+    GHOST_ADMIN_API_KEY = environ.get('GHOST_ADMIN_API_KEY')
     GHOST_API_EXPORT_URL = f'{GHOST_API_BASE_URL}/admin/db/'
 
     # Mailgun
