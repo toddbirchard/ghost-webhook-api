@@ -10,6 +10,6 @@ from api.log import LOGGER
 def donation_received():
     """Parse incoming donations."""
     donation = request.get_json()
-    results = db.insert_records(donation, 'coffee', replace=True)
+    results = db.insert_records(donation, 'coffee', replace=False)
     LOGGER.info(results)
     return make_response(jsonify(results))
