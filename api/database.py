@@ -1,11 +1,12 @@
 """Database client."""
 from typing import List
 from sqlalchemy import create_engine, MetaData, Table, text
+from sqlalchemy.orm import sessionmaker
 from api.log import LOGGER
 
 
 class Database:
-    """Blog database connection client."""
+    """Database client."""
 
     def __init__(self, db_uri: str, db_args: dict):
         self.engines = {
@@ -20,6 +21,8 @@ class Database:
                 echo=False
             )
         }
+        self.session_engine = create_engine(db_uri, connect_args=db_args, echo=False)
+        self.session = sessionmaker(bind=self.session_engine)
 
     def _table(self, table_name: str) -> Table:
         return Table(
@@ -55,6 +58,11 @@ class Database:
         """Fetch all rows via query."""
         rows = self.engines[table_name].execute(query).fetchall()
         return [row.items() for row in rows]
+
+    @LOGGER.catch
+    def fetch_record(self, query, table_name='analytics') -> str:
+        """Fetch row via query."""
+        return self.engines[table_name].execute(query).fetch()
 
     @LOGGER.catch
     def insert_records(self, rows, table_name: str, replace=None) -> str:

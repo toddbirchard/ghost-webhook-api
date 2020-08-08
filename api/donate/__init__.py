@@ -6,7 +6,7 @@ from api.log import LOGGER
 
 
 @LOGGER.catch
-@api.route('/donate', methods=['POST'])
+@api.route('/donation', methods=['POST'])
 def donation_received():
     """Parse incoming donations."""
     donation = request.get_json()

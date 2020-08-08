@@ -8,7 +8,7 @@ from api import sms
 @LOGGER.catch
 @api.route('/authors/posts/created', methods=['POST'])
 def author_created_post_notification():
-    """Notify blog editor upon post creation."""
+    """Notify admin upon author post creation."""
     data = request.get_json()['post']['current']
     title = data['title']
     image = data.get('feature_image', None)

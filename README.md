@@ -8,7 +8,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/network)
 
-![Jamstack Automation API](https://github.com/toddbirchard/jamstack-automations/blob/master/.github/jamstack@2x.png)
+![Jamstack Automation API](./.github/jamstack@2x.png)
 
 Supplementary API to optimize JAMStack sites via webhooks. Listens for site updates to clean metadata, optimize images, handle user sign-ups, and much more.
 
@@ -16,10 +16,10 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 ## Endpoints
 
 #### Posts
-  * **GET** `/post/all/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.)
-  * **GET** `/post/backup`: Fetch JSON backup of all blog data.
-  * **POST** `/post/metadata`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.)
-  * **POST** `/post/lynx/previews`: Replace HTML anchor tags with rich-content link embeds.
+  * **GET** `/posts/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.)
+  * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
+  * **POST** `/posts/update`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.)
+  * **POST** `/posts/lynx/previews`: Replace HTML anchor tags with rich-content link embeds.
 #### Searches
   * **GET** `/searches/week`: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
   * **GET** `/searches/historical`: Append current week's Algolia searches to a historical table of all searches.
@@ -36,7 +36,9 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
 #### Authors
   * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.
-  
+#### Donations
+  * **POST** `/donation`: Consumes a payload sent by BuyMeACoffee each time a donation is made & saves the result.
+    
 ## Installation
 
 **Installation via `requirements.txt`**:

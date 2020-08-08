@@ -9,7 +9,7 @@ from .lynx.cards import generate_link_previews
 
 
 @LOGGER.catch
-@api.route('/post/update', methods=['POST'])
+@api.route('/posts/update', methods=['POST'])
 def update_post():
     """Update post metadata & render Lynx previews."""
     post = request.get_json()['post']['current']
@@ -19,7 +19,7 @@ def update_post():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
-    mobiledoc = post.get('mobiledoc')
+    mobile_doc = post.get('mobiledoc')
     time = get_current_time()
     body = {
         "posts": [{
@@ -43,7 +43,7 @@ def update_post():
                 "twitter_image": feature_image
             })
         # Parse link previews
-        if 'kg-card' not in mobiledoc:
+        if 'kg-card' not in mobile_doc:
             doc = generate_link_previews(post)
             LOGGER.info(f'Lynx mobile doc: {doc}')
             # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
@@ -59,7 +59,7 @@ def update_post():
 
 
 @LOGGER.catch
-@api.route('/post/metadata', methods=['GET'])
+@api.route('/posts/metadata', methods=['GET'])
 def post_metadata_sanitize():
     """Mass update post metadata."""
     queries = get_queries()
@@ -70,7 +70,7 @@ def post_metadata_sanitize():
 
 
 @LOGGER.catch
-@api.route('/post/backup', methods=['GET'])
+@api.route('/posts/backup', methods=['GET'])
 def backup_database():
     """Save JSON backup of database."""
     json = ghost.get_json_backup()
