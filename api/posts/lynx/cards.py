@@ -1,6 +1,7 @@
 """Replace <a> tags in Lynx posts with cards."""
 import re
 import simplejson as json
+from flask import jsonify
 from api.log import LOGGER
 from .scrape import scrape_link
 from .doc import mobile_doc
@@ -15,4 +16,4 @@ def generate_link_previews(post) -> str:
     mobile_doc['cards'] = link_previews
     for i, link in enumerate(link_previews):
         mobile_doc['sections'].append([10, i])
-    return str(mobile_doc)
+    return jsonify(mobile_doc)
