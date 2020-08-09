@@ -50,11 +50,16 @@ def render_json_ltd(html, base_url: str) -> Optional[dict]:
 def get_title(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata title."""
     title = None
-    if bool(_data):
+    if bool(_data) and _data.get('headline'):
         if isinstance(_data.get('headline'), list):
             title = _data['headline'][0]
         elif isinstance(_data.get('headline'), str):
             title = _data.get('headline')
+        if isinstance(title, str):
+            return title
+    if bool(_data) and _data.get('title'):
+        if isinstance(_data.get('title'), list):
+            title = _data['title'][0]
         elif isinstance(_data.get('title'), str):
             title = _data.get('title')
         if isinstance(title, str):
@@ -73,8 +78,8 @@ def get_title(_data: dict, html) -> Optional[str]:
 def get_image(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata `share image`."""
     image = None
-    if bool(_data):
-        if isinstance(_data.get('image'), list):
+    if bool(_data) and _data.get('image'):
+        if isinstance(_data['image'], list):
             image = _data['image'][0].get('url')
         elif isinstance(_data, dict):
             image = _data['image'].get('url')
@@ -106,8 +111,8 @@ def get_description(_data: dict, html) -> Optional[str]:
 def get_author(_data: dict, html) -> Optional[str]:
     """Scrape author name."""
     author = None
-    if bool(_data):
-        if isinstance(_data.get('author'), list):
+    if bool(_data) and _data.get('author'):
+        if isinstance(_data['author'], list):
             author = _data['author'][0].get('name')
         elif isinstance(_data['author'], dict):
             author = _data['author'].get('name')
@@ -163,11 +168,10 @@ def get_domain(url: str) -> Optional[str]:
 def get_canonical(_data: dict, html) -> Optional[str]:
     """Get parsed_metadata canonical URL."""
     canonical = None
-    if bool(_data):
-        if _data.get('mainEntityOfPage'):
-            canonical = _data['mainEntityOfPage'].get('@id')
-        if isinstance(canonical, str):
-            return canonical
+    if bool(_data) and _data.get('mainEntityOfPage'):
+        canonical = _data['mainEntityOfPage'].get('@id')
+    if isinstance(canonical, str):
+        return canonical
     if html.find("link", attrs={"rel": "canonical"}):
         canonical = html.find("link", attrs={"rel": "canonical"}).get('href')
     elif html.find("link", attrs={"rel": "og:url"}):
