@@ -48,9 +48,9 @@ def update_post():
         if 'kg-card' not in html or 'kg-card' not in previous['html']:
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-            body['posts'][0].update({
-                "mobiledoc": doc
-            })
+            # body['posts'][0].update({
+            #     "mobiledoc": doc
+            # })
     # Update image meta tags
     elif feature_image is not None:
         body['posts'][0].update({
