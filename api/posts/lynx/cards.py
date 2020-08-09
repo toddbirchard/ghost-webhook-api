@@ -15,4 +15,4 @@ def generate_link_previews(post) -> str:
     mobile_doc['cards'] = link_previews
     for i, link in enumerate(link_previews):
         mobile_doc['sections'].append([10, i])
-    return json.loads(mobile_doc)
+    return str(mobile_doc)
