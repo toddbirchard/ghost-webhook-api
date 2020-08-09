@@ -61,20 +61,22 @@ def generate_embedded_link_previews():
     html = post.get('html')
     prev_html = post.get('prev_html')
     time = get_current_time()
-    if 'kg-card' not in html or 'kg-card' not in prev_html['html']:
-        doc = generate_link_previews(post)
-        LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
-        body = {
-            "posts": [{
-                "mobiledoc": doc,
-                "updated_at": time
+    if slug == 'roundup':
+        if 'kg-card' not in html or 'kg-card' not in prev_html['html']:
+            doc = generate_link_previews(post)
+            LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
+            body = {
+                "posts": [{
+                    "mobiledoc": doc,
+                    "updated_at": time
+                }
+                ]
             }
-            ]
-        }
-        response, code = ghost.update_post(post_id, body, slug)
-        # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
-        return make_response(f'Updated {slug} with code {code}: {doc}', 200)
-    return make_response(f'Lynx post {slug} already contains previews.', 200)
+            response, code = ghost.update_post(post_id, body, slug)
+            # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
+            return make_response(f'Updated {slug} with code {code}: {doc}', 200)
+        return make_response(f'Lynx post {slug} already contains previews.', 200)
+    pass
     
 
 @LOGGER.catch
