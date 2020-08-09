@@ -110,7 +110,8 @@ def get_description(_data: dict, html) -> Optional[str]:
         description = html.find("meta", property="og:description").get('content')
     elif html.find("meta", property="twitter:description"):
         description = html.find("meta", property="twitter:description").get('content')
-    return description.replace("'", "")
+    if description:
+        return description.replace("'", "")
 
 
 def get_author(_data: dict, html) -> Optional[str]:
@@ -129,7 +130,10 @@ def get_author(_data: dict, html) -> Optional[str]:
         author = html.find("meta", property="twitter:creator").get('content')
     elif html.find("a", attrs={"class": "commit-author"}):
         author = html.find("a", attrs={"class": "commit-author"}).get('href')
-    return author
+    if author:
+        return author
+    else:
+        return ""
 
 
 def get_publisher(_data: dict) -> Optional[str]:
@@ -140,7 +144,10 @@ def get_publisher(_data: dict) -> Optional[str]:
             publisher = _data['publisher'][0].get('name')
         elif isinstance(_data['publisher'], dict):
             publisher = _data['publisher'].get('name')
-    return publisher
+    if publisher:
+        return publisher
+    else:
+        return ""
 
 
 def get_favicon(html, base_url: str) -> Optional[str]:
