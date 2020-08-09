@@ -16,7 +16,7 @@ def scrape_link(url) -> Optional[List[dict]]:
         LOGGER.error(f'Invalid Lynx URL threw {req.status_code}: {url}')
         return None
     html = BeautifulSoup(req.content, 'html.parser')
-    base_url = get_base_url(html, url)
+    base_url = get_base_url(req.content, url)
     json_ld = render_json_ltd(req.content, base_url)
     card = ["bookmark", {
                 "type": "bookmark",
