@@ -12,20 +12,20 @@ class Ghost:
 
     def __init__(
             self,
-            admin_api_base_url: str,
+            api_url: str,
             client_id: str,
             client_secret: str
     ):
         """
         Creates a new Ghost API client.
 
-        :param admin_api_base_url: Ghost's admin API base URL
+        :param api_url: Ghost's admin API base URL
         :param client_id: Self-supplied client ID
         :param client_secret: Self-supplied client secret
         """
         self.client_id = client_id
         self.secret = client_secret
-        self.url = admin_api_base_url
+        self.url = api_url
 
     def __https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""

@@ -18,7 +18,7 @@ gcs = GCS(
 )
 # gbq = BigQuery(Config.GCP_BIGQUERY_URI)
 ghost = Ghost(
-    base_url=Config.GHOST_ADMIN_API_URL,
+    api_url=Config.GHOST_ADMIN_API_URL,
     client_id=Config.GHOST_CLIENT_ID,
     client_secret=Config.GHOST_ADMIN_API_KEY,
  )
