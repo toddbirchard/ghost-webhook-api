@@ -33,13 +33,14 @@ def update_post():
             }
         ]
     }
-    if primary_tag.get('slug') == 'roundup' and feature_image is None:
-        feature_image = image.fetch_random_lynx_image()
-        body['posts'][0].update({
-            "feature_image": feature_image,
-            "og_image": feature_image,
-            "twitter_image": feature_image
-         })
+    if primary_tag.get('slug') == 'roundup':
+        if feature_image is None:
+            feature_image = image.fetch_random_lynx_image()
+            body['posts'][0].update({
+                "feature_image": feature_image,
+                "og_image": feature_image,
+                "twitter_image": feature_image
+             })
     # Update image meta tags
     elif feature_image is not None:
         body['posts'][0].update({
@@ -59,11 +60,11 @@ def generate_embedded_link_previews():
     post_id = post.get('id')
     slug = post.get('slug')
     html = post.get('html')
-    prev_html = post.get('prev_html')
+    previous = post.get('previous')
     primary_tag = post.get('primary_tag')
     time = get_current_time()
     if primary_tag['slug'] == 'roundup':
-        if 'kg-card' not in html or 'kg-card' not in prev_html['html']:
+        if 'kg-card' not in html or 'kg-card' not in previous['html']:
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
             body = {
