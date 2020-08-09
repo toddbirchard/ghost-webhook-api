@@ -73,7 +73,7 @@ def get_title(_data: dict, html) -> Optional[str]:
         title = html.find("meta", property="twitter:title").get('content')
     elif html.find("h1"):
         title = html.find("h1").string
-    return repr(title)
+    return title
 
 
 def get_image(_data: dict, html) -> Optional[str]:
@@ -103,14 +103,14 @@ def get_description(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata description."""
     description = None
     if bool(_data) and _data.get('description'):
-        return repr(_data['description'])
+        return _data['description']
     if html.find("meta", property="description"):
         description = html.find("meta", property="description").get('content')
     elif html.find("meta", property="og:description"):
         description = html.find("meta", property="og:description").get('content')
     elif html.find("meta", property="twitter:description"):
         description = html.find("meta", property="twitter:description").get('content')
-    return repr(description)
+    return description
 
 
 def get_author(_data: dict, html) -> Optional[str]:
