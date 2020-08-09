@@ -5,6 +5,7 @@ import extruct
 from bs4 import BeautifulSoup
 from api.log import LOGGER
 from api.posts.lynx.utils import http_headers
+from w3lib.html import get_base_url
 
 
 @LOGGER.catch
@@ -14,8 +15,8 @@ def scrape_link(url) -> Optional[List[dict]]:
     if req.status_code != 200:
         LOGGER.error(f'Invalid Lynx URL threw {req.status_code}: {url}')
         return None
-    base_url = get_domain(url)
     html = BeautifulSoup(req.content, 'html.parser')
+    base_url = get_base_url(html, url)
     json_ld = render_json_ltd(req.content, base_url)
     card = ["bookmark", {
                 "type": "bookmark",
