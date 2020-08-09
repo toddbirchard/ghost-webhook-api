@@ -169,9 +169,10 @@ def get_canonical(_data: dict, html) -> Optional[str]:
     """Get parsed_metadata canonical URL."""
     canonical = None
     if bool(_data) and _data.get('mainEntityOfPage'):
-        canonical = _data['mainEntityOfPage'].get('@id')
-    if isinstance(canonical, str):
-        return canonical
+        if isinstance(_data['mainEntityOfPage'], dict):
+            canonical = _data['mainEntityOfPage'].get('@id')
+        elif isinstance(_data['mainEntityOfPage'], str):
+            return _data['mainEntityOfPage']
     if html.find("link", attrs={"rel": "canonical"}):
         canonical = html.find("link", attrs={"rel": "canonical"}).get('href')
     elif html.find("link", attrs={"rel": "og:url"}):
