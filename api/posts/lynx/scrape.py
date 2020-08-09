@@ -80,7 +80,11 @@ def get_image(_data: dict, html) -> Optional[str]:
     image = None
     if bool(_data) and _data.get('image'):
         if isinstance(_data['image'], list):
-            image = _data['image'][0].get('url')
+            image = _data['image'][0]
+            if isinstance(image, dict):
+                image = image.get('url')
+            if isinstance(image, str):
+                return image
         elif isinstance(_data, dict):
             image = _data['image'].get('url')
         if isinstance(image, str):
