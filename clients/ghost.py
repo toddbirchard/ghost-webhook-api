@@ -27,7 +27,7 @@ class Ghost:
         """
         self.client_id = client_id
         self.secret = client_secret
-        self.url = f'{base_url}/ghost/api/v{version}'
+        self.url = f'{base_url}/ghost/api/v3/'
 
     def __https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
