@@ -13,9 +13,9 @@ def update_post():
     action = payload['action']
     user = payload['sender'].get('login')
     if user == 'toddbirchard':
-        return make_response('Activity ignored.', 200)
+        return make_response('Activity ignored.', 200, {'content-type': 'text/html; charset=UTF-8'})
     sms.send_message(payload)
-    return make_response('SMS notification sent.', 200)
+    return make_response('SMS notification sent.', 200, {'content-type': 'text/html; charset=UTF-8'})
 
 
 
