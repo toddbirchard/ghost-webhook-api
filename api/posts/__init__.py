@@ -20,6 +20,8 @@ def update_post():
     feature_image = post.get('feature_image')
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
+    html = post.get('html')
+    previous = post.get('previous')
     time = get_current_time()
     body = {
         "posts": [{
@@ -41,6 +43,16 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
              })
+        if 'kg-card' not in html or 'kg-card' not in previous['html']:
+            doc = generate_link_previews(post)
+            LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
+            body['posts'][0].update({
+                "posts": [{
+                    "mobiledoc": doc,
+                    "updated_at": time
+                }
+                ]
+            })
     # Update image meta tags
     elif feature_image is not None:
         body['posts'][0].update({
