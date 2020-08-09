@@ -46,7 +46,6 @@ def update_post():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
-    ghost.posts.update(post.id, title='Updated title')
     response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(jsonify(response), code)
@@ -55,16 +54,26 @@ def update_post():
 @LOGGER.catch
 @api.route('/posts/embed', methods=['POST'])
 def generate_embedded_link_previews():
-    """Update post metadata & render Lynx previews."""
+    """Render Lynx previews."""
     post = request.get_json()['post']['current']
     post_id = post.get('id')
     slug = post.get('slug')
-    mobile_doc = post.get('mobiledoc')
-    if 'kg-card' not in mobile_doc:
+    html = post.get('html')
+    prev_html = post.get('prev_html')
+    time = get_current_time()
+    if 'kg-card' not in html or 'kg-card' not in prev_html['html']:
         doc = generate_link_previews(post)
         LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
+        body = {
+            "posts": [{
+                "mobiledoc": doc,
+                "updated_at": time
+            }
+            ]
+        }
+        response, code = ghost.update_post(post_id, body, slug)
         # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
-        return make_response(f'Generated Previews for Lynx post {slug}: {doc}', 200)
+        return make_response(f'Updated {slug} with code {code}: {doc}', 200)
     return make_response(f'Lynx post {slug} already contains previews.', 200)
     
 
