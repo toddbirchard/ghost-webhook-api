@@ -27,6 +27,7 @@ def github_pr():
 def github_issue():
     """Send SMS notification upon issue creation."""
     payload = request.get_json()
+    LOGGER.info(payload)
     action = payload.get('action')
     user = payload['sender'].get('login')
     issue = payload['issue']
