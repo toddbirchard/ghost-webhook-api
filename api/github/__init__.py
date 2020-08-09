@@ -7,7 +7,7 @@ from api.log import LOGGER
 
 @LOGGER.catch
 @api.route('/github/pr', methods=['POST'])
-def github_pr_opened():
+def github_pr():
     """Send SMS notification for all PR activity."""
     payload = request.get_json()
     action = payload.get('action')
@@ -24,7 +24,7 @@ def github_pr_opened():
 
 @LOGGER.catch
 @api.route('/github/issue', methods=['POST'])
-def github_pr_opened():
+def github_issue():
     """Send SMS notification upon issue creation."""
     payload = request.get_json()
     action = payload.get('action')
