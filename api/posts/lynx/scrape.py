@@ -73,7 +73,7 @@ def get_title(_data: dict, html) -> Optional[str]:
         title = html.find("meta", property="twitter:title").get('content')
     elif html.find("h1"):
         title = html.find("h1").string
-    return title
+    return repr(title)
 
 
 def get_image(_data: dict, html) -> Optional[str]:
@@ -110,7 +110,7 @@ def get_description(_data: dict, html) -> Optional[str]:
         description = html.find("meta", property="og:description").get('content')
     elif html.find("meta", property="twitter:description"):
         description = html.find("meta", property="twitter:description").get('content')
-    return description
+    return repr(description)
 
 
 def get_author(_data: dict, html) -> Optional[str]:
@@ -140,7 +140,7 @@ def get_publisher(_data: dict) -> Optional[str]:
             publisher = _data['publisher'][0].get('name')
         elif isinstance(_data['publisher'], dict):
             publisher = _data['publisher'].get('name')
-    return publisher
+    return repr(publisher)
 
 
 def get_favicon(html, base_url: str) -> Optional[str]:
