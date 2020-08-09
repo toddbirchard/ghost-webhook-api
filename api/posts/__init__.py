@@ -47,9 +47,7 @@ def update_post():
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
             body['posts'][0].update({
-                "posts": [{
-                    "mobiledoc": doc
-                }]
+                "mobiledoc": doc
             })
     # Update image meta tags
     elif feature_image is not None:
