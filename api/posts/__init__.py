@@ -48,7 +48,7 @@ def update_post():
         })
     response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
-    return make_response(jsonify(response), code)
+    return make_response(response, code)
 
 
 @LOGGER.catch

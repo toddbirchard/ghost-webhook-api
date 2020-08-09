@@ -12,22 +12,20 @@ class Ghost:
 
     def __init__(
             self,
-            base_url,
-            version,
-            client_id,
-            client_secret
+            admin_api_base_url: str,
+            client_id: str,
+            client_secret: str
     ):
         """
         Creates a new Ghost API client.
 
-        :param base_url: The base url of the server
-        :param version: The server version to use
+        :param admin_api_base_url: Ghost's admin API base URL
         :param client_id: Self-supplied client ID
         :param client_secret: Self-supplied client secret
         """
         self.client_id = client_id
         self.secret = client_secret
-        self.url = f'{base_url}/ghost/api/v3/'
+        self.url = admin_api_base_url
 
     def __https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
@@ -64,8 +62,14 @@ class Ghost:
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
-    def update_post(self, post_id, body: dict, slug: str) -> Tuple[dict, int]:
-        """Update post by ID."""
+    def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
+        """
+        Update post by ID.
+
+        :param post_id: Ghost post ID
+        :param body: Payload containing post updates.
+        :param slug: Human-readable post identifier.
+        """
         try:
             req = requests.put(
                 f'{self.url}/posts/{post_id}/',
@@ -74,7 +78,7 @@ class Ghost:
             )
             response = f'Received code {req.status_code} when updating `{slug}`.'
             LOGGER.info(response)
-            return {'RESPONSE': response}, req.status_code
+            return response, req.status_code
         except RequestException as exc:
             LOGGER.error(exc)
             raise exc
