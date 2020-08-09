@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 def get_current_time() -> str:
 	"""Get current EST time."""
 	now = datetime.now(pytz.utc)
-	return now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-6] + '000Z'
+	return now.strftime("%Y-%m-%dT%H:%M:%S.%f")
 
 
 def get_current_date(timeframe: int) -> str:
