@@ -1,6 +1,5 @@
 """Routes to transform post data."""
 from time import sleep
-import simplejson as json
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import db, image

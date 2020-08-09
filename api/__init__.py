@@ -18,7 +18,8 @@ def init_api():
             analytics,
             members,
             authors,
-            routes
+            routes,
+            github
         )
 
         return api
