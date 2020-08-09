@@ -62,7 +62,7 @@ def generate_embedded_link_previews():
     prev_html = post.get('prev_html')
     primary_tag = post.get('primary_tag')
     time = get_current_time()
-    if primary_tag['roundup'] == 'roundup':
+    if primary_tag['slug'] == 'roundup':
         if 'kg-card' not in html or 'kg-card' not in prev_html['html']:
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
