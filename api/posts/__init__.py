@@ -1,5 +1,6 @@
 """Routes to transform post data."""
 from time import sleep
+import simplejson as json
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import db, image
@@ -48,7 +49,7 @@ def update_post():
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
             body['posts'][0].update({
-                "mobiledoc": doc
+                "mobiledoc": json.dumps(doc)
             })
     # Update image meta tags
     elif feature_image is not None:
