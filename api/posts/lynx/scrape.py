@@ -65,8 +65,8 @@ def get_title(_data: dict, html) -> Optional[str]:
             title = _data.get('title')
         if isinstance(title, str):
             return title
-    elif html.title.string:
-        title = html.title.string
+    elif html.find("title"):
+        title = html.find('title').string
     elif html.find("meta", property="og:title"):
         title = html.find("meta", property="og:title").get('content')
     elif html.find("meta", property="twitter:title"):
