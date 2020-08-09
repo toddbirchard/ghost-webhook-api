@@ -59,7 +59,7 @@ def update_post():
     if body['posts'][0].get('mobiledoc'):
         sleep(1)
         time = get_current_time()
-        body['posts'][0]['mobiledoc'] = time
+        body['posts'][0]['updated_at'] = time
     response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(response, code)
