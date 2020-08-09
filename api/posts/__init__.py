@@ -1,4 +1,5 @@
 """Routes to transform post data."""
+from time import sleep
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from api import db, image
@@ -55,6 +56,10 @@ def update_post():
             "og_image": feature_image,
             "twitter_image": feature_image
         })
+    if body['posts'][0].get('mobiledoc'):
+        sleep(1)
+        time = get_current_time()
+        body['posts'][0]['mobiledoc'] = time
     response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(response, code)
