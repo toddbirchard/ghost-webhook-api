@@ -60,6 +60,7 @@ def update_post():
         sleep(1)
         time = get_current_time()
         body['posts'][0]['updated_at'] = time
+    LOGGER.info(f'Originally updated at {post.get("updated_at")}, new timestamp {time}')
     response, code = ghost.update_post(post_id, body, slug)
     LOGGER.info(f'Post Updated with code {code}: {body}')
     return make_response(response, code)
