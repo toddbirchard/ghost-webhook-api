@@ -9,7 +9,7 @@ from w3lib.html import get_base_url
 
 
 @LOGGER.catch
-def scrape_link(url) -> Optional[List[dict]]:
+def scrape_link(url: str) -> Optional[List[dict]]:
     """Replace anchor tags with embedded previews from scraped data."""
     req = requests.get(url, headers=http_headers)
     if req.status_code != 200:
@@ -35,7 +35,7 @@ def scrape_link(url) -> Optional[List[dict]]:
     return card
 
 
-def render_json_ltd(html, base_url: str) -> Optional[dict]:
+def render_json_ltd(html: bytes, base_url: str) -> Optional[dict]:
     """Fetch JSON-LD structured data."""
     metadata = extruct.extract(
         html,
@@ -48,23 +48,24 @@ def render_json_ltd(html, base_url: str) -> Optional[dict]:
     return metadata
 
 
-def get_title(_data: dict, html) -> Optional[str]:
-    """Scrape parsed_metadata title."""
+def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
+    """Fetch title via extruct with BeautifulSoup fallback."""
     title = None
-    if bool(_data) and _data.get('headline'):
-        if isinstance(_data.get('headline'), list):
-            title = _data['headline'][0]
-        elif isinstance(_data.get('headline'), str):
-            title = _data.get('headline')
+    if bool(json_ld) and json_ld.get('headline'):
+        if isinstance(json_ld.get('headline'), list):
+            title = json_ld['headline'][0]
+        elif isinstance(json_ld.get('headline'), str):
+            title = json_ld.get('headline')
         if isinstance(title, str):
             return title.replace("'", "")
-    if bool(_data) and _data.get('title'):
-        if isinstance(_data.get('title'), list):
-            title = _data['title'][0]
-        elif isinstance(_data.get('title'), str):
-            title = _data.get('title')
+    if bool(json_ld) and json_ld.get('title'):
+        if isinstance(json_ld.get('title'), list):
+            title = json_ld['title'][0]
+        elif isinstance(json_ld.get('title'), str):
+            title = json_ld.get('title')
         if isinstance(title, str):
             return title
+    # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("title"):
         title = html.find('title').string
     elif html.find("meta", property="og:title"):
@@ -76,20 +77,21 @@ def get_title(_data: dict, html) -> Optional[str]:
     return title.replace("'", "")
 
 
-def get_image(_data: dict, html) -> Optional[str]:
-    """Scrape parsed_metadata `share image`."""
+def get_image(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
+    """Fetch share image via extruct with BeautifulSoup fallback."""
     image = None
-    if bool(_data) and _data.get('image'):
-        if isinstance(_data['image'], list):
-            image = _data['image'][0]
+    if bool(json_ld) and json_ld.get('image'):
+        if isinstance(json_ld['image'], list):
+            image = json_ld['image'][0]
             if isinstance(image, dict):
                 image = image.get('url')
             if isinstance(image, str):
                 return image
-        elif isinstance(_data.get('image'), dict):
-            image = _data['image'].get('url')
+        elif isinstance(json_ld.get('image'), dict):
+            image = json_ld['image'].get('url')
         if isinstance(image, str):
             return image
+    # Fallback to BeautifulSoup if target lacks structured data
     if html.find("meta", property="image"):
         image = html.find("meta", property="image").get('content')
     elif html.find("meta", property="og:image"):
@@ -99,11 +101,12 @@ def get_image(_data: dict, html) -> Optional[str]:
     return image
 
 
-def get_description(_data: dict, html) -> Optional[str]:
-    """Scrape parsed_metadata description."""
+def get_description(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
+    """Fetch description via extruct with BeautifulSoup fallback."""
     description = None
-    if bool(_data) and _data.get('description'):
-        return _data['description'].replace("'", "")
+    if bool(json_ld) and json_ld.get('description'):
+        return json_ld['description'].replace("'", "")
+    # Fallback to BeautifulSoup if target lacks structured data
     if html.find("meta", property="description"):
         description = html.find("meta", property="description").get('content')
     elif html.find("meta", property="og:description"):
@@ -114,16 +117,17 @@ def get_description(_data: dict, html) -> Optional[str]:
         return description.replace("'", "")
 
 
-def get_author(_data: dict, html) -> Optional[str]:
-    """Scrape author name."""
+def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
+    """Fetch author name via extruct with BeautifulSoup fallback."""
     author = None
-    if bool(_data) and _data.get('author'):
-        if isinstance(_data['author'], list):
-            author = _data['author'][0].get('name')
-        elif isinstance(_data['author'], dict):
-            author = _data['author'].get('name')
+    if bool(json_ld) and json_ld.get('author'):
+        if isinstance(json_ld['author'], list):
+            author = json_ld['author'][0].get('name')
+        elif isinstance(json_ld['author'], dict):
+            author = json_ld['author'].get('name')
         if isinstance(author, str):
             return author
+    # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("meta", property="author"):
         author = html.find("meta", property="author").get('content')
     elif html.find("meta", property="twitter:creator"):
@@ -136,22 +140,22 @@ def get_author(_data: dict, html) -> Optional[str]:
         return ""
 
 
-def get_publisher(_data: dict) -> Optional[str]:
-    """Scrape publisher name."""
+def get_publisher(json_ld: dict) -> Optional[str]:
+    """Fetch publisher name via extruct with BeautifulSoup fallback."""
     publisher = None
-    if bool(_data) and _data.get('publisher'):
-        if isinstance(_data['publisher'], list):
-            publisher = _data['publisher'][0].get('name')
-        elif isinstance(_data['publisher'], dict):
-            publisher = _data['publisher'].get('name')
+    if bool(json_ld) and json_ld.get('publisher'):
+        if isinstance(json_ld['publisher'], list):
+            publisher = json_ld['publisher'][0].get('name')
+        elif isinstance(json_ld['publisher'], dict):
+            publisher = json_ld['publisher'].get('name')
     if publisher:
         return publisher
     else:
         return ""
 
 
-def get_favicon(html, base_url: str) -> Optional[str]:
-    """Scrape favicon image."""
+def get_favicon(html: BeautifulSoup, base_url: str) -> Optional[str]:
+    """Fetch favicon with BeautifulSoup."""
     favicon = None
     if html.find("link", attrs={"rel": "icon"}):
         favicon = html.find("link", attrs={"rel": "icon"}).get('href')
@@ -170,21 +174,15 @@ def get_favicon(html, base_url: str) -> Optional[str]:
     return favicon
 
 
-def get_domain(url: str) -> Optional[str]:
-    """Get site root domain name."""
-    domain = url.split('://')[1]
-    name = domain.split('/')[0]
-    return f'https://{name}'
-
-
-def get_canonical(_data: dict, html) -> Optional[str]:
-    """Get parsed_metadata canonical URL."""
+def get_canonical(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
+    """Fetch canonical URL via extruct with BeautifulSoup fallback."""
     canonical = None
-    if bool(_data) and _data.get('mainEntityOfPage'):
-        if isinstance(_data['mainEntityOfPage'], dict):
-            canonical = _data['mainEntityOfPage'].get('@id')
-        elif isinstance(_data['mainEntityOfPage'], str):
-            return _data['mainEntityOfPage']
+    if bool(json_ld) and json_ld.get('mainEntityOfPage'):
+        if isinstance(json_ld['mainEntityOfPage'], dict):
+            canonical = json_ld['mainEntityOfPage'].get('@id')
+        elif isinstance(json_ld['mainEntityOfPage'], str):
+            return json_ld['mainEntityOfPage']
+    # Fallback to BeautifulSoup if target lacks structured data
     if html.find("link", attrs={"rel": "canonical"}):
         canonical = html.find("link", attrs={"rel": "canonical"}).get('href')
     elif html.find("link", attrs={"rel": "og:url"}):
