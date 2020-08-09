@@ -103,7 +103,7 @@ def get_description(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata description."""
     description = None
     if bool(_data) and _data.get('description'):
-        return _data['description']
+        return repr(_data['description'])
     if html.find("meta", property="description"):
         description = html.find("meta", property="description").get('content')
     elif html.find("meta", property="og:description"):
