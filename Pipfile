@@ -22,7 +22,6 @@ Mixpanel = "*"
 Loguru = "*"
 Twilio = "*"
 Beautifulsoup4 = "*"
-metadata_parser = "*"
 extruct = "*"
 simplejson = "*"
 

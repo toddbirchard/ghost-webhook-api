@@ -1,7 +1,6 @@
 """Scrape URLs found in body of Lynx posts for metadata."""
 from typing import Optional, List
 import requests
-import metadata_parser
 import extruct
 from bs4 import BeautifulSoup
 from api.log import LOGGER
@@ -10,40 +9,36 @@ from api.posts.lynx.utils import http_headers
 
 @LOGGER.catch
 def scrape_link(url) -> Optional[List[dict]]:
-    """Scrape links embedded in post for metadata to build preview cards."""
+    """Replace anchor tags with embedded previews from scraped data."""
     req = requests.get(url, headers=http_headers)
     if req.status_code != 200:
         LOGGER.error(f'Invalid Lynx URL threw {req.status_code}: {url}')
         return None
+    base_url = get_domain(url)
     html = BeautifulSoup(req.content, 'html.parser')
-    json_ld = render_json_ltd(url, req.content)
-    parsed_metadata = metadata_parser.MetadataParser(
-        url=url,
-        url_headers=http_headers,
-        search_head_only=False
-    )
+    json_ld = render_json_ltd(req.content, base_url)
     card = ["bookmark", {
                 "type": "bookmark",
-                "url": get_canonical(parsed_metadata),
+                "url": get_canonical(json_ld, html),
                 "metadata": {
-                    "url": get_canonical(parsed_metadata),
-                    "title": get_title(parsed_metadata, json_ld),
-                    "description": get_description(parsed_metadata, json_ld),
-                    "author": get_author(parsed_metadata, html, json_ld),
+                    "url": get_canonical(json_ld, html),
+                    "title": get_title(json_ld, html),
+                    "description": get_description(json_ld, html),
+                    "author": get_author(json_ld, html),
                     "publisher": get_publisher(json_ld),
-                    "thumbnail": get_image(parsed_metadata, json_ld),
-                    "icon": get_favicon(parsed_metadata, html, json_ld, get_domain(url))
+                    "thumbnail": get_image(json_ld, html),
+                    "icon": get_favicon(html, base_url)
                     }
                 }
             ]
     return card
 
 
-def render_json_ltd(url: str, html) -> Optional[dict]:
+def render_json_ltd(html, base_url: str) -> Optional[dict]:
     """Fetch JSON-LD structured data."""
     metadata = extruct.extract(
         html,
-        base_url=get_domain(url),
+        base_url=base_url,
         syntaxes=['json-ld'],
         uniform=True
     )['json-ld']
@@ -52,70 +47,76 @@ def render_json_ltd(url: str, html) -> Optional[dict]:
     return metadata
 
 
-def get_title(parsed_metadata, _data: dict) -> Optional[str]:
+def get_title(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata title."""
     title = None
-    if bool(_data) and _data.get('title'):
-        title = _data['title']
-    elif bool(_data) and _data.get('headline'):
-        title = _data['headline']
-    elif parsed_metadata.get_metadata('title'):
-        title = parsed_metadata.get_metadata('title')
-    elif parsed_metadata.get_metadata('og:title'):
-        title = parsed_metadata.get_metadata('og:title')
-    elif parsed_metadata.get_metadata('twitter:title'):
-        title = parsed_metadata.get_metadata('twitter:title')
-    if title:
-        title = title[0].split('|')[0]
+    if bool(_data):
+        if isinstance(_data.get('headline'), list):
+            title = _data['headline'][0]
+        elif isinstance(_data.get('headline'), str):
+            title = _data.get('headline')
+        elif isinstance(_data.get('title'), str):
+            title = _data.get('title')
+        if isinstance(title, str):
+            return title
+    elif html.title.string:
+        title = html.title.string
+    elif html.find("meta", property="og:title"):
+        title = html.find("meta", property="og:title").get('content')
+    elif html.find("meta", property="twitter:title"):
+        title = html.find("meta", property="twitter:title").get('content')
+    elif html.find("h1"):
+        title = html.find("h1").string
     return title
 
 
-def get_image(parsed_metadata, _data: dict) -> Optional[str]:
+def get_image(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata `share image`."""
     image = None
     if bool(_data):
-        if isinstance(_data, list):
-            image = _data[0]
-        if image is not None and isinstance(_data, dict):
-            image = image.get('image')
-        if isinstance(_data, str):
+        if isinstance(_data.get('image'), list):
+            image = _data['image'][0].get('url')
+        elif isinstance(_data, dict):
+            image = _data['image'].get('url')
+        if isinstance(image, str):
             return image
-    if parsed_metadata.get_metadata('og:image'):
-        image = parsed_metadata.get_metadata('og:image')
-    elif parsed_metadata.get_metadata('twitter:image'):
-        image = parsed_metadata.get_metadata('twitter:image')
+    if html.find("meta", property="image"):
+        image = html.find("meta", property="image").get('content')
+    elif html.find("meta", property="og:image"):
+        image = html.find("meta", property="og:image").get('content')
+    elif html.find("meta", property="twitter:image"):
+        image = html.find("meta", property="twitter:image").get('content')
     return image
 
 
-def get_description(parsed_metadata, _data: dict) -> Optional[str]:
+def get_description(_data: dict, html) -> Optional[str]:
     """Scrape parsed_metadata description."""
     description = None
     if bool(_data) and _data.get('description'):
-        description = _data['description']
-    elif parsed_metadata.get_metadata('description'):
-        description = parsed_metadata.get_metadata('description')
-    elif parsed_metadata.get_metadata('og:description'):
-        description = parsed_metadata.get_metadata('og:description')
-    elif parsed_metadata.get_metadata('twitter:description'):
-        description = parsed_metadata.get_metadata('twitter:description')
+        return _data['description']
+    if html.find("meta", property="description"):
+        description = html.find("meta", property="description").get('content')
+    elif html.find("meta", property="og:description"):
+        description = html.find("meta", property="og:description").get('content')
+    elif html.find("meta", property="twitter:description"):
+        description = html.find("meta", property="twitter:description").get('content')
     return description
 
 
-def get_author(parsed_metadata, html, _data: dict) -> Optional[str]:
+def get_author(_data: dict, html) -> Optional[str]:
     """Scrape author name."""
     author = None
-    if bool(_data) and _data.get('author'):
-        if type(_data['author']) == list:
-            _author = _data['author'][0]
-            author = _author.get('name')
-        elif type(_data['author']) == dict:
+    if bool(_data):
+        if isinstance(_data.get('author'), list):
+            author = _data['author'][0].get('name')
+        elif isinstance(_data['author'], dict):
             author = _data['author'].get('name')
-    elif parsed_metadata.get_metadata('author'):
-        author = parsed_metadata.get_metadata('author')
-    elif parsed_metadata.get_metadata('article:author'):
-        author = parsed_metadata.get_metadata('article:author')
-    elif parsed_metadata.get_metadata('twitter:creator'):
-        author = parsed_metadata.get_metadata('twitter:creator')
+        if isinstance(author, str):
+            return author
+    elif html.find("meta", property="author"):
+        author = html.find("meta", property="author").get('content')
+    elif html.find("meta", property="twitter:creator"):
+        author = html.find("meta", property="twitter:creator").get('content')
     elif html.find("a", attrs={"class": "commit-author"}):
         author = html.find("a", attrs={"class": "commit-author"}).get('href')
     return author
@@ -125,27 +126,18 @@ def get_publisher(_data: dict) -> Optional[str]:
     """Scrape publisher name."""
     publisher = None
     if bool(_data) and _data.get('publisher'):
-        if type(_data['publisher']) == list:
-            _publisher = _data['publisher'][0]
-            publisher = _publisher.get('name')
-        elif type(_data['publisher']) == dict:
+        if isinstance(_data['publisher'], list):
+            publisher = _data['publisher'][0].get('name')
+        elif isinstance(_data['publisher'], dict):
             publisher = _data['publisher'].get('name')
     return publisher
 
 
-def get_favicon(parsed_metadata, html, _data: dict, base_url: str) -> Optional[str]:
+def get_favicon(html, base_url: str) -> Optional[str]:
     """Scrape favicon image."""
     favicon = None
-    if bool(_data) and _data.get('logo'):
-        favicon = _data['logo'].get('url')
-    if parsed_metadata.get_metadata('shortcut icon'):
-        favicon = parsed_metadata.get_metadata('shortcut icon')
-    elif parsed_metadata.get_metadata('icon'):
-        favicon = parsed_metadata.get_metadata('icon')
-    elif parsed_metadata.get_metadata('shortcut'):
-        favicon = parsed_metadata.get_metadata('shortcut')
-    elif parsed_metadata.get_metadata('apple-touch-icon'):
-        favicon = parsed_metadata.get_metadata('apple-touch-icon')
+    if html.find("link", attrs={"rel": "icon"}):
+        favicon = html.find("link", attrs={"rel": "icon"}).get('href')
     elif html.find("link", attrs={"rel": "fluid-icon"}):
         favicon = html.find("link", attrs={"rel": "fluid-icon"}).get('href')
     elif html.find("link", attrs={"rel": "mask-icon"}):
@@ -154,7 +146,7 @@ def get_favicon(parsed_metadata, html, _data: dict, base_url: str) -> Optional[s
         favicon = html.find("link", attrs={"rel": "icon"}).get('href')
     elif html.find("link", attrs={"rel": "shortcut icon"}):
         favicon = html.find("link", attrs={"rel": "shortcut icon"}).get('href')
-    if favicon and favicon[0] != 'http':
+    if favicon and 'http' not in favicon:
         favicon = base_url + favicon
     if favicon is None:
         favicon = base_url + '/favicon.ico'
@@ -168,9 +160,18 @@ def get_domain(url: str) -> Optional[str]:
     return f'https://{name}'
 
 
-def get_canonical(parsed_metadata) -> Optional[str]:
+def get_canonical(_data: dict, html) -> Optional[str]:
     """Get parsed_metadata canonical URL."""
     canonical = None
-    if parsed_metadata.get_metadata('canonical'):
-        canonical = parsed_metadata.get_metadata('canonical')[0]
+    if bool(_data):
+        if _data.get('mainEntityOfPage'):
+            canonical = _data['mainEntityOfPage'].get('@id')
+        if isinstance(canonical, str):
+            return canonical
+    if html.find("link", attrs={"rel": "canonical"}):
+        canonical = html.find("link", attrs={"rel": "canonical"}).get('href')
+    elif html.find("link", attrs={"rel": "og:url"}):
+        canonical = html.find("link", attrs={"rel": "og:url"}).get('content')
+    elif html.find("link", attrs={"rel": "twitter:url"}):
+        canonical = html.find("link", attrs={"rel": "twitter:url"}).get('content')
     return canonical
