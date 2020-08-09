@@ -85,7 +85,7 @@ def get_image(_data: dict, html) -> Optional[str]:
                 image = image.get('url')
             if isinstance(image, str):
                 return image
-        elif isinstance(_data, dict):
+        elif isinstance(_data.get('image'), dict):
             image = _data['image'].get('url')
         if isinstance(image, str):
             return image
