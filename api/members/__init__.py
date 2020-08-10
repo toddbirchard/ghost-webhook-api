@@ -43,6 +43,7 @@ def newsletter_welcome_message():
         auth=("api", api.config["MAILGUN_API_KEY"]),
         data=body,
     )
+    LOGGER.info(f'Welcome email successfully sent to {name} <{email}>.')
     return make_response(jsonify(req.json()), 200)
 
 

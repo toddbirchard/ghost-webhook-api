@@ -34,10 +34,12 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
-  * **POST** `/members/donation`: Consumes a payload sent by BuyMeACoffee each time a donation is made & saves the result.
+  * **POST** `/members/donation`: Adds record to a ledger of incoming donations from BuyMeACoffee.
 #### Authors
   * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.
-#### Donations
+#### Github
+  *  **POST** `/github/pr`: Send SMS notification when contributors open or modify a Github PR.
+  *  **POST** `/github/issue`: Send SMS notification when contributors open or modify a Github issue.
     
 ## Installation
 
