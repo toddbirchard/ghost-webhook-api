@@ -1,8 +1,8 @@
 """Notify upon Github activity."""
 from flask import current_app as api
 from flask import make_response, request
-from api import sms
-from api.log import LOGGER
+from clients import sms
+from clients.log import LOGGER
 
 
 @LOGGER.catch

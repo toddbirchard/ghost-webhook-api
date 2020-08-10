@@ -4,8 +4,8 @@ from flask import current_app as api
 from flask import make_response, request, jsonify
 import requests
 from mixpanel import Mixpanel
-from api import db
-from api.log import LOGGER
+from clients import db
+from clients.log import LOGGER
 
 
 @LOGGER.catch

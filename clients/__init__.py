@@ -1,5 +1,5 @@
 from clients.database import Database
-from clients.gcs import GCS
+from clients.storage import GCS
 from clients.ghost import Ghost
 from clients.sms import Twilio
 from config import Config

@@ -3,7 +3,7 @@ from typing import Optional, List
 import requests
 import extruct
 from bs4 import BeautifulSoup
-from api.log import LOGGER
+from clients.log import LOGGER
 from api.posts.lynx.utils import http_headers
 from w3lib.html import get_base_url
 

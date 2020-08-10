@@ -1,8 +1,8 @@
 """Fetch site analytics data to determine trending posts."""
 from flask import current_app as api
 from flask import make_response
-from api import bigquery, db
-from api.log import LOGGER
+from clients import bigquery, db
+from clients.log import LOGGER
 
 
 @LOGGER.catch

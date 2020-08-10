@@ -4,7 +4,7 @@ from datetime import datetime as date
 import requests
 from requests.exceptions import RequestException
 import jwt
-from api.log import LOGGER
+from clients.log import LOGGER
 
 
 class Ghost:

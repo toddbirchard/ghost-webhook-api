@@ -2,7 +2,7 @@
 from typing import List
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import sessionmaker
-from api.log import LOGGER
+from clients.log import LOGGER
 
 
 class Database:

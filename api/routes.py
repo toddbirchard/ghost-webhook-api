@@ -1,7 +1,7 @@
 """API health check."""
 from flask import current_app as api
 from flask import make_response
-from api.log import LOGGER
+from clients.log import LOGGER
 
 
 @LOGGER.catch

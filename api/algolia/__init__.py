@@ -1,8 +1,8 @@
 """Fetch top search queries."""
 from flask import current_app as api
 from flask import jsonify, make_response
-from api import db
-from api.log import LOGGER
+from clients import db
+from clients.log import LOGGER
 from .fetch import fetch_algolia_searches
 
 

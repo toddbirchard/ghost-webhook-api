@@ -1,9 +1,5 @@
 """Initialize api."""
 from flask import Flask
-from clients import *
-from api.transform import ImageTransformer
-
-image = ImageTransformer(gcs)
 
 
 def init_api():

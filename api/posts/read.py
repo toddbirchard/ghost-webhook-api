@@ -2,7 +2,7 @@
 from typing import List
 from os import listdir
 from os.path import isfile, join
-from api.log import LOGGER
+from clients.log import LOGGER
 
 
 def get_queries() -> dict:

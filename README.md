@@ -27,7 +27,7 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
   * **GET** `/analytics/week`: Migrate site analytics data from BigQuery to MySQL table ("trending this week" widget).
   * **GET** `/analytics/month`: Migrate site analytics data from BigQuery to MySQL table ("trending this month" widget).
 #### Images
-  * **GET** `/images/transform`: Generates missing retina, mobile, and *.webp* images for all posts published in the current month. Accepts a *?directory=* parameter to force transformations for images in other directories.
+  * **GET** `/images/transform`: Generates missing retina and mobile varieties of post `feature_image`s.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **POST** `/image/transform`: Generates retina feature image for single post upon update. 

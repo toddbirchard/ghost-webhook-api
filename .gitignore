@@ -118,3 +118,6 @@ ca-certificate.crt
 
 # logs
 logs/*
+
+# Temporary image storage
+api/images/tmp/*

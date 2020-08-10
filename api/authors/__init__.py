@@ -1,8 +1,8 @@
 """Author management."""
 from flask import current_app as api
 from flask import make_response, request, jsonify
-from api.log import LOGGER
-from api import sms
+from clients.log import LOGGER
+from clients import sms
 
 
 @LOGGER.catch

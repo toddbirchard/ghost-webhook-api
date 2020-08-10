@@ -1,7 +1,7 @@
 """Replace <a> tags in Lynx posts with cards."""
 import re
 import simplejson as json
-from api.log import LOGGER
+from clients.log import LOGGER
 from .scrape import scrape_link
 from .doc import mobile_doc
 
