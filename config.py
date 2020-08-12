@@ -21,7 +21,12 @@ class Config:
     # Database
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
-    SQLALCHEMY_ENGINE_OPTIONS = {'ssl': {'ca': './creds/ca-certificate.crt'}}
+    # SQLALCHEMY_ENGINE_OPTIONS = {'ssl': {'ca': './creds/ca-certificate.crt'}}
+    SQLALCHEMY_SSL = '?ssl_ca=creds/ca-certificate.crt'
+    SQLALCHEMY_BINDS = {
+        'analytics': f'{SQLALCHEMY_DATABASE_URI}/analytics',
+        'blog': f'{SQLALCHEMY_DATABASE_URI}/hackers_prod'
+    }
 
     # Algolia API
     ALGOLIA_BASE_URL = environ.get('ALGOLIA_BASE_URL')

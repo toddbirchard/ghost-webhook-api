@@ -2,11 +2,12 @@
 from time import sleep
 from flask import current_app as api
 from flask import jsonify, make_response, request
-from clients import db, ghost
+from clients import ghost
 from clients.log import LOGGER
 from api.moment import get_current_time
 from .read import get_queries
 from .lynx.cards import generate_link_previews
+from api import db
 
 
 @LOGGER.catch

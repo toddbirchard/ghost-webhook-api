@@ -7,10 +7,10 @@ from google.cloud import bigquery as bigquery_client
 
 
 # Initialize clients
-db = Database(
+'''db = Database(
     uri=Config.SQLALCHEMY_DATABASE_URI,
     args=Config.SQLALCHEMY_ENGINE_OPTIONS
-)
+)'''
 gcs = GCS(
     bucket_name=Config.GCP_BUCKET_NAME,
     bucket_url=Config.GCP_BUCKET_URL,

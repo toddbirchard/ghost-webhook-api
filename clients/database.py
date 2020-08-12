@@ -1,33 +1,21 @@
 """Database client."""
 from typing import List
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData, Table
 from clients.log import LOGGER
+from flask_sqlalchemy import SQLAlchemy
 
 
-class Database:
+class Database(SQLAlchemy):
     """Database client."""
 
-    def __init__(self, uri: str, args: dict):
-        self.engines = {
-            'analytics': create_engine(
-                f'{uri}analytics',
-                connect_args=args,
-                echo=False
-            ),
-            'blog': create_engine(
-                f'{uri}hackers_prod',
-                connect_args=args,
-                echo=False
-            )
-        }
-        self.session_engine = create_engine(uri, connect_args=args, echo=False)
-        self.session = sessionmaker(bind=self.session_engine)
+    def __init__(self):
+        super().__init__()
 
-    def _table(self, table_name: str) -> Table:
+    @staticmethod
+    def _table(database_name: str, table_name: str) -> Table:
         return Table(
             table_name,
-            MetaData(bind=self.engines['analytics']),
+            MetaData(bind=database_name),
             autoload=True
         )
 
@@ -35,42 +23,49 @@ class Database:
     def execute_queries(self, queries: dict) -> dict:
         """Execute SQL query."""
         results = {}
+        engine = self.get_engine(bind='blog')
         for k, v in queries.items():
-            query_result = self.engines['blog'].execute(v)
+            query_result = engine.execute(v)
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
     @LOGGER.catch
     def execute_query(self, query: str):
         """Execute single SQL query."""
-        result = self.engines['blog'].execute(query)
+        engine = self.get_engine(bind='blog')
+        result = engine.execute(query)
         return result
 
     @LOGGER.catch
     def execute_query_from_file(self, sql_file: str):
         """Execute single SQL query."""
+        engine = self.get_engine(bind='blog')
         query = open(sql_file, 'r').read()
-        result = self.engines['blog'].execute(query)
+        result = engine.execute(query, bind='blog')
         return result
 
     @LOGGER.catch
-    def fetch_records(self, query, table_name='analytics') -> List[str]:
+    def fetch_records(self, query, database_name='blog') -> List[str]:
         """Fetch all rows via query."""
-        rows = self.engines[table_name].execute(query).fetchall()
+        engine = self.get_engine(bind=database_name)
+        rows = engine.execute(query).fetchall()
         return [row.items() for row in rows]
 
     @LOGGER.catch
-    def fetch_record(self, query, table_name='analytics') -> str:
+    def fetch_record(self, query, database_name=None) -> str:
         """Fetch row via query."""
-        return self.engines[table_name].execute(query).fetch()
+        engine = self.get_engine(bind=database_name)
+        return engine.execute(query).fetch()
 
     @LOGGER.catch
-    def insert_records(self, rows, table_name: str, replace=None):
+    def insert_records(self, rows, database_name='analytics', table_name=None, replace=None):
         """Insert rows into table."""
+        engine = self.get_engine(bind=database_name)
         if replace:
-            self.engines['analytics'].execute(f'TRUNCATE TABLE {table_name}')
-        table = self._table(table_name)
-        self.engines['analytics'].execute(table.insert(), rows)
+            engine.execute(f'TRUNCATE TABLE {table_name}', bind=database_name)
+        table = self._table(database_name, table_name)
+        table.insert()
+        engine.execute(table.insert(), rows, bind=database_name)
         return f'Inserted {len(rows)} into {table.name}.'
 
     @LOGGER.catch
@@ -80,8 +75,8 @@ class Database:
         self.execute_query(sql)
         return {post: image}
 
-    def insert_dataframe(self, df, table_name: str, exists_action='append'):
-        df.to_sql(table_name, self.engines['analytics'], if_exists=exists_action)
+    def insert_dataframe(self, df, table_name=None, exists_action='append'):
+        df.to_sql(table_name, self.get_engine(bind='analytics'), if_exists=exists_action)
         return df.to_json(orient='records')
 
     @staticmethod

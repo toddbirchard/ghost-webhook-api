@@ -7,35 +7,52 @@ Manage $(PROJECTNAME).
 
 Usage:
 
-make run             - Run uWSGI server for $(PROJECTNAME).
-make restart         - Purge cache & reinstall modules.
-make update          - Update npm production dependencies.
-make clean           - Remove cached files.
+make run	      - Run uWSGI server for $(PROJECTNAME).
+make restart	  - Purge cache & reinstall modules.
+make deploy	    - Pull latest build and deploy to production.
+make update	    - Update all pip dependencies in both poetry and pipenv environments.
+make clean	    - Remove cached files.
 endef
 export HELP
 
+
 .PHONY: run restart update help
+
 
 all help:
 	@echo "$$HELP"
 
+
 .PHONY: run
 run:
 	nohup uwsgi $(ENTRYPOINT) &
+
 
 .PHONY: restart
 restart:
 	pkill -9 -f $(shell uwsgi $(ENTRYPOINT))
 	nohup uwsgi $(ENTRYPOINT) &
 
-.PHONY: update
-update:
+
+.PHONY: deploy
+deploy:
 	git pull origin master
 	pkill -9 -f $(shell uwsgi $(ENTRYPOINT))
 	poetry shell
 	poetry update
-	nohup uwsgi $(ENTRYPOINT) &
-
+	service api restart
+	
+	
+.PHONY: update
+update:
+	poetry shell
+	poetry update
+	$(shell exit)
+	pipenv shell
+	pipenv update
+	pip3 freeze > requirements.txt
+	
+	
 .PHONY: clean
 clean:
 	find . -name '*.pyc' -delete

@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 Flask = "*"
+Flask-SQLAlchemy = "*"
 SQLAlchemy = "*"
 Pandas = "*"
 PyMySQL = "*"
@@ -24,6 +25,7 @@ Twilio = "*"
 Beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
+uWSGI = "*"
 
 [dev-packages]
 pytest = "*"
