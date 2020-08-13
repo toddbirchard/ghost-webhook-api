@@ -56,6 +56,8 @@ def donation_received():
     name = donation.get('name')
     message = donation.get('message')
     link = donation.get('link')
+    created_at = donation.get('created_at')
+    count = donation.get('count')
     coffee_id = donation.get('coffee_id')
     existing_donation = db.fetch_record(
         f"SELECT * FROM donations WHERE email = '{email}';",
@@ -69,11 +71,9 @@ def donation_received():
         )
         LOGGER.info(f'Updated existing record: {donation}')
         return make_response(jsonify({'Updated existing record': donation}))
-    db.insert_records(
-        donation,
-        table_name='donations',
-        database_name='analytics',
-        replace=False
+    db.execute_query(
+        f"INSERT INTO donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id}, count = {count}, created_at = '{created_at}' WHERE email = '{email}';",
+        database_name='analytics'
     )
     LOGGER.info(f'Inserted new record: {donation}')
     return make_response(jsonify({'Inserted new record': donation}))
