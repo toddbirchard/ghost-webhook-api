@@ -84,11 +84,9 @@ def generate_embedded_link_previews():
                 "posts": [{
                     "mobiledoc": doc,
                     "updated_at": time
-                }
-                ]
+                }]
             }
             response, code = ghost.update_post(post_id, body, slug)
-            # db.execute_query(f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';")
             return make_response(f'Updated {slug} with code {code}: {doc}', 200)
         return make_response(f'Lynx post {slug} already contains previews.', 200)
     pass
@@ -99,7 +97,7 @@ def generate_embedded_link_previews():
 def post_metadata_sanitize():
     """Mass update post metadata."""
     queries = get_queries()
-    results = db.execute_queries(queries)
+    results = db.execute_queries(queries, database_name='blog')
     headers = {'Content-Type': 'application/json'}
     LOGGER.info(f'Successfully ran queries: {queries}')
     return make_response(jsonify(results), 200, headers)

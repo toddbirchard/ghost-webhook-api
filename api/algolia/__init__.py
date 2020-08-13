@@ -11,7 +11,12 @@ from .fetch import fetch_algolia_searches
 def week_searches():
     """Save top search queries for the current week."""
     records = fetch_algolia_searches(timeframe=7)
-    response = db.insert_records(records, 'algolia_searches_week', replace=True)
+    response = db.insert_records(
+        records,
+        table_name='algolia_searches_week',
+        database_name='analytics'
+        replace=True
+    )
     return make_response(jsonify(response), 200)
 
 
@@ -20,5 +25,9 @@ def week_searches():
 def historical_searches():
     """Save and persist top search queries for the current month."""
     records = fetch_algolia_searches(timeframe=30)
-    response = db.insert_records(records, 'algolia_searches_historical')
+    response = db.insert_records(
+        records,
+        table_name='algolia_searches_historical',
+        database_name='analytics'
+    )
     return make_response(jsonify(response), 200)

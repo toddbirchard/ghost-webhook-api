@@ -22,53 +22,53 @@ class Database:
             )
         }
 
-    def _table(self, table_name: str) -> Table:
+    def _table(self, table_name: str, database_name='analytics') -> Table:
         return Table(
             table_name,
-            MetaData(bind=self.engines['analytics']),
+            MetaData(bind=self.engines[database_name]),
             autoload=True
         )
 
     @LOGGER.catch
-    def execute_queries(self, queries: dict) -> dict:
+    def execute_queries(self, queries: dict, database_name='blog') -> dict:
         """Execute SQL query."""
         results = {}
         for k, v in queries.items():
-            query_result = self.engines['blog'].execute(v)
+            query_result = self.engines[database_name].execute(v)
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
     @LOGGER.catch
-    def execute_query(self, query: str):
+    def execute_query(self, query: str, database_name='blog'):
         """Execute single SQL query."""
-        result = self.engines['blog'].execute(query)
+        result = self.engines[database_name].execute(query)
         return result
 
     @LOGGER.catch
-    def execute_query_from_file(self, sql_file: str):
+    def execute_query_from_file(self, sql_file: str, database_name='blog'):
         """Execute single SQL query."""
         query = open(sql_file, 'r').read()
-        result = self.engines['blog'].execute(query)
+        result = self.engines[database_name].execute(query)
         return result
 
     @LOGGER.catch
-    def fetch_records(self, query, table_name='analytics') -> List[str]:
+    def fetch_records(self, query, table_name='analytics', database_name=None) -> List[str]:
         """Fetch all rows via query."""
-        rows = self.engines[table_name].execute(query).fetchall()
+        rows = self.engines[database_name].execute(query).fetchall()
         return [row.items() for row in rows]
 
     @LOGGER.catch
-    def fetch_record(self, query, table_name='analytics') -> str:
+    def fetch_record(self, query, table_name='analytics', database_name=None) -> str:
         """Fetch row via query."""
-        return self.engines[table_name].execute(query).fetch()
+        return self.engines[database_name].execute(query).fetch()
 
     @LOGGER.catch
-    def insert_records(self, rows, table_name: str, replace=None):
+    def insert_records(self, rows, table_name=None, database_name=None, replace=None):
         """Insert rows into table."""
         if replace:
-            self.engines['analytics'].execute(f'TRUNCATE TABLE {table_name}')
+            self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
         table = self._table(table_name)
-        self.engines['analytics'].execute(table.insert(), rows)
+        self.engines[database_name].execute(table.insert(), rows)
         return f'Inserted {len(rows)} into {table.name}.'
 
     @LOGGER.catch
@@ -78,8 +78,8 @@ class Database:
         self.execute_query(sql)
         return {post: image}
 
-    def insert_dataframe(self, df, table_name: str, exists_action='append'):
-        df.to_sql(table_name, self.engines['analytics'], if_exists=exists_action)
+    def insert_dataframe(self, df, table_name=None, database_name='analytics', exists_action='append'):
+        df.to_sql(table_name, self.engines[database_name], if_exists=exists_action)
         return df.to_json(orient='records')
 
     @staticmethod

@@ -45,10 +45,16 @@ def transform_lynx_images():
 @api.route('/images/assign/lynx', methods=['GET'])
 def assign_missing_lynx_images():
     """Assign random image to Lynx posts which are missing a feature image."""
-    results = db.execute_query_from_file('api/images/sql/lynx_missing_images.sql')
+    results = db.execute_query_from_file(
+        'api/images/sql/lynx_missing_images.sql',
+        database_name='blog'
+    )
     posts = [result.id for result in results]
     for post in posts:
-        new_feature_image = gcs.fetch_random_lynx_image()
-        db.update_post_image(new_feature_image, post)
-    LOGGER.info(f'Updated {len(posts)} lynx posts with image..')
-    return make_response(f'Updated {len(posts)} lynx posts with image..')
+        image = gcs.fetch_random_lynx_image()
+        db.execute(
+            f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';"
+            database_name='blog'
+        )
+    LOGGER.info(f'Updated {len(posts)} lynx posts with image.')
+    return make_response(f'Updated {len(posts)} lynx posts with image.')
