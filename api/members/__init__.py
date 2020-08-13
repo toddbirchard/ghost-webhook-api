@@ -64,7 +64,7 @@ def donation_received():
     )
     if existing_donation:
         db.execute_query(
-            f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = '{coffee_id}' WHERE email = '{email}';"
+            f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = '{coffee_id}' WHERE email = '{email}';",
             database_name='analytics'
         )
     results = db.insert_records(

@@ -52,8 +52,8 @@ def assign_missing_lynx_images():
     posts = [result.id for result in results]
     for post in posts:
         image = gcs.fetch_random_lynx_image()
-        db.execute(
-            f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';"
+        db.execute_query(
+            f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
             database_name='blog'
         )
     LOGGER.info(f'Updated {len(posts)} lynx posts with image.')

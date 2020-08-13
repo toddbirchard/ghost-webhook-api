@@ -14,7 +14,7 @@ def week_searches():
     response = db.insert_records(
         records,
         table_name='algolia_searches_week',
-        database_name='analytics'
+        database_name='analytics',
         replace=True
     )
     return make_response(jsonify(response), 200)
