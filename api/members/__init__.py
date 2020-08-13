@@ -63,6 +63,6 @@ def donation_received():
     )
     if existing_donation:
         db.update(f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = '{coffee_id}' WHERE email = '{email}';")
-    results = db.insert_records(donation, 'coffee', replace=False)
+    results = db.insert_records(donation, 'donations', replace=False)
     LOGGER.info(results)
     return make_response(jsonify(results))
