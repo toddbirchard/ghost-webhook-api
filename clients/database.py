@@ -67,7 +67,7 @@ class Database:
         if replace:
             self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
         table = self._table(table_name)
-        self.engines[database_name].execute(table.insert(), rows)
+        self.engines[database_name].execute(text(table.insert()), rows)
         return f'Inserted {len(rows)} into {table.name}.'
 
     def insert_dataframe(self, df, table_name=None, database_name='analytics', exists_action='append'):
