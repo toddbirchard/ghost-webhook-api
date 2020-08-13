@@ -67,11 +67,13 @@ def donation_received():
             f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = '{coffee_id}' WHERE email = '{email}';",
             database_name='analytics'
         )
-    results = db.insert_records(
+        LOGGER.info(f'Updated existing record: {donation}')
+        return make_response(jsonify({'Updated existing record': donation'}))
+    db.insert_records(
         donation,
         table_name='donations',
         database_name='analytics',
         replace=False
     )
-    LOGGER.info(results)
-    return make_response(jsonify(results))
+    LOGGER.info(f'Inserted new record: {donation}')
+    return make_response(jsonify({'Inserted new record': donation'}))
