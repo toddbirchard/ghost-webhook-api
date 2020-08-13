@@ -65,12 +65,14 @@ def donation_received():
         database_name='analytics',
     )
     if existing_donation:
+        LOGGER.info(f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id} WHERE email = '{email}';")
         db.execute_query(
             f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id} WHERE email = '{email}';",
             database_name='analytics'
         )
         LOGGER.info(f'Updated existing record: {donation}')
         return make_response(jsonify({'Updated existing record': donation}))
+    LOGGER.info(f"INSERT INTO donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id}, count = {count}, created_at = '{created_at}' WHERE email = '{email}';")
     db.execute_query(
         f"INSERT INTO donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id}, count = {count}, created_at = '{created_at}' WHERE email = '{email}';",
         database_name='analytics'
