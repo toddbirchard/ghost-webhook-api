@@ -1,7 +1,6 @@
 """Database client."""
 from typing import List
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, MetaData, Table, text
 from clients.log import LOGGER
 
 
@@ -34,33 +33,33 @@ class Database:
         """Execute SQL query."""
         results = {}
         for k, v in queries.items():
-            query_result = self.engines[database_name].execute(v)
+            query_result = self.engines[database_name].execute(text(v))
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
     @LOGGER.catch
     def execute_query(self, query: str, database_name='blog'):
         """Execute single SQL query."""
-        result = self.engines[database_name].execute(query)
+        result = self.engines[database_name].execute(text(query))
         return result
 
     @LOGGER.catch
     def execute_query_from_file(self, sql_file: str, database_name='blog'):
         """Execute single SQL query."""
         query = open(sql_file, 'r').read()
-        result = self.engines[database_name].execute(query)
+        result = self.engines[database_name].execute(text(query))
         return result
 
     @LOGGER.catch
     def fetch_records(self, query, table_name='analytics', database_name=None) -> List[str]:
         """Fetch all rows via query."""
-        rows = self.engines[database_name].execute(query).fetchall()
+        rows = self.engines[database_name].execute(text(query)).fetchall()
         return [row.items() for row in rows]
 
     @LOGGER.catch
     def fetch_record(self, query, table_name='analytics', database_name=None) -> str:
         """Fetch row via query."""
-        return self.engines[database_name].execute(query).first()
+        return self.engines[database_name].execute(text(query)).first()
 
     @LOGGER.catch
     def insert_records(self, rows, table_name=None, database_name=None, replace=None):
@@ -70,13 +69,6 @@ class Database:
         table = self._table(table_name)
         self.engines[database_name].execute(table.insert(), rows)
         return f'Inserted {len(rows)} into {table.name}.'
-
-    @LOGGER.catch
-    def update_post_image(self, image: str, post: str) -> dict:
-        """Set post feature image to desired image."""
-        sql = f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';"
-        self.execute_query(sql)
-        return {post: image}
 
     def insert_dataframe(self, df, table_name=None, database_name='analytics', exists_action='append'):
         """Insert Pandas DataFrame into SQL table."""
