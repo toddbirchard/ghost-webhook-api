@@ -19,13 +19,14 @@ class Config:
     FLASK_ENV = environ.get('FLASK_ENV')
 
     # Database
-    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_BASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = f'{SQLALCHEMY_BASE_URI}/hackers_prod'
     SQLALCHEMY_TRACK_MODIFICATIONS = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
     # SQLALCHEMY_ENGINE_OPTIONS = {'ssl': {'ca': './creds/ca-certificate.crt'}}
     SQLALCHEMY_SSL = '?ssl_ca=creds/ca-certificate.crt'
     SQLALCHEMY_BINDS = {
-        'analytics': f'{SQLALCHEMY_DATABASE_URI}/analytics',
-        'blog': f'{SQLALCHEMY_DATABASE_URI}/hackers_prod'
+        'analytics': f'{SQLALCHEMY_BASE_URI}/analytics',
+        'blog': f'{SQLALCHEMY_BASE_URI}/hackers_prod'
     }
 
     # Algolia API

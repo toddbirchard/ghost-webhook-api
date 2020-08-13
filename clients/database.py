@@ -60,12 +60,12 @@ class Database(SQLAlchemy):
     @LOGGER.catch
     def insert_records(self, rows, database_name='analytics', table_name=None, replace=None):
         """Insert rows into table."""
-        engine = self.get_engine(bind=database_name)
+        # engine = self.get_engine(bind=database_name)
         if replace:
-            engine.execute(f'TRUNCATE TABLE {table_name}', bind=database_name)
+            self.execute(f'TRUNCATE TABLE {table_name}', bind=database_name)
         table = self._table(database_name, table_name)
         table.insert()
-        engine.execute(table.insert(), rows, bind=database_name)
+        self.execute(table.insert(), rows, bind=database_name)
         return f'Inserted {len(rows)} into {table.name}.'
 
     @LOGGER.catch
