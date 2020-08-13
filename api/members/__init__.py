@@ -54,7 +54,7 @@ def donation_received():
     donation = request.get_json()
     email = donation.get('email')
     name = donation.get('name')
-    message = donation.get('message')
+    message = donation.get('message').replace("'", "\'")
     link = donation.get('link')
     created_at = donation.get('created_at')
     count = donation.get('count')
