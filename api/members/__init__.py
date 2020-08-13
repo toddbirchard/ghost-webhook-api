@@ -52,6 +52,17 @@ def newsletter_welcome_message():
 def donation_received():
     """Parse incoming donations."""
     donation = request.get_json()
+    email = donation.get('email')
+    name = donation.get('name')
+    message = donation.get('message')
+    link = donation.get('link')
+    coffee_id = donation.get('coffee_id')
+    existing_donation = db.fetch_record(
+        f"SELECT * FROM donations WHERE email = '{email}';",
+        table_name='donations'
+    )
+    if existing_donation:
+        db.update(f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = '{coffee_id}' WHERE email = '{email}';")
     results = db.insert_records(donation, 'coffee', replace=False)
     LOGGER.info(results)
     return make_response(jsonify(results))

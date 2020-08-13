@@ -11,18 +11,16 @@ class Database:
     def __init__(self, uri: str, args: dict):
         self.engines = {
             'analytics': create_engine(
-                f'{uri}analytics',
+                f'{uri}/analytics',
                 connect_args=args,
                 echo=False
             ),
             'blog': create_engine(
-                f'{uri}hackers_prod',
+                f'{uri}/hackers_prod',
                 connect_args=args,
                 echo=False
             )
         }
-        self.session_engine = create_engine(uri, connect_args=args, echo=False)
-        self.session = sessionmaker(bind=self.session_engine)
 
     def _table(self, table_name: str) -> Table:
         return Table(

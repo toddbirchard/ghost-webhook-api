@@ -24,6 +24,7 @@ Twilio = "*"
 Beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
+uWSGI = "*"
 
 [dev-packages]
 pytest = "*"

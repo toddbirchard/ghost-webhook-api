@@ -16,7 +16,6 @@ gcs = GCS(
     bucket_url=Config.GCP_BUCKET_URL,
     bucket_lynx=Config.GCP_LYNX_DIRECTORY
 )
-# gbq = BigQuery(Config.GCP_BIGQUERY_URI)
 ghost = Ghost(
     api_url=Config.GHOST_ADMIN_API_URL,
     client_id=Config.GHOST_CLIENT_ID,
