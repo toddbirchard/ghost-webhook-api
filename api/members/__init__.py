@@ -68,7 +68,7 @@ def donation_received():
             database_name='analytics'
         )
         LOGGER.info(f'Updated existing record: {donation}')
-        return make_response(jsonify({'Updated existing record': donation'}))
+        return make_response(jsonify({'Updated existing record': donation}))
     db.insert_records(
         donation,
         table_name='donations',
@@ -76,4 +76,4 @@ def donation_received():
         replace=False
     )
     LOGGER.info(f'Inserted new record: {donation}')
-    return make_response(jsonify({'Inserted new record': donation'}))
+    return make_response(jsonify({'Inserted new record': donation}))
