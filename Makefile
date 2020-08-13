@@ -38,8 +38,7 @@ restart:
 deploy:
 	git pull origin master
 	pkill -9 -f $(shell uwsgi $(ENTRYPOINT))
-	poetry shell
-	poetry update
+	pipenv update
 	service api restart
 	
 	
