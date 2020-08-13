@@ -77,19 +77,19 @@ def generate_embedded_link_previews():
     primary_tag = post.get('primary_tag')
     time = get_current_time()
     if primary_tag['slug'] == 'roundup':
-        if 'kg-card' not in html or 'kg-card' not in previous['html']:
-            doc = generate_link_previews(post)
-            LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
-            body = {
-                "posts": [{
-                    "mobiledoc": doc,
-                    "updated_at": time
-                }]
-            }
-            response, code = ghost.update_post(post_id, body, slug)
-            return make_response(f'Updated {slug} with code {code}: {doc}', 200)
+        if html is not None and 'kg-card' not in html:
+            if previous is not None and 'kg-card' not in previous['html']:
+                doc = generate_link_previews(post)
+                LOGGER.info(f'Generated Previews for Lynx post {slug}: {doc}')
+                body = {
+                    "posts": [{
+                        "mobiledoc": doc,
+                        "updated_at": time
+                    }]
+                }
+                response, code = ghost.update_post(post_id, body, slug)
+                return make_response(f'Updated {slug} with code {code}: {doc}', 200)
         return make_response(f'Lynx post {slug} already contains previews.', 200)
-    pass
     
 
 @LOGGER.catch

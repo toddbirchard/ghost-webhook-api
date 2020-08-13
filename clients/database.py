@@ -33,7 +33,7 @@ class Database:
         """Execute SQL query."""
         results = {}
         for k, v in queries.items():
-            query_result = self.engines[database_name].execute(text(v))
+            query_result = self.engines[database_name].execute(v)
             results[k] = f'{query_result.rowcount} rows affected.'
         return results
 
@@ -47,7 +47,7 @@ class Database:
     def execute_query_from_file(self, sql_file: str, database_name='blog'):
         """Execute single SQL query."""
         query = open(sql_file, 'r').read()
-        result = self.engines[database_name].execute(text(query))
+        result = self.engines[database_name].execute(query)
         return result
 
     @LOGGER.catch
