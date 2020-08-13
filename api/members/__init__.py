@@ -48,7 +48,7 @@ def newsletter_welcome_message():
 
 
 @LOGGER.catch
-@api.route('/members/donation', methods=['POST'])
+@api.route('/members/donation', methods=['PUT'])
 def donation_received():
     """Parse incoming donations."""
     donation = request.get_json()
