@@ -36,9 +36,9 @@ restart:
 
 .PHONY: deploy
 deploy:
-	git pull origin master
-	pkill -9 -f $(shell uwsgi $(ENTRYPOINT))
-	pipenv update
+	$(shell git pull origin master)
+	$(shell pkill -9 -f  uwsgi $(ENTRYPOINT))
+	$(shell pipenv update)
 	service api restart
 	
 	
