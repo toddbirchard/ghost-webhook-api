@@ -60,7 +60,7 @@ class Database:
     @LOGGER.catch
     def fetch_record(self, query, table_name='analytics', database_name=None) -> str:
         """Fetch row via query."""
-        return self.engines[database_name].execute(query).fetch()
+        return self.engines[database_name].execute(query).first()
 
     @LOGGER.catch
     def insert_records(self, rows, table_name=None, database_name=None, replace=None):
@@ -79,6 +79,7 @@ class Database:
         return {post: image}
 
     def insert_dataframe(self, df, table_name=None, database_name='analytics', exists_action='append'):
+        """Insert Pandas DataFrame into SQL table."""
         df.to_sql(table_name, self.engines[database_name], if_exists=exists_action)
         return df.to_json(orient='records')
 
