@@ -2,7 +2,7 @@
 from time import sleep
 from flask import current_app as api
 from flask import jsonify, make_response, request
-from clients import db, ghost
+from clients import db, ghost, gcs
 from clients.log import LOGGER
 from api.moment import get_current_time
 from .read import get_queries
@@ -37,7 +37,7 @@ def update_post():
     }
     if primary_tag.get('slug') == 'roundup':
         if feature_image is None:
-            feature_image = image.fetch_random_lynx_image()
+            feature_image = gcs.fetch_random_lynx_image()
             body['posts'][0].update({
                 "feature_image": feature_image,
                 "og_image": feature_image,
