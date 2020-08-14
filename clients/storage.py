@@ -58,7 +58,7 @@ class GCS:
     def purge_unwanted_images(self, folder):
         """Delete images which have been compressed or generated multiple times."""
         LOGGER.info('Purging unwanted images...')
-        substrings = ['@2x@2x', '_o', 'psd', '?', '_mobile']
+        substrings = ['@2x@2x', '_o', 'psd', '?', '_mobile_mobile']
         image_blobs = self.get(folder)
         for image_blob in image_blobs:
             if any(substr in image_blob.name for substr in substrings):
@@ -100,8 +100,6 @@ class GCS:
         for image_blob in self.fetch_blobs(folder, image_type='retina'):
             new_image_name = image_blob.name.replace("@2x", "_mobile@2x")
             mobile_blob = self.bucket.blob(new_image_name)
-            if mobile_blob.exists():
-                break
             mobile_image = self._create_mobile_image(image_blob)
             mobile_blob.upload_from_string(mobile_image, content_type='image/jpeg')
             images_transformed.append(new_image_name)
