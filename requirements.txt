@@ -2,7 +2,7 @@ attrs==19.3.0
 beautifulsoup4==4.9.1
 cachetools==4.1.1
 certifi==2020.6.20
-cffi==1.14.1
+cffi==1.14.2
 chardet==3.0.4
 click==7.1.2
 extruct==0.9.0
@@ -38,7 +38,7 @@ packaging==20.4
 pandas==1.1.0
 Pillow==7.2.0
 pluggy==0.13.1
-protobuf==3.12.4
+protobuf==3.13.0
 py==1.9.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8

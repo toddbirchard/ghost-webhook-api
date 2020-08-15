@@ -29,6 +29,8 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 #### Images
   * **GET** `/images/transform`: Generates missing retina and mobile varieties of post `feature_image`s.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
+  * **GET** `/images/purge`: Delete unwanted duplicate images.
+  * **GET** `/images/mobile`: Apply mobile transformations to feature images in a given directory.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **POST** `/image/transform`: Generates retina feature image for single post upon update. 
 #### Members

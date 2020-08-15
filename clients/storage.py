@@ -1,7 +1,7 @@
 """Google Cloud Storage client and image transformer."""
 from typing import List, Optional
 import io
-from math import floor
+import re
 from google.cloud import storage
 from google.cloud.storage.blob import Blob
 from random import randint
@@ -57,14 +57,23 @@ class GCS:
     @LOGGER.catch
     def purge_unwanted_images(self, folder):
         """Delete images which have been compressed or generated multiple times."""
+        images_purged = []
         LOGGER.info('Purging unwanted images...')
-        substrings = ['@2x@2x', '_o', 'psd', '?', '_mobile_mobile']
-        image_blobs = self.get(folder)
+        substrings = ['@2x@2x', '_o', 'psd', '?', '_mobile_mobile', '@2x-']
+        blobs = self.get(folder)
+        image_blobs = [blob.name for blob in blobs]
         for image_blob in image_blobs:
-            if any(substr in image_blob.name for substr in substrings):
-                self.bucket.delete_blob(image_blob.name)
-                LOGGER.info(f'Deleted {image_blob.name}.')
-        return self.get(folder)
+            if any(substr in image_blob for substr in substrings):
+                self.bucket.delete_blob(image_blob)
+                images_purged.append(image_blob)
+                LOGGER.info(f'Deleted {image_blob}')
+            r = re.compile("-[0-9]-[0-9]@2x.jpg")
+            repeat_blobs = list(filter(r.match, image_blobs))
+            for repeat_blob in repeat_blobs:
+                self.bucket.delete_blob(repeat_blob)
+                images_purged.append(repeat_blob)
+                LOGGER.info(f'Deleted {repeat_blob}')
+        return images_purged
 
     def retina_transformations(self, folder) -> List[Optional[str]]:
         """Find images missing a retina-quality counterpart."""
@@ -100,10 +109,13 @@ class GCS:
         for image_blob in self.fetch_blobs(folder, image_type='retina'):
             new_image_name = image_blob.name.replace("@2x", "_mobile@2x")
             mobile_blob = self.bucket.blob(new_image_name)
+            if mobile_blob.exists():
+                pass
             mobile_image = self._create_mobile_image(image_blob.name)
-            mobile_blob.upload_from_string(mobile_image)
-            images_transformed.append(new_image_name)
-            LOGGER.info(f'Creating mobile image {new_image_name}')
+            if mobile_image:
+                mobile_blob.upload_from_string(mobile_image, 'image/jpeg')
+                images_transformed.append(new_image_name)
+                LOGGER.info(f'Creating mobile image {new_image_name}')
         return images_transformed
 
     @LOGGER.catch
@@ -129,12 +141,16 @@ class GCS:
 
     def _create_mobile_image(self, image_blob):
         """Create mobile responsive version of a given image."""
-        bytes = self._fetch_image_via_http(image_blob)
-        stream = BytesIO(bytes)
+        img_bytes = self._fetch_image_via_http(image_blob)
+        stream = BytesIO(img_bytes)
         im = Image.open(stream)
-        im = im.resize((floor(im.width / 2), floor(im.height / 2)))
-        im.save(stream, format='JPEG2000')
-        return stream.getvalue()
+        width, height = im.size
+        if width > 1000:
+            new_bytes = io.BytesIO()
+            im_resized = im.resize((600, 346))
+            im_resized.save(new_bytes, 'JPEG', quality=90, optimize=True)
+            return stream.getvalue()
+        return None
 
     @LOGGER.catch
     def _create_retina_image(self, image_blob, new_image_name):
