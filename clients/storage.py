@@ -100,9 +100,10 @@ class GCS:
         for image_blob in self.fetch_blobs(folder, image_type='retina'):
             new_image_name = image_blob.name.replace("@2x", "_mobile@2x")
             mobile_blob = self.bucket.blob(new_image_name)
-            mobile_image = self._create_mobile_image(image_blob)
-            mobile_blob.upload_from_string(mobile_image, content_type='image/jpeg')
+            mobile_image = self._create_mobile_image(image_blob.name)
+            mobile_blob.upload_from_string(mobile_image)
             images_transformed.append(new_image_name)
+            LOGGER.info(f'Creating mobile image {new_image_name}')
         return images_transformed
 
     @LOGGER.catch
@@ -128,12 +129,12 @@ class GCS:
 
     def _create_mobile_image(self, image_blob):
         """Create mobile responsive version of a given image."""
-        image_file = self._fetch_image_via_http(image_blob)
-        img_bytes = io.BytesIO()
-        im = Image.open(BytesIO(image_file))
+        bytes = self._fetch_image_via_http(image_blob)
+        stream = BytesIO(bytes)
+        im = Image.open(stream)
         im = im.resize((floor(im.width / 2), floor(im.height / 2)))
-        im.save(img_bytes, format='JPEG')
-        return img_bytes.getvalue()
+        im.save(stream, format='JPEG2000')
+        return stream.getvalue()
 
     @LOGGER.catch
     def _create_retina_image(self, image_blob, new_image_name):
