@@ -118,6 +118,7 @@ ca-certificate.crt
 
 # logs
 logs/*
+nohup.out
 
 # Temporary image storage
 api/images/tmp/*

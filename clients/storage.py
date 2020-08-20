@@ -2,12 +2,14 @@
 from typing import List, Optional
 import io
 import re
+from io import BytesIO
+from random import randint
+
 from google.cloud import storage
 from google.cloud.storage.blob import Blob
-from random import randint
-from io import BytesIO
 import requests
 from PIL import Image
+
 from clients.log import LOGGER
 
 
@@ -59,7 +61,7 @@ class GCS:
         """Delete images which have been compressed or generated multiple times."""
         images_purged = []
         LOGGER.info('Purging unwanted images...')
-        substrings = ['@2x@2x', '_o', 'psd', '?', '_mobile_mobile', '@2x-']
+        substrings = ['@2x@2x', '_o', 'psd', '?', '_mobile', '@2x-', '-1-1', '-1-2']
         blobs = self.get(folder)
         image_blobs = [blob.name for blob in blobs]
         for image_blob in image_blobs:
@@ -167,7 +169,6 @@ class GCS:
     def _fetch_image_via_http(self, image_name):
         """Fetch raw image data via HTTP request."""
         url = f'{self.bucket_http_url}{image_name}'
-        LOGGER.info(f'Checking {url}')
         image_request = requests.get(url)
         if image_request.headers['Content-Type'] in ('application/octet-stream', 'image/jpeg'):
             return image_request.content

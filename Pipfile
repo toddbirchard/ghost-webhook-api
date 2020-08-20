@@ -17,7 +17,6 @@ python-resize-image = "*"
 webp-converter = "*"
 Python-dotenv = "*"
 pyjwt="*"
-PyBigQuery = "*"
 Mixpanel = "*"
 Loguru = "*"
 Twilio = "*"
@@ -29,6 +28,7 @@ uWSGI = "*"
 [dev-packages]
 pytest = "*"
 mock = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.8"
