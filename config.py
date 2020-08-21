@@ -20,7 +20,7 @@ class Config:
 
     # Database
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {'ssl': {'ca': './creds/ca-certificate.crt'}}
 
     # Algolia API
@@ -70,3 +70,7 @@ class Config:
     # Celery
     CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
     CELERY_RESULT_BACKEND = environ.get('CELERY_RESULT_BACKEND')
+
+    # Datadog
+    DATADOG_API_KEY = environ.get('DATADOG_API_KEY')
+    DATADOG_APP_KEY = environ.get('DATADOG_APP_KEY')

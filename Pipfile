@@ -23,6 +23,7 @@ Twilio = "*"
 Beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
+datadog = "*"
 uWSGI = "*"
 
 [dev-packages]
