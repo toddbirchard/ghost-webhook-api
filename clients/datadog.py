@@ -6,7 +6,7 @@ from datadog import api as datadog
 class DataDog:
     """Trace events to Datadog."""
 
-    def __init__(self, api_key, app_key):
+    def __init__(self, api_key: str, app_key: str):
         self.api_key = api_key
         self.app_key = app_key
         return initialize({

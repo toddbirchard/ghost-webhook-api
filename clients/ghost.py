@@ -62,7 +62,12 @@ class Ghost:
         req = requests.get(f"{self.url}/posts/{post_id}", headers=headers)
         return req.json()
 
-    def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
+    def update_post(
+            self,
+            post_id: str,
+            body: dict,
+            slug: str
+        ) -> Tuple[str, int]:
         """
         Update post by ID.
 
