@@ -43,9 +43,9 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
              })
-        if 'kg-card' not in html or 'kg-card' not in previous['html']:
-            doc = generate_link_previews(post)
-            LOGGER.info(f'Generated Previews for Lynx post {slug}.')
+        # if 'kg-card' not in html or 'kg-card' not in previous['html']:
+            # doc = generate_link_previews(post)
+            # LOGGER.info(f'Generated Previews for Lynx post {slug}.')
             # body['posts'][0].update({
             #     "mobiledoc": doc
             # })
@@ -88,9 +88,15 @@ def generate_embedded_link_previews():
                     }]
                 }
                 response, code = ghost.update_post(post_id, body, slug)
-                return make_response(f'Updated {slug} with code {code}: {doc}', 200)
-        return make_response(f'Lynx post {slug} already contains previews.', 200)
-    
+                return make_response(
+                    f'Updated {slug} with code {code}: {doc}',
+                    200
+                )
+        return make_response(
+            f'Lynx post {slug} already contains previews.',
+            200
+        )
+
 
 @LOGGER.catch
 @api.route('/posts/metadata', methods=['GET'])

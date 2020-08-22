@@ -1,3 +1,4 @@
+
 """Datadog logger."""
 from datadog import initialize
 from datadog import api as datadog

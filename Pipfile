@@ -24,6 +24,7 @@ Beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
 datadog = "*"
+JSON-log-formatter = "*"
 uWSGI = "*"
 
 [dev-packages]

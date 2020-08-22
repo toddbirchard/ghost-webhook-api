@@ -16,10 +16,19 @@ def github_pr():
     repo = payload['repository']
     headers = {'content-type': 'text/html; charset=UTF-8'}
     if user in ('toddbirchard', "dependabot-preview[bot]", "renovate[bot]"):
-        return make_response(f'Activity from {user} ignored.', 200, headers)
-    message = f'PR {action} for repository {repo["name"]}: `{pull_request["title"]}` \n\n {pull_request["url"]}'
+        return make_response(
+            f'Activity from {user} ignored.',
+            200,
+            headers
+        )
+    message = f'PR {action} for repository {repo["name"]}: \
+              `{pull_request["title"]}` \n\n {pull_request["url"]}'
     sms.send_message(message)
-    return make_response(f'SMS notification sent for {action} for {user}.', 200, headers)
+    return make_response(
+        f'SMS notification sent for {action} for {user}.',
+        200,
+        headers
+    )
 
 
 @LOGGER.catch
@@ -34,7 +43,15 @@ def github_issue():
     repo = payload['repository']
     headers = {'content-type': 'text/html; charset=UTF-8'}
     if user in ('toddbirchard', "dependabot-preview[bot]", "renovate[bot]"):
-        return make_response(f'Activity from {user} ignored.', 200, headers)
+        return make_response(
+            f'Activity from {user} ignored.',
+            200,
+            headers
+        )
     message = f'Issue {action} for repository {repo["name"]}: `{issue["title"]}` \n\n {issue["url"]}'
     sms.send_message(message)
-    return make_response(f'SMS notification sent for {action} for {user}.', 200, headers)
+    return make_response(
+        f'SMS notification sent for {action} for {user}.',
+        200,
+        headers
+    )
