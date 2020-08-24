@@ -1,5 +1,6 @@
 """Database client."""
 from typing import List
+from pandas import DataFrame
 from sqlalchemy import create_engine, MetaData, Table, text
 from clients.log import LOGGER
 
@@ -7,7 +8,11 @@ from clients.log import LOGGER
 class Database:
     """Database client."""
 
-    def __init__(self, uri: str, args: dict):
+    def __init__(
+        self,
+        uri: str,
+        args: dict
+    ):
         self.engines = {
             'analytics': create_engine(
                 f'{uri}/analytics',
@@ -51,18 +56,18 @@ class Database:
         return result
 
     @LOGGER.catch
-    def fetch_records(self, query, table_name='analytics', database_name=None) -> List[str]:
+    def fetch_records(self, query, database_name=None) -> List[str]:
         """Fetch all rows via query."""
         rows = self.engines[database_name].execute(text(query)).fetchall()
         return [row.items() for row in rows]
 
     @LOGGER.catch
-    def fetch_record(self, query, table_name='analytics', database_name=None) -> str:
+    def fetch_record(self, query: str, database_name=None):
         """Fetch row via query."""
         return self.engines[database_name].execute(text(query)).first()
 
     @LOGGER.catch
-    def insert_records(self, rows, table_name=None, database_name=None, replace=None):
+    def insert_records(self, rows, table_name=None, database_name=None, replace=None) -> str:
         """Insert rows into table."""
         if replace:
             self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
@@ -70,12 +75,13 @@ class Database:
         self.engines[database_name].execute(text(table.insert()), rows)
         return f'Inserted {len(rows)} into {table.name}.'
 
-    def insert_dataframe(self, df, table_name=None, database_name='analytics', exists_action='append'):
+    def insert_dataframe(
+            self,
+            df: DataFrame,
+            table_name=None,
+            database_name='analytics',
+            exists_action='append'
+    ):
         """Insert Pandas DataFrame into SQL table."""
         df.to_sql(table_name, self.engines[database_name], if_exists=exists_action)
         return df.to_json(orient='records')
-
-    @staticmethod
-    def _construct_response(affected_rows) -> str:
-        """Summarize results of an executed query."""
-        return f'Modified {affected_rows} rows.'

@@ -37,11 +37,11 @@ class GCS:
         return self.client.get_bucket(self.bucket_name)
 
     @property
-    def bucket_http_url(self):
+    def bucket_http_url(self) -> str:
         """Publicly accessible URL for images.."""
         return self.bucket_url
 
-    def get(self, prefix: str):
+    def get(self, prefix: str) -> List[Blob]:
         """
         Retrieve all blobs in a bucket containing a prefix.
         :param prefix: Substring to match against filenames.
@@ -49,7 +49,7 @@ class GCS:
         """
         return self.bucket.list_blobs(prefix=prefix)
 
-    def fetch_blobs(self, folder, image_type=None) -> List[Optional[Blob]]:
+    def fetch_blobs(self, folder: str, image_type=None) -> List[Optional[Blob]]:
         """Retrieve images from GCS bucket matching directory & filter conditions."""
         files = self.get(prefix=folder)
         if image_type == 'retina':
@@ -57,7 +57,7 @@ class GCS:
         return [file for file in files if '@2x' not in file.name and '_mobile' not in file.name]
 
     @LOGGER.catch
-    def purge_unwanted_images(self, folder):
+    def purge_unwanted_images(self, folder: str) -> List[str]:
         """Delete images which have been compressed or generated multiple times."""
         images_purged = []
         LOGGER.info('Purging unwanted images...')
@@ -77,7 +77,7 @@ class GCS:
                 LOGGER.info(f'Deleted {repeat_blob}')
         return images_purged
 
-    def retina_transformations(self, folder) -> List[Optional[str]]:
+    def retina_transformations(self, folder: str) -> List[Optional[str]]:
         """Find images missing a retina-quality counterpart."""
         images_transformed = []
         LOGGER.info('Generating standard images...')
@@ -90,7 +90,7 @@ class GCS:
                 images_transformed.append(new_image_name)
         return images_transformed
 
-    def webp_transformations(self, folder) -> List[Optional[str]]:
+    def webp_transformations(self, folder: str) -> List[Optional[str]]:
         """Find images missing a webp counterpart."""
         images_transformed = []
         LOGGER.info('Generating webp images...')
@@ -104,7 +104,7 @@ class GCS:
         return images_transformed
 
     @LOGGER.catch
-    def mobile_transformations(self, folder) -> List[Optional[str]]:
+    def mobile_transformations(self, folder: str) -> List[Optional[str]]:
         """Generate mobile responsive images."""
         images_transformed = []
         LOGGER.info('Generating mobile images...')
@@ -121,7 +121,7 @@ class GCS:
         return images_transformed
 
     @LOGGER.catch
-    def create_single_retina_image(self, image_url):
+    def create_single_retina_image(self, image_url: str) -> str:
         """Create retina version of single image."""
         image_path = image_url.replace(self.bucket_url, '')
         image_blob = storage.Blob(image_path, self.bucket)
@@ -132,7 +132,7 @@ class GCS:
             self._create_retina_image(image_blob, new_image_name)
         return f'{self.bucket_http_url}{new_image_name}'
 
-    def fetch_random_lynx_image(self):
+    def fetch_random_lynx_image(self) -> str:
         """Fetch random Lynx image from GCS bucket."""
         lynx_images = self.get(prefix='roundup')
         images = [f"{self.bucket_http_url}{image.name}" for image in lynx_images if '@2x.jpg' in image.name]
@@ -141,7 +141,7 @@ class GCS:
         LOGGER.info(f'Selected random Lynx image {image}')
         return image
 
-    def _create_mobile_image(self, image_blob):
+    def _create_mobile_image(self, image_blob: Blob):
         """Create mobile responsive version of a given image."""
         img_bytes = self._fetch_image_via_http(image_blob)
         stream = BytesIO(img_bytes)
@@ -155,7 +155,7 @@ class GCS:
         return None
 
     @LOGGER.catch
-    def _create_retina_image(self, image_blob, new_image_name):
+    def _create_retina_image(self, image_blob: Blob, new_image_name: str) -> None:
         """Create retina versions of standard-res images."""
         original_image = self._fetch_image_via_http(new_image_name)
         if original_image:
@@ -166,7 +166,7 @@ class GCS:
                 self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
 
     @LOGGER.catch
-    def _fetch_image_via_http(self, image_name):
+    def _fetch_image_via_http(self, image_name: str):
         """Fetch raw image data via HTTP request."""
         url = f'{self.bucket_http_url}{image_name}'
         image_request = requests.get(url)

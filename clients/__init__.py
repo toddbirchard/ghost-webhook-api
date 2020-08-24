@@ -23,10 +23,15 @@ ghost = Ghost(
     client_id=Config.GHOST_CLIENT_ID,
     client_secret=Config.GHOST_ADMIN_API_KEY,
  )
-sms = Twilio(Config)
-bigquery = bigquery_client.Client()
+sms = Twilio(
+    sid=Config.TWILIO_ACCOUNT_SID,
+    token=Config.TWILIO_AUTH_TOKEN,
+    recipient=Config.TWILIO_RECIPIENT_PHONE,
+    sender=Config.TWILIO_SENDER_PHONE
+)
 dd = DataDog(
     api_key=Config.DATADOG_API_KEY,
     app_key=Config.DATADOG_APP_KEY
 )
+bigquery = bigquery_client.Client()
 dd.test()

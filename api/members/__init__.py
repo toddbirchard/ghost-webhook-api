@@ -61,7 +61,6 @@ def donation_received():
     coffee_id = donation.get('coffee_id')
     existing_donation = db.fetch_record(
         f"SELECT * FROM donations WHERE email = '{email}';",
-        table_name='donations',
         database_name='analytics',
     )
     if existing_donation:

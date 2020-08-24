@@ -5,11 +5,11 @@ from twilio.rest import Client
 class Twilio:
     """Twilio SMS Client."""
 
-    def __init__(self, Config):
-        self.sid = Config.TWILIO_ACCOUNT_SID
-        self.token = Config.TWILIO_AUTH_TOKEN
-        self.recipient = Config.TWILIO_RECIPIENT_PHONE
-        self.sender = Config.TWILIO_SENDER_PHONE
+    def __init__(self, sid: str, token: str, recipient: str, sender: str):
+        self.sid = sid
+        self.token = token
+        self.recipient = recipient
+        self.sender = sender
         self.client = Client(self.sid, self.token)
 
     def send_message(self, msg):
