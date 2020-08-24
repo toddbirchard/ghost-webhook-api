@@ -1,4 +1,4 @@
-attrs==19.3.0
+attrs==20.1.0
 beautifulsoup4==4.9.1
 cachetools==4.1.1
 certifi==2020.6.20
@@ -34,7 +34,7 @@ metadata-parser==0.10.0
 mf2py==1.1.2
 mixpanel==4.6.0
 mock==4.0.2
-more-itertools==8.3.0
+more-itertools==8.4.0
 numpy==1.19.1
 packaging==20.4
 pandas==1.1.1
@@ -49,7 +49,7 @@ pycparser==2.20
 PyJWT==1.7.1
 PyMySQL==0.10.0
 pyparsing==2.4.7
-pytest==5.4.3
+pytest==6.0.1
 python-dateutil==2.8.1
 python-dotenv==0.14.0
 python-resize-image==1.1.19
