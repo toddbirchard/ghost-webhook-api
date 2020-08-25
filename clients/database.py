@@ -1,7 +1,7 @@
 """Database client."""
 from typing import List
 from pandas import DataFrame
-from sqlalchemy import create_engine, MetaData, Table, text
+from sqlalchemy import create_engine, MetaData, Table
 from clients.log import LOGGER
 
 
@@ -45,7 +45,7 @@ class Database:
     @LOGGER.catch
     def execute_query(self, query: str, database_name='blog'):
         """Execute single SQL query."""
-        result = self.engines[database_name].execute(text(query))
+        result = self.engines[database_name].execute(query)
         return result
 
     @LOGGER.catch
@@ -58,13 +58,13 @@ class Database:
     @LOGGER.catch
     def fetch_records(self, query, database_name=None) -> List[str]:
         """Fetch all rows via query."""
-        rows = self.engines[database_name].execute(text(query)).fetchall()
+        rows = self.engines[database_name].execute(query).fetchall()
         return [row.items() for row in rows]
 
     @LOGGER.catch
     def fetch_record(self, query: str, database_name=None):
         """Fetch row via query."""
-        return self.engines[database_name].execute(text(query)).first()
+        return self.engines[database_name].execute(query).first()
 
     @LOGGER.catch
     def insert_records(self, rows, table_name=None, database_name=None, replace=None) -> str:
@@ -72,7 +72,7 @@ class Database:
         if replace:
             self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
         table = self._table(table_name)
-        self.engines[database_name].execute(text(table.insert()), rows)
+        self.engines[database_name].execute(table.insert(), rows)
         return f'Inserted {len(rows)} into {table.name}.'
 
     def insert_dataframe(
