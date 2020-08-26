@@ -1,10 +1,11 @@
 """Fetch posts from Algolia REST API."""
+from typing import List
 import requests
 from flask import current_app as api
 from api.moment import get_current_date
 
 
-def fetch_algolia_searches(timeframe=7) -> list:
+def fetch_algolia_searches(timeframe=7) -> List[str]:
     """Fetch single week of searches from Algolia API."""
     endpoint = f'{api.config["ALGOLIA_BASE_URL"]}/searches'
     headers = {
@@ -26,4 +27,3 @@ def filter_results(search_queries: list) -> list:
     search_queries = list(filter(lambda x: len(x['search']) > 2, search_queries))
     search_queries = list(filter(lambda x: x['search'].replace(' ', '') != '', search_queries))
     return search_queries
-
