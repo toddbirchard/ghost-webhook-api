@@ -17,7 +17,7 @@ google-cloud-bigquery-storage==1.0.0
 google-cloud-core==1.4.1
 google-cloud-storage==1.30.0
 google-crc32c==0.1.0
-google-resumable-media==0.7.1
+google-resumable-media==1.0.0
 googleapis-common-protos==1.52.0
 grpcio==1.31.0
 html-text==0.5.2
