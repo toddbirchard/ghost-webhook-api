@@ -35,7 +35,7 @@ metadata-parser==0.10.0
 mf2py==1.1.2
 mixpanel==4.6.0
 mock==4.0.2
-more-itertools==8.4.0
+more-itertools==8.5.0
 mypy==0.782
 mypy-extensions==0.4.3
 numpy==1.19.1
