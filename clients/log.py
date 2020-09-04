@@ -1,6 +1,6 @@
 """Custom logger."""
-import simplejson as json
 from sys import stdout
+import simplejson as json
 from loguru import logger
 from config import Config
 
@@ -38,6 +38,7 @@ def create_logger() -> logger:
                    + "<light-red>{level}</light-red>: "
                    + "<light-white>{message}</light-white>"
         )
+        # Datadog
         logger.add(
             'logs/info.json',
             format=formatter,
@@ -47,6 +48,15 @@ def create_logger() -> logger:
             'logs/errors.json',
             format=formatter,
             level="ERROR",
+        )
+        # APM
+        apm_format = ('%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] '
+                      '[dd.service=%(dd.service)s dd.env=%(dd.env)s dd.version=%(dd.version)s dd.trace_id=%(dd.trace_id)s dd.span_id=%(dd.span_id)s] '
+                      '- %(message)s')
+        logger.add(
+            'logs/apm.json',
+            format=apm_format,
+            level="INFO",
         )
     else:
         # Output logs to console while in development

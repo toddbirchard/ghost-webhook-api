@@ -5,7 +5,6 @@ from clients.ghost import Ghost
 from clients.sms import Twilio
 from config import Config
 from google.cloud import bigquery as bigquery_client
-from clients.datadog import DataDog
 
 
 # Initialize clients
@@ -29,9 +28,4 @@ sms = Twilio(
     recipient=Config.TWILIO_RECIPIENT_PHONE,
     sender=Config.TWILIO_SENDER_PHONE
 )
-dd = DataDog(
-    api_key=Config.DATADOG_API_KEY,
-    app_key=Config.DATADOG_APP_KEY
-)
 bigquery = bigquery_client.Client()
-dd.test()
