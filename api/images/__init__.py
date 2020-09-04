@@ -1,4 +1,4 @@
-"""Routes to transform post images."""
+"""Generate and export optimized images."""
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from clients import db
@@ -9,9 +9,9 @@ headers = {'content-type': 'application/json'}
 
 
 @LOGGER.catch
-@api.route('/image/transform', methods=['POST'])
+@api.route('/images/post', methods=['POST'])
 def create_post_retina_image():
-    """Create image transforms on post update."""
+    """Generate retina version of a post's feature image if one doesn't exist."""
     post = request.get_json()['post']['current']
     feature_image = post.get('feature_image')
     title = post.get('title')
@@ -22,15 +22,22 @@ def create_post_retina_image():
 
 
 @api.route('/images/transform', methods=['GET'])
-def transform_recent_images():
-    """Apply transformations to image uploaded within the current month."""
+def transform_images():
+    """
+    Apply transformations to images uploaded within the current month.
+    Optionally accepts a `directory` parameter to override image directory.
+    """
     folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
     purged_images = gcs.purge_unwanted_images(folder)
     mobile_images = gcs.mobile_transformations(folder)
     retina_images = gcs.retina_transformations(folder)
     LOGGER.info(f'Transformed {mobile_images} mobile, {retina_images} retina images.')
     return make_response(
-        jsonify({'purged': purged_images, 'retina': retina_images, 'mobile': mobile_images}),
+        jsonify({
+            'purged': purged_images,
+            'retina': retina_images,
+            'mobile': mobile_images
+            }),
         200,
         headers
     )
@@ -42,7 +49,11 @@ def purge_images():
     folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
     purged_images = gcs.purge_unwanted_images(folder)
     LOGGER.info(f'Transformed {purged_images} images.')
-    return make_response(jsonify({'purged': purged_images}), 200, headers)
+    return make_response(
+        jsonify({'purged': purged_images}),
+        200,
+        headers
+    )
 
 
 @api.route('/images/mobile', methods=['GET'])
@@ -52,22 +63,16 @@ def transform_mobile_images():
     purged_images = gcs.purge_unwanted_images(folder)
     mobile_images = gcs.mobile_transformations(folder)
     LOGGER.info(f'Transformed {mobile_images} mobile.')
-    return make_response(jsonify({'purged': purged_images, 'mobile': mobile_images}), 200, headers)
+    return make_response(
+        jsonify({'purged': purged_images, 'mobile': mobile_images}),
+        200,
+        headers
+    )
 
 
-@api.route('/images/transform/lynx', methods=['GET'])
-def transform_lynx_images():
-    """Apply transformations to all `Lynx` images."""
-    folder = 'roundup'
-    mobile_images = gcs.mobile_transformations(folder)
-    retina_images = gcs.retina_transformations(folder)
-    LOGGER.info(f'Transformed {mobile_images} mobile, {retina_images} retina images.')
-    return make_response(jsonify({'retina': retina_images, 'mobile': mobile_images}), 200, headers)
-
-
-@api.route('/images/assign/lynx', methods=['GET'])
-def assign_missing_lynx_images():
-    """Assign image to Lynx posts which are missing feature image."""
+@api.route('/images/lynx', methods=['GET'])
+def assign_lynx_images():
+    """Assign images to any Lynx posts which are missing a feature image."""
     results = db.execute_query_from_file(
         'api/images/sql/lynx_missing_images.sql',
         database_name='blog'
@@ -80,4 +85,8 @@ def assign_missing_lynx_images():
             database_name='blog'
         )
     LOGGER.info(f'Updated {len(posts)} lynx posts with image.')
-    return make_response(f'Updated {len(posts)} lynx posts with image.', 200)
+    return make_response(
+        jsonify({'updated': posts}),
+        200,
+        headers
+    )

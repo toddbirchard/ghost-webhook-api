@@ -38,9 +38,8 @@ twilio = "*"
 beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
-datadog = "*"
-uwsgi = "*"
 ddtrace = "*"
+uwsgi = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

@@ -4,17 +4,15 @@ import io
 import re
 from io import BytesIO
 from random import randint
-
 from google.cloud import storage
 from google.cloud.storage.blob import Blob
 import requests
 from PIL import Image
-
 from clients.log import LOGGER
 
 
 class GCS:
-    """Google Cloud Storage CDN."""
+    """Google Cloud Storage image CDN."""
 
     def __init__(
             self,
@@ -83,11 +81,14 @@ class GCS:
         LOGGER.info('Generating standard images...')
         for image_blob in self.fetch_blobs(folder):
             new_image_name = image_blob.name.replace('.jpg', '@2x.jpg')
-            existing_image_file = self._fetch_image_via_http(new_image_name)
+            retina_blob = self.bucket.blob(new_image_name)
+            if retina_blob.exists():
+                pass
+            existing_image_file = self._fetch_image_via_http(retina_blob.name)
             if existing_image_file is None:
-                LOGGER.info(f'Creating retina image {new_image_name}')
-                self._create_retina_image(image_blob, new_image_name)
-                images_transformed.append(new_image_name)
+                LOGGER.info(f'Creating retina image {retina_blob.name}')
+                self._create_retina_image(image_blob, retina_blob.name)
+                images_transformed.append(retina_blob.name)
         return images_transformed
 
     def webp_transformations(self, folder: str) -> List[Optional[str]]:
@@ -113,11 +114,11 @@ class GCS:
             mobile_blob = self.bucket.blob(new_image_name)
             if mobile_blob.exists():
                 pass
-            mobile_image = self._create_mobile_image(image_blob.name)
+            mobile_image = self._create_mobile_image(image_blob)
             if mobile_image:
                 mobile_blob.upload_from_string(mobile_image, 'image/jpeg')
-                images_transformed.append(new_image_name)
-                LOGGER.info(f'Creating mobile image {new_image_name}')
+                images_transformed.append(mobile_blob.name)
+                LOGGER.info(f'Creating mobile image {mobile_blob.name}')
         return images_transformed
 
     @LOGGER.catch
@@ -126,10 +127,13 @@ class GCS:
         image_path = image_url.replace(self.bucket_url, '')
         image_blob = storage.Blob(image_path, self.bucket)
         new_image_name = image_blob.name.replace('.jpg', '@2x.jpg')
-        existing_image_file = self._fetch_image_via_http(new_image_name)
-        if existing_image_file is None:
-            LOGGER.info(f'Creating retina image {new_image_name}')
-            self._create_retina_image(image_blob, new_image_name)
+        retina_blob = self.bucket.blob(new_image_name)
+        if retina_blob.exists():
+            return f'{retina_blob.name} already exists.'
+        image_file = self._fetch_image_via_http(retina_blob.name)
+        if image_file is None:
+            LOGGER.info(f'Creating retina image {retina_blob.name}')
+            self._create_retina_image(image_blob, retina_blob.name)
         return f'{self.bucket_http_url}{new_image_name}'
 
     def fetch_random_lynx_image(self) -> str:
@@ -143,15 +147,20 @@ class GCS:
 
     def _create_mobile_image(self, image_blob: Blob):
         """Create mobile responsive version of a given image."""
-        img_bytes = self._fetch_image_via_http(image_blob)
+        img_bytes = self._fetch_image_via_http(image_blob.name)
         stream = BytesIO(img_bytes)
         im = Image.open(stream)
         width, height = im.size
         if width > 1000:
-            new_bytes = io.BytesIO()
             im_resized = im.resize((600, 346))
-            im_resized.save(new_bytes, 'JPEG', quality=90, optimize=True)
-            return stream.getvalue()
+            new_image_bytes = io.BytesIO()
+            im_resized.save(
+                new_image_bytes,
+                'JPEG2000',
+                quality=90,
+                optimize=True
+            )
+            return new_image_bytes.getvalue()
         return None
 
     @LOGGER.catch
