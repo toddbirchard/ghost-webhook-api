@@ -1,5 +1,5 @@
 """Database client."""
-from typing import List, json
+from typing import List
 from pandas import DataFrame
 from sqlalchemy import create_engine, MetaData, Table
 from clients.log import LOGGER
@@ -81,7 +81,7 @@ class Database:
             table_name=None,
             database_name='analytics',
             action='append'
-    ) -> json:
+    ):
         """Insert Pandas DataFrame into SQL table."""
         df.to_sql(table_name, self.engines[database_name], if_exists=action)
         return df.to_json(orient='records')

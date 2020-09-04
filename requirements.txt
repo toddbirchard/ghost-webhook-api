@@ -10,8 +10,8 @@ decorator==4.4.2
 extruct==0.10.0
 Flask==1.1.2
 future==0.18.2
-google-api-core==1.22.1
-google-auth==1.21.0
+google-api-core==1.22.2
+google-auth==1.21.1
 google-cloud-bigquery==1.27.2
 google-cloud-bigquery-storage==1.0.0
 google-cloud-core==1.4.1
@@ -28,6 +28,7 @@ isodate==0.6.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
 JSON-log-formatter==0.3.0
+jstyleson==0.0.2
 loguru==0.5.1
 lxml==4.5.2
 MarkupSafe==1.1.1
@@ -35,7 +36,7 @@ metadata-parser==0.10.0
 mf2py==1.1.2
 mixpanel==4.6.0
 mock==4.0.2
-more-itertools==8.5.0
+more-itertools==8.4.0
 mypy==0.782
 mypy-extensions==0.4.3
 numpy==1.19.1

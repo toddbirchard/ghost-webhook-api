@@ -15,7 +15,7 @@ def analytics_week():
         df,
         table_name='weekly_stats',
         database_name='analytics',
-        exists_action='replace'
+        action='replace'
     )
     LOGGER.info(result)
     return make_response(result, 200, {'content-type': 'application/json'})
@@ -31,7 +31,7 @@ def analytics_month():
         df,
         table_name='monthly_stats',
         database_name='analytics',
-        exists_action='replace'
+        action='replace'
     )
     LOGGER.info(result)
     return make_response(result, 200, {'content-type': 'application/json'})

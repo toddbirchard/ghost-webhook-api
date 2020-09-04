@@ -17,7 +17,6 @@ def week_searches():
         database_name='analytics',
         replace=True
     )
-    print(result)
     LOGGER.info(result)
     return make_response(jsonify(result), 200)
 
