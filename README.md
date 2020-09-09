@@ -16,17 +16,17 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 ## Endpoints
 
 #### Posts
-  * **GET** `/posts/metadata`: Fill in missing metadata for all posts (titles, descriptions, etc.).
+  * **GET** `/posts/update`: Populate metadata for all posts en masse. Populates meta titles, og titles & descriptions, and feature images.
   * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
-  * **POST** `/posts/update`: Fill in missing metadata for a single post upon publish (titles, descriptions, etc.).
-  * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds.
+  * **POST** `/posts/update`: Populate metadata for a single post upon publish. Populates meta title, og title & description, and feature image where applicable.
+  * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds for a given post upon publish.
 #### Searches
-  * **GET** `/searches/week`: Pull current week's top Algolia searches and save to a database table (used for search suggestions).
-  * **GET** `/searches/historical`: Append current week's Algolia searches to a historical table of all searches.
+  * **GET** `/searches/week`: Pull current week's top Algolia search queries and save to a SQL database (useful for building search-related features, ie: search suggestions).
+  * **GET** `/searches/historical`: Export current month's search queries to a SQL database (non-destructive export intended for historical table of searches).
 #### Analytics
-  * **GET** `/analytics/week`: Migrate site analytics data from BigQuery to MySQL table ("trending this week" widget).
-  * **GET** `/analytics/month`: Migrate site analytics data from BigQuery to MySQL table ("trending this month" widget).
-#### Images
+  * **GET** `/analytics/week`: Export site analytics from data warehouse (Google BigQuery) to SQL database. Useful for trend-related features ie: "trending this week" widget.
+  * **GET** `/analytics/month`: Export site analytics from data warehouse (Google BigQuery) to SQL database. Useful for trend-related features ie: "trending this month" widget.
+#### Image Optimization
   * **GET** `/images/transform`: Generates missing retina and mobile varieties of post `feature_image`s.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
   * **GET** `/images/purge`: Delete unwanted duplicate images.
