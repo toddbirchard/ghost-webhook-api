@@ -11,7 +11,7 @@ from clients.log import LOGGER
 @LOGGER.catch
 @api.route('/members/mixpanel', methods=['POST'])
 def subscriber_mixpanel():
-    """Create Mixpanel record for new subscriber."""
+    """Create Mixpanel record for newsletter subscriber."""
     mp = Mixpanel(api.config['MIXPANEL_API_TOKEN'])
     data = request.get_json()
     email = data.get('email')
@@ -25,8 +25,8 @@ def subscriber_mixpanel():
 
 
 @LOGGER.catch
-@api.route('/members/newsletter/welcome', methods=['POST'])
-def newsletter_welcome_message():
+@api.route('/members/newsletter', methods=['POST'])
+def newsletter_subscriber():
     """Send welcome email to newsletter subscriber."""
     endpoint = f'https://api.mailgun.net/v3/{api.config["MAILGUN_EMAIL_SERVER"]}/messages'
     email = request.json.get('email')
@@ -50,7 +50,7 @@ def newsletter_welcome_message():
 @LOGGER.catch
 @api.route('/members/donation', methods=['PUT'])
 def donation_received():
-    """Parse incoming donations."""
+    """Add donation to historical ledger."""
     donation = request.get_json()
     email = donation.get('email')
     name = donation.get('name')
