@@ -12,7 +12,7 @@ from .lynx.cards import generate_link_previews
 @LOGGER.catch
 @api.route('/posts/update', methods=['POST'])
 def update_post():
-    """Update post metadata & render Lynx previews."""
+    """Update post metadata."""
     post = request.get_json()['post']['current']
     post_id = post.get('id')
     slug = post.get('slug')
@@ -67,8 +67,8 @@ def update_post():
 
 @LOGGER.catch
 @api.route('/posts/embed', methods=['POST'])
-def generate_embedded_link_previews():
-    """Render Lynx previews."""
+def post_link_previews():
+    """Render anchor tag link previews."""
     post = request.get_json()['post']['current']
     post_id = post.get('id')
     slug = post.get('slug')
@@ -99,7 +99,7 @@ def generate_embedded_link_previews():
 
 
 @LOGGER.catch
-@api.route('/posts/metadata', methods=['GET'])
+@api.route('/posts/update', methods=['GET'])
 def post_metadata_sanitize():
     """Mass update post metadata."""
     queries = get_queries()
@@ -112,6 +112,6 @@ def post_metadata_sanitize():
 @LOGGER.catch
 @api.route('/posts/backup', methods=['GET'])
 def backup_database():
-    """Save JSON backup of database."""
+    """Export JSON backup of database."""
     json = ghost.get_json_backup()
     return json
