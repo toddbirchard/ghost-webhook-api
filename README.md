@@ -16,9 +16,9 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
 ## Endpoints
 
 #### Posts
-  * **GET** `/posts/update`: Populate metadata for all posts en masse. Populates meta titles, og titles & descriptions, and feature images.
+  * **GET** `/posts/update`: Populate metadata for all posts en masse. Supports meta titles, og titles & descriptions, and feature images.
   * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
-  * **POST** `/posts/update`: Populate metadata for a single post upon publish. Populates meta title, og title & description, and feature image where applicable.
+  * **POST** `/posts/update`: Populate metadata for a single post upon publish. Supports meta title, og title & description, and feature image where applicable.
   * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds for a given post upon publish.
 #### Searches
   * **GET** `/searches/week`: Pull current week's top Algolia search queries and save to a SQL database (useful for building search-related features, ie: search suggestions).
@@ -27,12 +27,12 @@ Supplementary API to optimize JAMStack sites via webhooks. Listens for site upda
   * **GET** `/analytics/week`: Export site analytics from data warehouse (Google BigQuery) to SQL database. Useful for trend-related features ie: "trending this week" widget.
   * **GET** `/analytics/month`: Export site analytics from data warehouse (Google BigQuery) to SQL database. Useful for trend-related features ie: "trending this month" widget.
 #### Image Optimization
-  * **GET** `/images/transform`: Generates missing retina and mobile varieties of post `feature_image`s.
+  * **GET** `/images/transform`: Generates retina and mobile varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a _?directory=_ parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
-  * **GET** `/images/purge`: Delete unwanted duplicate images.
-  * **GET** `/images/mobile`: Apply mobile transformations to feature images in a given directory.
+  * **GET** `/images/purge`: Delete unwanted images such as duplicates, unused images, etc.
+  * **GET** `/images/mobile`: Generate mobile image variations of post feature_images. Defaults to images uploaded within the current month, or accepts a _?directory=_ parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
-  * **POST** `/image/transform`: Generates retina feature image for single post upon update.
+  * **POST** `/image/transform`: Generate retina and mobile feature_image for a single post upon update.
 #### Members
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
