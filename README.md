@@ -24,13 +24,13 @@ Python API to provide JAMStack-based sites content & image optimization automati
   * **GET** `/searches/week`: Pull current week's top Algolia search queries and save to a SQL database (useful for building search-related features, ie: search suggestions).
   * **GET** `/searches/historical`: Export current month's search queries to a SQL database (non-destructive export intended for historical table of searches).
 #### Analytics
-  * **GET** `/analytics/week`: Export site analytics from data warehouse (Google BigQuery) to SQL database. Useful for trend-related features ie: "trending this week" widget.
-  * **GET** `/analytics/month`: Export site analytics from data warehouse (Google BigQuery) to SQL database. Useful for trend-related features ie: "trending this month" widget.
+  * **GET** `/analytics/week`: Export site analytics from a data warehouse to a SQL database. Useful for trend-related features ie: "trending this week" widget.
+  * **GET** `/analytics/month`: Export site analytics from data warehouse to a SQL database.
 #### Image Optimization
-  * **GET** `/images/transform`: Generates retina and mobile varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a _?directory=_ parameter which accepts a path to recursively optimize images on the given CDN.
+  * **GET** `/images/transform`: Generates retina and mobile varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
   * **GET** `/images/purge`: Delete unwanted images such as duplicates, unused images, etc.
-  * **GET** `/images/mobile`: Generate mobile image variations of post feature_images. Defaults to images uploaded within the current month, or accepts a _?directory=_ parameter which accepts a path to recursively optimize images on the given CDN.
+  * **GET** `/images/mobile`: Generate mobile image variations of post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **POST** `/image/transform`: Generate retina and mobile feature_image for a single post upon update.
 #### Members
