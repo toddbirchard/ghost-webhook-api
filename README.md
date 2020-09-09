@@ -10,7 +10,7 @@
 
 ![Jamstack Automation API](./.github/jamstack@2x.png)
 
-Supplementary API to optimize JAMStack sites via webhooks. Listens for site updates to clean metadata, optimize images, handle user sign-ups, and much more.
+Python API to provide JAMStack-based sites content & image optimization automations, features from third-party services (Mailgun, Twilio, Github, etc), and data pipelines to power data-driven features. Places nicely with Webhooks typical of JAMStack sites to trigger a myriad of jobs to empower JAMStack sites.
 
 
 ## Endpoints
