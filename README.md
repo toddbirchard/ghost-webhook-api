@@ -40,8 +40,8 @@ Python API to provide JAMStack-based sites content & image optimization automati
 #### Authors
   * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.
 #### Github
-  *  **POST** `/github/pr`: Send SMS notification when contributors open or modify a Github PR.
-  *  **POST** `/github/issue`: Send SMS notification when contributors open or modify a Github issue.
+  *  **POST** `/github/pr`: Trigger SMS notification when contributors open a Github PR in a specified Github org.
+  *  **POST** `/github/issue`: Trigger SMS notification when contributors open a Github issue in a specified Github org.
 
 ## Installation
 
