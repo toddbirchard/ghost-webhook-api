@@ -55,7 +55,7 @@ pyasn1-modules==0.2.8
 pybigquery==0.4.15
 pycparser==2.20
 PyJWT==1.7.1
-PyMySQL==0.10.0
+PyMySQL==0.10.1
 pyparsing==2.4.7
 pytest==6.0.1
 python-dateutil==2.8.1
