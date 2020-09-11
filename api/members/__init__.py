@@ -54,11 +54,12 @@ def donation_received():
     donation = request.get_json()
     email = donation.get('email')
     name = donation.get('name')
-    message = donation.get('message').replace("'", "\\'")
     link = donation.get('link')
     created_at = donation.get('created_at')
     count = donation.get('count')
     coffee_id = donation.get('coffee_id')
+    if donation.get('message', None):
+        message = donation.get('message').replace("'", "\\'")
     existing_donation = db.fetch_record(
         f"SELECT * FROM donations WHERE email = '{email}';",
         database_name='analytics',
