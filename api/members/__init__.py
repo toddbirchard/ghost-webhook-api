@@ -48,7 +48,7 @@ def newsletter_subscriber():
 
 
 @LOGGER.catch
-@api.route('/members/donation', methods=['POST'])
+@api.route('/members/donation', methods=['PUT'])
 def donation_received():
     """Add donation to historical ledger."""
     donation = request.get_json()
