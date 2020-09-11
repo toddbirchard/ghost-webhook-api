@@ -1,5 +1,7 @@
 """Initialize api."""
 from flask import Flask
+from ddtrace import patch_all
+patch_all()
 
 
 def init_api():
