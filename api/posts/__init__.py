@@ -1,5 +1,6 @@
 """Routes to transform post data."""
 from time import sleep
+from datetime import datetime, timedelta
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from clients import db, ghost, gcs
@@ -43,12 +44,13 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
              })
-        # if 'kg-card' not in html or 'kg-card' not in previous['html']:
-            # doc = generate_link_previews(post)
-            # LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-            # body['posts'][0].update({
-            #     "mobiledoc": doc
-            # })
+        if html and ('kg-card' not in html or 'kg-card' not in previous['html']):
+            if previous.get('updated_at') and (time - datetime.strftime(previous['updated_at']) > timedelta(seconds=5)):
+                doc = generate_link_previews(post)
+                LOGGER.info(f'Generated Previews for Lynx post {slug}.')
+                body['posts'][0].update({
+                    "mobiledoc": doc
+                })
     # Update image meta tags
     elif feature_image is not None:
         body['posts'][0].update({
