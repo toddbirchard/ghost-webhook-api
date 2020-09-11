@@ -58,6 +58,7 @@ def donation_received():
     created_at = donation.get('created_at')
     count = donation.get('count')
     coffee_id = donation.get('coffee_id')
+    message = None
     if donation.get('message', None):
         message = donation.get('message').replace("'", "\\'")
     existing_donation = db.fetch_record(
