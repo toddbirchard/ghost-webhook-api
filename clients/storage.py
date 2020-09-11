@@ -156,7 +156,7 @@ class GCS:
             new_image_bytes = io.BytesIO()
             im_resized.save(
                 new_image_bytes,
-                'JPEG2000',
+                'JPEG',
                 quality=90,
                 optimize=True
             )
