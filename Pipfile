@@ -24,6 +24,8 @@ Beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
 ddtrace = "*"
+boto = "*"
+botocore = "*"
 uWSGI = "*"
 
 [dev-packages]

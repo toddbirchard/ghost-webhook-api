@@ -39,6 +39,8 @@ beautifulsoup4 = "*"
 extruct = "*"
 simplejson = "*"
 ddtrace = "*"
+boto = "*"
+botocore = "*"
 uwsgi = "*"
 
 [tool.poetry.dev-dependencies]

@@ -1,10 +1,10 @@
 """Parsing individual URLs and verify JSON-LD is returned."""
+from ..scrape import render_json_ltd, get_image
 import simplejson as json
 import pytest
 import requests
 from mock import Mock
 from bs4 import BeautifulSoup
-from ..scrape import render_json_ltd, get_image
 
 
 @pytest.fixture

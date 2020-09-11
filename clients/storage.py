@@ -125,15 +125,13 @@ class GCS:
     def create_single_retina_image(self, image_url: str) -> str:
         """Create retina version of single image."""
         image_path = image_url.replace(self.bucket_url, '')
-        image_blob = storage.Blob(image_path, self.bucket)
-        new_image_name = image_blob.name.replace('.jpg', '@2x.jpg')
+        print(image_path)
+        original_image_blob = storage.Blob(image_path, self.bucket)
+        new_image_name = original_image_blob.name.replace('.jpg', '@2x.jpg')
         retina_blob = self.bucket.blob(new_image_name)
         if retina_blob.exists():
             return f'{retina_blob.name} already exists.'
-        image_file = self._fetch_image_via_http(retina_blob.name)
-        if image_file is None:
-            LOGGER.info(f'Creating retina image {retina_blob.name}')
-            self._create_retina_image(image_blob, retina_blob.name)
+        self._create_retina_image(original_image_blob, retina_blob)
         return f'{self.bucket_http_url}{new_image_name}'
 
     def fetch_random_lynx_image(self) -> str:
@@ -164,15 +162,20 @@ class GCS:
         return None
 
     @LOGGER.catch
-    def _create_retina_image(self, image_blob: Blob, new_image_name: str) -> None:
+    def _create_retina_image(self, original_blob: Blob, retina_blob: Blob) -> None:
         """Create retina versions of standard-res images."""
-        original_image = self._fetch_image_via_http(new_image_name)
-        if original_image:
-            img = Image.open(BytesIO(original_image))
-            img.save()
-            width, height = img.size
+        original_image_file = self._fetch_image_via_http(original_blob.name)
+        if original_image_file is not None:
+            LOGGER.info(f'Creating retina image {retina_blob.name}')
+            im = Image.open(BytesIO(original_image_file))
+            im.save()
+            width, height = im.size
             if width > 1000:
-                self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
+                self.bucket.copy_blob(
+                    original_blob,
+                    self.bucket,
+                    retina_blob.name
+                )
 
     @LOGGER.catch
     def _fetch_image_via_http(self, image_name: str):

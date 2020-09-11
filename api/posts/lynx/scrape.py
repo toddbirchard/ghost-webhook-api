@@ -13,7 +13,10 @@ def scrape_link(url: str) -> Optional[List[dict]]:
     """Replace anchor tags with embedded previews from scraped data."""
     req = requests.get(url, headers=http_headers)
     if req.status_code != 200:
-        LOGGER.error(f'Invalid Lynx URL threw {req.status_code}: {url}')
+        LOGGER.error(f'Lynx URL {url} threw status code {req.status_code}')
+        return None
+    elif req.headers.get('content-type', None) and 'text/html' not in req.headers['content-type']:
+        LOGGER.error(f'Lynx URL {url} ignored with type {req.headers.get("content-type")}')
         return None
     html = BeautifulSoup(req.content, 'html.parser')
     base_url = get_base_url(req.content, url)
