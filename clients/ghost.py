@@ -93,7 +93,7 @@ class Ghost:
         try:
             req = requests.post(
                 f'{self.url}/members/',
-                data=body,
+                json=body,
                 headers={'Authorization': self.session_token}
             )
             response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
