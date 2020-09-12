@@ -37,7 +37,7 @@ def new_user():
 def new_comment():
     """User comment."""
     data = request.get_json()
-    post_slug = data['post_url'].split('/')[:-1]
+    post_slug = data['post_url'].replace('https://hackersandslackers.com/', '').replace('/', '')
     comment = {
         "comment_id": data.get('id'),
         "user_name": data.get('user_name'),
