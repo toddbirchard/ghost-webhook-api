@@ -96,7 +96,7 @@ class Ghost:
                 data=body,
                 headers={'Authorization': self.session_token}
             )
-            response = f'Received code {req.status_code} when adding user: `{body["members"][0]["email"]}`.'
+            response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
             LOGGER.info(response)
             return response, req.status_code
         except RequestException as exc:
