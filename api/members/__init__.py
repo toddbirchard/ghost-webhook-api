@@ -1,4 +1,5 @@
 """Subscribers and Ghost member management."""
+from datetime import datetime
 import simplejson as json
 from flask import current_app as api
 from flask import make_response, request, jsonify
@@ -44,7 +45,7 @@ def new_comment():
         "body": data.get('body'),
         "post_url": data.get('post_url'),
         "user_role": data.get('user_role'),
-        "created_at": data.get('created_at'),
+        "created_at": datetime.strptime(data.get('created_at'), "%Y-%m-%dT%H:%M:%S.%f"),
     }
     result = db.insert_records([comment], table_name="comments", database_name="hackers_prod")
     LOGGER.info(f'Created commentId={comment["comment_id"]} by user={comment["user_id"]}.')
