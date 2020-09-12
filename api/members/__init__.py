@@ -37,7 +37,7 @@ def new_comment():
     """User comment."""
     data = request.get_json()
     comment = {
-        "id": data.get('id'),
+        "comment_id": data.get('id'),
         "user_name": data.get('user_name'),
         "user_avatar": data.get('user_avatar'),
         "user_id": data.get('user_id'),
