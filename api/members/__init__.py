@@ -37,14 +37,13 @@ def new_user():
 def new_comment():
     """User comment."""
     data = request.get_json()
-    post_slug = data['post_url'].replace('https://hackersandslackers.com/', '').replace('/', '')
     comment = {
         "comment_id": data.get('id'),
         "user_name": data.get('user_name'),
         "user_avatar": data.get('user_avatar'),
         "user_id": data.get('user_id'),
         "body": data.get('body'),
-        "post_slug": post_slug,
+        "post_id": data.get('post_id'),
         "user_role": data.get('user_role'),
         "created_at": datetime.strptime(
             data.get('created_at').replace('Z', ''),
