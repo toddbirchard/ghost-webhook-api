@@ -47,7 +47,7 @@ def new_comment():
         "created_at": data.get('created_at'),
     }
     result = db.insert_records([comment], table_name="comments", database_name="hackers_prod")
-    LOGGER.info(f'Created commentId={comment["id"]} by user={comment["user_id"]}.')
+    LOGGER.info(f'Created commentId={comment["comment_id"]} by user={comment["user_id"]}.')
     return make_response(jsonify(result), 200)
 
 
