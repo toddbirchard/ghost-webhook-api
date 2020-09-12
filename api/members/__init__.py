@@ -8,7 +8,6 @@ from clients import db, ghost
 from clients.log import LOGGER
 
 
-@LOGGER.catch
 @api.route('/members/signup', methods=['POST'])
 def new_user():
     """Create Ghost member from Netlify auth signup."""
@@ -33,6 +32,25 @@ def new_user():
 
 
 @LOGGER.catch
+@api.route('/members/comments', methods=['POST'])
+def new_comment():
+    """User comment."""
+    data = request.get_json()
+    comment = {
+        "id": data.get('id'),
+        "user_name": data.get('user_name'),
+        "user_avatar": data.get('user_avatar'),
+        "user_id": data.get('user_id'),
+        "body": data.get('body'),
+        "post_url": data.get('post_url'),
+        "user_role": data.get('user_role'),
+        "created_at": data.get('created_at'),
+    }
+    result = db.insert_records([comment], table_name="comments", database_name="hackers_prod")
+    LOGGER.info(f'Created commentId={comment["id"]} by user={comment["user_id"]}.')
+    return make_response(jsonify(result), 200)
+
+
 @api.route('/members/mixpanel', methods=['POST'])
 def subscriber_mixpanel():
     """Create Mixpanel record for newsletter subscriber."""
@@ -48,7 +66,6 @@ def subscriber_mixpanel():
     return make_response(jsonify({'DENIED': data}))
 
 
-@LOGGER.catch
 @api.route('/members/newsletter', methods=['POST'])
 def newsletter_subscriber():
     """Send welcome email to newsletter subscriber."""
@@ -71,7 +88,6 @@ def newsletter_subscriber():
     return make_response(jsonify(req.json()), 200)
 
 
-@LOGGER.catch
 @api.route('/members/donation', methods=['PUT'])
 def donation_received():
     """Add donation to historical ledger."""
