@@ -45,7 +45,10 @@ def new_comment():
         "body": data.get('body'),
         "post_url": data.get('post_url'),
         "user_role": data.get('user_role'),
-        "created_at": datetime.strptime(data.get('created_at'), "%Y-%m-%dT%H:%M:%S.%f"),
+        "created_at": datetime.strptime(
+            data.get('created_at').replace('Z', ''),
+            "%Y-%m-%dT%H:%M:%S.%f"
+        ),
     }
     result = db.insert_records([comment], table_name="comments", database_name="hackers_prod")
     LOGGER.info(f'Created commentId={comment["comment_id"]} by user={comment["user_id"]}.')
