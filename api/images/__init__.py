@@ -75,14 +75,14 @@ def assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = db.execute_query_from_file(
         'api/images/sql/lynx_missing_images.sql',
-        database_name='blog'
+        database_name='hackers_prod'
     )
     posts = [result.id for result in results]
     for post in posts:
         image = gcs.fetch_random_lynx_image()
         db.execute_query(
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
-            database_name='blog'
+            database_name='hackers_prod'
         )
     LOGGER.info(f'Updated {len(posts)} lynx posts with image.')
     return make_response(

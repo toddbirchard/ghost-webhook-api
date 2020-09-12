@@ -20,7 +20,7 @@ class Database:
                 connect_args=args,
                 echo=False
             ),
-            'blog': create_engine(
+            'hackers_prod': create_engine(
                 f'{uri}/hackers_prod',
                 connect_args=args,
                 echo=False
@@ -35,7 +35,7 @@ class Database:
         )
 
     @LOGGER.catch
-    def execute_queries(self, queries: dict, database_name='blog') -> dict:
+    def execute_queries(self, queries: dict, database_name='hackers_prod') -> dict:
         """Execute SQL query."""
         results = {}
         for k, v in queries.items():
@@ -44,7 +44,7 @@ class Database:
         return results
 
     @LOGGER.catch
-    def execute_query(self, query: str, database_name='blog'):
+    def execute_query(self, query: str, database_name='hackers_prod'):
         """Execute single SQL query."""
         try:
             result = self.engines[database_name].execute(query)
@@ -54,7 +54,7 @@ class Database:
             return f'Failed to execute SQL query: {query}'
 
     @LOGGER.catch
-    def execute_query_from_file(self, sql_file: str, database_name='blog'):
+    def execute_query_from_file(self, sql_file: str, database_name='hackers_prod'):
         """Execute single SQL query."""
         try:
             query = open(sql_file, 'r').read()
