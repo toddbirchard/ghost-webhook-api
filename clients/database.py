@@ -27,7 +27,7 @@ class Database:
             )
         }
 
-    def _table(self, table_name: str, database_name='analytics') -> Table:
+    def _table(self, table_name: str, database_name) -> Table:
         return Table(
             table_name,
             MetaData(bind=self.engines[database_name]),
@@ -81,7 +81,7 @@ class Database:
         try:
             if replace:
                 self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
-            table = self._table(table_name)
+            table = self._table(table_name, database_name)
             self.engines[database_name].execute(table.insert(), rows)
             return f'Inserted {len(rows)} into {table.name}.'
         except SQLAlchemyError as e:
