@@ -5,7 +5,7 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 from clients import db, ghost, gcs
 from clients.log import LOGGER
-from api.moment import get_current_time
+from api.moment import get_current_time, get_current_datetime
 from .read import get_queries
 from .lynx.cards import generate_link_previews
 
@@ -22,8 +22,9 @@ def update_post():
     custom_excerpt = post.get('custom_excerpt')
     primary_tag = post.get('primary_tag')
     html = post.get('html')
-    previous = post.get('previous')
+    previous = request.get_json()['post'].get('previous')
     time = get_current_time()
+    updated_at = get_current_datetime()
     body = {
         "posts": [{
             "meta_title": title,
@@ -44,8 +45,9 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
              })
-        if html and ('kg-card' not in html or 'kg-card' not in previous['html']):
-            if previous.get('updated_at') and (time - datetime.strftime(previous['updated_at']) > timedelta(seconds=5)):
+        if html and ('kg-card' not in html):
+            print(updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.%fZ"))
+            if previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.%fZ") > timedelta(seconds=5)) and 'kg-card' not in previous['html']:
                 doc = generate_link_previews(post)
                 LOGGER.info(f'Generated Previews for Lynx post {slug}.')
                 body['posts'][0].update({

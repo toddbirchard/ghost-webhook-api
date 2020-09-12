@@ -125,8 +125,8 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     author = None
     if bool(json_ld) and json_ld.get('author'):
         if isinstance(json_ld['author'], list):
-            author = json_ld['author'][0].get('name')
-        elif isinstance(json_ld['author'], dict):
+            author = json_ld['author'][0]
+        if isinstance(json_ld['author'], dict):
             author = json_ld['author'].get('name')
         if isinstance(author, str):
             return author
@@ -148,12 +148,11 @@ def get_publisher(json_ld: dict) -> Optional[str]:
     publisher = None
     if bool(json_ld) and json_ld.get('publisher'):
         if isinstance(json_ld['publisher'], list):
-            publisher = json_ld['publisher'][0].get('name')
-        elif isinstance(json_ld['publisher'], dict):
+            publisher = json_ld['publisher'][0]
+        if isinstance(json_ld['publisher'], dict):
             publisher = json_ld['publisher'].get('name')
-    if publisher:
-        return publisher
-    else:
+        if isinstance(publisher, str):
+            return publisher
         return ""
 
 

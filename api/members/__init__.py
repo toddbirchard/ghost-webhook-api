@@ -4,8 +4,29 @@ from flask import current_app as api
 from flask import make_response, request, jsonify
 import requests
 from mixpanel import Mixpanel
-from clients import db
+from clients import db, ghost
 from clients.log import LOGGER
+
+
+@LOGGER.catch
+@api.route('/members/signup', methods=['POST'])
+def new_user():
+    """Create Ghost member from Netlify auth signup."""
+    data = request.get_json()
+    LOGGER.info(data)
+    body = {
+      "members": [{
+        "name": data['user_metadata'].get('full_name'),
+        "email": data.get('email'),
+        "note": "",
+        "subscribed": True,
+        "comped": False,
+        "labels": []
+      }]
+    }
+    response, code = ghost.create_member(body)
+    LOGGER.info(f'Post Updated with code {code}: {body}')
+    return make_response(response, code)
 
 
 @LOGGER.catch

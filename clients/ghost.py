@@ -78,10 +78,25 @@ class Ghost:
         try:
             req = requests.put(
                 f'{self.url}/posts/{post_id}/',
-                json=body,
+                data=body,
                 headers={'Authorization': self.session_token}
             )
             response = f'Received code {req.status_code} when updating `{slug}`.'
+            LOGGER.info(response)
+            return response, req.status_code
+        except RequestException as exc:
+            LOGGER.error(exc)
+            raise exc
+
+    def create_member(self, body: dict):
+        """Create new member."""
+        try:
+            req = requests.post(
+                f'{self.url}/members/',
+                data=body,
+                headers={'Authorization': self.session_token}
+            )
+            response = f'Received code {req.status_code} when adding user: `{body["email"]}`.'
             LOGGER.info(response)
             return response, req.status_code
         except RequestException as exc:
