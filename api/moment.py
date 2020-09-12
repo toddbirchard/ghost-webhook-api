@@ -18,4 +18,4 @@ def get_current_date(timeframe: int) -> str:
 
 def get_current_datetime() -> datetime:
     """Get current UTC datetime."""
-    return datetime.now(pytz.utc)
+    return datetime.now()

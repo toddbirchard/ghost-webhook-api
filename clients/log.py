@@ -19,6 +19,16 @@ def formatter(record):
 def create_logger() -> logger:
     """Create custom logger."""
     logger.remove()
+    # Output logs to console while in development
+    logger.add(
+        stdout,
+        colorize=True,
+        level="INFO",
+        catch=True,
+        format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
+               + "<light-green>{level}</light-green>: "
+               + "<light-white>{message}</light-white>"
+    )
     if Config.FLASK_ENV == 'production':
         logger.add(
             'logs/info.log',
@@ -57,17 +67,6 @@ def create_logger() -> logger:
             'logs/apm.json',
             format=apm_format,
             level="INFO",
-        )
-    else:
-        # Output logs to console while in development
-        logger.add(
-            stdout,
-            colorize=True,
-            level="INFO",
-            catch=True,
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-            + "<light-green>{level}</light-green>: "
-            + "<light-white>{message}</light-white>"
         )
     return logger
 

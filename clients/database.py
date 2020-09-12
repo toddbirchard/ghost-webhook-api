@@ -1,7 +1,8 @@
 """Database client."""
-from typing import List
+from typing import List, Optional
 from pandas import DataFrame
 from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy.exc import SQLAlchemyError
 from clients.log import LOGGER
 
 
@@ -45,15 +46,23 @@ class Database:
     @LOGGER.catch
     def execute_query(self, query: str, database_name='blog'):
         """Execute single SQL query."""
-        result = self.engines[database_name].execute(query)
-        return result
+        try:
+            result = self.engines[database_name].execute(query)
+            return result
+        except SQLAlchemyError as e:
+            LOGGER.error(e)
+            return f'Failed to execute SQL query: {query}'
 
     @LOGGER.catch
     def execute_query_from_file(self, sql_file: str, database_name='blog'):
         """Execute single SQL query."""
-        query = open(sql_file, 'r').read()
-        result = self.engines[database_name].execute(query)
-        return result
+        try:
+            query = open(sql_file, 'r').read()
+            result = self.engines[database_name].execute(query)
+            return result
+        except SQLAlchemyError as e:
+            LOGGER.error(e)
+            return f'Failed to execute SQL: {sql_file}'
 
     @LOGGER.catch
     def fetch_records(self, query, database_name=None) -> List[str]:
@@ -69,11 +78,15 @@ class Database:
     @LOGGER.catch
     def insert_records(self, rows, table_name=None, database_name=None, replace=None) -> str:
         """Insert rows into table."""
-        if replace:
-            self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
-        table = self._table(table_name)
-        self.engines[database_name].execute(table.insert(), rows)
-        return f'Inserted {len(rows)} into {table.name}.'
+        try:
+            if replace:
+                self.engines[database_name].execute(f'TRUNCATE TABLE {table_name}')
+            table = self._table(table_name)
+            self.engines[database_name].execute(table.insert(), rows)
+            return f'Inserted {len(rows)} into {table.name}.'
+        except SQLAlchemyError as e:
+            LOGGER.error(e)
+            return f'Failed to insert rows into {table.name}'
 
     def insert_dataframe(
             self,

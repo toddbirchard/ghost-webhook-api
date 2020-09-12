@@ -28,7 +28,7 @@ def new_user():
     if code == 200:
         LOGGER.info(f'Member created with code {code}: {body}')
         return make_response(response, code)
-    LOGGER.info('Member creation failed.')
+    LOGGER.error('Member creation failed.')
     return make_response('Member creation failed.', 500)
 
 
