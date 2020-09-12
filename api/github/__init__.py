@@ -21,8 +21,8 @@ def github_pr():
             200,
             headers
         )
-    message = f'PR {action} for repository {repo["name"]}: \
-              `{pull_request["title"]}` \n\n {pull_request["url"]}'
+    message = f'PR {action} for repository {repo["name"]}: {pull_request["title"]}` \n\n {pull_request["url"]}'
+    LOGGER.info(message)
     sms.send_message(message)
     return make_response(
         f'SMS notification sent for {action} for {user}.',
@@ -36,7 +36,6 @@ def github_pr():
 def github_issue():
     """Send SMS notification upon issue creation."""
     payload = request.get_json()
-    LOGGER.info(payload)
     action = payload.get('action')
     user = payload['sender'].get('login')
     issue = payload['issue']
@@ -49,6 +48,7 @@ def github_issue():
             headers
         )
     message = f'Issue {action} for repository {repo["name"]}: `{issue["title"]}` \n\n {issue["url"]}'
+    LOGGER.info(message)
     sms.send_message(message)
     return make_response(
         f'SMS notification sent for {action} for {user}.',

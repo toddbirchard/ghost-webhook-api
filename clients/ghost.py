@@ -82,7 +82,6 @@ class Ghost:
                 headers={'Authorization': self.session_token}
             )
             response = f'Received code {req.status_code} when updating `{slug}`.'
-            LOGGER.info(response)
             return response, req.status_code
         except RequestException as exc:
             LOGGER.error(exc)
@@ -97,7 +96,6 @@ class Ghost:
                 headers={'Authorization': self.session_token}
             )
             response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
-            LOGGER.info(response)
             return response, req.status_code
         except RequestException as exc:
             LOGGER.error(exc)
