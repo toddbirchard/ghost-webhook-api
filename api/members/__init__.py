@@ -25,7 +25,10 @@ def new_user():
       }]
     }
     response, code = ghost.create_member(body)
-    LOGGER.info(f'Post Updated with code {code}: {body}')
+    if code == 200:
+        LOGGER.info(f'Member created with code {code}: {body}')
+        return make_response(response, code)
+    LOGGER.info(f'Member creation failed with code {code}: {body["errors"][0]}')
     return make_response(response, code)
 
 
