@@ -35,18 +35,14 @@ def create_logger() -> logger:
             colorize=True,
             level="INFO",
             rotation="200 MB",
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-                   + "<light-green>{level}</light-green>: "
-                   + "<light-white>{message}</light-white>"
+            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> <light-green>{level}</light-green>:<light-white>{message}</light-white>"
         )
         logger.add(
             'logs/errors.log',
             colorize=True,
             level="ERROR",
             rotation="200 MB",
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-                   + "<light-red>{level}</light-red>: "
-                   + "<light-white>{message}</light-white>"
+            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> <light-red>{level}</light-red>:<light-white>{message}</light-white>"
         )
         # Datadog
         logger.add(
