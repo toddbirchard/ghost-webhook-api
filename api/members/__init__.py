@@ -16,9 +16,9 @@ def new_user():
     LOGGER.info(data)
     body = {
       "members": [{
-        "name": data['user_metadata'].get('full_name'),
+        "name": data.get('full_name'),
         "email": data.get('email'),
-        "note": "",
+        "note": f"IP: {data.get('ip_address')}",
         "subscribed": True,
         "comped": False,
         "labels": []
