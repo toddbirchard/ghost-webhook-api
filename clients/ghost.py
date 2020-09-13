@@ -100,7 +100,7 @@ class Ghost:
             LOGGER.info(response)
             return response, req.status_code
         except HTTPError as e:
-            LOGGER.error(f'Failed to create Ghost member: {e.response}')
+            LOGGER.error(f'Failed to create Ghost member: {e.response.content}')
             return e.response.content, e.response.status_code
 
     def get_json_backup(self) -> dict:
