@@ -15,7 +15,7 @@ def new_user():
     data = request.get_json()
     body = {
       "members": [{
-        "name": data.get('full_name'),
+        "name": data.get('name'),
         "email": data.get('email'),
         "note": data.get('ip_address'),
         "subscribed": True,
