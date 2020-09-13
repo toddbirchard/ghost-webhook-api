@@ -1,8 +1,8 @@
-"""Ghost admin."""
+"""Ghost admin client."""
 from typing import Tuple
 from datetime import datetime as date
 import requests
-from requests.exceptions import RequestException
+from requests.exceptions import HTTPError
 import jwt
 from clients.log import LOGGER
 
@@ -83,9 +83,9 @@ class Ghost:
             )
             response = f'Received code {req.status_code} when updating `{slug}`.'
             return response, req.status_code
-        except RequestException as exc:
-            LOGGER.error(exc)
-            raise exc
+        except HTTPError as e:
+            LOGGER.error(e.response)
+            return e.response.content, e.response.status_code
 
     def create_member(self, body: dict):
         """Create new member."""
@@ -95,11 +95,12 @@ class Ghost:
                 json=body,
                 headers={'Authorization': self.session_token}
             )
+            req.raise_for_status()
             response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
             return response, req.status_code
-        except RequestException as exc:
-            LOGGER.error(exc)
-            raise exc
+        except HTTPError as e:
+            LOGGER.error(e.response)
+            return e.response.content, e.response.status_code
 
     def get_json_backup(self) -> dict:
         """Download JSON snapshot of Ghost database."""
@@ -112,5 +113,9 @@ class Ghost:
                    'Origin': 'hackersandslackers.tools',
                    'Authority': 'hackersandslackers.tools'}
         endpoint = f'{self.url}/db/'
-        req = requests.get(endpoint, headers=headers)
-        return req.json()
+        try:
+            req = requests.get(endpoint, headers=headers)
+            return req.json()
+        except HTTPError as e:
+            LOGGER.error(e.response)
+            return e.response

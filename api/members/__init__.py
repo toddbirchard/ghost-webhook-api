@@ -35,7 +35,7 @@ def new_user():
 @LOGGER.catch
 @api.route('/members/comments', methods=['POST'])
 def new_comment():
-    """User comment."""
+    """Parse form submission into comment SQL table."""
     data = request.get_json()
     comment = {
         "comment_id": data.get('id'),

@@ -1,5 +1,5 @@
 """Database client."""
-from typing import List, Optional
+from typing import List
 from pandas import DataFrame
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
@@ -51,7 +51,7 @@ class Database:
             return result
         except SQLAlchemyError as e:
             LOGGER.error(e)
-            return f'Failed to execute SQL query: {query}'
+            return f'Failed to execute SQL query {query}: {e}'
 
     @LOGGER.catch
     def execute_query_from_file(self, sql_file: str, database_name='hackers_prod'):
@@ -62,7 +62,7 @@ class Database:
             return result
         except SQLAlchemyError as e:
             LOGGER.error(e)
-            return f'Failed to execute SQL: {sql_file}'
+            return f'Failed to execute SQL {sql_file}: {e}'
 
     @LOGGER.catch
     def fetch_records(self, query, database_name=None) -> List[str]:
@@ -86,7 +86,7 @@ class Database:
             return f'Inserted {len(rows)} into {table.name}.'
         except SQLAlchemyError as e:
             LOGGER.error(e)
-            return f'Failed to insert rows.'
+            return f'Failed to insert rows: {e}'
 
     def insert_dataframe(
             self,
