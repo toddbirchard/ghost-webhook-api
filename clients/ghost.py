@@ -95,7 +95,6 @@ class Ghost:
                 json=body,
                 headers={'Authorization': self.session_token}
             )
-            req.raise_for_status()
             response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
             LOGGER.info(response)
             return response, req.status_code

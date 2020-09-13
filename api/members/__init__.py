@@ -12,16 +12,15 @@ from clients.log import LOGGER
 @api.route('/members/signup', methods=['POST'])
 def new_user():
     """Create Ghost member from Netlify auth signup."""
-    data = request.get_json()['user']
-    provider = data['app_metadata'].get('provider')
+    data = request.get_json()
     body = {
       "members": [{
         "name": data.get('full_name'),
         "email": data.get('email'),
-        "note": f"IP: {data.get('ip_address')}",
+        "note": data.get('ip_address'),
         "subscribed": True,
         "comped": False,
-        "labels": [provider]
+        "labels": [data.get('provider')]
       }]
     }
     LOGGER.info(body)
