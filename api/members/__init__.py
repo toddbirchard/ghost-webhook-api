@@ -33,6 +33,7 @@ def new_user():
 def new_comment():
     """Parse form submission into comment SQL table."""
     data = request.get_json()
+    LOGGER.info(data)
     user_role = data.get('user_role', None)
     if data.get('author_name') == data.get('user_name'):
         user_role = 'author'
