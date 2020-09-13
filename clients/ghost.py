@@ -97,9 +97,10 @@ class Ghost:
             )
             req.raise_for_status()
             response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
+            LOGGER.info(response)
             return response, req.status_code
         except HTTPError as e:
-            LOGGER.error(e.response)
+            LOGGER.error(f'Failed to create Ghost member: {e.response}')
             return e.response.content, e.response.status_code
 
     def get_json_backup(self) -> dict:
