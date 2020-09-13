@@ -33,6 +33,9 @@ def new_user():
 def new_comment():
     """Parse form submission into comment SQL table."""
     data = request.get_json()
+    user_role = data.get('user_role', None)
+    if data.get('author_email') == data.get('user_email'):
+        user_role = 'author'
     comment = {
         "comment_id": data.get('id'),
         "user_name": data.get('user_name'),
@@ -41,7 +44,7 @@ def new_comment():
         "body": data.get('body'),
         "post_id": data.get('post_id'),
         "post_slug": data.get('post_slug'),
-        "user_role": data.get('user_role'),
+        "user_role": user_role,
         "created_at": datetime.strptime(
             data.get('created_at').replace('Z', ''),
             "%Y-%m-%dT%H:%M:%S.%f"
