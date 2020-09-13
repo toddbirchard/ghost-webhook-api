@@ -13,11 +13,10 @@ from clients.log import LOGGER
 def new_user():
     """Create Ghost member from Netlify auth signup."""
     data = request.get_json()['user']
-    LOGGER.info(data)
     provider = data['app_metadata'].get('provider')
     body = {
       "members": [{
-        "name": data.get('name'),
+        "name": data.get('full_name'),
         "email": data.get('email'),
         "note": f"IP: {data.get('ip_address')}",
         "subscribed": True,
@@ -25,6 +24,7 @@ def new_user():
         "labels": [provider]
       }]
     }
+    LOGGER.info(body)
     response, code = ghost.create_member(body)
     return make_response(response, code)
 
