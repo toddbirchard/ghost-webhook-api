@@ -86,7 +86,7 @@ class Database:
             return f'Inserted {len(rows)} into {table.name}.'
         except SQLAlchemyError as e:
             LOGGER.error(e)
-            return f'Failed to insert rows: {e}'
+            raise e
 
     def insert_dataframe(
             self,

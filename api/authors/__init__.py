@@ -6,8 +6,8 @@ from clients import sms
 
 
 @LOGGER.catch
-@api.route('/authors/posts/created', methods=['POST'])
-def author_created_post_notification():
+@api.route('/authors/post', methods=['POST'])
+def author_post_created():
     """Notify admin upon author post creation."""
     data = request.get_json()['post']['current']
     title = data['title']

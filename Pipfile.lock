@@ -439,11 +439,11 @@
         },
         "mixpanel": {
             "hashes": [
-                "sha256:a0a2adba595ad75fecc5e28e46f25d1c8c9bf30fbe704147c48dfab307a84c02",
-                "sha256:b010f445d700d555d66e49f48bb72f29a7c4a2181e3e4eb07b19ba53c648d983"
+                "sha256:1089fe179a77b733963806033fe22768a95ad1f4ac3e9651ace54351cc465a81",
+                "sha256:1f010e3d0877ebbcda369db9d0eac938c4276a1fa8323a5d832575aa1e9e8e60"
             ],
             "index": "pypi",
-            "version": "==4.6.0"
+            "version": "==4.7.0"
         },
         "numpy": {
             "hashes": [

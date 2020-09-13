@@ -51,7 +51,11 @@ def new_comment():
             "%Y-%m-%dT%H:%M:%S.%f"
         ),
     }
-    result = db.insert_records([comment], table_name="comments", database_name="hackers_prod")
+    result = db.insert_records(
+        [comment],
+        table_name="comments",
+        database_name="hackers_prod"
+    )
     LOGGER.info(f'Created commentId={comment["comment_id"]} by user={comment["user_id"]}.')
     return make_response(jsonify(result), 200)
 
@@ -97,31 +101,28 @@ def newsletter_subscriber():
 def donation_received():
     """Add donation to historical ledger."""
     donation = request.get_json()
-    email = donation.get('email')
-    name = donation.get('name')
-    link = donation.get('link')
-    created_at = donation.get('created_at')
-    count = donation.get('count')
-    coffee_id = donation.get('coffee_id')
-    message = None
+    donation_data = {
+        "donation": donation.get('email'),
+        "email": donation.get('name'),
+        "name": donation.get('name'),
+        "link": donation.get('link'),
+        "created_at": donation.get('created_at'),
+        "count": donation.get('count'),
+        "coffee_id": donation.get('coffee_id'),
+        "message": None
+    }
     if donation.get('message', None):
-        message = donation.get('message').replace("'", "\\'")
+        donation_data["message"] = donation.get('message').replace("'", "\\'")
     existing_donation = db.fetch_record(
         f"SELECT * FROM donations WHERE email = '{email}';",
         database_name='analytics',
     )
     if existing_donation:
-        LOGGER.info(f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id} WHERE email = '{email}';")
-        db.execute_query(
-            f"UPDATE donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id} WHERE email = '{email}';",
-            database_name='analytics'
-        )
-        LOGGER.info(f'Updated existing record: {donation}')
-        return make_response(jsonify({'Updated existing record': donation}))
-    LOGGER.info(f"INSERT INTO donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id}, count = {count}, created_at = '{created_at}' WHERE email = '{email}';")
-    db.execute_query(
-        f"INSERT INTO donations SET message = '{message}', link = '{link}', name = '{name}', coffee_id = {coffee_id}, count = {count}, created_at = '{created_at}' WHERE email = '{email}';",
-        database_name='analytics'
+        db.execute_query(f"DELETE FROM donations WHERE email = {email}")
+    db.insert_records(
+        [donation_data],
+        table_name="donations",
+        database_name="analytics"
     )
-    LOGGER.info(f'Inserted new record: {donation}')
-    return make_response(jsonify({'Inserted new record': donation}))
+    LOGGER.info(f'Inserted donation: {donation}')
+    return make_response(f'Inserted donation: {donation}', 200)

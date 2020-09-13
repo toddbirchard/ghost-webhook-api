@@ -35,11 +35,12 @@ Python API to provide JAMStack-based sites content & image optimization automati
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
 #### Members
   * **POST** `/members/signup`: Create Ghost member. Accepts payloads from auth providers to allow sign up via Github, Google, etc.
+  * **POST** `/members/comments`: Parse comment form submission into SQL database table.
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
-  * **POST** `/members/newsletter/welcome`: Send welcome email to new newsletter subscribers via Mailgun.
+  * **POST** `/members/newsletter`: Send welcome email to new newsletter subscribers via Mailgun.
   * **POST** `/members/donation`: Add incoming donation to a historical ledger of donations from BuyMeACoffee.
 #### Authors
-  * **POST** `/authors/posts/created`: Notify site admin/editor when posts are ready for review.
+  * **POST** `/authors/post`: Notify site admin/editor when posts are ready for review.
 #### Github
   *  **POST** `/github/pr`: Trigger SMS notification when contributors open a Github PR in a specified Github org.
   *  **POST** `/github/issue`: Trigger SMS notification when contributors open a Github issue in a specified Github org.

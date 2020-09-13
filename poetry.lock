@@ -493,10 +493,11 @@ description = "Official Mixpanel library for Python"
 name = "mixpanel"
 optional = false
 python-versions = "*"
-version = "4.6.0"
+version = "4.7.0"
 
 [package.dependencies]
 six = ">=1.9.0"
+urllib3 = ">=1.21.1"
 
 [[package]]
 category = "dev"
@@ -1266,8 +1267,8 @@ mf2py = [
     {file = "mf2py-1.1.2.tar.gz", hash = "sha256:84f1f8f2ff3f1deb1c30be497e7ccd805452996a662fd4a77f09e0105bede2c9"},
 ]
 mixpanel = [
-    {file = "mixpanel-4.6.0-py2.py3-none-any.whl", hash = "sha256:b010f445d700d555d66e49f48bb72f29a7c4a2181e3e4eb07b19ba53c648d983"},
-    {file = "mixpanel-4.6.0.tar.gz", hash = "sha256:a0a2adba595ad75fecc5e28e46f25d1c8c9bf30fbe704147c48dfab307a84c02"},
+    {file = "mixpanel-4.7.0-py2.py3-none-any.whl", hash = "sha256:1089fe179a77b733963806033fe22768a95ad1f4ac3e9651ace54351cc465a81"},
+    {file = "mixpanel-4.7.0.tar.gz", hash = "sha256:1f010e3d0877ebbcda369db9d0eac938c4276a1fa8323a5d832575aa1e9e8e60"},
 ]
 mock = [
     {file = "mock-4.0.2-py3-none-any.whl", hash = "sha256:3f9b2c0196c60d21838f307f5825a7b86b678cedc58ab9e50a8988187b4d81e0"},
