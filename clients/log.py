@@ -1,6 +1,5 @@
 """Custom logger."""
 from sys import stdout
-import simplejson as json
 from loguru import logger
 from config import Config
 
