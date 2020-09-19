@@ -48,13 +48,6 @@ def create_logger() -> logger:
                + "<light-white>{message}</light-white>"
     )
     if Config.FLASK_ENV == 'production':
-        logger.add(
-            'logs/errors.log',
-            colorize=True,
-            level="ERROR",
-            rotation="200 MB",
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> <light-red>{level}</light-red>:<light-white>{message}</light-white>"
-        )
         # Datadog
         logger.add(
             'logs/info.json',

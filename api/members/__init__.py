@@ -101,23 +101,29 @@ def newsletter_subscriber():
 def donation_received():
     """Add donation to historical ledger."""
     donation = request.get_json()
+    email = donation.get('email')
+    name = donation.get('email')
+    link = donation.get('link')
+    created_at = donation.get('created_at')
+    count = donation.get('count')
+    coffee_id = donation.get('coffee_id')
+    message = donation.get('message')
+    if message:
+        message = message.replace("'", "\\'")
     donation_data = {
-        "donation": donation.get('email'),
-        "email": donation.get('name'),
-        "name": donation.get('name'),
-        "link": donation.get('link'),
-        "created_at": donation.get('created_at'),
-        "count": donation.get('count'),
-        "coffee_id": donation.get('coffee_id'),
-        "message": None
+        "email": email,
+        "name": name,
+        "link": link,
+        "created_at": created_at,
+        "count": count,
+        "coffee_id": coffee_id,
+        "message": message
     }
-    if donation.get('message', None):
-        donation_data["message"] = donation.get('message').replace("'", "\\'")
     existing_donation = db.fetch_record(
         f"SELECT * FROM donations WHERE email = '{email}';",
         database_name='analytics',
     )
-    if existing_donation:
+    if existing_donation and email:
         db.execute_query(f"DELETE FROM donations WHERE email = {email}")
     db.insert_records(
         [donation_data],
@@ -125,4 +131,8 @@ def donation_received():
         database_name="analytics"
     )
     LOGGER.info(f'Inserted donation: {donation}')
-    return make_response(f'Inserted donation: {donation}', 200)
+    return make_response(
+        jsonify({'Inserted': donation}),
+        200,
+        {'content-type': 'application/json'}
+    )
