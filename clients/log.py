@@ -1,16 +1,25 @@
 """Custom logger."""
-from sys import stdout
+from sys import stdout, stderr
+import simplejson as json
 from loguru import logger
 from config import Config
 
 
 def serialize(record):
-    subset = {"time": record["time"].strftime("%m/%d/%Y, %H:%M:%S"), "message": record["message"]}
+    """Parse log message into Datadog JSON format."""
+    subset = {
+        "time": record["time"].strftime("%m/%d/%Y, %H:%M:%S"),
+        "message": record["message"],
+        "function": record["function"],
+        "module": record["name"]
+    }
+    if record.get("exception", None):
+        subset.update({'exception': record["exception"]})
     return json.dumps(subset)
 
 
 def formatter(record):
-    # Note this function returns the string to be formatted, not the actual message to be logged
+    """Pass raw string to be serialized."""
     record["extra"]["serialized"] = serialize(record)
     return "{extra[serialized]},\n"
 
@@ -18,7 +27,17 @@ def formatter(record):
 def create_logger() -> logger:
     """Create custom logger."""
     logger.remove()
-    # Output logs to console while in development
+    # Datadog
+    logger.add(
+        stdout,
+        format=formatter,
+        level="INFO",
+    )
+    logger.add(
+        stderr,
+        format=formatter,
+        level="ERROR",
+    )
     logger.add(
         stdout,
         colorize=True,
@@ -29,13 +48,6 @@ def create_logger() -> logger:
                + "<light-white>{message}</light-white>"
     )
     if Config.FLASK_ENV == 'production':
-        logger.add(
-            'logs/info.log',
-            colorize=True,
-            level="INFO",
-            rotation="200 MB",
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> <light-green>{level}</light-green>:<light-white>{message}</light-white>"
-        )
         logger.add(
             'logs/errors.log',
             colorize=True,
@@ -48,11 +60,13 @@ def create_logger() -> logger:
             'logs/info.json',
             format=formatter,
             level="INFO",
+            rotation="500 MB",
         )
         logger.add(
             'logs/errors.json',
             format=formatter,
             level="ERROR",
+            rotation="500 MB",
         )
         # APM
         apm_format = ('%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] '
@@ -62,6 +76,7 @@ def create_logger() -> logger:
             'logs/apm.json',
             format=apm_format,
             level="INFO",
+            rotation="500 MB",
         )
     return logger
 
