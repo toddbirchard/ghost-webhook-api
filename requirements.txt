@@ -30,7 +30,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 jmespath==0.10.0
 jstyleson==0.0.2
-loguru==0.5.2
+loguru==0.5.3
 lxml==4.5.2
 MarkupSafe==1.1.1
 mf2py==1.1.2
