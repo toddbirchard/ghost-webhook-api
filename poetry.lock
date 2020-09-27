@@ -27,10 +27,12 @@ description = "Screen-scraping library"
 name = "beautifulsoup4"
 optional = false
 python-versions = "*"
-version = "4.9.1"
+version = "4.9.2"
 
 [package.dependencies]
-soupsieve = [">1.2", "<2.0"]
+[package.dependencies.soupsieve]
+python = ">=3.0"
+version = ">1.2"
 
 [package.extras]
 html5lib = ["html5lib"]
@@ -50,7 +52,7 @@ description = "Low-level, data-driven core of boto 3."
 name = "botocore"
 optional = false
 python-versions = "*"
-version = "1.18.1"
+version = "1.18.6"
 
 [package.dependencies]
 jmespath = ">=0.7.1,<1.0.0"
@@ -171,6 +173,18 @@ dotenv = ["python-dotenv"]
 
 [[package]]
 category = "main"
+description = "A Flask extension adding a decorator for CORS support"
+name = "flask-cors"
+optional = false
+python-versions = "*"
+version = "3.0.9"
+
+[package.dependencies]
+Flask = ">=0.9"
+Six = "*"
+
+[[package]]
+category = "main"
 description = "Google API client core library"
 name = "google-api-core"
 optional = false
@@ -197,7 +211,7 @@ description = "Google Authentication Library"
 name = "google-auth"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-version = "1.21.2"
+version = "1.21.3"
 
 [package.dependencies]
 cachetools = ">=2.0.0,<5.0"
@@ -215,21 +229,22 @@ description = "Google BigQuery API client library"
 name = "google-cloud-bigquery"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-version = "1.27.2"
+version = "1.28.0"
 
 [package.dependencies]
 google-api-core = ">=1.21.0,<2.0dev"
 google-cloud-core = ">=1.4.1,<2.0dev"
-google-resumable-media = ">=0.5.0,<2.0dev"
+google-resumable-media = ">=0.6.0,<2.0dev"
 six = ">=1.13.0,<2.0.0dev"
 
 [package.extras]
-all = ["google-cloud-bigquery-storage (>=1.0.0,<2.0.0dev)", "grpcio (>=1.8.2,<2.0dev)", "pyarrow (>=0.16.0,<2.0dev)", "pandas (>=0.17.1)", "tqdm (>=4.0.0,<5.0.0dev)", "pyarrow (<0.17.0)", "pyarrow (>=1.0.0,<2.0dev)"]
-bqstorage = ["google-cloud-bigquery-storage (>=1.0.0,<2.0.0dev)", "grpcio (>=1.8.2,<2.0dev)", "pyarrow (>=0.16.0,<2.0dev)"]
+all = ["google-cloud-bigquery-storage (>=1.0.0,<2.0.0dev)", "grpcio (>=1.32.0,<2.0dev)", "pyarrow (>=1.0.0,<2.0dev)", "pandas (>=0.23.0)", "tqdm (>=4.7.4,<5.0.0dev)", "opentelemetry-api (0.9b0)", "opentelemetry-sdk (0.9b0)", "opentelemetry-instrumentation (0.9b0)", "pyarrow (>=0.16.0,<0.17.0dev)", "pyarrow (>=1.0.0,<2.0de)"]
+bqstorage = ["google-cloud-bigquery-storage (>=1.0.0,<2.0.0dev)", "grpcio (>=1.32.0,<2.0dev)", "pyarrow (>=1.0.0,<2.0dev)"]
 fastparquet = ["fastparquet", "python-snappy", "llvmlite (<=0.31.0)", "llvmlite (<=0.34.0)"]
-pandas = ["pandas (>=0.17.1)"]
-pyarrow = ["pyarrow (<0.17.0)", "pyarrow (>=1.0.0,<2.0dev)"]
-tqdm = ["tqdm (>=4.0.0,<5.0.0dev)"]
+opentelemetry = ["opentelemetry-api (0.9b0)", "opentelemetry-sdk (0.9b0)", "opentelemetry-instrumentation (0.9b0)"]
+pandas = ["pandas (>=0.23.0)"]
+pyarrow = ["pyarrow (>=0.16.0,<0.17.0dev)", "pyarrow (>=1.0.0,<2.0de)"]
+tqdm = ["tqdm (>=4.7.4,<5.0.0dev)"]
 
 [[package]]
 category = "main"
@@ -269,12 +284,13 @@ description = "Google Cloud Storage API client library"
 name = "google-cloud-storage"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-version = "1.31.0"
+version = "1.31.2"
 
 [package.dependencies]
 google-auth = ">=1.11.0,<2.0dev"
 google-cloud-core = ">=1.4.1,<2.0dev"
 google-resumable-media = ">=1.0.0,<2.0dev"
+requests = ">=2.18.0,<3.0.0dev"
 
 [[package]]
 category = "main"
@@ -434,7 +450,7 @@ description = "Python logging made (stupidly) simple"
 name = "loguru"
 optional = false
 python-versions = ">=3.5"
-version = "0.5.2"
+version = "0.5.3"
 
 [package.dependencies]
 colorama = ">=0.3.4"
@@ -502,14 +518,6 @@ version = "4.0.2"
 build = ["twine", "wheel", "blurb"]
 docs = ["sphinx"]
 test = ["pytest", "pytest-cov"]
-
-[[package]]
-category = "dev"
-description = "More routines for operating on iterables, beyond itertools"
-name = "more-itertools"
-optional = false
-python-versions = ">=3.5"
-version = "8.5.0"
 
 [[package]]
 category = "dev"
@@ -677,14 +685,13 @@ description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
 python-versions = ">=3.5"
-version = "6.0.2"
+version = "6.1.0"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
 attrs = ">=17.4.0"
 colorama = "*"
 iniconfig = "*"
-more-itertools = ">=4.0.0"
 packaging = "*"
 pluggy = ">=0.12,<1.0"
 py = ">=1.8.2"
@@ -820,10 +827,11 @@ version = "2.2.2"
 [[package]]
 category = "main"
 description = "A modern CSS selector implementation for Beautiful Soup."
+marker = "python_version >= \"3.0\""
 name = "soupsieve"
 optional = false
-python-versions = "*"
-version = "1.9.6"
+python-versions = ">=3.5"
+version = "2.0.1"
 
 [[package]]
 category = "main"
@@ -873,7 +881,7 @@ description = "Twilio API client and TwiML generator"
 name = "twilio"
 optional = false
 python-versions = "*"
-version = "6.45.2"
+version = "6.45.3"
 
 [package.dependencies]
 PyJWT = ">=1.4.2"
@@ -976,7 +984,7 @@ version = "1.0.2"
 dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 
 [metadata]
-content-hash = "fa1898f81d7499d8e9e5d5ed110b446488e0c5399a354cc657a171a7314bd08e"
+content-hash = "6a1100f7430a9f60280a2eff2eab73955950f9e236c0d48109705d0a2e71e645"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -989,17 +997,17 @@ attrs = [
     {file = "attrs-20.2.0.tar.gz", hash = "sha256:26b54ddbbb9ee1d34d5d3668dd37d6cf74990ab23c828c2888dccdceee395594"},
 ]
 beautifulsoup4 = [
-    {file = "beautifulsoup4-4.9.1-py2-none-any.whl", hash = "sha256:e718f2342e2e099b640a34ab782407b7b676f47ee272d6739e60b8ea23829f2c"},
-    {file = "beautifulsoup4-4.9.1-py3-none-any.whl", hash = "sha256:a6237df3c32ccfaee4fd201c8f5f9d9df619b93121d01353a64a73ce8c6ef9a8"},
-    {file = "beautifulsoup4-4.9.1.tar.gz", hash = "sha256:73cc4d115b96f79c7d77c1c7f7a0a8d4c57860d1041df407dd1aae7f07a77fd7"},
+    {file = "beautifulsoup4-4.9.2-py2-none-any.whl", hash = "sha256:645d833a828722357038299b7f6879940c11dddd95b900fe5387c258b72bb883"},
+    {file = "beautifulsoup4-4.9.2-py3-none-any.whl", hash = "sha256:5dfe44f8fddc89ac5453f02659d3ab1668f2c0d9684839f0785037e8c6d9ac8d"},
+    {file = "beautifulsoup4-4.9.2.tar.gz", hash = "sha256:1edf5e39f3a5bc6e38b235b369128416c7239b34f692acccececb040233032a1"},
 ]
 boto = [
     {file = "boto-2.49.0-py2.py3-none-any.whl", hash = "sha256:147758d41ae7240dc989f0039f27da8ca0d53734be0eb869ef16e3adcfa462e8"},
     {file = "boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a"},
 ]
 botocore = [
-    {file = "botocore-1.18.1-py2.py3-none-any.whl", hash = "sha256:d6bdf51c8880aa9974e6b61d2f7d9d1debe407287e2e9e60f36c789fe8ba6790"},
-    {file = "botocore-1.18.1.tar.gz", hash = "sha256:6bdf60281c2e80360fe904851a1a07df3dcfe066fe88dc7fba2b5e626ac05c8c"},
+    {file = "botocore-1.18.6-py2.py3-none-any.whl", hash = "sha256:31f04b68a6ebe8cfa97b4d70f54f29aef8b6a0bc9c4da7b8ee9b6a53fc69edae"},
+    {file = "botocore-1.18.6.tar.gz", hash = "sha256:3de32a03679bb172a41c38e3c9af3f7259f3637f705aa2ac384b3233dc985b85"},
 ]
 cachetools = [
     {file = "cachetools-4.1.1-py3-none-any.whl", hash = "sha256:513d4ff98dd27f85743a8dc0e92f55ddb1b49e060c2d5961512855cda2c01a98"},
@@ -1095,17 +1103,21 @@ flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},
     {file = "Flask-1.1.2.tar.gz", hash = "sha256:4efa1ae2d7c9865af48986de8aeb8504bf32c7f3d6fdc9353d34b21f4b127060"},
 ]
+flask-cors = [
+    {file = "Flask-Cors-3.0.9.tar.gz", hash = "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8"},
+    {file = "Flask_Cors-3.0.9-py2.py3-none-any.whl", hash = "sha256:cee4480aaee421ed029eaa788f4049e3e26d15b5affb6a880dade6bafad38324"},
+]
 google-api-core = [
     {file = "google-api-core-1.22.2.tar.gz", hash = "sha256:779107f17e0fef8169c5239d56a8fbff03f9f72a3893c0c9e5842ec29dfedd54"},
     {file = "google_api_core-1.22.2-py2.py3-none-any.whl", hash = "sha256:67e33a852dcca7cb7eff49abc35c8cc2c0bb8ab11397dc8306d911505cae2990"},
 ]
 google-auth = [
-    {file = "google-auth-1.21.2.tar.gz", hash = "sha256:7084c50c03f7a8a5696ef4500e65df0c525a0f6909f3c70b9ee65900a230c755"},
-    {file = "google_auth-1.21.2-py2.py3-none-any.whl", hash = "sha256:dcf86c5adc3a8a7659be190b12bb8912ae019cfd9ee2a571ea881e289fafbe39"},
+    {file = "google-auth-1.21.3.tar.gz", hash = "sha256:31941bf019fb242c04d0de32845da10180788bfddb0de87d78c4bdf55555dda1"},
+    {file = "google_auth-1.21.3-py2.py3-none-any.whl", hash = "sha256:873051a6317294b083795cffc467bcd05b6df483ef542bfe0069ddbfbac0a096"},
 ]
 google-cloud-bigquery = [
-    {file = "google-cloud-bigquery-1.27.2.tar.gz", hash = "sha256:8a21cfe5db0c84aca0730197b50ea1649350619849283d0b5e7b506d803a6fa1"},
-    {file = "google_cloud_bigquery-1.27.2-py2.py3-none-any.whl", hash = "sha256:171eb279a43df3e51cefd25542cbb9ab0d59d62949a29a7c33f0020560573a8d"},
+    {file = "google-cloud-bigquery-1.28.0.tar.gz", hash = "sha256:9784cff71d6a46ce202748169f9c7e38fc99d6babbb2f3cdc540475d11f572b9"},
+    {file = "google_cloud_bigquery-1.28.0-py2.py3-none-any.whl", hash = "sha256:9266e989531f290d3b836dc7b308ac22b350c4d664af19325bd0102261231b71"},
 ]
 google-cloud-bigquery-storage = [
     {file = "google-cloud-bigquery-storage-1.1.0.tar.gz", hash = "sha256:c92533cedbb672f1a35555c112d4d5cccb9f8f6d0e98a604fbf98223773adad3"},
@@ -1116,8 +1128,8 @@ google-cloud-core = [
     {file = "google_cloud_core-1.4.1-py2.py3-none-any.whl", hash = "sha256:4c9e457fcfc026fdde2e492228f04417d4c717fb0f29f070122fb0ab89e34ebd"},
 ]
 google-cloud-storage = [
-    {file = "google-cloud-storage-1.31.0.tar.gz", hash = "sha256:4f51c7700242a9d54c07117f25fec5d110ab85435b3ce60ac28cc553f8ea938b"},
-    {file = "google_cloud_storage-1.31.0-py2.py3-none-any.whl", hash = "sha256:34fb8f7e8a2a633cbfb09d8dec38b3450c4029af1a328a67bca64f6226a1f4a5"},
+    {file = "google-cloud-storage-1.31.2.tar.gz", hash = "sha256:74bbb5b2d0b249de4a52f561435d0c3570ddc19b249653ae588ec0abcc3c81e6"},
+    {file = "google_cloud_storage-1.31.2-py2.py3-none-any.whl", hash = "sha256:e2a2533b5e368365e84d2acaa53b75266a09802fc1c8bda52e3212335eccb6bd"},
 ]
 google-crc32c = [
     {file = "google-crc32c-1.0.0.tar.gz", hash = "sha256:9439b960b6ecd847557675d130fc3626d762bf535da595c20a6949a705fb3eae"},
@@ -1186,8 +1198,8 @@ jstyleson = [
     {file = "jstyleson-0.0.2.tar.gz", hash = "sha256:680003f3b15a2959e4e6a351f3b858e3c07dd3e073a0d54954e34d8ea5e1308e"},
 ]
 loguru = [
-    {file = "loguru-0.5.2-py3-none-any.whl", hash = "sha256:a5e5e196b9958feaf534ac2050171d16576bae633074ce3e73af7dda7e9a58ae"},
-    {file = "loguru-0.5.2.tar.gz", hash = "sha256:5aecbf13bc8e2f6e5a5d0475460a345b44e2885464095ea7de44e8795857ad33"},
+    {file = "loguru-0.5.3-py3-none-any.whl", hash = "sha256:f8087ac396b5ee5f67c963b495d615ebbceac2796379599820e324419d53667c"},
+    {file = "loguru-0.5.3.tar.gz", hash = "sha256:b28e72ac7a98be3d28ad28570299a393dfcd32e5e3f6a353dec94675767b6319"},
 ]
 lxml = [
     {file = "lxml-4.5.2-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:74f48ec98430e06c1fa8949b49ebdd8d27ceb9df8d3d1c92e1fdc2773f003f20"},
@@ -1267,10 +1279,6 @@ mixpanel = [
 mock = [
     {file = "mock-4.0.2-py3-none-any.whl", hash = "sha256:3f9b2c0196c60d21838f307f5825a7b86b678cedc58ab9e50a8988187b4d81e0"},
     {file = "mock-4.0.2.tar.gz", hash = "sha256:dd33eb70232b6118298d516bbcecd26704689c386594f0f3c4f13867b2c56f72"},
-]
-more-itertools = [
-    {file = "more-itertools-8.5.0.tar.gz", hash = "sha256:6f83822ae94818eae2612063a5101a7311e68ae8002005b5e05f03fd74a86a20"},
-    {file = "more_itertools-8.5.0-py3-none-any.whl", hash = "sha256:9b30f12df9393f0d28af9210ff8efe48d10c94f73e5daf886f10c4b0b0b4f03c"},
 ]
 mypy = [
     {file = "mypy-0.782-cp35-cp35m-macosx_10_6_x86_64.whl", hash = "sha256:2c6cde8aa3426c1682d35190b59b71f661237d74b053822ea3d748e2c9578a7c"},
@@ -1447,8 +1455,8 @@ pyparsing = [
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 pytest = [
-    {file = "pytest-6.0.2-py3-none-any.whl", hash = "sha256:0e37f61339c4578776e090c3b8f6b16ce4db333889d65d0efb305243ec544b40"},
-    {file = "pytest-6.0.2.tar.gz", hash = "sha256:c8f57c2a30983f469bf03e68cdfa74dc474ce56b8f280ddcb080dfd91df01043"},
+    {file = "pytest-6.1.0-py3-none-any.whl", hash = "sha256:1cd09785c0a50f9af72220dd12aa78cfa49cbffc356c61eab009ca189e018a33"},
+    {file = "pytest-6.1.0.tar.gz", hash = "sha256:d010e24666435b39a4cf48740b039885642b6c273a3f77be3e7e03554d2806b7"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
@@ -1537,8 +1545,8 @@ sortedcontainers = [
     {file = "sortedcontainers-2.2.2.tar.gz", hash = "sha256:4e73a757831fc3ca4de2859c422564239a31d8213d09a2a666e375807034d2ba"},
 ]
 soupsieve = [
-    {file = "soupsieve-1.9.6-py2.py3-none-any.whl", hash = "sha256:feb1e937fa26a69e08436aad4a9037cd7e1d4c7212909502ba30701247ff8abd"},
-    {file = "soupsieve-1.9.6.tar.gz", hash = "sha256:7985bacc98c34923a439967c1a602dc4f1e15f923b6fcf02344184f86cc7efaa"},
+    {file = "soupsieve-2.0.1-py3-none-any.whl", hash = "sha256:1634eea42ab371d3d346309b93df7870a88610f0725d47528be902a0d95ecc55"},
+    {file = "soupsieve-2.0.1.tar.gz", hash = "sha256:a59dc181727e95d25f781f0eb4fd1825ff45590ec8ff49eadfd7f1a537cc0232"},
 ]
 sqlalchemy = [
     {file = "SQLAlchemy-1.3.19-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:f2e8a9c0c8813a468aa659a01af6592f71cd30237ec27c4cc0683f089f90dcfc"},
@@ -1583,7 +1591,7 @@ toml = [
     {file = "toml-0.10.1.tar.gz", hash = "sha256:926b612be1e5ce0634a2ca03470f95169cf16f939018233a670519cb4ac58b0f"},
 ]
 twilio = [
-    {file = "twilio-6.45.2.tar.gz", hash = "sha256:28db188ddf7497ec31d812bc7d750f6073b6050981053a43252d9915ca94309b"},
+    {file = "twilio-6.45.3.tar.gz", hash = "sha256:df1cf8f7e62fbe4d412e66204ee7f948cd31ff18173ff4690475834174eedaf0"},
 ]
 typed-ast = [
     {file = "typed_ast-1.4.1-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:73d785a950fc82dd2a25897d525d003f6378d1cb23ab305578394694202a58c3"},
