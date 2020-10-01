@@ -10,8 +10,8 @@ def serialize(record):
     subset = {
         "time": record["time"].strftime("%m/%d/%Y, %H:%M:%S"),
         "message": record["message"],
-        "function": record["function"],
-        "module": record["name"]
+        "function": record.get("function"),
+        "module": record.get("name")
     }
     if record.get("exception", None):
         subset.update({'exception': record["exception"]})
