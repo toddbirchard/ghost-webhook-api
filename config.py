@@ -73,5 +73,6 @@ class Config:
     CELERY_RESULT_BACKEND = environ.get('CELERY_RESULT_BACKEND')
 
     # Datadog
+    DATADOG_TRACE_ENABLED = environ.get('DATADOG_TRACE_ENABLED')
     DATADOG_API_KEY = environ.get('DATADOG_API_KEY')
     DATADOG_APP_KEY = environ.get('DATADOG_APP_KEY')

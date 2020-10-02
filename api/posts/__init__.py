@@ -57,7 +57,7 @@ def update_post():
                         "mobiledoc": doc
                     })'''
         # Update image meta tags
-        elif feature_image is not None:
+        if feature_image is not None:
             body['posts'][0].update({
                 "og_image": feature_image,
                 "twitter_image": feature_image

@@ -1,8 +1,6 @@
 """Initialize api."""
 from flask import Flask
 from flask_cors import CORS
-from ddtrace import patch_all
-patch_all()
 
 
 def init_api():
@@ -10,6 +8,12 @@ def init_api():
     api = Flask(__name__, instance_relative_config=False)
     api.config.from_object('config.Config')
     CORS(api, resources={r"/*": {"origins": "*"}})
+
+    # Enable Datadog APM
+    if api.config['DATADOG_TRACE_ENABLED'] == 'prod':
+        from ddtrace import patch_all
+        patch_all()
+
     with api.app_context():
         from api import (
             posts,
