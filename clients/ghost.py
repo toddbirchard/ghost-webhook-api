@@ -54,6 +54,7 @@ class Ghost:
             algorithm='HS256',
             headers=header
         )
+        LOGGER.info(f'Granted Ghost auth token.')
         return f'Ghost {token.decode()}'
 
     def get_post(self, post_id) -> dict:
@@ -67,7 +68,7 @@ class Ghost:
             post_id: str,
             body: dict,
             slug: str
-        ) -> Tuple[str, int]:
+    ) -> Tuple[str, int]:
         """
         Update post by ID.
 
@@ -82,6 +83,8 @@ class Ghost:
                 headers={'Authorization': self.session_token}
             )
             response = f'Received code {req.status_code} when updating `{slug}`.'
+            if req.status_code > 300:
+                LOGGER.warning(f'Failed to update post `{slug}`: {req.text}')
             return response, req.status_code
         except HTTPError as e:
             LOGGER.error(e.response)
@@ -95,8 +98,11 @@ class Ghost:
                 json=body,
                 headers={'Authorization': self.session_token}
             )
+            if req.status_code > 300:
+                LOGGER.warning(
+                    f'Failed to create Ghost member `{body["members"][0]["email"]}` with code {req.status_code}: {req.text}'
+                )
             response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
-            LOGGER.info(response)
             return response, req.status_code
         except HTTPError as e:
             LOGGER.error(f'Failed to create Ghost member: {e.response.content}')

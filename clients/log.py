@@ -30,21 +30,29 @@ def create_logger() -> logger:
     # Datadog
     logger.add(
         stdout,
-        format=formatter,
-        level="INFO",
-    )
-    logger.add(
-        stderr,
-        format=formatter,
-        level="ERROR",
-    )
-    logger.add(
-        stdout,
         colorize=True,
         level="INFO",
         catch=True,
         format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
                + "<light-green>{level}</light-green>: "
+               + "<light-white>{message}</light-white>"
+    )
+    logger.add(
+        stdout,
+        colorize=True,
+        level="WARNING",
+        catch=True,
+        format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
+               + "<yellow>{level}</yellow>: "
+               + "<light-white>{message}</light-white>"
+    )
+    logger.add(
+        stderr,
+        colorize=True,
+        level="ERROR",
+        catch=True,
+        format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
+               + "<red>{level}</red>: "
                + "<light-white>{message}</light-white>"
     )
     if Config.FLASK_ENV == 'production':
@@ -59,6 +67,12 @@ def create_logger() -> logger:
             'logs/errors.json',
             format=formatter,
             level="ERROR",
+            rotation="500 MB",
+        )
+        logger.add(
+            'logs/errors.json',
+            format=formatter,
+            level="WARNING",
             rotation="500 MB",
         )
         # APM

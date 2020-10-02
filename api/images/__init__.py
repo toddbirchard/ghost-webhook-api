@@ -16,8 +16,8 @@ def create_post_retina_image():
     feature_image = post.get('feature_image')
     title = post.get('title')
     if feature_image is not None and '@2x' not in feature_image:
-        LOGGER.info(f'Creating image for updated post {title}.')
         new_image = gcs.create_single_retina_image(feature_image)
+        LOGGER.info(f'Created image for post `{title}`: {new_image}')
         return make_response(jsonify({title: new_image}), 200, headers)
 
 

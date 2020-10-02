@@ -11,7 +11,7 @@ from clients.log import LOGGER
 
 @api.route('/members/signup', methods=['POST'])
 def new_user():
-    """Create Ghost member from Netlify auth signup."""
+    """Create Ghost member from Netlify identity signup."""
     data = request.get_json()
     body = {
       "members": [{
@@ -23,8 +23,8 @@ def new_user():
         "labels": [data.get('provider')]
       }]
     }
-    LOGGER.info(body)
     response, code = ghost.create_member(body)
+    LOGGER.infop(response)
     return make_response(response, code)
 
 
@@ -130,7 +130,7 @@ def donation_received():
         table_name="donations",
         database_name="analytics"
     )
-    LOGGER.info(f'Inserted donation: {donation}')
+    LOGGER.info(f'Received donation: {donation}')
     return make_response(
         jsonify({'Inserted': donation}),
         200,
