@@ -81,8 +81,11 @@ class Ghost:
         try:
             req = requests.put(
                 f'{self.url}/posts/{post_id}/',
-                data=body,
-                headers={'Authorization': self.session_token}
+                json=body,
+                headers={
+                    'Authorization': self.session_token,
+                    'Content-Type': 'application/json'
+                }
             )
             response = f'Received code {req.status_code} when updating `{slug}`.'
             if req.status_code > 300:

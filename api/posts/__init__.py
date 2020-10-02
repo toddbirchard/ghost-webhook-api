@@ -16,7 +16,6 @@ def update_post():
     """Update post metadata upon save."""
     data = request.get_json()
     if data:
-        print(data['post'])
         post = data['post']['current']
         post_id = post.get('id')
         slug = post.get('slug')
@@ -49,14 +48,14 @@ def update_post():
                     "og_image": feature_image,
                     "twitter_image": feature_image
                  })
-            if html and ('kg-card' not in html):
+            '''if html and ('kg-card' not in html):
                 print(updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.%fZ"))
                 if previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.%fZ") > timedelta(seconds=5)) and 'kg-card' not in previous['html']:
                     doc = generate_link_previews(post)
                     LOGGER.info(f'Generated Previews for Lynx post {slug}.')
                     body['posts'][0].update({
                         "mobiledoc": doc
-                    })
+                    })'''
         # Update image meta tags
         elif feature_image is not None:
             body['posts'][0].update({
@@ -69,7 +68,7 @@ def update_post():
             body['posts'][0]['updated_at'] = time
         response, code = ghost.update_post(post_id, body, slug)
         LOGGER.info(f'Post Updated with code {code}: {body}')
-        return make_response(response, code)
+        return make_response(jsonify({str(code): response}))
     LOGGER.warning('JSON body missing from request.')
     return make_response('JSON body missing from request.', 422)
 

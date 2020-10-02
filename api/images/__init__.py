@@ -19,6 +19,7 @@ def create_post_retina_image():
         new_image = gcs.create_single_retina_image(feature_image)
         LOGGER.info(f'Created image for post `{title}`: {new_image}')
         return make_response(jsonify({title: new_image}), 200, headers)
+    return make_response(f'Post `{post}` already has retina image {feature_image}', 422, headers)
 
 
 @api.route('/images/transform', methods=['GET'])
