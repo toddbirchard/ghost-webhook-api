@@ -14,7 +14,8 @@ class Ghost:
             self,
             api_url: str,
             client_id: str,
-            client_secret: str
+            client_secret: str,
+            netlify_build_url: str
     ):
         """
         Creates a new Ghost API client.
@@ -26,6 +27,7 @@ class Ghost:
         self.client_id = client_id
         self.secret = client_secret
         self.url = api_url
+        self.netlify_build_url = netlify_build_url
 
     def __https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
@@ -106,6 +108,22 @@ class Ghost:
             return response, req.status_code
         except HTTPError as e:
             LOGGER.error(f'Failed to create Ghost member: {e.response.content}')
+            return e.response.content, e.response.status_code
+
+    def rebuild_netlify_site(self):
+        """Trigger Netlify site rebuild."""
+        try:
+            req = requests.post(
+                self.netlify_build_url,
+            )
+            if req.status_code > 300:
+                LOGGER.warning(
+                    f'Failed to rebuild Netlify site: {req.text}'
+                )
+            response = f'Rebuilt Netlify site with status code {req.status_code}.'
+            return response, req.status_code
+        except HTTPError as e:
+            LOGGER.error(f'Failed to rebuild Netlify site: {e.response.content}')
             return e.response.content, e.response.status_code
 
     def get_json_backup(self) -> dict:

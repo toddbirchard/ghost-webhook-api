@@ -57,6 +57,7 @@ def new_comment():
         database_name="hackers_prod"
     )
     LOGGER.info(f'Created commentId={comment["comment_id"]} by user={comment["user_id"]}.')
+    ghost.rebuild_netlify_site()
     return make_response(jsonify(result), 200)
 
 

@@ -21,6 +21,7 @@ ghost = Ghost(
     api_url=Config.GHOST_ADMIN_API_URL,
     client_id=Config.GHOST_CLIENT_ID,
     client_secret=Config.GHOST_ADMIN_API_KEY,
+    netlify_build_url=Config.GHOST_NETLIFY_BUILD_HOOK,
  )
 sms = Twilio(
     sid=Config.TWILIO_ACCOUNT_SID,

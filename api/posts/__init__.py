@@ -29,14 +29,15 @@ def update_post():
         time = get_current_time()
         updated_at = get_current_datetime()
         body = {
-            "posts": [{
-                "meta_title": title,
-                "og_title": title,
-                "twitter_title": title,
-                "meta_description": custom_excerpt,
-                "twitter_description": custom_excerpt,
-                "og_description": custom_excerpt,
-                "updated_at": time
+            "posts": [
+                {
+                    "meta_title": title,
+                    "og_title": title,
+                    "twitter_title": title,
+                    "meta_description": custom_excerpt,
+                    "twitter_description": custom_excerpt,
+                    "og_description": custom_excerpt,
+                    "updated_at": time
                 }
             ]
         }

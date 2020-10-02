@@ -49,6 +49,7 @@ class Config:
     GHOST_CLIENT_ID = environ.get('GHOST_CLIENT_ID')
     GHOST_ADMIN_API_KEY = environ.get('GHOST_ADMIN_API_KEY')
     GHOST_API_EXPORT_URL = f'{GHOST_BASE_URL}/admin/db/'
+    GHOST_NETLIFY_BUILD_HOOK = environ.get('GHOST_NETLIFY_BUILD_HOOK')
 
     # Mailgun
     MAILGUN_EMAIL_SERVER = environ.get("MAILGUN_EMAIL_SERVER")
