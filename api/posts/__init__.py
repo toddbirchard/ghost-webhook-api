@@ -54,13 +54,12 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
             })
-        LOGGER.info('previous_update = ', previous_update)
-        if html and ('kg-card' not in html):
+        '''if html and ('kg-card' not in html):
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
             body['posts'][0].update({
                 "mobiledoc": doc
-            })
+            })'''
         # Update image meta tags
         if feature_image is not None:
             body['posts'][0].update({
