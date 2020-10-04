@@ -16,8 +16,8 @@ def update_post():
     """Update post metadata upon save."""
     data = request.get_json()
     LOGGER.info(data['post']['previous'])
-    previous = data['post']['previous']
-    LOGGER.info(previous)
+    previous_update = datetime.strptime(data['post']['previous']['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z")
+    LOGGER.info(previous_update)
     if data:
         post = data['post']['current']
         post_id = post.get('id')
@@ -49,10 +49,8 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
             })
-        LOGGER.info('previous = ', previous)
-        LOGGER.info('updated_at = ', updated_at)
-        LOGGER.info('previous updated_at = ', datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z"))
-        if html and ('kg-card' not in html) and previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z") > timedelta(seconds=5)):
+        LOGGER.info('previous_update = ', previous_update)
+        if html and ('kg-card' not in html) and previous_update and (updated_at - previous_update > timedelta(seconds=5)):
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
             body['posts'][0].update({
