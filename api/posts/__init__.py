@@ -21,7 +21,7 @@ def update_post():
             current_time = get_current_datetime()
             previous_update_date = datetime.strptime(data['post']['previous']['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z")
             LOGGER.info('previous_update_date = ', previous_update_date)
-            if previous_update_date and current_time - previous_update['updated_at'] < timedelta(seconds=5):
+            if previous_update_date and current_time - previous_update_date < timedelta(seconds=5):
                 LOGGER.warning('Post update ignored as post was just updated.')
                 return make_response('Post update ignored as post was just updated.', 200)
         post = data['post']['current']
