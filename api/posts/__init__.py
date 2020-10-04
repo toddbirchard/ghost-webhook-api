@@ -15,61 +15,62 @@ from .lynx.cards import generate_link_previews
 def update_post():
     """Update post metadata upon save."""
     data = request.get_json()
-    LOGGER.info(data['post']['previous'])
     previous_update = datetime.strptime(data['post']['previous']['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z")
     LOGGER.info(previous_update)
-    if data:
-        post = data['post']['current']
-        post_id = post.get('id')
-        slug = post.get('slug')
-        title = post.get('title')
-        feature_image = post.get('feature_image')
-        custom_excerpt = post.get('custom_excerpt')
-        primary_tag = post.get('primary_tag')
-        html = post.get('html')
-        time = get_current_time()
-        updated_at = get_current_datetime()
-        body = {
-            "posts": [
-                {
-                    "meta_title": title,
-                    "og_title": title,
-                    "twitter_title": title,
-                    "meta_description": custom_excerpt,
-                    "twitter_description": custom_excerpt,
-                    "og_description": custom_excerpt,
-                    "updated_at": time
-                }
-            ]
-        }
-        if primary_tag.get('slug') == 'roundup' and feature_image is None:
-            feature_image = gcs.fetch_random_lynx_image()
-            body['posts'][0].update({
-                "feature_image": feature_image,
-                "og_image": feature_image,
-                "twitter_image": feature_image
-            })
-        LOGGER.info('previous_update = ', previous_update)
-        if html and ('kg-card' not in html) and previous_update and (updated_at - previous_update > timedelta(seconds=5)):
-            doc = generate_link_previews(post)
-            LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-            body['posts'][0].update({
-                "mobiledoc": doc
-            })
-        # Update image meta tags
-        if feature_image is not None:
-            body['posts'][0].update({
-                "og_image": feature_image,
-                "twitter_image": feature_image
-            })
-        if body['posts'][0].get('mobiledoc'):
-            sleep(1)
+    current_time = get_current_datetime()
+    if current_time - previous_update > timedelta(seconds=5):
+        if data:
+            post = data['post']['current']
+            post_id = post.get('id')
+            slug = post.get('slug')
+            title = post.get('title')
+            feature_image = post.get('feature_image')
+            custom_excerpt = post.get('custom_excerpt')
+            primary_tag = post.get('primary_tag')
+            html = post.get('html')
             time = get_current_time()
-            body['posts'][0]['updated_at'] = time
-        response, code = ghost.update_post(post_id, body, slug)
-        return make_response(jsonify({str(code): response}))
-    LOGGER.warning('JSON body missing from request.')
-    return make_response('JSON body missing from request.', 422)
+            body = {
+                "posts": [
+                    {
+                        "meta_title": title,
+                        "og_title": title,
+                        "twitter_title": title,
+                        "meta_description": custom_excerpt,
+                        "twitter_description": custom_excerpt,
+                        "og_description": custom_excerpt,
+                        "updated_at": time
+                    }
+                ]
+            }
+            if primary_tag.get('slug') == 'roundup' and feature_image is None:
+                feature_image = gcs.fetch_random_lynx_image()
+                body['posts'][0].update({
+                    "feature_image": feature_image,
+                    "og_image": feature_image,
+                    "twitter_image": feature_image
+                })
+            LOGGER.info('previous_update = ', previous_update)
+            if html and ('kg-card' not in html) and previous_update and ():
+                doc = generate_link_previews(post)
+                LOGGER.info(f'Generated Previews for Lynx post {slug}.')
+                body['posts'][0].update({
+                    "mobiledoc": doc
+                })
+            # Update image meta tags
+            if feature_image is not None:
+                body['posts'][0].update({
+                    "og_image": feature_image,
+                    "twitter_image": feature_image
+                })
+            if body['posts'][0].get('mobiledoc'):
+                sleep(1)
+                time = get_current_time()
+                body['posts'][0]['updated_at'] = time
+            response, code = ghost.update_post(post_id, body, slug)
+            return make_response(jsonify({str(code): response}))
+        LOGGER.warning('JSON body missing from request.')
+    LOGGER.warning('Post update ignored as post was just updated.')
+    return make_response('Post update ignored as post was just updated.', 422)
 
 
 @LOGGER.catch
