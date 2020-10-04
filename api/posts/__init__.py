@@ -47,6 +47,9 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
             })
+        LOGGER.debug('previous = ', previous)
+        LOGGER.debug('updated_at = ', updated_at)
+        LOGGER.debug('previous updated_at = ', datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z"))
         if html and ('kg-card' not in html) and previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z") > timedelta(seconds=5)):
                 doc = generate_link_previews(post)
                 LOGGER.info(f'Generated Previews for Lynx post {slug}.')
