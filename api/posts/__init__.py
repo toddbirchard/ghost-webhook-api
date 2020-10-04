@@ -54,7 +54,7 @@ def update_post():
                 "twitter_image": feature_image
             })
         LOGGER.info('previous_update = ', previous_update)
-        if html and ('kg-card' not in html) and previous_update and ():
+        if html and ('kg-card' not in html):
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
             body['posts'][0].update({
