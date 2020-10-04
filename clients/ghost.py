@@ -90,6 +90,8 @@ class Ghost:
             response = f'Received code {req.status_code} when updating `{slug}`.'
             if req.status_code > 300:
                 LOGGER.warning(f'Failed to update post `{slug}`: {req.text}')
+            else:
+                LOGGER.info(f'Successfully updated post `{slug}`: {body}')
             return response, req.status_code
         except HTTPError as e:
             LOGGER.error(e.response)

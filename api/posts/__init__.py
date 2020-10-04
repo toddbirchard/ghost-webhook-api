@@ -47,15 +47,15 @@ def update_post():
                 "og_image": feature_image,
                 "twitter_image": feature_image
             })
-        LOGGER.debug('previous = ', previous)
-        LOGGER.debug('updated_at = ', updated_at)
-        LOGGER.debug('previous updated_at = ', datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z"))
+        LOGGER.info('previous = ', previous)
+        LOGGER.info('updated_at = ', updated_at)
+        LOGGER.info('previous updated_at = ', datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z"))
         if html and ('kg-card' not in html) and previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z") > timedelta(seconds=5)):
-                doc = generate_link_previews(post)
-                LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-                body['posts'][0].update({
-                    "mobiledoc": doc
-                })
+            doc = generate_link_previews(post)
+            LOGGER.info(f'Generated Previews for Lynx post {slug}.')
+            body['posts'][0].update({
+                "mobiledoc": doc
+            })
         # Update image meta tags
         if feature_image is not None:
             body['posts'][0].update({
@@ -67,7 +67,6 @@ def update_post():
             time = get_current_time()
             body['posts'][0]['updated_at'] = time
         response, code = ghost.update_post(post_id, body, slug)
-        LOGGER.info(f'Post Updated with code {code}: {body}')
         return make_response(jsonify({str(code): response}))
     LOGGER.warning('JSON body missing from request.')
     return make_response('JSON body missing from request.', 422)
