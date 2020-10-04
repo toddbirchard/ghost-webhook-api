@@ -11,7 +11,7 @@ def generate_link_previews(post) -> str:
     """Replace <a> tags in Lynx posts with link previews."""
     html = post.get('html')
     links = re.findall('<a href="(.*?)"', html)
-    link_previews = [scrape_link(link) for link in links]
+    link_previews = [scrape_link(link) for link in links if link is not None]
     mobile_doc['cards'] = link_previews
     for i, link in enumerate(link_previews):
         mobile_doc['sections'].append([10, i])
