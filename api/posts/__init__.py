@@ -15,16 +15,14 @@ from .lynx.cards import generate_link_previews
 def update_post():
     """Update post metadata upon save."""
     data = request.get_json()
-    sleep(6)
     if data:
         previous_update = data['post'].get('previous')
         if previous_update:
             current_time = get_current_datetime()
             previous_update_date = datetime.strptime(data['post']['previous']['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z")
-            LOGGER.info('previous_update_date = ', previous_update_date)
             if previous_update_date and current_time - previous_update_date < timedelta(seconds=5):
                 LOGGER.warning('Post update ignored as post was just updated.')
-                return make_response('Post update ignored as post was just updated.', 200)
+                return make_response('Post update ignored as post was just updated.', 422)
         post = data['post']['current']
         post_id = post.get('id')
         slug = post.get('slug')
