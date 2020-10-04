@@ -15,7 +15,8 @@ from .lynx.cards import generate_link_previews
 def update_post():
     """Update post metadata upon save."""
     data = request.get_json()
-    LOGGER.info(data)
+    LOGGER.info(data.keys())
+    LOGGER.info(data['post'].keys())
     if data:
         post = data['post']['current']
         post_id = post.get('id')
@@ -25,7 +26,7 @@ def update_post():
         custom_excerpt = post.get('custom_excerpt')
         primary_tag = post.get('primary_tag')
         html = post.get('html')
-        previous = data['post'].get('previous')
+        previous = data.get('previous')
         time = get_current_time()
         updated_at = get_current_datetime()
         body = {
