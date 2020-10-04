@@ -16,6 +16,8 @@ def update_post():
     """Update post metadata upon save."""
     data = request.get_json()
     LOGGER.info(data['post']['previous'])
+    previous = data['post']['previous']
+    LOGGER.info(previous)
     if data:
         post = data['post']['current']
         post_id = post.get('id')
@@ -25,7 +27,6 @@ def update_post():
         custom_excerpt = post.get('custom_excerpt')
         primary_tag = post.get('primary_tag')
         html = post.get('html')
-        previous = data['post']['previous']
         time = get_current_time()
         updated_at = get_current_datetime()
         body = {
