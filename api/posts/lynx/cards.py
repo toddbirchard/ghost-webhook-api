@@ -1,5 +1,5 @@
 """Replace <a> tags in Lynx posts with cards."""
-from typing import List, Optional
+from typing import List
 import re
 import simplejson as json
 import requests
