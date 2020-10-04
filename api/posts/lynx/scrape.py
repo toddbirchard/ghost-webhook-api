@@ -77,7 +77,8 @@ def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         title = html.find("meta", property="twitter:title").get('content')
     elif html.find("h1"):
         title = html.find("h1").string
-    return title.replace("'", "")
+    if title:
+        return title.replace("'", "")
 
 
 def get_image(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
