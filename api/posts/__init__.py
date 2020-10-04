@@ -40,22 +40,19 @@ def update_post():
                 }
             ]
         }
-        if primary_tag.get('slug') == 'roundup':
-            if feature_image is None:
-                feature_image = gcs.fetch_random_lynx_image()
+        if primary_tag.get('slug') == 'roundup' and feature_image is None:
+            feature_image = gcs.fetch_random_lynx_image()
+            body['posts'][0].update({
+                "feature_image": feature_image,
+                "og_image": feature_image,
+                "twitter_image": feature_image
+            })
+        if html and ('kg-card' not in html) and previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.000Z") > timedelta(seconds=5)):
+                doc = generate_link_previews(post)
+                LOGGER.info(f'Generated Previews for Lynx post {slug}.')
                 body['posts'][0].update({
-                    "feature_image": feature_image,
-                    "og_image": feature_image,
-                    "twitter_image": feature_image
-                 })
-            '''if html and ('kg-card' not in html):
-                print(updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.%fZ"))
-                if previous and (updated_at - datetime.strptime(previous['updated_at'], "%Y-%m-%dT%H:%M:%S.%fZ") > timedelta(seconds=5)) and 'kg-card' not in previous['html']:
-                    doc = generate_link_previews(post)
-                    LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-                    body['posts'][0].update({
-                        "mobiledoc": doc
-                    })'''
+                    "mobiledoc": doc
+                })
         # Update image meta tags
         if feature_image is not None:
             body['posts'][0].update({
