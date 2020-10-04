@@ -59,14 +59,14 @@ def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
             title = json_ld['headline'][0]
         elif isinstance(json_ld.get('headline'), str):
             title = json_ld.get('headline')
-        if isinstance(title, str):
+        if bool(title) and isinstance(title, str):
             return title.replace("'", "")
     if bool(json_ld) and json_ld.get('title'):
         if isinstance(json_ld.get('title'), list):
             title = json_ld['title'][0]
         elif isinstance(json_ld.get('title'), str):
             title = json_ld.get('title')
-        if isinstance(title, str):
+        if bool(title) and isinstance(title, str):
             return title
     # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("title"):
@@ -86,13 +86,13 @@ def get_image(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     if bool(json_ld) and json_ld.get('image'):
         if isinstance(json_ld['image'], list):
             image = json_ld['image'][0]
-            if isinstance(image, dict):
+            if bool(image) and isinstance(image, dict):
                 image = image.get('url')
-            if isinstance(image, str):
+            if bool(image) and isinstance(image, str):
                 return image
         elif isinstance(json_ld.get('image'), dict):
             image = json_ld['image'].get('url')
-        if isinstance(image, str):
+        if bool(image) and isinstance(image, str):
             return image
     # Fallback to BeautifulSoup if target lacks structured data
     if html.find("meta", property="image"):
@@ -126,9 +126,9 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     if bool(json_ld) and json_ld.get('author'):
         if isinstance(json_ld['author'], list):
             author = json_ld['author'][0]
-        if isinstance(json_ld['author'], dict):
+        if bool(author) and isinstance(json_ld['author'], dict):
             author = json_ld['author'].get('name')
-        if isinstance(author, str):
+        if bool(author) and isinstance(author, str):
             return author
     # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("meta", property="author"):
@@ -149,9 +149,9 @@ def get_publisher(json_ld: dict) -> Optional[str]:
     if bool(json_ld) and json_ld.get('publisher'):
         if isinstance(json_ld['publisher'], list):
             publisher = json_ld['publisher'][0]
-        if isinstance(json_ld['publisher'], dict):
+        if bool(publisher) and isinstance(json_ld['publisher'], dict):
             publisher = json_ld['publisher'].get('name')
-        if isinstance(publisher, str):
+        if bool(publisher) and isinstance(publisher, str):
             return publisher
         return ""
 
