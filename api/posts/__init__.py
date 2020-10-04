@@ -26,7 +26,7 @@ def update_post():
         custom_excerpt = post.get('custom_excerpt')
         primary_tag = post.get('primary_tag')
         html = post.get('html')
-        previous = data.get('previous')
+        previous = post.get('previous')
         time = get_current_time()
         updated_at = get_current_datetime()
         body = {
