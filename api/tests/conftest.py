@@ -1,8 +1,6 @@
-from .. import init_api
-import pytest
-
+from api import init_api
 
 @pytest.fixture
-def app():
-    app = init_api()
-    return app
+def api():
+    api = init_api()
+    return api

@@ -30,7 +30,7 @@ botocore = "*"
 uWSGI = "*"
 
 [dev-packages]
-pytest = "*"
+pytest-flask = "*"
 mock = "*"
 mypy = "*"
 

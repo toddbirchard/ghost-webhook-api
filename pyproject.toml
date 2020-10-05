@@ -45,7 +45,7 @@ botocore = "*"
 uwsgi = "*"
 
 [tool.poetry.dev-dependencies]
-pytest = "*"
+pytest-flask = "*"
 mock = "*"
 mypy = "*"
 
