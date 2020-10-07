@@ -39,17 +39,17 @@ deploy:
 	service $(PROJECTNAME) stop
 	git stash
 	git pull origin master
-	# $(shell source ./dependencies.sh)
+	$(shell . ./dependencies.sh)
 	service $(PROJECTNAME) start
 	service $(PROJECTNAME) status
 
 
 .PHONY: update
 update:
-	poetry update
-	poetry shell
-    $(shell pip3 freeze > requirements.txt)
-	# $(shell source ./dependencies.sh)
+	poetry shell && poetry update
+	pip freeze > requirements.txt
+	exit
+	$(shell . ./dependencies.sh)
 
 
 .PHONY: clean
@@ -58,4 +58,3 @@ clean:
 	find . -name '__pycache__' -delete
 	find . -name 'poetry.lock' -delete
 	find . -name 'Pipefile.lock' -delete
-	find . -name '.pytest_cache/' -delete

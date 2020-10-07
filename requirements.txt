@@ -1,7 +1,7 @@
 aiohttp==3.6.2
 async-timeout==3.0.1
 attrs==20.2.0
-beautifulsoup4==4.9.2
+beautifulsoup4==4.9.3
 boto==2.49.0
 botocore==1.18.11
 cachetools==4.1.1
@@ -57,7 +57,7 @@ pycparser==2.20
 PyJWT==1.7.1
 PyMySQL==0.10.1
 pyparsing==2.4.7
-pytest==6.1.0
+pytest==6.1.1
 pytest-flask==1.0.0
 python-dateutil==2.8.1
 python-dotenv==0.14.0
