@@ -55,32 +55,13 @@ def create_logger() -> logger:
                + "<red>{level}</red>: "
                + "<light-white>{message}</light-white>"
     )
+    # Datadog
+    logger.add(
+        'logs/info.json',
+        format=formatter,
+        rotation="500 MB",
+    )
     if Config.FLASK_ENV == 'production':
-        # Datadog
-        logger.add(
-            'logs/info.json',
-            format=formatter,
-            level="INFO",
-            rotation="500 MB",
-        )
-        logger.add(
-            'logs/errors.json',
-            format=formatter,
-            level="ERROR",
-            rotation="500 MB",
-        )
-        logger.add(
-            'logs/errors.json',
-            format=formatter,
-            level="WARNING",
-            rotation="500 MB",
-        )
-        logger.add(
-            'logs/debug.json',
-            format=formatter,
-            level="DEBUG",
-            rotation="500 MB",
-        )
         # APM
         apm_format = ('%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] '
                       '[dd.service=%(dd.service)s dd.env=%(dd.env)s dd.version=%(dd.version)s dd.trace_id=%(dd.trace_id)s dd.span_id=%(dd.span_id)s] '

@@ -24,7 +24,6 @@ def new_user():
       }]
     }
     response, code = ghost.create_member(body)
-    LOGGER.infop(response)
     return make_response(response, code)
 
 
@@ -56,7 +55,7 @@ def new_comment():
         table_name="comments",
         database_name="hackers_prod"
     )
-    LOGGER.info(f'Created commentId={comment["comment_id"]} by user={comment["user_id"]}.')
+    LOGGER.success(f'User `{comment["user_id"]}` successfully commented on {data.get("post_slug")}.')
     ghost.rebuild_netlify_site()
     return make_response(jsonify(result), 200)
 
@@ -94,7 +93,7 @@ def newsletter_subscriber():
         auth=("api", api.config["MAILGUN_API_KEY"]),
         data=body,
     )
-    LOGGER.info(f'Welcome email successfully sent to {name} <{email}>.')
+    LOGGER.info(f'Welcome email sent to {name} <{email}>.')
     return make_response(jsonify(req.json()), 200)
 
 
@@ -131,7 +130,7 @@ def donation_received():
         table_name="donations",
         database_name="analytics"
     )
-    LOGGER.info(f'Received donation: {donation}')
+    LOGGER.success(f'Received donation: {donation}')
     return make_response(
         jsonify({'Inserted': donation}),
         200,

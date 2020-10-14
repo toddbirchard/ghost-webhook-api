@@ -18,18 +18,19 @@ class Ghost:
             netlify_build_url: str
     ):
         """
-        Creates a new Ghost API client.
+        Ghost admin API client.
 
-        :param api_url: Ghost's admin API base URL
         :param client_id: Self-supplied client ID
         :param client_secret: Self-supplied client secret
+        :param api_url: Ghost's admin API base URL
+        :param netlify_build_url: Netlify hook to trigger full site rebuild.
         """
         self.client_id = client_id
         self.secret = client_secret
         self.url = api_url
         self.netlify_build_url = netlify_build_url
 
-    def __https_session(self) -> None:
+    def _https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
         endpoint = f'{self.url}/session/'
         headers = {'Authorization': self.session_token}
@@ -97,19 +98,19 @@ class Ghost:
             LOGGER.error(e.response)
             return e.response.content, e.response.status_code
 
-    def create_member(self, body: dict):
-        """Create new member."""
+    def create_member(self, body: dict) -> Tuple[str, int]:
+        """Create new member.
+
+        :param body: Create new Ghost member account used to receive newsletters.
+        """
         try:
             req = requests.post(
                 f'{self.url}/members/',
                 json=body,
                 headers={'Authorization': self.session_token}
             )
-            if req.status_code > 300:
-                LOGGER.warning(
-                    f'Failed to create Ghost member `{body["members"][0]["email"]}` with code {req.status_code}: {req.text}'
-                )
-            response = f'Received code {req.status_code} when adding user: `{req.json()}`.'
+            response = f'Successfully created new Ghost member `{body.get("email")}: {req.json()}.'
+            LOGGER.success(response)
             return response, req.status_code
         except HTTPError as e:
             LOGGER.error(f'Failed to create Ghost member: {e.response.content}')
@@ -121,11 +122,8 @@ class Ghost:
             req = requests.post(
                 self.netlify_build_url,
             )
-            if req.status_code > 300:
-                LOGGER.warning(
-                    f'Failed to rebuild Netlify site: {req.text}'
-                )
-            response = f'Rebuilt Netlify site with status code {req.status_code}.'
+            response = f'Triggered Netlify build with status code {req.status_code}.'
+            LOGGER.info(response)
             return response, req.status_code
         except HTTPError as e:
             LOGGER.error(f'Failed to rebuild Netlify site: {e.response.content}')
@@ -133,7 +131,7 @@ class Ghost:
 
     def get_json_backup(self) -> dict:
         """Download JSON snapshot of Ghost database."""
-        self.__https_session()
+        self._https_session()
         headers = {'accept': 'text/html,application/xhtml+xml,application/xml;\
                                 q=0.9,image/webp,image/apng,*/*;\
                                 q=0.8,application/signed-exchange;\

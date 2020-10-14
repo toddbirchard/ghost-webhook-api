@@ -10,7 +10,7 @@ from .doc import mobile_doc
 
 
 @LOGGER.catch
-def generate_link_previews(post) -> str:
+def generate_link_previews(post: dict) -> str:
     """Replace <a> tags in Lynx posts with link previews."""
     html = post.get('html')
     urls = re.findall('<a href="(.*?)"', html)

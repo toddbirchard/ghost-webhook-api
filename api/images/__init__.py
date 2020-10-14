@@ -32,7 +32,7 @@ def transform_images():
     purged_images = gcs.purge_unwanted_images(folder)
     mobile_images = gcs.mobile_transformations(folder)
     retina_images = gcs.retina_transformations(folder)
-    LOGGER.info(f'Transformed {mobile_images} mobile, {retina_images} retina images.')
+    LOGGER.info(f'Transformed {len(mobile_images)} mobile, {len(retina_images)} retina images.')
     return make_response(
         jsonify({
             'purged': purged_images,
@@ -63,7 +63,7 @@ def transform_mobile_images():
     folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
     purged_images = gcs.purge_unwanted_images(folder)
     mobile_images = gcs.mobile_transformations(folder)
-    LOGGER.info(f'Transformed {mobile_images} mobile.')
+    LOGGER.success(f'Transformed {len(mobile_images)} mobile image(s).')
     return make_response(
         jsonify({'purged': purged_images, 'mobile': mobile_images}),
         200,
