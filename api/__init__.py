@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 
 def init_api():
-    """Construct the core application."""
+    """Construct the core Flask application."""
     api = Flask(__name__, instance_relative_config=False)
     api.config.from_object('config.Config')
     CORS(api, resources={r"/*": {"origins": "*"}})
@@ -23,7 +23,8 @@ def init_api():
             members,
             authors,
             routes,
-            github
+            github,
+            newsletter
         )
 
         return api

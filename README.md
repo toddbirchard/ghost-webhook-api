@@ -39,6 +39,9 @@ Python API to provide JAMStack-based sites content & image optimization automati
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter`: Send welcome email to new newsletter subscribers via Mailgun.
   * **POST** `/members/donation`: Add incoming donation to a historical ledger of donations from BuyMeACoffee.
+#### Members
+  * **POST** `/newsletter/subscribe`: Send welcome email to new newsletter subscribers via Mailgun.
+  * **POST** `/newsletter/unsubscribe`: Receive analytics events when users unsubscribe from newsletters.
 #### Authors
   * **POST** `/authors/post`: Notify site admin/editor when posts are ready for review.
 #### Github

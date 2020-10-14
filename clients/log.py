@@ -27,7 +27,6 @@ def formatter(record):
 def create_logger() -> logger:
     """Create custom logger."""
     logger.remove()
-    # Datadog
     logger.add(
         stdout,
         colorize=True,

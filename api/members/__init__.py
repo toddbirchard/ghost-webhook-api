@@ -1,9 +1,7 @@
 """Ghost member management."""
 from datetime import datetime
-import simplejson as json
 from flask import current_app as api
 from flask import make_response, request, jsonify
-import requests
 from mixpanel import Mixpanel
 from clients import db, ghost
 from clients.log import LOGGER
@@ -73,28 +71,6 @@ def subscriber_mixpanel():
         LOGGER.info(f'Created Mixpanel record for subscriber {name}, ({email}).')
         return make_response(jsonify({'CREATED': body}))
     return make_response(jsonify({'DENIED': data}))
-
-
-@api.route('/members/newsletter', methods=['POST'])
-def newsletter_subscriber():
-    """Send welcome email to newsletter subscriber."""
-    endpoint = f'https://api.mailgun.net/v3/{api.config["MAILGUN_EMAIL_SERVER"]}/messages'
-    email = request.json.get('email')
-    name = request.json.get('name').title()
-    body = {
-        "from": "todd@mail.hackersandslackers.com",
-        "to": email,
-        "subject": api.config["MAILGUN_SUBJECT_LINE"],
-        "template": api.config["MAILGUN_EMAIL_TEMPLATE"],
-        "h:X-Mailgun-Variables": json.dumps({"name": name})
-    }
-    req = requests.post(
-        endpoint,
-        auth=("api", api.config["MAILGUN_API_KEY"]),
-        data=body,
-    )
-    LOGGER.info(f'Welcome email sent to {name} <{email}>.')
-    return make_response(jsonify(req.json()), 200)
 
 
 @api.route('/members/donation', methods=['PUT'])
