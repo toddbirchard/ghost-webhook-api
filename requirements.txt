@@ -24,7 +24,7 @@ grpcio==1.32.0
 html-text==0.5.2
 html5lib==1.1
 idna==2.10
-iniconfig==1.0.1
+iniconfig==1.1.1
 intervaltree==3.1.0
 isodate==0.6.0
 itsdangerous==1.1.0
