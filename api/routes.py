@@ -8,5 +8,5 @@ from clients.log import LOGGER
 def health_check():
     """API health check status."""
     headers = {'Content-Type': 'text/plain;charset=utf-8'}
-    LOGGER.info('API health check successful!')
+    LOGGER.success('API health check successful!')
     return make_response('API is online!', 200, headers)

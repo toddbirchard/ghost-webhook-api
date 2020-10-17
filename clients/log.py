@@ -6,7 +6,7 @@ from config import Config
 
 
 def formatter(record):
-    """Pass raw string to be serialized."""
+    """Pass raw log to be serialized."""
 
     def serialize(log):
         """Parse log message into Datadog JSON format."""

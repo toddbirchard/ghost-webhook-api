@@ -24,7 +24,7 @@ def newsletter_subscribe():
         auth=("api", api.config["MAILGUN_API_KEY"]),
         data=body,
     )
-    LOGGER.info(f'Welcome email sent to {name} <{email}>.')
+    LOGGER.success(f'Welcome email sent to {name} <{email}>.')
     return make_response(jsonify(req.json()), 200, {'Content-Type': 'application/json'})
 
 

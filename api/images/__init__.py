@@ -17,7 +17,7 @@ def create_post_retina_image():
     title = post.get('title')
     if feature_image is not None and '@2x' not in feature_image:
         new_image = gcs.create_single_retina_image(feature_image)
-        LOGGER.info(f'Created image for post `{title}`: {new_image}')
+        LOGGER.success(f'Created image for post `{title}`: {new_image}')
         return make_response(jsonify({title: new_image}), 200, headers)
     return make_response(f'Post `{post}` already has retina image {feature_image}', 422, headers)
 
@@ -32,7 +32,7 @@ def transform_images():
     purged_images = gcs.purge_unwanted_images(folder)
     mobile_images = gcs.mobile_transformations(folder)
     retina_images = gcs.retina_transformations(folder)
-    LOGGER.info(f'Transformed {len(mobile_images)} mobile, {len(retina_images)} retina images.')
+    LOGGER.success(f'Transformed {len(mobile_images)} mobile, {len(retina_images)} retina images.')
     return make_response(
         jsonify({
             'purged': purged_images,
@@ -49,7 +49,7 @@ def purge_images():
     """Purge unwanted images."""
     folder = request.args.get('directory', api.config['GCP_BUCKET_FOLDER'])
     purged_images = gcs.purge_unwanted_images(folder)
-    LOGGER.info(f'Transformed {purged_images} images.')
+    LOGGER.success(f'Deleted {purged_images} unwanted images.')
     return make_response(
         jsonify({'purged': purged_images}),
         200,
@@ -85,7 +85,7 @@ def assign_lynx_images():
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
             database_name='hackers_prod'
         )
-    LOGGER.info(f'Updated {len(posts)} lynx posts with image.')
+    LOGGER.success(f'Updated {len(posts)} lynx posts with image.')
     return make_response(
         jsonify({'updated': posts}),
         200,

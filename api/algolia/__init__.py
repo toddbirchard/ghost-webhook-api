@@ -17,7 +17,7 @@ def week_searches():
         database_name='analytics',
         replace=True
     )
-    LOGGER.info(f'Successfully inserted {len(result)} rows into algolia_searches_week table.')
+    LOGGER.success(f'Successfully inserted {len(result)} rows into algolia_searches_week table.')
     return make_response(jsonify(result), 200)
 
 
@@ -31,5 +31,5 @@ def historical_searches():
         table_name='algolia_searches_historical',
         database_name='analytics'
     )
-    LOGGER.info(f'Successfully inserted {len(result)} rows into algolia_searches_historical table.')
+    LOGGER.success(f'Successfully inserted {len(result)} rows into algolia_searches_historical table.')
     return make_response(jsonify(result), 200)

@@ -115,7 +115,7 @@ def post_metadata_sanitize():
     queries = get_queries()
     results = db.execute_queries(queries, database_name='hackers_prod')
     headers = {'Content-Type': 'application/json'}
-    LOGGER.info(f'Successfully ran queries: {queries}')
+    LOGGER.success(f'Successfully ran queries: {queries}')
     return make_response(jsonify(results), 200, headers)
 
 

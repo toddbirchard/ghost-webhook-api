@@ -17,7 +17,7 @@ def analytics_week():
         database_name='analytics',
         action='replace'
     )
-    LOGGER.info(f'Successfully inserted {len(result)} rows into weekly_stats table.')
+    LOGGER.success(f'Successfully inserted {len(result)} rows into weekly_stats table.')
     return make_response(result, 200, {'content-type': 'application/json'})
 
 
@@ -33,5 +33,5 @@ def analytics_month():
         database_name='analytics',
         action='replace'
     )
-    LOGGER.info(f'Successfully inserted {len(result)} rows into monthly_stats table.')
+    LOGGER.success(f'Successfully inserted {len(result)} rows into monthly_stats table.')
     return make_response(result, 200, {'content-type': 'application/json'})
