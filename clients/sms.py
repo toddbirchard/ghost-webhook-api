@@ -15,8 +15,6 @@ class Twilio:
     def send_message(self, msg):
         """Send Twilio message."""
         message = self.client.messages.create(
-            to=self.recipient,
-            from_=self.sender,
-            body=msg
+            to=self.recipient, from_=self.sender, body=msg
         )
         return message

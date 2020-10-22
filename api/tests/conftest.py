@@ -1,5 +1,7 @@
-from api import init_api
 import pytest
+
+from api import init_api
+
 
 @pytest.fixture
 def api():

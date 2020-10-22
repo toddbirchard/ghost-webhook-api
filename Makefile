@@ -8,13 +8,21 @@ Manage $(PROJECTNAME). Usage:
 make run        - Run $(PROJECTNAME).
 make restart    - Purge cache & reinstall modules.
 make deploy     - Pull latest build and deploy to production.
-make update     - Update pip dependencies in both poetry and pipenv environments.
+make update     - Update pip dependencies via Python Poetry.
+make format     - Format code with Python's `Black` library.
 make clean      - Remove cached files and lock files.
 endef
 export HELP
 
 
-.PHONY: run restart deploy update clean help
+.PHONY: run restart deploy update format clean help
+
+requirements: .requirements.txt
+env: .venv/bin/activate
+
+
+.requirements.txt: requirements.txt
+	$(shell . .venv/bin/activate && pip install -r requirements.txt)
 
 
 all help:
@@ -22,12 +30,12 @@ all help:
 
 
 .PHONY: run
-run:
+run: env
 	service $(PROJECTNAME) start
 
 
 .PHONY: restart
-restart:
+restart: env
 	service $(PROJECTNAME) stop
 	make clean
 	service $(PROJECTNAME) start
@@ -39,17 +47,22 @@ deploy:
 	service $(PROJECTNAME) stop
 	git stash
 	git pull origin master
-	$(shell . ./dependencies.sh)
+	$(shell . ./deploy.sh)
 	service $(PROJECTNAME) start
 	service $(PROJECTNAME) status
 
 
 .PHONY: update
-update:
-	poetry shell && poetry update
-	pip freeze > requirements.txt
-	exit
-	$(shell . ./dependencies.sh)
+update: env
+	.venv/bin/python3 -m pip install -U pip
+	poetry update
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+
+.PHONY: format
+format: env
+	$(shell . .venv/bin/activate && isort -rc ./)
+	$(shell . .venv/bin/activate && black ./)
 
 
 .PHONY: clean

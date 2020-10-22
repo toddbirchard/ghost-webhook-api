@@ -1,6 +1,7 @@
 """Get current EST time/date."""
-import pytz
 from datetime import datetime, timedelta
+
+import pytz
 
 
 def get_current_time() -> str:

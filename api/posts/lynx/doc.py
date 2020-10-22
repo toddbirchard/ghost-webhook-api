@@ -5,5 +5,5 @@ mobile_doc = {
     "atoms": [],
     "cards": [],
     "markups": [],
-    "sections": []
+    "sections": [],
 }

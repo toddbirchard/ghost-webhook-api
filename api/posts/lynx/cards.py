@@ -1,24 +1,27 @@
 """Replace <a> tags in Lynx posts with cards."""
-from typing import List
 import re
-import simplejson as json
+from typing import List
+
 import requests
-from clients.log import LOGGER
+import simplejson as json
+
 from api.posts.lynx.utils import http_headers
-from .scrape import scrape_link
+from clients.log import LOGGER
+
 from .doc import mobile_doc
+from .scrape import scrape_link
 
 
 @LOGGER.catch
 def generate_link_previews(post: dict) -> str:
     """Replace <a> tags in Lynx posts with link previews."""
-    html = post.get('html')
+    html = post.get("html")
     urls = re.findall('<a href="(.*?)"', html)
     links = remove_404s(urls)
     link_previews = [scrape_link(link) for link in links if link is not None]
-    mobile_doc['cards'] = link_previews
+    mobile_doc["cards"] = link_previews
     for i, link in enumerate(link_previews):
-        mobile_doc['sections'].append([10, i])
+        mobile_doc["sections"].append([10, i])
     return json.dumps(mobile_doc)
 
 
@@ -31,4 +34,3 @@ def remove_404s(links: List[str]) -> List[str]:
         if res.status_code == 200:
             valid_links.append(link)
     return valid_links
-
