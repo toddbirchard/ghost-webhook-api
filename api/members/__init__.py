@@ -81,7 +81,7 @@ def donation_received():
     """Add donation to historical ledger."""
     donation = request.get_json()
     email = donation.get("email")
-    name = donation.get("email")
+    name = donation.get("name")
     link = donation.get("link")
     created_at = donation.get("created_at")
     count = donation.get("count")
