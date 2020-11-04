@@ -82,3 +82,26 @@ def assign_lynx_images():
         )
     LOGGER.success(f"Updated {len(posts)} lynx posts with image.")
     return make_response(jsonify({"updated": posts}), 200, headers)
+
+
+@api.route("/images/move", methods=["GET"])
+def organize_images():
+    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
+    # moved_images = gcs.organize_retina_images(folder, image_type='retina')
+    image_headers = gcs.image_headers(folder)
+    moved_mobile_images = gcs.organize_mobile_images(folder)
+    organize_mobile_images = gcs.organize_mobile_images(folder)
+    LOGGER.success(f"Moved {len(moved_mobile_images)} mobile & {len(organize_mobile_images)} mobile images.")
+    return make_response(jsonify({
+        "mobile": moved_mobile_images,
+        "retina": organize_mobile_images,
+        "headers": image_headers
+    }), 200, headers)
+
+
+@api.route("/images/headers", methods=["GET"])
+def organize_images_headers():
+    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
+    headers_images = gcs.image_headers(folder)
+    LOGGER.success(f"Modified {len(headers_images)} images.")
+    return make_response(jsonify({"headers": headers_images}), 200, headers)
