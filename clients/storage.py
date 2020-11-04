@@ -65,7 +65,7 @@ class GCS:
             return [
                 file
                 for file in files
-                if "@2x.jpg" in file.name and "_mobile" not in file.name
+                if "@2x.jpg" in file.name and "_mobile" not in file.name and '/retina' not in file.name
             ]
         return [
             file
@@ -155,8 +155,7 @@ class GCS:
             new_image_name = image_blob.name.replace(".jpg", "@2x.jpg")
             mobile_blob = self.bucket.blob(new_image_name)
             if mobile_blob.exists() is False:
-                mobile_image_byes = self._new_image_blob(image_blob)
-                mobile_blob.upload_from_string(mobile_blob, content_type="image/jpeg")
+                self._new_image_blob(image_blob, image_type='retina')
                 images_transformed.append(mobile_blob.name)
         return images_transformed
 
@@ -174,7 +173,9 @@ class GCS:
         LOGGER.info("Generating mobile images...")
         for image_blob in self.fetch_blobs(folder, image_type="retina"):
             mobile_blob = self._new_image_blob(image_blob, image_type='mobile')
-            if mobile_blob is not None:
+            if mobile_blob.exists() is False:
+                mobile_blob_bytes = self._create_mobile_image(image_blob)
+                mobile_blob.upload_from_string(mobile_blob_bytes, content_type="image/jpeg")
                 images_transformed.append(mobile_blob.name)
         return images_transformed
 
@@ -203,19 +204,18 @@ class GCS:
         """
         image_folder = image_blob.name.rsplit('/', 1)[0]
         image_name = image_blob.name.rsplit('/', 1)[1]
-        if image_blob.exists() is True and image_type is not None:
-            LOGGER.info(f"{image_blob.name} already exists.")
-        elif image_blob.exists() is False and image_type == 'mobile':
-            image_blob = self.bucket.blob(f'{image_folder}/{image_type}/{image_name}')
-            mobile_blob = self._create_mobile_image(image_blob)
-            LOGGER.info(f"Created mobile image `{image_blob.name}`")
-            return mobile_blob
+        if image_type == 'mobile':
+            mobile_blob = self.bucket.blob(f'{image_folder}/{image_type}/{image_name}')
+            if mobile_blob.exists() is False:
+                return mobile_blob
         elif image_blob.exists() is False and image_type == 'retina':
             image_name = image_name.replace(".jpg", "@2x.jpg")
             image_blob = self.bucket.blob(f'{image_folder}/{image_type}/{image_name}')
             self.bucket.copy_blob(image_blob, self.bucket, image_blob)
             LOGGER.info(f"Created retina image `{image_blob.name}`")
             return image_blob
+        elif image_blob.exists() is True and image_type is not None:
+            LOGGER.info(f"{image_blob.name} already exists.")
         return None
 
     def fetch_random_lynx_image(self) -> str:
@@ -242,14 +242,15 @@ class GCS:
         :returns: Optional[bytes]
         """
         img_bytes = self._fetch_image_via_http(image_blob.name)
-        stream = BytesIO(img_bytes)
-        im = Image.open(stream)
-        width, height = im.size
-        if width > 1000:
-            im_resized = im.resize((600, 346))
-            new_image_bytes = io.BytesIO()
-            im_resized.save(new_image_bytes, "JPEG", quality=90, optimize=True)
-            return new_image_bytes.getvalue()
+        if img_bytes:
+            stream = BytesIO(img_bytes)
+            im = Image.open(stream)
+            width, height = im.size
+            if width > 1000:
+                im_resized = im.resize((600, 346))
+                new_image_bytes = io.BytesIO()
+                im_resized.save(new_image_bytes, "JPEG", quality=90, optimize=True)
+                return new_image_bytes.getvalue()
         return None
 
     @LOGGER.catch
