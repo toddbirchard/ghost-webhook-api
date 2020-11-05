@@ -13,7 +13,7 @@ flask==1.1.2
 flask-cors==3.0.9
 google-api-core==1.23.0
 google-auth==1.23.0
-google-cloud-bigquery==2.2.0
+google-cloud-bigquery==2.3.1
 google-cloud-bigquery-storage==2.0.1
 google-cloud-core==1.4.3
 google-cloud-storage==1.32.0
