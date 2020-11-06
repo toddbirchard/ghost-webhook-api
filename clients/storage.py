@@ -65,14 +65,12 @@ class GCS:
             return [
                 file
                 for file in files
-                if "@2x.jpg" in file.name
-                and "_mobile" not in file.name
-                and "/_retina" in file.name
+                if "@2x.jpg" in file.name and "/_retina" in file.name
             ]
         return [
             file
             for file in files
-            if "@2x" not in file.name and "_mobile" not in file.name
+            if "@2x" not in file.name and "/_mobile" not in file.name
         ]
 
     @LOGGER.catch
@@ -87,14 +85,26 @@ class GCS:
         """
         images_purged = []
         LOGGER.info("Purging unwanted images...")
-        substrings = ["@2x@2x", "_o", "psd", "?", "@2x-", "-1-1", "-1-2", ".webp"]
-        blobs = self.get(folder, )
-        image_blobs = [blob.name for blob in blobs]
+        substrings = [
+            "@2x@2x",
+            "_o",
+            "psd",
+            "?",
+            "@2x-",
+            "-1-1",
+            "-1-2",
+            ".webp",
+            "_retina/_retina",
+        ]
+        blobs = self.get(
+            folder,
+        )
+        image_blobs = [blob for blob in blobs]
         for image_blob in image_blobs:
-            if any(substr in image_blob for substr in substrings):
+            if any(substr in image_blob.name for substr in substrings):
                 self.bucket.delete_blob(image_blob)
-                images_purged.append(image_blob)
-                LOGGER.info(f"Deleted {image_blob}")
+                images_purged.append(image_blob.name)
+                LOGGER.info(f"Deleted {image_blob.name}.")
             r = re.compile("-[0-9]-[0-9]@2x.jpg")
             repeat_blobs = list(filter(r.match, image_blobs))
             for repeat_blob in repeat_blobs:
@@ -104,15 +114,20 @@ class GCS:
         return images_purged
 
     def organize_retina_images(self, folder: str) -> List:
-        """Move retina images into retina folder."""
-        moved_blobs = []
+        """
+        Move images into respective folder.
+
+        :param folder: Remote directory to recursively apply image transformations.
+        :type folder: str
+
+        :returns: List
+        """
         image_blobs = [
             blob
             for blob in self.get(folder)
-            if "@2x" in blob.name
-            and "/_mobile" not in blob.name
-            and "/_retina" not in blob.name
+            if "@2x" in blob.name and "/_retina" not in blob.name
         ]
+        moved_blobs = []
         for image_blob in image_blobs:
             image_folder, image_name = self._get_folder_and_filename(image_blob)
             moved_blob = self.bucket.blob(f"{image_folder}/_retina/{image_name}")
@@ -123,28 +138,7 @@ class GCS:
                 image_blob.delete()
                 moved_blobs.append(moved_blob.name)
                 LOGGER.info(f"Moved `{image_blob.name}` -> `{moved_blob.name}`")
-        return moved_blobs
-
-    def organize_mobile_images(self, folder: str) -> List:
-        """Move retina images into retina folder."""
-        moved_blobs = []
-        image_blobs = [
-            blob
-            for blob in self.get(folder)
-            if "_mobile" in blob.name
-            and "/_mobile" not in blob.name
-            and "/_retina" not in blob.name
-        ]
-        for image_blob in image_blobs:
-            image_folder, image_name = self._get_folder_and_filename(image_blob)
-            moved_blob = self.bucket.blob(f"{image_folder}/_mobile/{image_name}")
-            if moved_blob.exists() is False:
-                moved_blob = self.bucket.copy_blob(
-                    image_blob, self.bucket, new_name=moved_blob.name
-                )
-                image_blob.delete()
-                moved_blobs.append(moved_blob.name)
-                LOGGER.info(f"Moved `{image_blob.name}` -> `{moved_blob.name}`")
+            LOGGER.info(f"Ignored moving `{moved_blob.name}`")
         return moved_blobs
 
     def image_headers(self, folder: str) -> List:
@@ -155,12 +149,14 @@ class GCS:
                 image_blob.content_type = "image/jpg"
                 self.bucket.copy_blob(image_blob, self.bucket)
                 header_blobs.append(image_blob.name)
+                LOGGER.info(f"Applied content-type `image/jpg` to {image_blob.name}")
             elif (
                 ".png" in image_blob.name and "octet-stream" in image_blob.content_type
             ):
                 image_blob.content_type = "image/png"
                 self.bucket.copy_blob(image_blob, self.bucket)
                 header_blobs.append(image_blob.name)
+                LOGGER.info(f"Applied content-type `image/png` to {image_blob.name}")
         return header_blobs
 
     def retina_transformations(self, folder: str) -> List[Optional[str]]:
@@ -171,7 +167,7 @@ class GCS:
             new_image_name = image_blob.name.replace(".jpg", "@2x.jpg")
             mobile_blob = self.bucket.blob(new_image_name)
             if mobile_blob.exists() is False:
-                self._new_image_blob(image_blob, image_type="retina")
+                self._new_image_blob(image_blob, "retina")
                 images_transformed.append(mobile_blob.name)
         return images_transformed
 
@@ -188,7 +184,7 @@ class GCS:
         images_transformed = []
         LOGGER.info("Generating mobile images...")
         for image_blob in self.fetch_blobs(folder, image_type="retina"):
-            mobile_blob = self._new_image_blob(image_blob, image_type="mobile")
+            mobile_blob = self._new_image_blob(image_blob, "mobile")
             images_transformed.append(mobile_blob)
         return images_transformed
 
@@ -204,34 +200,37 @@ class GCS:
         """
         relative_image_path = image_url.replace(self.bucket_url, "")
         image_blob = storage.Blob(relative_image_path, self.bucket)
-        retina_blob = self._new_image_blob(image_blob, image_type="retina")
+        retina_blob = self._new_image_blob(image_blob, "retina")
         return f"{self.bucket_http_url}{retina_blob}"
 
-    def _new_image_blob(self, image_blob: Blob, image_type=None) -> Optional[str]:
+    def _new_image_blob(self, image_blob: Blob, image_type: str) -> Optional[str]:
         """
         :param image_blob: Google storage blob representing an image.
         :type image_blob: Blob
+        :param image_type: Type of img transformation to apply.
+        :type image_type: str
 
         :returns: Blob
         """
         image_folder, image_name = self._get_folder_and_filename(image_blob)
-        new_image_name = f"{image_folder}/_{image_type}/{image_name}"
-        if image_type == 'retina':
-            new_image_name = f"{image_folder}/_{image_type}/{image_name.replace('.jpg', '@2x.jpg')}"
-        elif image_type == 'mobile':
-            new_image_name = f"{image_folder.replace('/_retina', '/_mobile')}/{image_name}"
-        new_image_blob = self.bucket.blob(new_image_name)
-        if new_image_blob.exists() is True:
-            LOGGER.info(f"{new_image_blob.name} already exists.")
-            return None
-        elif new_image_blob.exists() is False and image_type == "retina":
-            self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
-            LOGGER.info(f"Created retina image `{new_image_name}`")
-            return new_image_name
-        elif new_image_blob.exists() is False and image_type == "mobile":
-            self._create_mobile_image(image_blob, new_image_blob)
-            LOGGER.info(f"Created mobile image `{new_image_name}`")
-            return new_image_name
+        if image_type == "retina":
+            new_image_name = (
+                f"{image_folder}/_{image_type}/{image_name.replace('.jpg', '@2x.jpg')}"
+            )
+            new_image_blob = self.bucket.blob(new_image_name)
+            if new_image_blob.exists() is False:
+                self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
+                LOGGER.info(f"Created retina image `{new_image_name}`")
+                return new_image_name
+        elif image_type == "mobile":
+            new_image_name = (
+                f"{image_folder.replace('/_retina', '/_mobile')}/{image_name}"
+            )
+            new_image_blob = self.bucket.blob(new_image_name)
+            if new_image_blob.exists():
+                self._create_mobile_image(image_blob, new_image_blob)
+                LOGGER.info(f"Created mobile image `{new_image_name}`")
+                return new_image_name
         return None
 
     def fetch_random_lynx_image(self) -> str:
@@ -247,16 +246,20 @@ class GCS:
         LOGGER.info(f"Selected random Lynx image: `{image}`")
         return image
 
-    def _create_mobile_image(self, image_blob: Blob, new_image_blob: Blob) -> Optional[str]:
+    def _create_mobile_image(
+        self, original_image_blob: Blob, new_image_blob: Blob
+    ) -> Optional[str]:
         """
         Create smaller image size to be served on mobile devices.
 
-        :param image_blob: Original image blob.
-        :type image_blob: Blob
+        :param original_image_blob: Original image blob.
+        :type original_image_blob: Blob
+        :param new_image_blob: New newly created Blob for mobile image.
+        :type new_image_blob: Blob
 
-        :returns: Optional[bytes]
+        :returns: Optional[str]
         """
-        img_bytes = self._fetch_image_via_http(image_blob.name)
+        img_bytes = self._fetch_image_via_http(original_image_blob.name)
         if img_bytes:
             stream = BytesIO(img_bytes)
             im = Image.open(stream)
@@ -265,10 +268,10 @@ class GCS:
                 im_resized = im.resize((600, 346))
                 new_image_bytes = io.BytesIO()
                 im_resized.save(new_image_bytes, "JPEG", quality=90, optimize=True)
-                content_type = image_blob.name.split('.', -1)[1]
+                content_type = original_image_blob.name.split(".", -1)[1]
                 content_types = {
-                    'jpg': "image/jpeg",
-                    'png': "image/png",
+                    "jpg": "image/jpeg",
+                    "png": "image/png",
                 }
                 new_image_blob.upload_from_string(
                     new_image_bytes.getvalue(), content_type=content_types[content_type]
@@ -277,7 +280,15 @@ class GCS:
         return None
 
     @staticmethod
-    def _get_folder_and_filename(image_blob: Blob):
+    def _get_folder_and_filename(image_blob: Blob) -> (str, str):
+        """
+        Get relative file path & filename from a given blob.
+
+        :param image_blob: Image stored on GCS
+        :type image_blob: Blob
+
+        :returns: (str, str)
+        """
         image_folder = image_blob.name.rsplit("/", 1)[0]
         image_name = image_blob.name.rsplit("/", 1)[1]
         return image_folder, image_name

@@ -1,4 +1,4 @@
-"""Generate and export optimized images."""
+"""Generate optimized images to be served from Google Cloud CDN."""
 from flask import current_app as api
 from flask import jsonify, make_response, request
 
@@ -87,17 +87,15 @@ def assign_lynx_images():
 @api.route("/images/move", methods=["GET"])
 def organize_images():
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    moved_images = gcs.organize_retina_images(folder)
+    retina_images = gcs.organize_retina_images(folder)
     image_headers = gcs.image_headers(folder)
-    moved_mobile_images = gcs.organize_mobile_images(folder)
     LOGGER.success(
-        f"Moved {len(moved_images)} mobile & {len(moved_mobile_images)} mobile images."
+        f"Moved {len(retina_images)} retina images and modified {len(image_headers)} content-types."
     )
     return make_response(
         jsonify(
             {
-                "mobile": moved_images,
-                "retina": moved_mobile_images,
+                "retina": retina_images,
                 "headers": image_headers,
             }
         ),
