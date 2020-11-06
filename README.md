@@ -48,35 +48,12 @@ Python API to provide JAMStack-based sites content & image optimization automati
   *  **POST** `/github/pr`: Trigger SMS notification when contributors open a Github PR in a specified Github org.
   *  **POST** `/github/issue`: Trigger SMS notification when contributors open a Github issue in a specified Github org.
 
-## Installation
+### Installation
 
-**Installation via `requirements.txt`**:
-
-```shell
-$ git clone https://github.com/toddbirchard/jamstack-automations.git
-$ cd jamstack-automations
-$ python3 -m venv myenv
-$ source myenv/bin/activate
-$ pip3 install -r requirements.txt
-$ python3 main.py
-```
-
-**Installation via [Pipenv](https://pipenv-fork.readthedocs.io/en/latest/)**:
+Get up and running with `make deploy`:
 
 ```shell
-$ git clone https://github.com/toddbirchard/jamstack-automations.git
-$ cd jamstack-automations
-$ pipenv shell
-$ pipenv update
-$ python3 main.py
-```
-
-**Installation via [Poetry](https://python-poetry.org/)**:
-
-```shell
-$ git clone https://github.com/toddbirchard/jamstack-automations.git
-$ cd jamstack-automations
-$ poetry shell
-$ poetry update
-$ poetry run
-```
+$ git clone https://github.com/toddbirchard/jamstack-api.git
+$ cd jamstack-api
+$ make deploy
+``` 

@@ -87,16 +87,23 @@ def assign_lynx_images():
 @api.route("/images/move", methods=["GET"])
 def organize_images():
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    # moved_images = gcs.organize_retina_images(folder, image_type='retina')
+    moved_images = gcs.organize_retina_images(folder)
     image_headers = gcs.image_headers(folder)
     moved_mobile_images = gcs.organize_mobile_images(folder)
-    organize_mobile_images = gcs.organize_mobile_images(folder)
-    LOGGER.success(f"Moved {len(moved_mobile_images)} mobile & {len(organize_mobile_images)} mobile images.")
-    return make_response(jsonify({
-        "mobile": moved_mobile_images,
-        "retina": organize_mobile_images,
-        "headers": image_headers
-    }), 200, headers)
+    LOGGER.success(
+        f"Moved {len(moved_images)} mobile & {len(moved_mobile_images)} mobile images."
+    )
+    return make_response(
+        jsonify(
+            {
+                "mobile": moved_images,
+                "retina": moved_mobile_images,
+                "headers": image_headers,
+            }
+        ),
+        200,
+        headers,
+    )
 
 
 @api.route("/images/headers", methods=["GET"])
