@@ -65,7 +65,7 @@ tenacity==6.2.0
 twilio==6.47.0
 typing-extensions==3.7.4.3
 typing-inspect==0.6.0
-urllib3==1.25.11
+urllib3==1.26.2
 uwsgi==2.0.19.1
 w3lib==1.22.0
 webencodings==0.5.1
