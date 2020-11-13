@@ -41,7 +41,12 @@ def transform_images():
     )
     return make_response(
         jsonify(
-            {"purged": purged_images, "retina": retina_images, "mobile": mobile_images, "headers": headers_images}
+            {
+                "purged": purged_images,
+                "retina": retina_images,
+                "mobile": mobile_images,
+                "headers": headers_images,
+            }
         ),
         200,
         headers,

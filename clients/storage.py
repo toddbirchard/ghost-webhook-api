@@ -52,15 +52,16 @@ class GCS:
         return [
             file
             for file in files
-            if "@2x.jpg" not in file.name and "/_retina" not in file.name
+            if "@2x.jpg" not in file.name
+            and "/_retina" not in file.name
+            and "/authors" not in file.name
+            and "/assets" not in file.name
         ]
 
     def _get_retina_blobs(self, folder):
         files = self.get(prefix=folder)
         return [
-            file
-            for file in files
-            if "@2x.jpg" in file.name and "/_retina" in file.name
+            file for file in files if "@2x.jpg" in file.name
         ]
 
     def _get_mobile_blobs(self, folder):
@@ -135,6 +136,8 @@ class GCS:
         image_blobs = self._get_retina_blobs(folder)
         for image_blob in image_blobs:
             image_folder, image_name = self._get_folder_and_filename(image_blob)
+            if '/_retina/' in image_name:
+                pass
             moved_blob = self.bucket.blob(f"{image_folder}/_retina/{image_name}")
             if moved_blob.exists() is False:
                 moved_blob = self.bucket.copy_blob(
@@ -170,10 +173,10 @@ class GCS:
         LOGGER.info("Generating retina images...")
         for image_blob in self._get_standard_blobs(folder):
             new_image_name = image_blob.name.replace(".jpg", "@2x.jpg")
-            mobile_blob = self.bucket.blob(new_image_name)
-            if mobile_blob.exists() is False:
+            retina_blob = self.bucket.blob(new_image_name)
+            if retina_blob.exists() is False:
                 self._new_image_blob(image_blob, "retina")
-                images_transformed.append(mobile_blob.name)
+                images_transformed.append(retina_blob.name)
         return images_transformed
 
     @LOGGER.catch
@@ -231,6 +234,10 @@ class GCS:
             new_image_name = (
                 f"{image_folder.replace('/_retina', '/_mobile')}/{image_name}"
             )
+            if '/mobile' not in image_folder:
+                new_image_name = (
+                    f"{image_folder}/_mobile/{image_name}"
+                )
             new_image_blob = self.bucket.blob(new_image_name)
             if new_image_blob.exists():
                 self._create_mobile_image(image_blob, new_image_blob)
