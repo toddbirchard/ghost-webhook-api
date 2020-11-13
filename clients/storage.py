@@ -47,26 +47,32 @@ class GCS:
         """
         return self.bucket.list_blobs(prefix=prefix)
 
-    def fetch_blobs(
-        self, folder: str, image_type: Optional[str] = None
-    ) -> List[Optional[Blob]]:
+    def _get_standard_blobs(self, folder):
+        files = self.get(prefix=folder)
+        return [
+            file
+            for file in files
+            if "@2x.jpg" not in file.name and "/_retina" not in file.name
+        ]
+
+    def _get_retina_blobs(self, folder):
+        files = self.get(prefix=folder)
+        return [
+            file
+            for file in files
+            if "@2x.jpg" in file.name and "/_retina" in file.name
+        ]
+
+    def _get_mobile_blobs(self, folder):
         """
         Retrieve images from GCS bucket matching directory & filter conditions.
 
         :param folder: Remote directory to recursively apply image transformations,=.
         :type folder: str
-        :param image_type: Type of image transformation to apply.
-        :type image_type: Optional[str]
 
         :returns: List[Blob]
         """
         files = self.get(prefix=folder)
-        if image_type == "retina":
-            return [
-                file
-                for file in files
-                if "@2x.jpg" in file.name and "/_retina" in file.name
-            ]
         return [
             file
             for file in files
@@ -99,19 +105,22 @@ class GCS:
         blobs = self.get(
             folder,
         )
-        image_blobs = [blob for blob in blobs]
-        for image_blob in image_blobs:
-            if any(substr in image_blob.name for substr in substrings):
-                self.bucket.delete_blob(image_blob)
-                images_purged.append(image_blob.name)
-                LOGGER.info(f"Deleted {image_blob.name}.")
-            r = re.compile("-[0-9]-[0-9]@2x.jpg")
-            repeat_blobs = list(filter(r.match, image_blobs))
-            for repeat_blob in repeat_blobs:
-                self.bucket.delete_blob(repeat_blob)
-                images_purged.append(repeat_blob)
-                LOGGER.info(f"Deleted {repeat_blob}")
+        image_blob_names = [blob.name for blob in blobs]
+        for image_blob_name in image_blob_names:
+            if any(substr in image_blob_name for substr in substrings):
+                self.bucket.delete_blob(image_blob_name)
+                images_purged.append(image_blob_name)
+                LOGGER.info(f"Deleted {image_blob_name}.")
         return images_purged
+
+    def _remove_repeat_blobs(self, image_blobs):
+        images_purged = []
+        r = re.compile("-[0-9]-[0-9]@2x.jpg")
+        repeat_blobs = list(filter(r.match, image_blobs))
+        for repeat_blob in repeat_blobs:
+            self.bucket.delete_blob(repeat_blob)
+            images_purged.append(repeat_blob)
+            LOGGER.info(f"Deleted {repeat_blob.name}")
 
     def organize_retina_images(self, folder: str) -> List:
         """
@@ -122,12 +131,8 @@ class GCS:
 
         :returns: List
         """
-        image_blobs = [
-            blob
-            for blob in self.get(folder)
-            if "@2x" in blob.name and "/_retina" not in blob.name
-        ]
         moved_blobs = []
+        image_blobs = self._get_retina_blobs(folder)
         for image_blob in image_blobs:
             image_folder, image_name = self._get_folder_and_filename(image_blob)
             moved_blob = self.bucket.blob(f"{image_folder}/_retina/{image_name}")
@@ -163,7 +168,7 @@ class GCS:
         """Find images missing a retina-quality counterpart."""
         images_transformed = []
         LOGGER.info("Generating retina images...")
-        for image_blob in self.fetch_blobs(folder):
+        for image_blob in self._get_standard_blobs(folder):
             new_image_name = image_blob.name.replace(".jpg", "@2x.jpg")
             mobile_blob = self.bucket.blob(new_image_name)
             if mobile_blob.exists() is False:
@@ -183,7 +188,7 @@ class GCS:
         """
         images_transformed = []
         LOGGER.info("Generating mobile images...")
-        for image_blob in self.fetch_blobs(folder, image_type="retina"):
+        for image_blob in self._get_retina_blobs(folder):
             mobile_blob = self._new_image_blob(image_blob, "mobile")
             images_transformed.append(mobile_blob)
         return images_transformed

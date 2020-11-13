@@ -1,13 +1,13 @@
 beautifulsoup4==4.9.3
 boto==2.49.0
-botocore==1.19.15
+botocore==1.19.17
 cachetools==4.1.1
 certifi==2020.11.8
 cffi==1.14.3; python_version >= "3.5"
 chardet==3.0.4
 click==7.1.2
 colorama==0.4.4; sys_platform == "win32"
-ddtrace==0.43.1
+ddtrace==0.44.0
 extruct==0.10.0
 flask==1.1.2
 flask-cors==3.0.9
@@ -54,7 +54,7 @@ pytz==2020.4
 pyyaml==5.3.1
 rdflib==4.2.2
 rdflib-jsonld==0.5.0
-requests==2.24.0
+requests==2.25.0
 rsa==4.6; python_version >= "3.5"
 simplejson==3.17.2
 six==1.15.0
@@ -65,7 +65,7 @@ tenacity==6.2.0
 twilio==6.47.0
 typing-extensions==3.7.4.3
 typing-inspect==0.6.0
-urllib3==1.25.11
+urllib3==1.26.2
 uwsgi==2.0.19.1
 w3lib==1.22.0
 webencodings==0.5.1
