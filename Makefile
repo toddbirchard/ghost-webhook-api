@@ -43,10 +43,8 @@ restart: env
 
 
 .PHONY: deploy
-deploy:
+deploy: update
 	service $(PROJECTNAME) stop
-	git stash
-	git pull origin master
 	$(shell . ./deploy.sh)
 	service $(PROJECTNAME) start
 	service $(PROJECTNAME) status
