@@ -23,8 +23,9 @@ def formatter(record):
             subset.update({"exception": log["exception"]})
         return json.dumps(subset)
 
-    record["extra"]["serialized"] = serialize(record)
-    return "{extra[serialized]},\n"
+    if type(record) is not str:
+        record["extra"]["serialized"] = serialize(record)
+        return "{extra[serialized]},\n"
 
 
 def create_logger() -> logger:
