@@ -328,10 +328,11 @@ class GCS:
                 im_resized = im.resize((600, 346))
                 new_image_bytes = io.BytesIO()
                 mobile_image = im_resized.save(new_image_bytes, 'JPEG', quality=90, optimize=True)
-                new_image_blob.upload_from_string(
-                    mobile_image.getvalue(), content_type=content_types[content_type]
-                )
-                return new_image_blob.name
+                if mobile_image is not None:
+                    new_image_blob.upload_from_string(
+                        mobile_image.getvalue(), content_type=content_types[content_type]
+                    )
+                    return new_image_blob.name
         return None
 
     @staticmethod
