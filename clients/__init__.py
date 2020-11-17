@@ -3,6 +3,7 @@ from google.cloud import bigquery as bigquery_client
 
 from clients.database import Database
 from clients.ghost import Ghost
+from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
 from config import Config
@@ -35,3 +36,7 @@ sms = Twilio(
 
 # Google BigQuery
 bigquery = bigquery_client.Client()
+
+mailgun = Mailgun(
+    Config.MAILGUN_EMAIL_SERVER, Config.MAILGUN_FROM_SENDER, Config.MAILGUN_API_KEY
+)

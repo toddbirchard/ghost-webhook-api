@@ -1,9 +1,9 @@
 """Newsletter subscription management."""
-import requests
 import simplejson as json
 from flask import current_app as api
 from flask import jsonify, make_response, request
 
+from clients import mailgun
 from clients.log import LOGGER
 
 
@@ -16,19 +16,17 @@ def newsletter_subscribe():
     email = request.json.get("email")
     name = request.json.get("name").title()
     body = {
-        "from": "todd@mail.hackersandslackers.com",
+        "from": "todd@hackersandslackers.com",
         "to": email,
         "subject": api.config["MAILGUN_SUBJECT_LINE"],
         "template": api.config["MAILGUN_EMAIL_TEMPLATE"],
         "h:X-Mailgun-Variables": json.dumps({"name": name}),
+        "o:tracking": True,
     }
-    req = requests.post(
-        endpoint,
-        auth=("api", api.config["MAILGUN_API_KEY"]),
-        data=body,
-    )
-    LOGGER.success(f"Welcome email sent to {name} <{email}>.")
-    return make_response(jsonify(req.json()), 200, {"Content-Type": "application/json"})
+    response = mailgun.send_email(body)
+    if response.status_code == 200:
+        return make_response(response.json(), 200, {"Content-Type": "application/json"})
+    return make_response(response, 422, {"Content-Type": "text/plain"})
 
 
 @api.route("/newsletter/unsubscribe", methods=["POST"])

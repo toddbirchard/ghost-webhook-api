@@ -5,7 +5,7 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 from mixpanel import Mixpanel
 
-from clients import db, ghost
+from clients import db, ghost, mailgun
 from clients.log import LOGGER
 
 
@@ -32,12 +32,15 @@ def new_user():
 @LOGGER.catch
 @api.route("/members/comments", methods=["POST"])
 def new_comment():
-    """Parse form submission into comment SQL table."""
+    """Parse form submission into comment SQL table and notify post author."""
     data = request.get_json()
     LOGGER.info(data)
     user_role = data.get("user_role", None)
     if data.get("author_name") == data.get("user_name"):
         user_role = "author"
+    else:
+        post = ghost.get_post(data.get("id"))
+        mailgun.send_comment_notification_email(post, data)
     comment = {
         "comment_id": data.get("id"),
         "user_name": data.get("user_name"),

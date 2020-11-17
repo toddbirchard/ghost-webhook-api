@@ -103,7 +103,7 @@ class GCS:
             "-1-2",
             ".webp",
             "_retina/_retina",
-            "_retina/_mobile/"
+            "_retina/_mobile/",
         ]
         blobs = self.get(
             folder,
@@ -139,7 +139,7 @@ class GCS:
         image_blobs = self._get_retina_blobs(folder)
         for image_blob in image_blobs:
             image_folder, image_name = self._get_folder_and_filename(image_blob)
-            if '/_retina/' in image_name:
+            if "/_retina/" in image_name:
                 pass
             moved_blob = self.bucket.blob(f"{image_folder}/_retina/{image_name}")
             if moved_blob.exists() is False:
@@ -152,7 +152,7 @@ class GCS:
             LOGGER.info(f"Ignored moving `{moved_blob.name}`")
         return moved_blobs
 
-    '''def image_headers(self, folder: str) -> List:
+    """def image_headers(self, folder: str) -> List:
         header_blobs = []
         image_blobs = [blob for blob in self.get(folder)]
         for image_blob in image_blobs:
@@ -171,7 +171,7 @@ class GCS:
                 self.bucket.copy_blob(image_blob, self.bucket)
                 header_blobs.append(image_blob.name)
                 LOGGER.info(f"Applied content-type `image/png` to {image_blob.name}")
-        return header_blobs'''
+        return header_blobs"""
 
     @LOGGER.catch
     def retina_transformations(self, folder: str) -> List[Optional[str]]:
@@ -262,9 +262,7 @@ class GCS:
         """
         image_folder, image_name = self._get_folder_and_filename(image_blob)
         if image_type == "standard":
-            new_image_name = (
-                f"{image_folder.replace('/_retina', '').replace('/_mobile', '')}/{image_name.replace('@2x', '')}"
-            )
+            new_image_name = f"{image_folder.replace('/_retina', '').replace('/_mobile', '')}/{image_name.replace('@2x', '')}"
             self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
             LOGGER.info(f"Created standard image `{new_image_name}`")
             return new_image_name
@@ -277,7 +275,7 @@ class GCS:
                 self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
                 LOGGER.info(f"Created retina image `{new_image_name}`")
                 return new_image_name
-        elif image_type == "mobile" and '@2x' in image_name:
+        elif image_type == "mobile" and "@2x" in image_name:
             new_image_name = (
                 f"{image_folder.replace('/_retina', '/_mobile')}/{image_name}"
             )
@@ -327,10 +325,13 @@ class GCS:
                 }
                 im_resized = im.resize((600, 346))
                 new_image_bytes = io.BytesIO()
-                mobile_image = im_resized.save(new_image_bytes, 'JPEG', quality=90, optimize=True)
+                mobile_image = im_resized.save(
+                    new_image_bytes, "JPEG", quality=90, optimize=True
+                )
                 if mobile_image is not None:
                     new_image_blob.upload_from_string(
-                        mobile_image.getvalue(), content_type=content_types[content_type]
+                        mobile_image.getvalue(),
+                        content_type=content_types[content_type],
                     )
                     return new_image_blob.name
         return None
