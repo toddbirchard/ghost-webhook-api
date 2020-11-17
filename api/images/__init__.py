@@ -10,7 +10,7 @@ headers = {"content-type": "application/json"}
 
 @LOGGER.catch
 @api.route("/images/post", methods=["POST"])
-def create_post_retina_image():
+def optimize_post_image():
     """Generate retina version of a post's feature image if one doesn't exist."""
     post = request.get_json()["post"]["current"]
     feature_image = post.get("feature_image")
@@ -25,7 +25,7 @@ def create_post_retina_image():
 
 
 @api.route("/images/transform", methods=["GET"])
-def transform_images():
+def bulk_transform_images():
     """
     Apply transformations to images uploaded within the current month.
     Optionally accepts a `directory` parameter to override image directory.
@@ -33,7 +33,6 @@ def transform_images():
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
 
     purged_images = gcs.purge_unwanted_images(folder)
-    # headers_images = gcs.image_headers(folder)
     retina_images = gcs.retina_transformations(folder)
     mobile_images = gcs.mobile_transformations(folder)
     standard_images = gcs.standard_transformations(folder)
@@ -47,7 +46,6 @@ def transform_images():
                 "retina": retina_images,
                 "mobile": mobile_images,
                 "standard": standard_images,
-                # "headers": headers_images,
             }
         ),
         200,
@@ -65,7 +63,7 @@ def purge_images():
 
 
 @api.route("/images/mobile", methods=["GET"])
-def transform_mobile_images():
+def bulk_transform_mobile_images():
     """Apply transformations to image uploaded within the current month."""
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
     purged_images = gcs.purge_unwanted_images(folder)
@@ -77,7 +75,7 @@ def transform_mobile_images():
 
 
 @api.route("/images/lynx", methods=["GET"])
-def assign_lynx_images():
+def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = db.execute_query_from_file(
         "api/images/sql/lynx_missing_images.sql", database_name="hackers_prod"
@@ -93,8 +91,8 @@ def assign_lynx_images():
     return make_response(jsonify({"updated": posts}), 200, headers)
 
 
-@api.route("/images/move", methods=["GET"])
-def organize_images():
+@api.route("/images/sort", methods=["GET"])
+def bulk_organize_images():
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
     retina_images = gcs.organize_retina_images(folder)
     image_headers = gcs.image_headers(folder)
@@ -111,11 +109,3 @@ def organize_images():
         200,
         headers,
     )
-
-
-@api.route("/images/headers", methods=["GET"])
-def organize_images_headers():
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    headers_images = gcs.image_headers(folder)
-    LOGGER.success(f"Modified {len(headers_images)} images.")
-    return make_response(jsonify({"headers": headers_images}), 200, headers)
