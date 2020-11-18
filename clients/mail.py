@@ -40,4 +40,6 @@ class Mailgun:
             "o:tracking": True,
             "text": f"Your post `{post['posts'][0]['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['posts'][0]['url'].replace('.app', '.com')}",
         }
-        return self.send_email(body)
+        req = self.send_email(body)
+        if req.status_code == 200:
+            LOGGER.succes(f"{post["posts"][0]["primary_author"]} received comment notification email."
