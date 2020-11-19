@@ -25,35 +25,36 @@ def new_comment():
     data = request.get_json()
     user_role = None
     post = ghost.get_post(data.get("id"))
-    if post['posts'][0]['primary_author']['email'] == data.get("user_email"):
-        user_role = "author"
-    else:
-        mailgun.send_comment_notification_email(post, data)
-    comment = {
-        "comment_id": data.get("id"),
-        "user_name": data.get("user_name"),
-        "user_avatar": data.get("user_avatar"),
-        "user_id": data.get("user_id"),
-        "body": data.get("body"),
-        "post_id": data.get("post_id"),
-        "post_slug": data.get("post_slug"),
-        "user_role": user_role,
-        "created_at": datetime.strptime(
-            data.get("created_at").replace("Z", ""), "%Y-%m-%dT%H:%M:%S.%f"
-        ),
-    }
-    rows = db.insert_records(
-        [comment], table_name="comments", database_name="hackers_prod"
-    )
-    if bool(rows):
-        LOGGER.success(
-            f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`'
+    if post:
+        if post['posts'][0]['primary_author']['email'] == data.get("user_email"):
+            user_role = "author"
+        else:
+            mailgun.send_comment_notification_email(post, data)
+        comment = {
+            "comment_id": data.get("id"),
+            "user_name": data.get("user_name"),
+            "user_avatar": data.get("user_avatar"),
+            "user_id": data.get("user_id"),
+            "body": data.get("body"),
+            "post_id": data.get("post_id"),
+            "post_slug": data.get("post_slug"),
+            "user_role": user_role,
+            "created_at": datetime.strptime(
+                data.get("created_at").replace("Z", ""), "%Y-%m-%dT%H:%M:%S.%f"
+            ),
+        }
+        rows = db.insert_records(
+            [comment], table_name="comments", database_name="hackers_prod"
         )
-        ghost.rebuild_netlify_site()
-        return make_response(
-            f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`',
-            200,
-        )
+        if bool(rows):
+            LOGGER.success(
+                f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`'
+            )
+            ghost.rebuild_netlify_site()
+            return make_response(
+                f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`',
+                200,
+            )
     return make_response(f"Failed to save comment: User={data.get('user_name')} Post={data.get('post_slug')}")
 
 

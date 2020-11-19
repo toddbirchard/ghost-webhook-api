@@ -1,6 +1,6 @@
 """Ghost admin client."""
 from datetime import datetime as date
-from typing import Tuple
+from typing import Tuple, Optional
 
 import jwt
 import requests
@@ -47,14 +47,17 @@ class Ghost:
         LOGGER.info(f"Granted Ghost auth token.")
         return f"Ghost {token.decode()}"
 
-    def get_post(self, post_id) -> dict:
+    def get_post(self, post_id) -> Optional[dict]:
         """Fetch post by ID."""
-        headers = {"Authorization": self.session_token}
-        params = {"include": "authors"}
-        req = requests.get(
-            f"{self.url}/posts/{post_id}", headers=headers, params=params
-        )
-        return req.json()
+        try:
+            headers = {"Authorization": self.session_token}
+            params = {"include": "authors"}
+            req = requests.get(
+                f"{self.url}/posts/{post_id}", headers=headers, params=params
+            )
+            return req.json()
+        except HTTPError as e:
+            LOGGER.error(f"Failed to fetch post `{post_id}`: {e}")
 
     def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
         """
