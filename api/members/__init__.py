@@ -24,7 +24,7 @@ def new_comment():
     """Save user-generated comment to SQL table, and notify post author."""
     data = request.get_json()
     user_role = None
-    post, status_code = ghost.get_post(data.get("id"))
+    post = ghost.get_post(data.get("id"))
     if post:
         if post["primary_author"]["email"] == data.get("user_email"):
             user_role = "author"
