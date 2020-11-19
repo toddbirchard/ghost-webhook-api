@@ -19,12 +19,12 @@ def new_ghost_member():
 
 
 @LOGGER.catch
-@api.route("/members/comments", methods=["POST"])
+@api.route("/members/comment", methods=["POST"])
 def new_comment():
-    """Parse form submission into comment SQL table and notify post author."""
+    """Save user-generated comment to SQL table, and notify post author."""
     data = request.get_json()
     user_role = None
-    post = ghost.get_post(data.get("id"))
+    post, status_code = ghost.get_post(data.get("id"))
     if post:
         if post["primary_author"]["email"] == data.get("user_email"):
             user_role = "author"
