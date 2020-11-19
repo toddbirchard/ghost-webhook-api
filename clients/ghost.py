@@ -58,6 +58,7 @@ class Ghost:
             return req.json()
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch post `{post_id}`: {e}")
+            return None
 
     def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
         """

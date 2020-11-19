@@ -23,14 +23,14 @@ class Mailgun:
                 data=body,
             )
             LOGGER.success(
-                f"Successfully sent email to {body['to']} with subject {body['subject']}"
+                f"Successfully sent email to {body['to']} with subject `{body['subject']}`"
             )
             return req
         except HTTPError as e:
             LOGGER.error(
-                f"Failed to send email to {body['to']} with subject {body['subject']}: {e}"
+                f"Failed to send email to `{body['to']}` with subject `{body['subject']}`: {e}"
             )
-            return f"Failed to send email to {body['to']} with subject {body['subject']}: {e}"
+            return None
 
     def send_comment_notification_email(self, post, comment):
         body = {
@@ -40,13 +40,4 @@ class Mailgun:
             "o:tracking": True,
             "text": f"Your post `{post['posts'][0]['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['posts'][0]['url'].replace('.app', '.com')}",
         }
-        req = self.send_email(body)
-        if req.status_code == 200:
-            LOGGER.success(
-                f"{post['posts'][0]['primary_author']} received comment notification email."
-            )
-        else:
-            LOGGER.error(
-                f"Failed to send comment notification email to {post['posts'][0]['primary_author']} for comment on {post['posts'][0]['title']}"
-            )
-        return req
+        return self.send_email(body)
