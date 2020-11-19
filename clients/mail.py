@@ -35,9 +35,9 @@ class Mailgun:
     def send_comment_notification_email(self, post, comment):
         body = {
             "from": "todd@hackersandslackers.com",
-            "to": post["posts"][0]["primary_author"]["email"],
-            "subject": f"Hackers and Slackers: {comment.get('user_name')} commented on your post `{post['posts'][0]['title']}`",
+            "to": post["primary_author"]["email"],
+            "subject": f"Hackers and Slackers: {comment.get('user_name')} commented on your post `{post['title']}`",
             "o:tracking": True,
-            "text": f"Your post `{post['posts'][0]['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['posts'][0]['url'].replace('.app', '.com')}",
+            "text": f"Your post `{post['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['url'].replace('.app', '.com')}",
         }
         return self.send_email(body)

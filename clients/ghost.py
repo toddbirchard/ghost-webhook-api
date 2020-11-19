@@ -1,6 +1,6 @@
 """Ghost admin client."""
 from datetime import datetime as date
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import jwt
 import requests
@@ -50,14 +50,31 @@ class Ghost:
     def get_post(self, post_id) -> Optional[dict]:
         """Fetch post by ID."""
         try:
-            headers = {"Authorization": self.session_token}
+            headers = {
+                "Authorization": self.session_token,
+                "Content-Type": "application/json",
+            }
             params = {"include": "authors"}
-            req = requests.get(
-                f"{self.url}/posts/{post_id}", headers=headers, params=params
-            )
-            return req.json()
+            endpoint = f"{self.url}/posts/{post_id}"
+            req = requests.get(endpoint, headers=headers, params=params)
+            if req.json().get("errors"):
+                LOGGER.error(
+                    f"Failed to fetch post `{post_id}`: {req.json().get('errors')[0]['message']}"
+                )
+                return None
+            post = req.json()["posts"][0]
+            LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
+            return post
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch post `{post_id}`: {e}")
+            return None
+        except KeyError as e:
+            LOGGER.error(f"KeyError for `{e}` occurred while fetching post `{post_id}`")
+            return None
+        except Exception as e:
+            LOGGER.error(
+                f"Unexpected error occurred while fetching post `{post_id}`: {e}"
+            )
             return None
 
     def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
