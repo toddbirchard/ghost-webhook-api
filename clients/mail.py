@@ -42,4 +42,6 @@ class Mailgun:
         }
         req = self.send_email(body)
         if req.status_code == 200:
-            LOGGER.succes(f"{post["posts"][0]["primary_author"]} received comment notification email."
+            LOGGER.success(
+                f"{post['posts'][0]['primary_author']} received comment notification email."
+            )

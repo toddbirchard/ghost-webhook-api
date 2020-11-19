@@ -48,10 +48,12 @@ class Ghost:
         return f"Ghost {token.decode()}"
 
     def get_post(self, post_id) -> dict:
-        """Fetch post data by ID."""
+        """Fetch post by ID."""
         headers = {"Authorization": self.session_token}
         params = {"include": "authors"}
-        req = requests.get(f"{self.url}/posts/{post_id}", headers=headers params=params)
+        req = requests.get(
+            f"{self.url}/posts/{post_id}", headers=headers, params=params
+        )
         return req.json()
 
     def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
