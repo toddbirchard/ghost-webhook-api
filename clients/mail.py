@@ -49,3 +49,4 @@ class Mailgun:
             LOGGER.error(
                 f"Failed to send comment notification email to {post['posts'][0]['primary_author']} for comment on {post['posts'][0]['title']}"
             )
+        return req

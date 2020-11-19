@@ -20,7 +20,7 @@ def new_ghost_subscription(data: dict) -> Tuple[str, int]:
     }
     response, code = ghost.create_member(body)
     if code == 200:
-        LOGGER.info(
+        LOGGER.success(
             f"Created new Ghost member: {data.get('name')} <{data.get('email')}>"
         )
     else:
