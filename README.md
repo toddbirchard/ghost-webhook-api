@@ -10,7 +10,7 @@
 
 ![Jamstack Automation API](./.github/jamstack@2x.png)
 
-Python API to provide JAMStack-based sites content & image optimization automation, features from third-party services (Mailgun, Twilio, Github, etc), and data pipelines to power data-driven features. Plays nicely with Webhooks typical of JAMStack sites to trigger a myriad of jobs to empower JAMStack sites.
+REST API to provide JAMStack-based sites content & image optimization automation, features from third-party services (Mailgun, Twilio, Github, etc), and data pipelines to power data-driven features. Plays nicely with Webhooks typical of JAMStack sites to trigger a myriad of jobs to empower JAMStack sites.
 
 
 ## Endpoints
@@ -33,12 +33,13 @@ Python API to provide JAMStack-based sites content & image optimization automati
   * **GET** `/images/purge`: Delete unwanted images such as duplicates, unused images, etc.
   * **GET** `/images/mobile`: Generate mobile image variations of post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
+  * **GET** `/images/sort`: Transverses CDN in a given directory (`?directory=`) to organize images into subdirectories based on image type (retina, mobile, etc).
 #### Members
   * **POST** `/members/signup`: Create Ghost member. Accepts payloads from auth providers to allow sign up via Github, Google, etc.
-  * **POST** `/members/comments`: Parse comment form submission into SQL database table.
+  * **POST** `/members/comments`: Accept user-submitted comments for posts. Each submission notifies the post’s author via a Mailgun email.
   * **POST** `/members/mixpanel`: Create Mixpanel profile for new newsletter subscriber.
   * **POST** `/members/newsletter`: Send welcome email to new newsletter subscribers via Mailgun.
-  * **POST** `/members/donation`: Add incoming donation to a historical ledger of donations from BuyMeACoffee.
+  * **POST** `/members/donation`: Adds BuyMeACoffee donations to a historical ledger.
 #### Members
   * **POST** `/newsletter/subscribe`: Send welcome email to new newsletter subscribers via Mailgun.
   * **POST** `/newsletter/unsubscribe`: Receive analytics events when users unsubscribe from newsletters.

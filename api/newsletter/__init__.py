@@ -26,7 +26,7 @@ def newsletter_subscribe():
     response = mailgun.send_email(body)
     if response.status_code == 200:
         return make_response(response.json(), 200, {"Content-Type": "application/json"})
-    return make_response(response, 422, {"Content-Type": "text/plain"})
+    return make_response(response, 202, {"Content-Type": "text/plain"})
 
 
 @api.route("/newsletter/unsubscribe", methods=["POST"])

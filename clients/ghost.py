@@ -55,7 +55,10 @@ class Ghost:
             req = requests.get(
                 f"{self.url}/posts/{post_id}", headers=headers, params=params
             )
-            return req.json()
+            if req.status_code < 300:
+                post = req.json()['posts'][0]
+                LOGGER.info(f"Fetched post {post}")
+                return post
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch post `{post_id}`: {e}")
             return None
