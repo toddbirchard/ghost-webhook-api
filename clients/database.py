@@ -113,7 +113,7 @@ class Database:
 
     def insert_records(
         self, rows: List[dict], table_name=None, database_name=None, replace=False
-    ) -> str:
+    ) -> int:
         """
         Insert rows into table.
 
@@ -131,7 +131,7 @@ class Database:
                 self.engines[database_name].execute(f"TRUNCATE TABLE {table_name}")
             table = self._table(table_name, database_name)
             self.engines[database_name].execute(table.insert(), rows)
-            return f"Inserted {len(rows)} into {table.name}."
+            return len(rows)
         except SQLAlchemyError as e:
             LOGGER.error(e)
             raise e

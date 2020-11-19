@@ -45,3 +45,7 @@ class Mailgun:
             LOGGER.success(
                 f"{post['posts'][0]['primary_author']} received comment notification email."
             )
+        else:
+            LOGGER.error(
+                f"Failed to send comment notification email to {post['posts'][0]['primary_author']} for comment on {post['posts'][0]['title']}"
+            )

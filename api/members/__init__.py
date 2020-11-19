@@ -5,28 +5,17 @@ from flask import current_app as api
 from flask import jsonify, make_response, request
 from mixpanel import Mixpanel
 
+from api.members.subscriptions import new_ghost_subscription
 from clients import db, ghost, mailgun
 from clients.log import LOGGER
 
 
 @api.route("/members/signup", methods=["POST"])
-def new_user():
+def new_ghost_member():
     """Create Ghost member from Netlify identity signup."""
     data = request.get_json()
-    body = {
-        "members": [
-            {
-                "name": data.get("name"),
-                "email": data.get("email"),
-                "note": data.get("ip_address"),
-                "subscribed": True,
-                "comped": False,
-                "labels": [data.get("provider")],
-            }
-        ]
-    }
-    response, code = ghost.create_member(body)
-    return make_response(response, code)
+    response, code = new_ghost_subscription(data)
+    return make_response(response, 202)
 
 
 @LOGGER.catch
@@ -34,12 +23,11 @@ def new_user():
 def new_comment():
     """Parse form submission into comment SQL table and notify post author."""
     data = request.get_json()
-    LOGGER.info(data)
-    user_role = data.get("user_role", None)
-    if data.get("author_name") == data.get("user_name"):
+    user_role = None
+    post = ghost.get_post(data.get("id"))
+    if post['posts'][0]['primary_author']['email'] == data.get("user_email"):
         user_role = "author"
     else:
-        post = ghost.get_post(data.get("id"))
         mailgun.send_comment_notification_email(post, data)
     comment = {
         "comment_id": data.get("id"),
@@ -54,14 +42,19 @@ def new_comment():
             data.get("created_at").replace("Z", ""), "%Y-%m-%dT%H:%M:%S.%f"
         ),
     }
-    result = db.insert_records(
+    rows = db.insert_records(
         [comment], table_name="comments", database_name="hackers_prod"
     )
-    LOGGER.success(
-        f'User `{comment["user_id"]}` successfully commented on {data.get("post_slug")}.'
-    )
-    ghost.rebuild_netlify_site()
-    return make_response(jsonify(result), 200)
+    if bool(rows):
+        LOGGER.success(
+            f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`'
+        )
+        ghost.rebuild_netlify_site()
+        return make_response(
+            f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`',
+            200,
+        )
+    return make_response(f"Failed to save comment: User={data.get('user_name')} Post={data.get('post_slug')}")
 
 
 @api.route("/members/mixpanel", methods=["POST"])
