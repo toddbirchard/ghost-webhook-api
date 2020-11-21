@@ -33,10 +33,10 @@ def bulk_transform_images():
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
 
     purged_images = gcs.purge_unwanted_images(folder)
-    retina_images = gcs.retina_transformations(folder)
+    # retina_images = gcs.retina_transformations(folder)
     mobile_images = gcs.mobile_transformations(folder)
-    standard_images = gcs.standard_transformations(folder)
-    LOGGER.success(
+    # standard_images = gcs.standard_transformations(folder)
+    '''LOGGER.success(
         f"Transformed {len(mobile_images)} mobile, {len(retina_images)} retina, {len(standard_images)} standard images."
     )
     return make_response(
@@ -50,7 +50,7 @@ def bulk_transform_images():
         ),
         200,
         headers,
-    )
+    )'''
 
 
 @api.route("/images/purge", methods=["GET"])

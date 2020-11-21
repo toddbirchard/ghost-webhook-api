@@ -8,6 +8,7 @@ from typing import List, Optional
 import requests
 from google.cloud import storage
 from google.cloud.storage.blob import Blob
+from google.cloud.exceptions import GoogleCloudError
 from PIL import Image
 
 from clients.log import LOGGER
@@ -282,7 +283,6 @@ class GCS:
             new_image_blob = self.bucket.blob(new_image_name)
             if new_image_blob.exists() is False:
                 self._create_mobile_image(image_blob, new_image_blob)
-                LOGGER.info(f"Created mobile image `{new_image_name}`")
                 return new_image_name
         return None
 
@@ -318,22 +318,14 @@ class GCS:
             im = Image.open(stream)
             width, height = im.size
             if width > 1000:
-                content_type = original_image_blob.name.split(".", -1)[1]
-                content_types = {
-                    "jpg": "image/jpeg",
-                    "png": "image/png",
-                }
-                im_resized = im.resize((600, 346))
-                new_image_bytes = io.BytesIO()
-                mobile_image = im_resized.save(
-                    new_image_bytes, "JPEG", quality=90, optimize=True
-                )
-                if mobile_image is not None:
-                    new_image_blob.upload_from_string(
-                        mobile_image.getvalue(),
-                        content_type=content_types[content_type],
-                    )
+                try:
+                    im_resized = im.resize((600, 346)).tobytes()
+                    new_image_blob.upload_from_string(im_resized, content_type="image/jpeg")
+                    LOGGER.success(f"Created mobile image `{new_image_blob.name}`")
                     return new_image_blob.name
+                except GoogleCloudError as e:
+                    LOGGER.error(f"Failed save mobile image `{new_image_blob.name}` for unknown reason: {e}")
+                    return None
         return None
 
     @staticmethod
