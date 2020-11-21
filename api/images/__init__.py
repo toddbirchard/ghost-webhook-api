@@ -94,10 +94,12 @@ def bulk_assign_lynx_images():
     posts = [result.id for result in results]
     for post in posts:
         image = gcs.fetch_random_lynx_image()
-        db.execute_query(
+        result = db.execute_query(
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
             database_name="hackers_prod",
         )
+        if result:
+            LOGGER.info(f"Updated lynx post {post} with image {image}")
     LOGGER.success(f"Updated {len(posts)} lynx posts with image.")
     return make_response(jsonify({"updated": posts}), 200, headers)
 

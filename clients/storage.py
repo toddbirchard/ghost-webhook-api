@@ -6,8 +6,8 @@ from typing import List, Optional
 
 import requests
 from google.cloud import storage
-from google.cloud.storage.blob import Blob
 from google.cloud.exceptions import GoogleCloudError
+from google.cloud.storage.blob import Blob
 from PIL import Image
 
 from clients.log import LOGGER
@@ -52,7 +52,8 @@ class GCS:
         return [
             file
             for file in files
-            if "@2x.jpg" not in file.name
+            if ".jpg" in file.name
+            and "@2x.jpg" not in file.name
             and "/_retina" not in file.name
             and "/_mobile" not in file.name
             and "/authors" not in file.name
@@ -287,15 +288,10 @@ class GCS:
 
     def fetch_random_lynx_image(self) -> str:
         """Fetch random Lynx image from GCS bucket."""
-        lynx_images = self.get(prefix="roundup")
-        images = [
-            f"{self.bucket_http_url}{image.name}"
-            for image in lynx_images
-            if "@2x.jpg" in image.name and "_mobile" not in image.name
-        ]
+        files = self._get_standard_blobs("roundup")
+        images = [f"{self.bucket_http_url}{image.name}" for image in files]
         rand = randint(0, len(images) - 1)
         image = images[rand]
-        LOGGER.info(f"Selected random Lynx image: `{image}`")
         return image
 
     def _create_mobile_image(
@@ -318,12 +314,18 @@ class GCS:
             width, height = im.size
             if width > 1000:
                 try:
-                    im_resized = im.resize((600, 346)).tobytes()
-                    new_image_blob.upload_from_string(im_resized, content_type="image/jpeg")
-                    LOGGER.success(f"Created mobile image `{new_image_blob.name}`")
-                    return new_image_blob.name
+                    with BytesIO() as output:
+                        new_image = im.resize((800, 461))
+                        new_image.save(output, format="JPEG")
+                        new_image_blob.upload_from_string(
+                            output.getvalue(), content_type="image/jpg"
+                        )
+                        LOGGER.success(f"Created mobile image `{new_image_blob.name}`")
+                        return new_image_blob.name
                 except GoogleCloudError as e:
-                    LOGGER.error(f"Failed save mobile image `{new_image_blob.name}` for unknown reason: {e}")
+                    LOGGER.error(
+                        f"Failed save mobile image `{new_image_blob.name}` for unknown reason: {e}"
+                    )
                     return None
         return None
 

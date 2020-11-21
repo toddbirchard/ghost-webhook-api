@@ -65,8 +65,8 @@ class Database:
             result = self.engines[database_name].execute(query)
             return result
         except SQLAlchemyError as e:
-            LOGGER.error(e)
-            return f"Failed to execute SQL query {query}: {e}"
+            LOGGER.error(f"Failed to execute SQL query {query}: {e}")
+            return None
 
     @LOGGER.catch
     def execute_query_from_file(self, sql_file: str, database_name="hackers_prod"):
