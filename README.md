@@ -27,11 +27,12 @@ REST API to provide JAMStack-based sites content & image optimization automation
   * **GET** `/analytics/week`: Export site analytics from a data warehouse to a SQL database. Useful for trend-related features ie: "trending this week" widget.
   * **GET** `/analytics/month`: Export site analytics from data warehouse to a SQL database.
 #### Image Optimization
-  * **GET** `/images/transform`: Generates retina and mobile varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **POST** `/image/transform`: Generate retina and mobile feature_image for a single post upon update.
+  * **GET** `/images/transform`: Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
+  * **GET** `/images/transform/retina`: Same as above, but limited to **retina** transformations only.
+  * **GET** `/images/transform/mobile`: Same as above, but limited to **mobile** transformations only.
   * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
   * **GET** `/images/purge`: Delete unwanted images such as duplicates, unused images, etc.
-  * **GET** `/images/mobile`: Generate mobile image variations of post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/assign/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **GET** `/images/sort`: Transverses CDN in a given directory (`?directory=`) to organize images into subdirectories based on image type (retina, mobile, etc).
 #### Members

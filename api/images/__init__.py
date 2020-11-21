@@ -31,12 +31,11 @@ def bulk_transform_images():
     Optionally accepts a `directory` parameter to override image directory.
     """
     folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-
     purged_images = gcs.purge_unwanted_images(folder)
-    # retina_images = gcs.retina_transformations(folder)
+    retina_images = gcs.retina_transformations(folder)
     mobile_images = gcs.mobile_transformations(folder)
-    # standard_images = gcs.standard_transformations(folder)
-    '''LOGGER.success(
+    standard_images = gcs.standard_transformations(folder)
+    LOGGER.success(
         f"Transformed {len(mobile_images)} mobile, {len(retina_images)} retina, {len(standard_images)} standard images."
     )
     return make_response(
@@ -50,7 +49,31 @@ def bulk_transform_images():
         ),
         200,
         headers,
-    )'''
+    )
+
+
+@api.route("/images/transform/retina", methods=["GET"])
+def bulk_transform_retina_images():
+    """Apply retina transformations to image uploaded within the current month."""
+    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
+    purged_images = gcs.purge_unwanted_images(folder)
+    retina_images = gcs.retina_transformations(folder)
+    LOGGER.success(f"Transformed {len(retina_images)} retina image(s).")
+    return make_response(
+        jsonify({"purged": purged_images, "mobile": retina_images}), 200, headers
+    )
+
+
+@api.route("/images/transform/mobile", methods=["GET"])
+def bulk_transform_mobile_images():
+    """Apply mobile transformations to image uploaded within the current month."""
+    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
+    purged_images = gcs.purge_unwanted_images(folder)
+    mobile_images = gcs.mobile_transformations(folder)
+    LOGGER.success(f"Transformed {len(mobile_images)} mobile image(s).")
+    return make_response(
+        jsonify({"purged": purged_images, "mobile": mobile_images}), 200, headers
+    )
 
 
 @api.route("/images/purge", methods=["GET"])
@@ -60,18 +83,6 @@ def purge_images():
     purged_images = gcs.purge_unwanted_images(folder)
     LOGGER.success(f"Deleted {purged_images} unwanted images.")
     return make_response(jsonify({"purged": purged_images}), 200, headers)
-
-
-@api.route("/images/mobile", methods=["GET"])
-def bulk_transform_mobile_images():
-    """Apply transformations to image uploaded within the current month."""
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    purged_images = gcs.purge_unwanted_images(folder)
-    mobile_images = gcs.mobile_transformations(folder)
-    LOGGER.success(f"Transformed {len(mobile_images)} mobile image(s).")
-    return make_response(
-        jsonify({"purged": purged_images, "mobile": mobile_images}), 200, headers
-    )
 
 
 @api.route("/images/lynx", methods=["GET"])

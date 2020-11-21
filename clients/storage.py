@@ -1,5 +1,4 @@
 """Google Cloud Storage client and image transformer."""
-import io
 import re
 from io import BytesIO
 from random import randint
@@ -185,8 +184,8 @@ class GCS:
         :returns: List[str]
         """
         images_transformed = []
-        image_blobs = self._get_retina_blobs(folder)
-        LOGGER.info(f"Creating standard variants for {len(image_blobs)} images...")
+        image_blobs = self._get_standard_blobs(folder)
+        LOGGER.info(f"Creating retina variants for {len(image_blobs)} images...")
         for image_blob in image_blobs:
             new_image_name = image_blob.name.replace(".jpg", "@2x.jpg")
             retina_blob = self.bucket.blob(new_image_name)
