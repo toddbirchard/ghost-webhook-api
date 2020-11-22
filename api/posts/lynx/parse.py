@@ -3,10 +3,9 @@ import re
 from typing import List
 
 import requests
-import simplejson as json
 from flask import render_template
 
-from api.posts.lynx.doc import mobile_doc
+from api.posts.lynx.mobiledoc import mobile_doc
 from api.posts.lynx.scrape import scrape_link
 from api.posts.lynx.utils import http_headers
 from clients.log import LOGGER
@@ -22,7 +21,8 @@ def generate_link_previews(post: dict) -> str:
     mobile_doc["cards"] = link_previews
     for i, link in enumerate(link_previews):
         mobile_doc["sections"].append([10, i])
-    return json.dumps(mobile_doc)
+    return mobile_doc
+    # return json.dumps(mobile_doc)
 
 
 def generate_bookmark_html(html):

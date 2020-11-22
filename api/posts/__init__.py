@@ -9,7 +9,7 @@ from api.moment import get_current_datetime, get_current_time
 from clients import db, gcs, ghost
 from clients.log import LOGGER
 
-from .lynx.cards import generate_bookmark_html, generate_link_previews
+from .lynx.parse import generate_bookmark_html, generate_link_previews
 from .read import get_queries
 
 
@@ -85,15 +85,27 @@ def update_post():
     return make_response("JSON body missing from request.", 422)
 
 
-@api.route("/posts/test", methods=["POST"])
+@api.route("/posts/test/html", methods=["POST"])
 def test_bookmark_cards():
+    """Placeholder endpoint to test accuracy of scraping output"""
     data = request.get_json()
     post = data["post"]["current"]
     html = post.get("html")
     primary_tag = post.get("primary_tag")
     if html and ("kg-card" not in html) and primary_tag is not None:
         doc = generate_bookmark_html(html)
-        # LOGGER.info(f'Generated Previews: {doc}.')
+        return make_response(doc, 200, "")
+
+
+@api.route("/posts/test/mobiledoc", methods=["POST"])
+def test_mobiledoc_cards():
+    data = request.get_json()
+    post = data["post"]["current"]
+    html = post.get("html")
+    primary_tag = post.get("primary_tag")
+    if html and ('kg-card' not in html):
+        doc = generate_link_previews(post)
+        LOGGER.info(doc)
         return make_response(doc, 200, "")
 
 
