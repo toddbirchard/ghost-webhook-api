@@ -1,0 +1,20 @@
+<figure class="kg-card kg-bookmark-card">
+    <a class="kg-bookmark-container" href="{{ url }}">
+        <div class="kg-bookmark-content">
+            <div class="kg-bookmark-title">{{ title }}</div>
+            {% if description %}
+                <div class="kg-bookmark-description">{{ description }}</div>
+            {% endif %}
+            <div class="kg-bookmark-metadata">
+                {% if icon %}<img class="kg-bookmark-icon" src="{{ icon }}" alt="{{ title }} icon"/>{% endif %}
+                {% if author %}<div class="kg-bookmark-author">{{ author }}</div>{% endif %}
+                {% if publisher %}<div class="kg-bookmark-publisher">{{ publisher }}</div>{% endif %}
+            </div>
+        </div>
+        {% if image %}
+            <div class="kg-bookmark-thumbnail">
+                <img src="{{ image }}" alt="{{ title }}"/>
+            </div>
+        {% endif %}
+    </a>
+</figure>

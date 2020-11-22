@@ -39,7 +39,7 @@ def scrape_link(url: str) -> Optional[List[dict]]:
                 "description": get_description(json_ld, html),
                 "author": get_author(json_ld, html),
                 "publisher": get_publisher(json_ld),
-                "thumbnail": get_image(json_ld, html),
+                "image": get_image(json_ld, html),
                 "icon": get_favicon(html, base_url),
             },
         },
@@ -131,11 +131,14 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     """Fetch author name via extruct with BeautifulSoup fallback."""
     author = None
     if bool(json_ld) and json_ld.get("author"):
+        author = json_ld["author"]
+        print(json_ld["author"])
+        print(type(json_ld["author"]))
         if isinstance(json_ld["author"], list):
-            author = json_ld["author"][0]
+            author = json_ld["author"][0].get("name")
         if bool(author) and isinstance(json_ld["author"], dict):
             author = json_ld["author"].get("name")
-        if bool(author) and isinstance(author, str):
+        if bool(author) and isinstance(json_ld["author"], str):
             return author
     # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("meta", property="author"):
@@ -145,6 +148,7 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     elif html.find("a", attrs={"class": "commit-author"}):
         author = html.find("a", attrs={"class": "commit-author"}).get("href")
     if author:
+        LOGGER.info(author)
         return author
     else:
         return ""
@@ -156,7 +160,7 @@ def get_publisher(json_ld: dict) -> Optional[str]:
     if bool(json_ld) and json_ld.get("publisher"):
         if isinstance(json_ld["publisher"], list):
             publisher = json_ld["publisher"][0]
-        if bool(publisher) and isinstance(json_ld["publisher"], dict):
+        if bool(publisher) and isinstance(publisher, dict):
             publisher = json_ld["publisher"].get("name")
         if bool(publisher) and isinstance(publisher, str):
             return publisher
