@@ -1,9 +1,9 @@
 """Database client."""
-from typing import List
+from typing import List, Optional
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from clients.log import LOGGER
 
@@ -86,20 +86,22 @@ class Database:
             return f"Failed to execute SQL {sql_file}: {e}"
 
     @LOGGER.catch
-    def fetch_records(self, query, database_name=None) -> List[str]:
+    def fetch_records(self, query, database_name) -> Optional[List[str]]:
         """
         Fetch all rows via query.
 
         :param query: SQL query to run against database.
         :type query: str
         :param database_name: Name of database to connect to.
-        :type database_name: Optional[str]
+        :type database_name: str
         """
         rows = self.engines[database_name].execute(query).fetchall()
-        return [row.items() for row in rows]
+        if bool(rows):
+            return [row.items() for row in rows]
+        return None
 
     @LOGGER.catch
-    def fetch_record(self, query: str, database_name=None):
+    def fetch_record(self, query: str, database_name=None) -> Optional[str]:
         """
         Fetch a single row; typically used to verify whether a
         record already exists (ie: users).
@@ -113,7 +115,7 @@ class Database:
 
     def insert_records(
         self, rows: List[dict], table_name=None, database_name=None, replace=False
-    ) -> int:
+    ) -> Optional[int]:
         """
         Insert rows into table.
 
@@ -134,7 +136,10 @@ class Database:
             return len(rows)
         except SQLAlchemyError as e:
             LOGGER.error(e)
-            raise e
+            return None
+        except IntegrityError as e:
+            LOGGER.error(e)
+            return None
 
     def insert_dataframe(
         self, df: DataFrame, table_name=None, database_name="analytics", action="append"

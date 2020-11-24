@@ -1,10 +1,9 @@
 """Ghost member management."""
-from datetime import datetime
-
 from flask import current_app as api
 from flask import jsonify, make_response, request
 from mixpanel import Mixpanel
 
+from api.members.comments import parse_comment
 from api.members.subscriptions import new_ghost_subscription
 from clients import db, ghost, mailgun
 from clients.log import LOGGER
@@ -23,40 +22,37 @@ def new_ghost_member():
 def new_comment():
     """Save user-generated comment to SQL table, and notify post author."""
     data = request.get_json()
-    user_role = None
     post = ghost.get_post(data.get("id"))
-    if post:
-        if post["primary_author"]["email"] == data.get("user_email"):
-            user_role = "author"
-        else:
-            mailgun.send_comment_notification_email(post, data)
-        comment = {
-            "comment_id": data.get("id"),
-            "user_name": data.get("user_name"),
-            "user_avatar": data.get("user_avatar"),
-            "user_id": data.get("user_id"),
-            "body": data.get("body"),
-            "post_id": data.get("post_id"),
-            "post_slug": data.get("post_slug"),
-            "user_role": user_role,
-            "created_at": datetime.strptime(
-                data.get("created_at").replace("Z", ""), "%Y-%m-%dT%H:%M:%S.%f"
-            ),
-        }
+    comment = parse_comment(data, post)
+    if comment["user_role"] is None:
+        mailgun.send_comment_notification_email(post, comment)
+    existing_comment = db.fetch_records(
+        f"SELECT * FROM comments WHERE id = '{data.get('id')}';",
+        "hackers_prod",
+    )
+    if existing_comment is None:
         rows = db.insert_records(
             [comment], table_name="comments", database_name="hackers_prod"
         )
         if bool(rows):
             LOGGER.success(
-                f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`'
+                f"New comment `{data.get('id')}` saved on post `{data.get('post_slug')}`"
             )
             ghost.rebuild_netlify_site()
-            return make_response(
-                f'User `{data.get("user_name")}` ({comment["user_id"]}) commented on `{data.get("post_slug")}`',
-                200,
-            )
+            return make_response(comment, 200, {"content-type": "application/json"})
+        LOGGER.warning(f"Comment `{data.get('id')}` already exists.")
+        return make_response(
+            {
+                "errors": f"Failed to save duplicate comment `{data.get('id')}`",
+                "comment": comment,
+            },
+            202,
+            {"content-type": "application/json"},
+        )
     return make_response(
-        f"Failed to save comment: User={data.get('user_name')} Post={data.get('post_slug')}"
+        comment,
+        202,
+        {"content-type": "application/json"},
     )
 
 

@@ -103,7 +103,7 @@ def test_mobiledoc_cards():
     post = data["post"]["current"]
     html = post.get("html")
     primary_tag = post.get("primary_tag")
-    if html and ('kg-card' not in html):
+    if html and ("kg-card" not in html):
         doc = generate_link_previews(post)
         LOGGER.info(doc)
         return make_response(doc, 200, "")

@@ -45,6 +45,7 @@ class Config:
     # Ghost
     GHOST_BASE_URL = environ.get("GHOST_BASE_URL")
     GHOST_ADMIN_API_URL = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
+    GHOST_CONTENT_API_URL = f"{GHOST_BASE_URL}/ghost/api/v3/"
     GHOST_API_USERNAME = environ.get("GHOST_API_USERNAME")
     GHOST_API_PASSWORD = environ.get("GHOST_API_PASSWORD")
     GHOST_CLIENT_ID = environ.get("GHOST_CLIENT_ID")

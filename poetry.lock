@@ -82,7 +82,7 @@ description = "Low-level, data-driven core of boto 3."
 name = "botocore"
 optional = false
 python-versions = "*"
-version = "1.19.23"
+version = "1.19.24"
 
 [package.dependencies]
 jmespath = ">=0.7.1,<1.0.0"
@@ -167,7 +167,7 @@ description = "Extract embedded metadata from HTML markup"
 name = "extruct"
 optional = false
 python-versions = "*"
-version = "0.10.0"
+version = "0.11.0"
 
 [package.dependencies]
 html-text = ">=0.5.1"
@@ -1147,8 +1147,8 @@ boto = [
     {file = "boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a"},
 ]
 botocore = [
-    {file = "botocore-1.19.23-py2.py3-none-any.whl", hash = "sha256:d73a223bf88d067c3ae0a9a3199abe56e99c94267da77d7fed4c39f572f522c0"},
-    {file = "botocore-1.19.23.tar.gz", hash = "sha256:9f9efca44b2ab2d9c133ceeafa377e4b3d260310109284123ebfffc15e28481e"},
+    {file = "botocore-1.19.24-py2.py3-none-any.whl", hash = "sha256:7d4efbc621e3fe17226b356a65526210c9284f9a823ce7be7209108644823c40"},
+    {file = "botocore-1.19.24.tar.gz", hash = "sha256:5975b10dbc6a70c6789b95d083fbb93e4191f13afe25cd7a834cf2168fddbcd8"},
 ]
 cachetools = [
     {file = "cachetools-4.1.1-py3-none-any.whl", hash = "sha256:513d4ff98dd27f85743a8dc0e92f55ddb1b49e060c2d5961512855cda2c01a98"},
@@ -1239,8 +1239,8 @@ ddtrace = [
     {file = "ddtrace-0.44.0.tar.gz", hash = "sha256:bf18821061ce44c0e4b33da63f2e0bdf205887924a58f826ec8bd3ae550a919a"},
 ]
 extruct = [
-    {file = "extruct-0.10.0-py2.py3-none-any.whl", hash = "sha256:0bff6fa9fabf040515abf6fd27880f1e42d649ab8b8e9d8ee65dc8d262597904"},
-    {file = "extruct-0.10.0.tar.gz", hash = "sha256:ed5a1f41f0e023ba1086f98a6d0c282e8c62af01c6224449736e303c02b07497"},
+    {file = "extruct-0.11.0-py2.py3-none-any.whl", hash = "sha256:806e47214b8478d7a357f1dc6c63b56a8ce1796ed28ded3001b0a6287dbf4315"},
+    {file = "extruct-0.11.0.tar.gz", hash = "sha256:44da685e7638509dc8d86427cdc72b5bbe00a8bc6527e0d7219710b97b55ca55"},
 ]
 flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},

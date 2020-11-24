@@ -1,6 +1,6 @@
 """Ghost admin client."""
 from datetime import datetime as date
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import jwt
 import requests
@@ -13,24 +13,30 @@ class Ghost:
     """Ghost admin client."""
 
     def __init__(
-        self, api_url: str, client_id: str, client_secret: str, netlify_build_url: str
+        self,
+        admin_api_url: str,
+        content_api_url: str,
+        client_id: str,
+        client_secret: str,
+        netlify_build_url: str,
     ):
         """
         Ghost admin API client constructor.
 
         :param client_id: Self-supplied client ID
         :param client_secret: Self-supplied client secret
-        :param api_url: Ghost's admin API base URL
+        :param admin_api_url: Ghost's admin API base URL
         :param netlify_build_url: Netlify hook to trigger full site rebuild.
         """
         self.client_id = client_id
+        self.content_api_url = content_api_url
         self.secret = client_secret
-        self.url = api_url
+        self.admin_api_url = admin_api_url
         self.netlify_build_url = netlify_build_url
 
     def _https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
-        endpoint = f"{self.url}/session/"
+        endpoint = f"{self.admin_api_url}/session/"
         headers = {"Authorization": self.session_token}
         req = requests.post(endpoint, headers=headers)
         LOGGER.info(f"Authorization resulted in status code {req.status_code}.")
@@ -55,7 +61,7 @@ class Ghost:
                 "Content-Type": "application/json",
             }
             params = {"include": "authors"}
-            endpoint = f"{self.url}/posts/{post_id}"
+            endpoint = f"{self.admin_api_url}/posts/{post_id}"
             req = requests.get(endpoint, headers=headers, params=params)
             if req.json().get("errors"):
                 LOGGER.error(
@@ -90,7 +96,7 @@ class Ghost:
         """
         try:
             req = requests.put(
-                f"{self.url}/posts/{post_id}/",
+                f"{self.admin_api_url}/posts/{post_id}/",
                 json=body,
                 headers={
                     "Authorization": self.session_token,
@@ -107,6 +113,21 @@ class Ghost:
             LOGGER.error(e.response)
             return e.response.content, e.response.status_code
 
+    def get_authors(self) -> Optional[List[str]]:
+        try:
+            req = requests.get(
+                f"{self.admin_api_url}/users/",
+                headers={"Authorization": self.session_token},
+                params={"key": self.client_id},
+            )
+            if req.status_code == 200:
+                author_emails = [author["email"] for author in req.json()["users"]]
+                LOGGER.info(f"Fetched Ghost authors: {author_emails}")
+                return author_emails
+        except HTTPError as e:
+            LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
+            return None
+
     def create_member(self, body: dict) -> Tuple[str, int]:
         """Create new member.
 
@@ -115,7 +136,7 @@ class Ghost:
         """
         try:
             req = requests.post(
-                f"{self.url}/members/",
+                f"{self.admin_api_url}/members/",
                 json=body,
                 headers={"Authorization": self.session_token},
             )
@@ -151,7 +172,7 @@ class Ghost:
             "Origin": "hackersandslackers.tools",
             "Authority": "hackersandslackers.tools",
         }
-        endpoint = f"{self.url}/db/"
+        endpoint = f"{self.admin_api_url}/db/"
         try:
             req = requests.get(endpoint, headers=headers)
             return req.json()
