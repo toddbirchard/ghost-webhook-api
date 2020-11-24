@@ -46,7 +46,7 @@ def new_comment():
                 "errors": f"Failed to save duplicate comment `{data.get('id')}`",
                 "comment": comment,
             },
-            202,
+            422,
             {"content-type": "application/json"},
         )
     return make_response(
