@@ -31,9 +31,7 @@ def new_comment():
         "hackers_prod",
     )
     if existing_comment is None:
-        rows = db.insert_records(
-            [comment], table_name="comments", database_name="hackers_prod"
-        )
+        rows = db.insert_records([comment], "comments", "hackers_prod")
         if bool(rows):
             LOGGER.success(
                 f"New comment `{data.get('id')}` saved on post `{data.get('post_slug')}`"
@@ -95,13 +93,11 @@ def donation_received():
     }
     existing_donation = db.fetch_record(
         f"SELECT * FROM donations WHERE email = '{email}';",
-        database_name="analytics",
+        "analytics",
     )
     if existing_donation and email:
-        db.execute_query(f"DELETE FROM donations WHERE email = {email}")
-    db.insert_records(
-        [donation_data], table_name="donations", database_name="analytics"
-    )
+        db.execute_query(f"DELETE FROM donations WHERE email = {email}", "hackers_prod")
+    db.insert_records([donation_data], "donations", "analytics")
     LOGGER.success(f"Received donation: {donation}")
     return make_response(
         jsonify({"Inserted": donation}), 200, {"content-type": "application/json"}

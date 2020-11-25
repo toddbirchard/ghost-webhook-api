@@ -8,6 +8,7 @@ then
 else
     python3 -m venv .venv
     . .venv/bin/activate
+    echo
     python3 -m pip install --upgrade pip
     pip install -r requirements.txt
     python3 wsgi.py

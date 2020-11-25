@@ -89,14 +89,14 @@ def purge_images():
 def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = db.execute_query_from_file(
-        "api/images/sql/lynx_missing_images.sql", database_name="hackers_prod"
+        "api/images/sql/lynx_missing_images.sql", "hackers_prod"
     )
     posts = [result.id for result in results]
     for post in posts:
         image = gcs.fetch_random_lynx_image()
         result = db.execute_query(
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
-            database_name="hackers_prod",
+            "hackers_prod",
         )
         if result:
             LOGGER.info(f"Updated lynx post {post} with image {image}")

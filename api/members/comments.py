@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from clients import ghost, mailgun
+from clients import ghost
 
 
 def parse_comment(data: dict, post: dict):

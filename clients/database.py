@@ -21,7 +21,7 @@ class Database:
             ),
         }
 
-    def _table(self, table_name: str, database_name) -> Table:
+    def _table(self, table_name: str, database_name: str) -> Table:
         """
         :param table_name: Name of database table to fetch
         :type table_name: str
@@ -35,7 +35,7 @@ class Database:
         )
 
     @LOGGER.catch
-    def execute_queries(self, queries: dict, database_name="hackers_prod") -> dict:
+    def execute_queries(self, queries: dict, database_name: str) -> dict:
         """Execute collection of SQL queries.
 
         :param queries: Map of query names -> SQL queries.
@@ -52,7 +52,7 @@ class Database:
         return results
 
     @LOGGER.catch
-    def execute_query(self, query: str, database_name="hackers_prod"):
+    def execute_query(self, query: str, database_name: str):
         """
         Execute single SQL query.
 
@@ -69,7 +69,7 @@ class Database:
             return None
 
     @LOGGER.catch
-    def execute_query_from_file(self, sql_file: str, database_name="hackers_prod"):
+    def execute_query_from_file(self, sql_file: str, database_name: str):
         """Execute single SQL query.
 
         :param sql_file: Filepath of SQL query to run.
@@ -86,7 +86,7 @@ class Database:
             return f"Failed to execute SQL {sql_file}: {e}"
 
     @LOGGER.catch
-    def fetch_records(self, query, database_name) -> Optional[List[str]]:
+    def fetch_records(self, query: str, database_name: str) -> Optional[List[str]]:
         """
         Fetch all rows via query.
 
@@ -101,7 +101,7 @@ class Database:
         return None
 
     @LOGGER.catch
-    def fetch_record(self, query: str, database_name=None) -> Optional[str]:
+    def fetch_record(self, query: str, database_name: str) -> Optional[str]:
         """
         Fetch a single row; typically used to verify whether a
         record already exists (ie: users).
@@ -114,7 +114,7 @@ class Database:
         return self.engines[database_name].execute(query).first()
 
     def insert_records(
-        self, rows: List[dict], table_name=None, database_name=None, replace=False
+        self, rows: List[dict], table_name: str, database_name: str, replace=False
     ) -> Optional[int]:
         """
         Insert rows into table.
@@ -142,7 +142,7 @@ class Database:
             return None
 
     def insert_dataframe(
-        self, df: DataFrame, table_name=None, database_name="analytics", action="append"
+        self, df: DataFrame, table_name: str, database_name: str, action="append"
     ):
         """
         Insert Pandas DataFrame into SQL table.
@@ -152,7 +152,7 @@ class Database:
         :param table_name: Name of database table to insert into.
         :type table_name: str
         :param database_name: Name of database to connect to.
-        :type database_name: Optional[str]
+        :type database_name: str
         :param action: Method of dealing with duplicate rows.
         :type action: str
         """

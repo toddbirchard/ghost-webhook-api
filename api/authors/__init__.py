@@ -1,6 +1,6 @@
 """Author management."""
 from flask import current_app as api
-from flask import jsonify, make_response, request
+from flask import make_response, request
 
 from clients import sms
 from clients.log import LOGGER
@@ -27,5 +27,5 @@ def author_post_created():
             sms.send_message(msg)
         return make_response(msg, 200)
     return make_response(
-        jsonify({"response": f"Author is {author_name}, carry on."}), 204
+        f"Author is {author_name}, carry on.", 204, {"content-type:": "text/plain"}
     )

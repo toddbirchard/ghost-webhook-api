@@ -17,7 +17,6 @@ def init_api():
 
     with api.app_context():
         from api import (
-            algolia,
             analytics,
             authors,
             github,
