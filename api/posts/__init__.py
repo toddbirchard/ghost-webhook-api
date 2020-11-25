@@ -64,6 +64,10 @@ def update_post():
                     "twitter_image": feature_image,
                 }
             )
+        if html and "http://" in html:
+            html = html.replace("http://", "https://")
+            body["posts"][0].update({"html": html})
+            LOGGER.info(f"Resolved unsecure links in post `{slug}`")
         """if html and ('kg-card' not in html):
             doc = generate_link_previews(post)
             LOGGER.info(f'Generated Previews for Lynx post {slug}.')
