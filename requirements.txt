@@ -31,7 +31,7 @@ jmespath==0.10.0
 jstyleson==0.0.2
 libcst==0.3.14
 loguru==0.5.3
-lxml==4.6.1
+lxml==4.6.2
 markupsafe==1.1.1
 mf2py==1.1.2
 mixpanel==4.7.0
