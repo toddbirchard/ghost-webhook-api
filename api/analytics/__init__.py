@@ -13,14 +13,12 @@ def migrate_site_analytics():
     """Fetch top searches for current week."""
     weekly_traffic = import_site_analytics("weekly")
     monthly_traffic = import_site_analytics("monthly")
-    yearly_traffic = import_site_analytics("yearly")
     result = {
         "weekly_stats": f"{len(weekly_traffic)} rows",
         "monthly_traffic": f"{len(monthly_traffic)} rows",
-        "yearly_stats": f"{len(yearly_traffic)} rows",
     }
     LOGGER.success(
-        f"Migrated {len(weekly_traffic)} records into `weekly_stats` table, {len(yearly_traffic)} into `yearly_stats`"
+        f"Migrated {len(weekly_traffic)} records into `weekly_stats` table, {len(monthly_traffic)} into `monthly_stats`"
     )
     return make_response(result, 200, {"content-type": "application/json"})
 
