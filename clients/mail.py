@@ -1,6 +1,8 @@
 """Create Mailgun client."""
+from typing import Optional
+
 import requests
-from requests import HTTPError
+from requests import HTTPError, request
 
 from clients.log import LOGGER
 
@@ -14,7 +16,7 @@ class Mailgun:
         self.api_key = api_key
         self.endpoint = f"https://api.mailgun.net/v3/{self.server}/messages"
 
-    def send_email(self, body: dict):
+    def send_email(self, body: dict) -> Optional[request]:
         """Send Mailgun email."""
         try:
             req = requests.post(
@@ -32,7 +34,10 @@ class Mailgun:
             )
             return None
 
-    def send_comment_notification_email(self, post, comment):
+    def send_comment_notification_email(
+        self, post: dict, comment: dict
+    ) -> Optional[request]:
+        """Notify post author when a comment is submitted."""
         body = {
             "from": "todd@hackersandslackers.com",
             "to": post["primary_author"]["email"],

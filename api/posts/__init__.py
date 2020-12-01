@@ -16,7 +16,7 @@ from .read import get_queries
 @LOGGER.catch
 @api.route("/posts/update", methods=["POST"])
 def update_post():
-    """Update post metadata upon save."""
+    """Enrich post metadata upon update."""
     data = request.get_json()
     if data:
         previous_update = data["post"].get("previous")

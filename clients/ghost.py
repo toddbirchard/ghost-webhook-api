@@ -26,7 +26,7 @@ class Ghost:
         :param client_id: Self-supplied client ID
         :param client_secret: Self-supplied client secret
         :param admin_api_url: Ghost's admin API base URL
-        :param netlify_build_url: Netlify hook to trigger full site rebuild.
+        :param netlify_build_url: Netlify webhook to trigger full site rebuild.
         """
         self.client_id = client_id
         self.content_api_url = content_api_url

@@ -25,7 +25,7 @@ def generate_link_previews(post: dict) -> str:
     # return json.dumps(mobile_doc)
 
 
-def generate_bookmark_html(html):
+def generate_bookmark_html(html: str) -> str:
     urls = re.findall('<a href="(.*?)"', html)
     links = remove_404s(urls)
     link_previews = [scrape_link(link) for link in links if link is not None]
