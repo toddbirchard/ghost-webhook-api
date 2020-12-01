@@ -39,19 +39,20 @@ def create_logger() -> logger:
         + "<light-green>{level}</light-green>: "
         + "<light-white>{message}</light-white>",
     )
+    # Readable logs
+    logger.add(
+        "logs/info.log",
+        colorize=True,
+        catch=True,
+        format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
+        + "<light-green>{level}</light-green>: "
+        + "<light-white>{message}</light-white>",
+    )
+    logger.add("logs/info.json", format=formatter, rotation="500 MB", compression="zip")
     if Config.FLASK_ENV == "production":
         # Datadog
         logger.add(
             "logs/info.json", format=formatter, rotation="500 MB", compression="zip"
-        )
-        # Readable logs
-        logger.add(
-            "logs/info.log",
-            colorize=True,
-            catch=True,
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-            + "<light-green>{level}</light-green>: "
-            + "<light-white>{message}</light-white>",
         )
     return logger
 
