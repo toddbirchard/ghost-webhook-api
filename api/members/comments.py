@@ -4,7 +4,7 @@ from typing import Optional
 from clients import ghost
 
 
-def parse_comment(data: dict, post: dict):
+def parse_comment(data: dict, post: dict) -> dict:
     """Parse incoming user comment."""
     return {
         "comment_id": data.get("id"),

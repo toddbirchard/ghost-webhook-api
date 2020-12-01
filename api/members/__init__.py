@@ -96,7 +96,9 @@ def donation_received():
         "analytics",
     )
     if existing_donation and email:
-        db.execute_query(f"DELETE FROM donations WHERE email = {email}", "hackers_prod")
+        db.execute_query(
+            f"DELETE FROM donations WHERE email = '{email}';", "hackers_prod"
+        )
     db.insert_records([donation_data], "donations", "analytics")
     LOGGER.success(f"Received donation: {donation}")
     return make_response(
