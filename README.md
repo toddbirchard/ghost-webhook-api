@@ -20,12 +20,11 @@ REST API to provide JAMStack-based sites content & image optimization automation
   * **POST** `/posts/update`: Populate metadata for a single post upon publish. Supports meta title, og title & description, and feature image where applicable.
   * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
   * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds for a given post upon publish.
-#### Searches
-  * **GET** `/searches/week`: Pull current week's top Algolia search queries and save to a SQL database (useful for building search-related features, ie: search suggestions).
-  * **GET** `/searches/historical`: Export current month's search queries to a SQL database (non-destructive export intended for historical table of searches).
 #### Analytics
   * **GET** `/analytics/week`: Export site analytics from a data warehouse to a SQL database. Useful for trend-related features ie: "trending this week" widget.
   * **GET** `/analytics/month`: Export site analytics from data warehouse to a SQL database.
+  * **GET** `/searches/week`: Pull current week's top Algolia search queries and save to a SQL database (useful for building search-related features, ie: search suggestions).
+  * **GET** `/searches/historical`: Export current month's search queries to a SQL database (non-destructive export intended for historical table of searches).
 #### Image Optimization
   * **POST** `/image/transform`: Generate retina and mobile feature_image for a single post upon update.
   * **GET** `/images/transform`: Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.

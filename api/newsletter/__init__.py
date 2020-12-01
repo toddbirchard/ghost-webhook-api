@@ -10,9 +10,6 @@ from clients.log import LOGGER
 @api.route("/newsletter/subscribe", methods=["POST"])
 def newsletter_subscribe():
     """Send welcome email to newsletter subscriber."""
-    endpoint = (
-        f'https://api.mailgun.net/v3/{api.config["MAILGUN_EMAIL_SERVER"]}/messages'
-    )
     email = request.json.get("email")
     name = request.json.get("name").title()
     body = {

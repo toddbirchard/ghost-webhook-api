@@ -26,7 +26,7 @@ def fetch_sql_files() -> List[str]:
     return files
 
 
-def read_sql_queries(sql_file_paths) -> List[str]:
+def read_sql_queries(sql_file_paths: List) -> List[str]:
     """Read SQL queries from .sql files."""
     queries = []
     for file in sql_file_paths:

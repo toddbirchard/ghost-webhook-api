@@ -9,23 +9,17 @@ from clients.log import LOGGER
 @LOGGER.catch
 @api.route("/authors/post", methods=["POST"])
 def author_post_created():
-    """Notify admin upon author post creation."""
+    """Notify admin user upon author post creation."""
     data = request.get_json()["post"]["current"]
-    title = data["title"]
-    image = data.get("feature_image", None)
-    status = data.get("status")
+    title = data.get("title")
     author_name = data["primary_author"]["name"]
-    author_slug = data["primary_author"]["slug"]
-    if author_slug != "todd":
-        action_taken = "UPDATED"
-        if status != "draft":
-            action_taken = "PUBLISHED"
-        msg = f"{author_name} just {action_taken} a post: `{title}`."
-        if image is None and data["primary_tag"]["slug"] != "roundup":
-            msg = msg.join([msg, "Needs feature image."])
-            LOGGER.info(f"SMS notification triggered by post edit: {msg}")
-            sms.send_message(msg)
-        return make_response(msg, 200)
+    primary_author = data["primary_author"]["id"]
+    authors = data["authors"]
+    if primary_author == 1 and len(authors) > 1:
+        msg = f"{author_name} just updated a post: `{title}`."
+        LOGGER.info(f"SMS notification triggered by post edit: {msg}")
+        sms.send_message(msg)
+        return make_response(msg, 200, {"content-type:": "text/plain"})
     return make_response(
         f"Author is {author_name}, carry on.", 204, {"content-type:": "text/plain"}
     )

@@ -117,7 +117,7 @@ class Database:
         self, rows: List[dict], table_name: str, database_name: str, replace=False
     ) -> Optional[int]:
         """
-        Insert rows into table.
+        Insert rows into SQL table.
 
         :param rows: List of dictionaries to insert where keys are columns.
         :type rows: List[dict]
@@ -125,7 +125,7 @@ class Database:
         :type table_name: str
         :param database_name: Name of database to connect to.
         :type database_name: Optional[str]
-        :param replace: Whether or not to truncate table prior to insert.
+        :param replace: Flag to truncate table prior to insert.
         :type replace: bool
         """
         try:
@@ -157,4 +157,7 @@ class Database:
         :type action: str
         """
         df.to_sql(table_name, self.engines[database_name], if_exists=action)
+        LOGGER.info(
+            f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`."
+        )
         return df.to_json(orient="records")

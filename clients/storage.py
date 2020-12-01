@@ -33,7 +33,7 @@ class GCS:
 
     @property
     def bucket_http_url(self) -> str:
-        """Publicly accessible URL for images.."""
+        """Publicly accessible URL for images."""
         return self.bucket_url
 
     def get(self, prefix: str) -> List[Blob]:
@@ -70,7 +70,7 @@ class GCS:
         """
         Retrieve images from GCS bucket matching directory & filter conditions.
 
-        :param folder: Remote directory to recursively apply image transformations,=.
+        :param folder: Directory to recursively apply image transformations,=.
         :type folder: str
 
         :returns: List[Blob]
@@ -87,7 +87,7 @@ class GCS:
         """
         Delete images which have been compressed or generated multiple times.
 
-        :param folder: Remote directory to recursively apply image transformations.
+        :param folder: Directory to recursively apply image transformations.
         :type folder: str
 
         :returns: List[str]
@@ -129,9 +129,9 @@ class GCS:
     @LOGGER.catch
     def organize_retina_images(self, folder: str) -> List:
         """
-        Move images into respective folder.
+        Move images into their respective folders.
 
-        :param folder: Remote directory to recursively apply image transformations.
+        :param folder: Directory to recursively apply image transformations.
         :type folder: str
 
         :returns: List
