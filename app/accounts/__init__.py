@@ -33,6 +33,7 @@ def new_comment(comment: Comment):
         "hackers_prod",
     )
     if existing_comment is None:
+        comment_dict = parse_comment(comment, post)
         rows = db.insert_records([comment], "comments", "hackers_prod")
         if bool(rows):
             LOGGER.success(

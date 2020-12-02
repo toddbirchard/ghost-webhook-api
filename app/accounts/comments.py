@@ -1,32 +1,33 @@
 from datetime import datetime
 from typing import Optional
 
+from .models import Comment
 from clients import ghost
 
 
-def parse_comment(data: dict, post: dict) -> dict:
+def parse_comment(comment: Comment, post: dict) -> dict:
     """Parse incoming user comment."""
     return {
-        "comment_id": data.get("id"),
-        "user_name": data.get("user_name"),
-        "user_avatar": data.get("user_avatar"),
-        "user_id": data.get("user_id"),
-        "body": data.get("body"),
-        "post_id": data.get("post_id"),
-        "post_slug": data.get("post_slug"),
-        "user_role": get_user_role(data, post),
+        "comment_id": comment.id,
+        "user_name": comment.user_name,
+        "user_avatar": comment.user_avatar,
+        "user_id": comment.user_id,
+        "body": comment.body,
+        "post_id": comment.post_id,
+        "post_slug": comment.post_slug,
+        "user_role": get_user_role(comment, post),
         "created_at": datetime.strptime(
-            data.get("created_at").replace("Z", ""), "%Y-%m-%dT%H:%M:%S.%f"
+            comment.created_at.replace("Z", ""), "%Y-%m-%dT%H:%M:%S.%f"
         ),
     }
 
 
-def get_user_role(data: dict, post: dict) -> Optional[str]:
-    """Determine role of comment author."""
+def get_user_role(comment: Comment, post: dict) -> Optional[str]:
+    """Determine whether a commenter is the post author or site moderator."""
     authors = ghost.get_authors()
     if post:
-        if post["primary_author"]["email"] == data.get("user_email"):
+        if post["primary_author"]["email"] == comment.user_email:
             return "author"
-        elif data.get("user_email") in authors:
+        elif comment.user_email in authors:
             return "moderator"
     return None

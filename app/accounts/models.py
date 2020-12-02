@@ -39,10 +39,8 @@ class Comment(BaseModel):
     user_name: str
     user_avatar: Optional[str]
     user_id: str
+    user_email: str
     body: str
     created_at: str
-    post_url: str
-    post_id: str
     post_slug: str
-    user_email: str
     author_name: str
