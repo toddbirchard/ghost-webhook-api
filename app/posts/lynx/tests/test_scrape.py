@@ -22,42 +22,42 @@ def headers() -> dict:
 
 @pytest.fixture
 def mock_jsonld_1():
-    with open("api/posts/lynx/tests/data/jsonld/post_images_1.json") as file:
+    with open("app/posts/lynx/tests/data/jsonld/post_images_1.json") as file:
         metadata = json.load(file)
         return metadata
 
 
 @pytest.fixture
 def mock_jsonld_2():
-    with open("api/posts/lynx/tests/data/jsonld/post_images_2.json") as file:
+    with open("app/posts/lynx/tests/data/jsonld/post_images_2.json") as file:
         metadata = json.load(file)
         return metadata
 
 
 @pytest.fixture
 def mock_jsonld_3():
-    with open("api/posts/lynx/tests/data/jsonld/post_images_3.json") as file:
+    with open("app/posts/lynx/tests/data/jsonld/post_images_3.json") as file:
         metadata = json.load(file)
         return metadata
 
 
 @pytest.fixture
 def mock_html_1():
-    with open("api/posts/lynx/tests/data/html/post_html_1.html") as file:
+    with open("app/posts/lynx/tests/data/html/post_html_1.html") as file:
         html = BeautifulSoup(file, "html.parser")
         return html
 
 
 @pytest.fixture
 def mock_html_2():
-    with open("api/posts/lynx/tests/data/html/post_html_2.html") as file:
+    with open("app/posts/lynx/tests/data/html/post_html_2.html") as file:
         html = BeautifulSoup(file, "html.parser")
         return html
 
 
 @pytest.fixture
 def mock_html_3():
-    with open("api/posts/lynx/tests/data/html/post_html_3.html") as file:
+    with open("app/posts/lynx/tests/data/html/post_html_3.html") as file:
         html = BeautifulSoup(file, "html.parser")
         return html
 
@@ -69,7 +69,7 @@ def hackers_fetched_post(headers):
     site.url = "https://hackersandslackers.com/creating-django-views/"
     req = requests.get(site.url, headers=headers)
     site.html = req.text
-    with open("api/posts/lynx/tests/data/django_post_json_ld.json") as file:
+    with open("app/posts/lynx/tests/data/django_post_json_ld.json") as file:
         site.json_ld = json.load(file)
     return site
 

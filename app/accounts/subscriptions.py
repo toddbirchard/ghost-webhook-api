@@ -2,31 +2,30 @@ from typing import Tuple
 
 from clients import ghost
 from clients.log import LOGGER
+from .models import NetlifyUser
 
 
-def new_ghost_subscription(data: dict) -> Tuple[str, int]:
+def new_ghost_subscription(user: NetlifyUser) -> Tuple[str, int]:
     """Create Ghost member from Netlify identity signup."""
     body = {
-        "members": [
+        "accounts": [
             {
-                "name": data.get("name"),
-                "email": data.get("email"),
-                "note": data.get("ip_address"),
+                "name": user.name,
+                "email": user.email,
+                "note": user.note,
                 "subscribed": True,
                 "comped": False,
-                "labels": [data.get("provider")],
+                "labels": user.labels,
             }
         ]
     }
     response, code = ghost.create_member(body)
     if code == 200:
-        LOGGER.success(
-            f"Created new Ghost member: {data.get('name')} <{data.get('email')}>"
-        )
+        LOGGER.success(f"Created new Ghost member: {user.name} <{user.email}>")
     else:
         error_type = response["errors"][0]["type"]
         if error_type == "ValidationError":
             LOGGER.info(
-                f"Skipped Ghost member creation for existing user: {data.get('name')} <{data.get('email')}>"
+                f"Skipped Ghost member creation for existing user: {user.name} <{user.email}>"
             )
     return response, code

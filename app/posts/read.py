@@ -17,7 +17,7 @@ def get_queries() -> dict:
 
 def fetch_sql_files() -> List[str]:
     """Fetch all SQL query files in folder."""
-    folder = "api/posts/queries"
+    folder = "app/posts/queries"
     directory = listdir(folder)
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f

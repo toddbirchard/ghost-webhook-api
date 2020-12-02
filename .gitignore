@@ -122,4 +122,4 @@ nohup.out
 nohup
 
 # Temporary image storage
-api/images/tmp/*
+app/images/tmp/*

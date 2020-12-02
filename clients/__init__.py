@@ -6,38 +6,42 @@ from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
-from config import Config
+from config import Settings
 
 # Database connection
-db = Database(uri=Config.SQLALCHEMY_DATABASE_URI, args=Config.SQLALCHEMY_ENGINE_OPTIONS)
+db = Database(
+    uri=Settings().SQLALCHEMY_DATABASE_URI, args=Settings().SQLALCHEMY_ENGINE_OPTIONS
+)
 
 # Google Cloud Storage
 gcs = GCS(
-    bucket_name=Config.GCP_BUCKET_NAME,
-    bucket_url=Config.GCP_BUCKET_URL,
-    bucket_lynx=Config.GCP_LYNX_DIRECTORY,
+    bucket_name=Settings().GCP_BUCKET_NAME,
+    bucket_url=Settings().GCP_BUCKET_URL,
+    bucket_lynx=Settings().GCP_LYNX_DIRECTORY,
 )
 
 # Ghost Admin Client
 ghost = Ghost(
-    admin_api_url=Config.GHOST_ADMIN_API_URL,
-    content_api_url=Config.GHOST_CONTENT_API_URL,
-    client_id=Config.GHOST_CLIENT_ID,
-    client_secret=Config.GHOST_ADMIN_API_KEY,
-    netlify_build_url=Config.GHOST_NETLIFY_BUILD_HOOK,
+    admin_api_url=Settings().GHOST_ADMIN_API_URL,
+    content_api_url=Settings().GHOST_CONTENT_API_URL,
+    client_id=Settings().GHOST_CLIENT_ID,
+    client_secret=Settings().GHOST_ADMIN_API_KEY,
+    netlify_build_url=Settings().GHOST_NETLIFY_BUILD_HOOK,
 )
 
 # Twilio SMS
 sms = Twilio(
-    sid=Config.TWILIO_ACCOUNT_SID,
-    token=Config.TWILIO_AUTH_TOKEN,
-    recipient=Config.TWILIO_RECIPIENT_PHONE,
-    sender=Config.TWILIO_SENDER_PHONE,
+    sid=Settings().TWILIO_ACCOUNT_SID,
+    token=Settings().TWILIO_AUTH_TOKEN,
+    recipient=Settings().TWILIO_RECIPIENT_PHONE,
+    sender=Settings().TWILIO_SENDER_PHONE,
 )
 
 # Google BigQuery
 bigquery = bigquery_client.Client()
 
 mailgun = Mailgun(
-    Config.MAILGUN_EMAIL_SERVER, Config.MAILGUN_FROM_SENDER, Config.MAILGUN_API_KEY
+    Settings().MAILGUN_EMAIL_SERVER,
+    Settings().MAILGUN_FROM_SENDER,
+    Settings().MAILGUN_API_KEY,
 )

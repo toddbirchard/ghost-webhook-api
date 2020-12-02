@@ -5,9 +5,9 @@ from typing import List
 import requests
 from flask import render_template
 
-from api.posts.lynx.mobiledoc import mobile_doc
-from api.posts.lynx.scrape import scrape_link
-from api.posts.lynx.utils import http_headers
+from app.posts.lynx.mobiledoc import mobile_doc
+from app.posts.lynx.scrape import scrape_link
+from app.posts.lynx.utils import http_headers
 from clients.log import LOGGER
 
 

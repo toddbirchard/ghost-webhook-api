@@ -89,7 +89,7 @@ def purge_images():
 def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = db.execute_query_from_file(
-        "api/images/sql/lynx_missing_images.sql", "hackers_prod"
+        "app/images/sql/lynx_missing_images.sql", "hackers_prod"
     )
     posts = [result.id for result in results]
     for post in posts:

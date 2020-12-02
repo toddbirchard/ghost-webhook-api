@@ -1,14 +1,17 @@
 """Author management."""
-from flask import current_app as api
-from flask import make_response, request
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
+
+from app.posts.models import PostUpdate
 from clients import sms
 from clients.log import LOGGER
 
+router = APIRouter(prefix="/authors", tags=["authors"])
 
-@LOGGER.catch
-@api.route("/authors/post", methods=["POST"])
-def author_post_created():
+
+@router.post("/post")
+def author_post_created(post: PostUpdate):
     """Notify admin user upon author post creation."""
     data = request.get_json()["post"]["current"]
     title = data.get("title")
@@ -19,7 +22,7 @@ def author_post_created():
         msg = f"{author_name} just updated a post: `{title}`."
         LOGGER.info(f"SMS notification triggered by post edit: {msg}")
         sms.send_message(msg)
-        return make_response(msg, 200, {"content-type:": "text/plain"})
-    return make_response(
+        return msg
+    return JSONResponse(
         f"Author is {author_name}, carry on.", 204, {"content-type:": "text/plain"}
     )

@@ -1,6 +1,6 @@
 import pytest
 
-from api import init_api
+from app import init_api
 
 
 @pytest.fixture

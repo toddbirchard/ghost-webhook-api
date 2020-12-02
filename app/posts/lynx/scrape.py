@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from w3lib.html import get_base_url
 
-from api.posts.lynx.utils import http_headers
+from app.posts.lynx.utils import http_headers
 from clients.log import LOGGER
 
 
