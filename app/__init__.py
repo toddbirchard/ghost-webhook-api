@@ -1,15 +1,21 @@
 """Initialize app."""
 from functools import lru_cache
 
+from ddtrace.contrib.asgi import TraceMiddleware
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app import analytics, newsletter, posts, accounts, authors
-import config
+
+from app import accounts, analytics, authors, newsletter, posts
+from config import Settings
+from database.orm import Base, SessionLocal, engine
 
 
 @lru_cache()
 def get_settings():
-    return config.Settings()
+    return Settings()
+
+
+Base.metadata.create_all(bind=engine)
 
 
 api = FastAPI(
@@ -19,45 +25,23 @@ api = FastAPI(
     debug=True,
     docs_url="/",
     openapi_url="/api.json",
-    openapi_tags=[
-        {
-            "name": "posts",
-            "description": "Sanitation and optimization of post data.",
-        },
-        {
-            "name": "accounts",
-            "description": "User account signup and actions.",
-        },
-        {
-            "name": "authors",
-            "description": "New author management.",
-        },
-        {
-            "name": "newsletter",
-            "description": "Ghost newsletter subscription management.",
-        },
-        {
-            "name": "analytics",
-            "description": "Fetch site traffic & search query analytics.",
-        },
-    ],
+    openapi_tags=Settings().openapi_tags,
 )
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-]
+
+settings = Depends(get_settings)
+
 api.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=Settings().cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-settings = Depends(get_settings)
+
 api.include_router(analytics.router)
 api.include_router(newsletter.router)
 api.include_router(posts.router)
 api.include_router(accounts.router)
 api.include_router(authors.router)
+
+api = TraceMiddleware(api)

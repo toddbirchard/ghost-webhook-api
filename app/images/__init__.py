@@ -2,8 +2,9 @@
 from flask import current_app as api
 from flask import jsonify, make_response, request
 
-from clients import db, gcs
+from clients import gcs
 from clients.log import LOGGER
+from database import rdbms
 
 headers = {"content-type": "application/json"}
 
@@ -88,13 +89,13 @@ def purge_images():
 @api.route("/images/lynx", methods=["GET"])
 def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
-    results = db.execute_query_from_file(
+    results = rdbms.execute_query_from_file(
         "app/images/sql/lynx_missing_images.sql", "hackers_prod"
     )
     posts = [result.id for result in results]
     for post in posts:
         image = gcs.fetch_random_lynx_image()
-        result = db.execute_query(
+        result = rdbms.execute_query(
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
             "hackers_prod",
         )

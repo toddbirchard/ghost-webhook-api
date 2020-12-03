@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Optional
 
-from .models import Comment
 from clients import ghost
+
+from .models import Comment
 
 
 def parse_comment(comment: Comment, post: dict) -> dict:

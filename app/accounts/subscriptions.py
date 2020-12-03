@@ -2,6 +2,7 @@ from typing import Tuple
 
 from clients import ghost
 from clients.log import LOGGER
+
 from .models import NetlifyUser
 
 

@@ -1,17 +1,18 @@
 """Routes to transform post data."""
-from fastapi import APIRouter
-from fastapi.responses import JSONResponse
-
 from datetime import datetime, timedelta
 from time import sleep
 
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+
 from app.moment import get_current_datetime, get_current_time
-from clients import db, gcs, ghost
+from clients import gcs, ghost
 from clients.log import LOGGER
+from database import rdbms
 
 from .lynx.parse import generate_bookmark_html, generate_link_previews
-from .read import get_queries
 from .models import Post, PostUpdate
+from .read import get_queries
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
@@ -142,7 +143,7 @@ def post_link_previews(post_update: PostUpdate):
 def post_metadata_sanitize():
     """Mass update post metadata."""
     queries = get_queries()
-    results = db.execute_queries(queries, "hackers_prod")
+    results = rdbms.execute_queries(queries, "hackers_prod")
     headers = {"Content-Type": "application/json"}
     LOGGER.success(f"Successfully ran queries: {queries}")
     return results

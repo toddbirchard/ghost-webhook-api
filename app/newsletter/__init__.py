@@ -3,14 +3,11 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.newsletter.models import Subscription
-
-
 from clients import mailgun
 from clients.log import LOGGER
 from config import Settings
 
-
-router = APIRouter(prefix="/newsletter", tags=["newsletter"])
+router = APIRouter(prefix="/subscription", tags=["newsletter"])
 
 
 @router.post("/")

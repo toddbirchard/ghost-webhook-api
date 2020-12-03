@@ -1,17 +1,11 @@
 """Initialize clients and third-party services."""
 from google.cloud import bigquery as bigquery_client
 
-from clients.database import Database
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
 from config import Settings
-
-# Database connection
-db = Database(
-    uri=Settings().SQLALCHEMY_DATABASE_URI, args=Settings().SQLALCHEMY_ENGINE_OPTIONS
-)
 
 # Google Cloud Storage
 gcs = GCS(

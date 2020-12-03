@@ -1,5 +1,6 @@
 """Import analytics from data warehouse to application."""
-from clients import bigquery, db
+from clients import bigquery
+from database import rdbms
 
 
 def import_site_analytics(timeframe: str):
@@ -13,7 +14,7 @@ def import_site_analytics(timeframe: str):
     sql_table = f"{timeframe}_stats"
     results = bigquery.query(sql_query).result()
     df = results.to_dataframe()
-    result = db.insert_dataframe(df, sql_table, "analytics", action="replace")
+    result = rdbms.insert_dataframe(df, sql_table, "analytics", action="replace")
     if result is None:
         return 0
     return result

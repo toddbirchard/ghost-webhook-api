@@ -2,7 +2,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-
 from app.posts.models import PostUpdate
 from clients import sms
 from clients.log import LOGGER

@@ -1,15 +1,21 @@
-from typing import Optional, List
+from datetime import datetime
+from typing import List, Optional
+
 from pydantic import BaseModel
 
 
 class Donation(BaseModel):
+    id: int
     email: str
     name: str
-    link: str
-    created_at: str
-    count: str
-    coffee_id: str
+    count: int
     message: str
+    link: str
+    created_at: datetime
+    coffee_id: str
+
+    class Config:
+        orm_mode = True
 
 
 class NetlifyUser(BaseModel):
@@ -25,6 +31,9 @@ class NetlifyUser(BaseModel):
     avatar_image: Optional[str] = None
     comped: Optional[bool]
 
+    class Config:
+        orm_mode = True
+
 
 class NewUser(BaseModel):
     current: Optional[NetlifyUser]
@@ -35,12 +44,13 @@ class UserEvent(BaseModel):
 
 
 class Comment(BaseModel):
-    id: str
+    comment_id: str
+    post_id: str
+    post_slug: str
+    user_id: str
     user_name: str
     user_avatar: Optional[str]
-    user_id: str
     user_email: str
     body: str
     created_at: str
-    post_slug: str
     author_name: str

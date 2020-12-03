@@ -60,7 +60,7 @@ class Ghost:
                 "Authorization": self.session_token,
                 "Content-Type": "application/json",
             }
-            params = {"include": "authors"}
+            params = {"include": "authors", "key": self.client_id}
             endpoint = f"{self.admin_api_url}/posts/{post_id}"
             req = requests.get(endpoint, headers=headers, params=params)
             if req.json().get("errors"):
@@ -121,11 +121,14 @@ class Ghost:
                 params={"key": self.client_id},
             )
             if req.status_code == 200:
-                author_emails = [author["email"] for author in req.json()["users"]]
-                LOGGER.info(f"Fetched Ghost authors: {author_emails}")
+                author_emails = [author.get("email") for author in req.json()["users"]]
+                LOGGER.info(f"Fetched Ghost authors: {', '.join(author_emails)}")
                 return author_emails
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
+            return None
+        except KeyError as e:
+            LOGGER.error(f"KeyError while fetching Ghost authors: {e}")
             return None
 
     def create_member(self, body: dict) -> Tuple[str, int]:
