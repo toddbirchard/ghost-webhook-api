@@ -20,7 +20,7 @@ router = APIRouter(prefix="/posts", tags=["posts"])
 @router.post(
     "/update",
     summary="Optimize a single post image.",
-    description="Generate retina and mobile feature image for a single post upon update.",
+    description="Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
 )
 def update_post(post_update: PostUpdate):
     """Enrich post metadata upon update."""
@@ -137,7 +137,11 @@ def post_link_previews(post_update: PostUpdate):
         )
 
 
-@router.get("/update")
+@router.get(
+    "/update",
+    summary="Sanitize all post metadata.",
+    description="Run a sequence of queries to ensure all posts have proper metadata.",
+)
 def post_metadata_sanitize():
     """Mass update post metadata."""
     queries = get_queries()
