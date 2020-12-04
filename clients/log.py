@@ -48,7 +48,7 @@ def create_logger() -> logger:
         + "<light-white>{message}</light-white>",
     )
     logger.add("logs/info.json", format=formatter, rotation="500 MB", compression="zip")
-    if Settings().environment == "production":
+    if Settings().ENVIRONMENT == "production":
         # Datadog
         logger.add(
             "logs/info.json", format=formatter, rotation="500 MB", compression="zip"

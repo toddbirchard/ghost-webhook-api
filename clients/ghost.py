@@ -63,7 +63,7 @@ class Ghost:
             params = {"include": "authors", "key": self.client_id}
             endpoint = f"{self.admin_api_url}/posts/{post_id}"
             req = requests.get(endpoint, headers=headers, params=params)
-            if req.json().get("errors"):
+            if req.json().get("errors") is not None:
                 LOGGER.error(
                     f"Failed to fetch post `{post_id}`: {req.json().get('errors')[0]['message']}"
                 )
@@ -132,7 +132,7 @@ class Ghost:
             return None
 
     def create_member(self, body: dict) -> Tuple[str, int]:
-        """Create new member.
+        """Create new Ghost member.
 
         :param body: Create new Ghost member account used to receive newsletters.
         :param body: dict

@@ -238,19 +238,39 @@ class GCS:
         return images_transformed
 
     @LOGGER.catch
-    def create_single_retina_image(self, image_url: str) -> str:
+    def create_single_retina_image(self, image_url: Optional[str]) -> Optional[str]:
         """
         Create retina version of single image.
 
-        :param image_url: Generate single retina image from remote image URL.
+        :param image_url: Image to apply transformation to.
         :type image_url: str
 
-        :returns: str
+        :returns: Optional[str]
+        """
+        if image_url is not None:
+            relative_image_path = image_url.replace(self.bucket_url, "")
+            image_blob = storage.Blob(relative_image_path, self.bucket)
+            if image_blob.exists() is False:
+                retina_blob = self._new_image_blob(image_blob, "retina")
+                return f"{self.bucket_http_url}{retina_blob}"
+        return None
+
+    @LOGGER.catch
+    def create_single_mobile_image(self, image_url: Optional[str]) -> Optional[str]:
+        """
+        Create retina version of single image.
+
+        :param image_url: Image to apply transformation to.
+        :type image_url: str
+
+        :returns: Optional[str]
         """
         relative_image_path = image_url.replace(self.bucket_url, "")
         image_blob = storage.Blob(relative_image_path, self.bucket)
-        retina_blob = self._new_image_blob(image_blob, "retina")
-        return f"{self.bucket_http_url}{retina_blob}"
+        if image_blob.exists() is False:
+            mobile_blob = self._new_image_blob(image_blob, "mobile")
+            return f"{self.bucket_http_url}{mobile_blob}"
+        return None
 
     def _new_image_blob(self, image_blob: Blob, image_type: str) -> Optional[str]:
         """

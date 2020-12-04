@@ -1,92 +1,69 @@
 """Generate optimized images to be served from Google Cloud CDN."""
-from flask import current_app as api
-from flask import jsonify, make_response, request
+from typing import Optional
+
+from fastapi import APIRouter
 
 from clients import gcs
 from clients.log import LOGGER
+from config import Settings
 from database import rdbms
 
-headers = {"content-type": "application/json"}
+from .models import PostUpdate
+
+router = APIRouter(prefix="/images", tags=["images"])
 
 
-@LOGGER.catch
-@api.route("/images/post", methods=["POST"])
-def optimize_post_image():
+@router.post(
+    "/post",
+    summary="Optimize post image.",
+    description="Generate retina and mobile feature_image for a single post upon update.",
+)
+def optimize_post_image(post_update: PostUpdate):
     """Generate retina version of a post's feature image if one doesn't exist."""
-    post = request.get_json()["post"]["current"]
-    feature_image = post.get("feature_image")
-    title = post.get("title")
-    if feature_image is not None and "@2x" not in feature_image:
-        new_image = gcs.create_single_retina_image(feature_image)
-        LOGGER.success(f"Created image for post `{title}`: {new_image}")
-        return make_response(jsonify({title: new_image}), 200, headers)
-    return make_response(
-        f"Post `{post}` already has retina image {feature_image}", 422, headers
-    )
+    post = post_update.post.current
+    feature_image = post.feature_image
+    title = post.title
+    retina_image = gcs.create_single_retina_image(feature_image)
+    mobile_image = gcs.create_single_mobile_image(feature_image)
+    new_images = filter(lambda x: x is not None, [retina_image, mobile_image])
+    LOGGER.info(f"Generated images for post `{title}`: {', '.join(new_images)}")
+    return {"retina": retina_image, "mobile": mobile_image}
 
 
-@api.route("/images/transform", methods=["GET"])
-def bulk_transform_images():
+@router.get("/transform")
+def bulk_transform_images(directory: Optional[str] = None):
     """
     Apply transformations to images uploaded within the current month.
     Optionally accepts a `directory` parameter to override image directory.
     """
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    purged_images = gcs.purge_unwanted_images(folder)
-    retina_images = gcs.retina_transformations(folder)
-    mobile_images = gcs.mobile_transformations(folder)
-    standard_images = gcs.standard_transformations(folder)
+    if directory is None:
+        directory = Settings().GCP_BUCKET_FOLDER
+    purged_images = gcs.purge_unwanted_images(directory)
+    retina_images = gcs.retina_transformations(directory)
+    mobile_images = gcs.mobile_transformations(directory)
+    standard_images = gcs.standard_transformations(directory)
     LOGGER.success(
         f"Transformed {len(mobile_images)} mobile, {len(retina_images)} retina, {len(standard_images)} standard images."
     )
-    return make_response(
-        jsonify(
-            {
-                "purged": purged_images,
-                "retina": retina_images,
-                "mobile": mobile_images,
-                "standard": standard_images,
-            }
-        ),
-        200,
-        headers,
-    )
+    return {
+        "purged": purged_images,
+        "retina": retina_images,
+        "mobile": mobile_images,
+        "standard": standard_images,
+    }
 
 
-@api.route("/images/transform/retina", methods=["GET"])
-def bulk_transform_retina_images():
-    """Apply retina transformations to image uploaded within the current month."""
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    purged_images = gcs.purge_unwanted_images(folder)
-    retina_images = gcs.retina_transformations(folder)
-    LOGGER.success(f"Transformed {len(retina_images)} retina image(s).")
-    return make_response(
-        jsonify({"purged": purged_images, "mobile": retina_images}), 200, headers
-    )
-
-
-@api.route("/images/transform/mobile", methods=["GET"])
-def bulk_transform_mobile_images():
-    """Apply mobile transformations to image uploaded within the current month."""
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    purged_images = gcs.purge_unwanted_images(folder)
-    mobile_images = gcs.mobile_transformations(folder)
-    LOGGER.success(f"Transformed {len(mobile_images)} mobile image(s).")
-    return make_response(
-        jsonify({"purged": purged_images, "mobile": mobile_images}), 200, headers
-    )
-
-
-@api.route("/images/purge", methods=["GET"])
-def purge_images():
+@router.get("/purge")
+def purge_images(directory: Optional[str] = None):
     """Purge unwanted images."""
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    purged_images = gcs.purge_unwanted_images(folder)
-    LOGGER.success(f"Deleted {purged_images} unwanted images.")
-    return make_response(jsonify({"purged": purged_images}), 200, headers)
+    if directory is None:
+        directory = Settings().GCP_BUCKET_FOLDER
+    purged_images = gcs.purge_unwanted_images(directory)
+    LOGGER.success(f"Deleted {purged_images} unwanted images")
+    return {"purged": purged_images}
 
 
-@api.route("/images/lynx", methods=["GET"])
+@router.get("/lynx")
 def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = rdbms.execute_query_from_file(
@@ -100,26 +77,22 @@ def bulk_assign_lynx_images():
             "hackers_prod",
         )
         if result:
-            LOGGER.info(f"Updated lynx post {post} with image {image}")
-    LOGGER.success(f"Updated {len(posts)} lynx posts with image.")
-    return make_response(jsonify({"updated": posts}), 200, headers)
+            LOGGER.info(f"Updated Lynx post {post} with image {image}")
+    LOGGER.success(f"Updated {len(posts)} Lynx posts with image")
+    return {"updated": posts}
 
 
-@api.route("/images/sort", methods=["GET"])
-def bulk_organize_images():
-    folder = request.args.get("directory", api.config["GCP_BUCKET_FOLDER"])
-    retina_images = gcs.organize_retina_images(folder)
-    image_headers = gcs.image_headers(folder)
+@router.get("/sort")
+def bulk_organize_images(directory: Optional[str] = None):
+    """"""
+    if directory is None:
+        directory = Settings().GCP_BUCKET_FOLDER
+    retina_images = gcs.organize_retina_images(directory)
+    image_headers = gcs.image_headers(directory)
     LOGGER.success(
-        f"Moved {len(retina_images)} retina images and modified {len(image_headers)} content-types."
+        f"Moved {len(retina_images)} retina images, modified {len(image_headers)} content types."
     )
-    return make_response(
-        jsonify(
-            {
-                "retina": retina_images,
-                "headers": image_headers,
-            }
-        ),
-        200,
-        headers,
-    )
+    return {
+        "retina": retina_images,
+        "headers": image_headers,
+    }

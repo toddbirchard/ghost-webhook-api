@@ -10,7 +10,11 @@ from config import Settings
 router = APIRouter(prefix="/subscription", tags=["newsletter"])
 
 
-@router.post("/")
+@router.post(
+    "/",
+    summary="Welcome newsletter subscriber.",
+    description="Send a welcome email to new subscribers to Ghost newsletter.",
+)
 async def newsletter_subscribe(subscription: Subscription):
     """Send welcome email to newsletter subscriber."""
     body = {

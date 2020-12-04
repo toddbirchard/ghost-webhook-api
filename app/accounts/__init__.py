@@ -12,7 +12,7 @@ from database.crud import create_comment, create_donation, get_comment, get_dona
 from database.orm import get_db
 from database.schemas import NewComment, NewDonation
 
-router = APIRouter(prefix="/accounts", tags=["accounts"])
+router = APIRouter(prefix="/account", tags=["accounts"])
 
 
 @router.post("/")

@@ -17,7 +17,11 @@ from .read import get_queries
 router = APIRouter(prefix="/posts", tags=["posts"])
 
 
-@router.post("/update")
+@router.post(
+    "/update",
+    summary="Optimize a single post image.",
+    description="Generate retina and mobile feature image for a single post upon update.",
+)
 def update_post(post_update: PostUpdate):
     """Enrich post metadata upon update."""
     previous_update = post_update.post.previous
@@ -31,64 +35,58 @@ def update_post(post_update: PostUpdate):
         ):
             LOGGER.warning("Post update ignored as post was just updated.")
             return "Post update ignored as post was just updated."
-        post = post_update.post.current
-        post_id = post.id
-        slug = post.slug
-        title = post.title
-        feature_image = post.feature_image
-        custom_excerpt = post.custom_excerpt
-        primary_tag = post.primary_tag
-        html = post.html
+    post = post_update.post.current
+    post_id = post.id
+    slug = post.slug
+    title = post.title
+    feature_image = post.feature_image
+    custom_excerpt = post.custom_excerpt
+    primary_tag = post.primary_tag
+    html = post.html
+    time = get_current_time()
+    body = {
+        "posts": [
+            {
+                "meta_title": title,
+                "og_title": title,
+                "twitter_title": title,
+                "meta_description": custom_excerpt,
+                "twitter_description": custom_excerpt,
+                "og_description": custom_excerpt,
+                "updated_at": time,
+            }
+        ]
+    }
+    if primary_tag.slug == "roundup" and feature_image is None:
+        feature_image = gcs.fetch_random_lynx_image()
+        body["posts"][0].update(
+            {
+                "feature_image": feature_image,
+                "og_image": feature_image,
+                "twitter_image": feature_image,
+            }
+        )
+    if html and "http://" in html:
+        html = html.replace("http://", "https://")
+        body["posts"][0].update({"html": html})
+        LOGGER.info(f"Resolved unsecure links in post `{slug}`")
+    """if html and ('kg-card' not in html):
+        doc = generate_link_previews(post)
+        LOGGER.info(f'Generated Previews for Lynx post {slug}.')
+        body['posts'][0].update({
+            "mobiledoc": doc
+        })"""
+    # Update image meta tags
+    if feature_image is not None:
+        body["posts"][0].update(
+            {"og_image": feature_image, "twitter_image": feature_image}
+        )
+    if body["posts"][0].mobiledoc:
+        sleep(1)
         time = get_current_time()
-        body = {
-            "posts": [
-                {
-                    "meta_title": title,
-                    "og_title": title,
-                    "twitter_title": title,
-                    "meta_description": custom_excerpt,
-                    "twitter_description": custom_excerpt,
-                    "og_description": custom_excerpt,
-                    "updated_at": time,
-                }
-            ]
-        }
-        if primary_tag.slug == "roundup" and feature_image is None:
-            feature_image = gcs.fetch_random_lynx_image()
-            body["posts"][0].update(
-                {
-                    "feature_image": feature_image,
-                    "og_image": feature_image,
-                    "twitter_image": feature_image,
-                }
-            )
-        if html and "http://" in html:
-            html = html.replace("http://", "https://")
-            body["posts"][0].update({"html": html})
-            LOGGER.info(f"Resolved unsecure links in post `{slug}`")
-        """if html and ('kg-card' not in html):
-            doc = generate_link_previews(post)
-            LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-            body['posts'][0].update({
-                "mobiledoc": doc
-            })"""
-        # Update image meta tags
-        if feature_image is not None:
-            body["posts"][0].update(
-                {"og_image": feature_image, "twitter_image": feature_image}
-            )
-        if body["posts"][0].mobiledoc:
-            sleep(1)
-            time = get_current_time()
-            body["posts"][0]["updated_at"] = time
-        response, code = ghost.update_post(post_id, body, slug)
-        return {str(code): response}
-    LOGGER.warning("JSON body missing from request.")
-    return JSONResponse(
-        "JSON body missing from request.",
-        status_code=422,
-        headers={"content-type": "text/plain"},
-    )
+        body["posts"][0]["updated_at"] = time
+    response, code = ghost.update_post(post_id, body, slug)
+    return {str(code): response}
 
 
 @router.post("/test/html")
@@ -144,7 +142,6 @@ def post_metadata_sanitize():
     """Mass update post metadata."""
     queries = get_queries()
     results = rdbms.execute_queries(queries, "hackers_prod")
-    headers = {"Content-Type": "application/json"}
     LOGGER.success(f"Successfully ran queries: {queries}")
     return results
 

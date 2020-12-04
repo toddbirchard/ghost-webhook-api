@@ -9,7 +9,7 @@ from .models import Comment
 def parse_comment(comment: Comment, post: dict) -> dict:
     """Parse incoming user comment."""
     return {
-        "comment_id": comment.id,
+        "comment_id": comment.comment_id,
         "user_name": comment.user_name,
         "user_avatar": comment.user_avatar,
         "user_id": comment.user_id,

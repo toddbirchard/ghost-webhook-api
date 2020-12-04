@@ -18,16 +18,16 @@ class Settings(BaseSettings):
     debug: bool = True
 
     # General Config
-    secret_key = getenv("SECRET_KEY")
-    environment: str = getenv("ENVIRONMENT")
+    SECRET_KEY = getenv("SECRET_KEY")
+    ENVIRONMENT: str = getenv("ENVIRONMENT")
     dt: datetime.datetime = datetime.datetime.today()
-    cors_origins = [
+    CORS_ORIGINS = [
         "http://hackersandslackers.com",
         "https://hackersandslackers.app",
         "http://localhost",
         "http://localhost:8080",
     ]
-    openapi_tags = (
+    API_TAGS = (
         [
             {
                 "name": "posts",
@@ -48,6 +48,10 @@ class Settings(BaseSettings):
             {
                 "name": "analytics",
                 "description": "Fetch site traffic & search query analytics.",
+            },
+            {
+                "name": "images",
+                "description": "Optimize images for retina and mobile devices.",
             },
         ],
     )
