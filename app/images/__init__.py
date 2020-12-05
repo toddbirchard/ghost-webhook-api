@@ -30,7 +30,11 @@ def optimize_post_image(post_update: PostUpdate):
     return {"retina": retina_image, "mobile": mobile_image}
 
 
-@router.get("/transform")
+@router.get(
+    "/transform",
+    summary="Run batch optimizations on images.",
+    description="Generate retina and mobile feature image for a single post upon update.",
+)
 def bulk_transform_images(directory: Optional[str] = None):
     """
     Apply transformations to images uploaded within the current month.

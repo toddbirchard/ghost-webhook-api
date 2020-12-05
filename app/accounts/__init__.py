@@ -24,7 +24,11 @@ def new_ghost_member(user_event: UserEvent):
     return {"ghost": response, "mixpanel": mx}
 
 
-@router.post("/comment")
+@router.post(
+    "/comment",
+    summary="New user comment.",
+    description="Store user-generated comments submitted on posts.",
+)
 def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """Save user-generated comment to SQL table, and notify post author."""
     post = ghost.get_post(comment.post_id)
@@ -42,7 +46,12 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     return result.__dict__
 
 
-@router.post("/donation", response_model=NewDonation)
+@router.post(
+    "/donation",
+    response_model=NewDonation,
+    summary="New donation.",
+    description="Save record of new donation to persistent ledger.",
+)
 def create_user(donation: NewDonation, db: Session = Depends(get_db)):
     db_user = get_donation(db, donation.coffee_id)
     if db_user:

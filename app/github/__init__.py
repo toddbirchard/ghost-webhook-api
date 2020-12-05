@@ -7,7 +7,9 @@ from clients.log import LOGGER
 router = APIRouter(prefix="/github", tags=["github"])
 
 
-@router.post("/pr")
+@router.post(
+    "/pr",
+)
 async def github_pr(request: Request):
     """Send SMS notification for all PR activity."""
     payload = await request.json()
