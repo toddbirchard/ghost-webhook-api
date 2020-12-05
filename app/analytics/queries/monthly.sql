@@ -7,10 +7,15 @@ FROM
   hackersgatsbyprod.pages
 WHERE
   timestamp >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 day)
+  AND url NOT LIKE '%/page/%'
+  AND url NOT LIKE '%/tag/%'
+  AND url NOT LIKE '%/series/%'
+  AND url NOT LIKE '%/author/%'
+  AND title IS NOT NULL
 GROUP BY
-  title,
-  url
+  url,
+  title
 ORDER BY
-  COUNT(title) DESC
+  COUNT(url) DESC
 LIMIT
   2000;
