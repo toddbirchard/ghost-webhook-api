@@ -1,6 +1,5 @@
 """Newsletter subscription management."""
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 
 from app.newsletter.models import Subscription
 from clients import mailgun
@@ -32,5 +31,5 @@ async def newsletter_subscribe(subscription: Subscription):
 @router.delete("/")
 def newsletter_unsubscribe(subscription: Subscription):
     """Track user unsubscribe events and spam complaints."""
-    LOGGER.info(f"{subscription.member.previous.name} unsubscribed from newsletter.")
+    LOGGER.info(f"`{subscription.member.previous.name}` unsubscribed from newsletter.")
     return subscription.member.previous

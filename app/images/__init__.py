@@ -14,8 +14,8 @@ router = APIRouter(prefix="/images", tags=["images"])
 
 
 @router.post(
-    "/post",
-    summary="Optimize post image.",
+    "/",
+    summary="Optimize single post image.",
     description="Generate retina and mobile feature_image for a single post upon update.",
 )
 def optimize_post_image(post_update: PostUpdate):
@@ -31,9 +31,11 @@ def optimize_post_image(post_update: PostUpdate):
 
 
 @router.get(
-    "/transform",
-    summary="Run batch optimizations on images.",
-    description="Generate retina and mobile feature image for a single post upon update.",
+    "/",
+    summary="Batch optimize CDN images.",
+    description="Generates retina and mobile varieties of post feature_images. \
+            Defaults to images uploaded within the current month; \
+            accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
 )
 def bulk_transform_images(directory: Optional[str] = None):
     """

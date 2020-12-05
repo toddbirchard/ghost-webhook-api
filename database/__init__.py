@@ -1,6 +1,6 @@
 from config import Settings
 
-from .sqldb import Database
+from .sql_db import Database
 
 # Database connection
 rdbms = Database(

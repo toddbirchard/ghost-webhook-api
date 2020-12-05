@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine
+from sqlalchemy.engine.result import ResultProxy
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from clients.log import LOGGER
@@ -52,7 +53,7 @@ class Database:
         return results
 
     @LOGGER.catch
-    def execute_query(self, query: str, database_name: str):
+    def execute_query(self, query: str, database_name: str) -> Optional[ResultProxy]:
         """
         Execute single SQL query.
 

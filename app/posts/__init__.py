@@ -9,18 +9,20 @@ from app.moment import get_current_datetime, get_current_time
 from clients import gcs, ghost
 from clients.log import LOGGER
 from database import rdbms
+from database.schemas import PostUpdate
 
 from .lynx.parse import generate_bookmark_html, generate_link_previews
-from database.schemas import PostUpdate
-from .read import get_queries
+from .read import collect_sql_queries
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
 
 @router.post(
-    "/update",
+    "/",
     summary="Optimize a single post image.",
-    description="Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
+    description="Generates retina and mobile varieties of post feature_images. \
+        Defaults to images uploaded within the current month; \
+        accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
 )
 def update_post(post_update: PostUpdate):
     """Enrich post metadata upon update."""
@@ -81,12 +83,25 @@ def update_post(post_update: PostUpdate):
         body["posts"][0].update(
             {"og_image": feature_image, "twitter_image": feature_image}
         )
-    if body["posts"][0]['mobiledoc']:
+    if body["posts"][0]["mobiledoc"]:
         sleep(1)
         time = get_current_time()
         body["posts"][0]["updated_at"] = time
     response, code = ghost.update_post(post_id, body, slug)
     return {str(code): response}
+
+
+@router.get(
+    "/",
+    summary="Sanitize metadata for all posts.",
+    description="Run a sequence of queries to ensure all posts have proper metadata.",
+)
+def batch_post_metadata():
+    """Mass update post metadata."""
+    queries = collect_sql_queries()
+    results = rdbms.execute_queries(queries, "hackers_prod")
+    LOGGER.success(f"Successfully ran queries: {queries}")
+    return results
 
 
 @router.post("/embed")
@@ -113,19 +128,6 @@ def post_link_previews(post_update: PostUpdate):
             status_code=202,
             headers={"content-type": "text/plain"},
         )
-
-
-@router.get(
-    "/update",
-    summary="Sanitize all post metadata.",
-    description="Run a sequence of queries to ensure all posts have proper metadata.",
-)
-def post_metadata_sanitize():
-    """Mass update post metadata."""
-    queries = get_queries()
-    results = rdbms.execute_queries(queries, "hackers_prod")
-    LOGGER.success(f"Successfully ran queries: {queries}")
-    return results
 
 
 @router.get("/backup")

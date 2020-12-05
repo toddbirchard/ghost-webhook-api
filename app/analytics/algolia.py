@@ -2,19 +2,19 @@
 from typing import List, Optional
 
 import requests
-from flask import current_app as api
 from requests.exceptions import HTTPError
 
 from app.moment import get_current_date
 from clients.log import LOGGER
+from config import Settings
 
 
 def fetch_algolia_searches(timeframe=7) -> Optional[List[str]]:
     """Fetch single week of searches from Algolia API."""
-    endpoint = f'{api.config["ALGOLIA_BASE_URL"]}/searches'
+    endpoint = f"{Settings().ALGOLIA_BASE_URL}/searches"
     headers = {
-        "x-algolia-application-id": api.config["ALGOLIA_APP_ID"],
-        "x-algolia-app-key": api.config["ALGOLIA_API_KEY"],
+        "x-algolia-application-id": Settings().ALGOLIA_APP_ID,
+        "x-algolia-app-key": Settings().ALGOLIA_API_KEY,
     }
     params = {
         "index": "hackers_posts",

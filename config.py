@@ -31,7 +31,7 @@ class Settings(BaseSettings):
         [
             {
                 "name": "posts",
-                "description": "Sanitation and optimization of post data.",
+                "description": "Sanitation and optimization of post metadata.",
             },
             {
                 "name": "accounts",
@@ -39,7 +39,7 @@ class Settings(BaseSettings):
             },
             {
                 "name": "authors",
-                "description": "New author management.",
+                "description": "Author management.",
             },
             {
                 "name": "newsletter",
@@ -47,15 +47,15 @@ class Settings(BaseSettings):
             },
             {
                 "name": "analytics",
-                "description": "Fetch site traffic & search query analytics.",
+                "description": "Migrate site traffic & search query analytics.",
             },
             {
                 "name": "images",
                 "description": "Optimize images for retina and mobile devices.",
             },
             {
-                "name": "Github",
-                "description": "Notify when Github issues and.",
+                "name": "github",
+                "description": "Send notifications when Github issues/PRs are opened for HackersAndSlackers repos.",
             },
         ],
     )
@@ -65,7 +65,9 @@ class Settings(BaseSettings):
     # Database
     SQLALCHEMY_DATABASE_URI = getenv("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS = {"ssl": {"ca": "./creds/ca-certificate.crt"}}
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "ssl": {"ca": "/Users/toddbirchard/auth/ca-certificate.crt"}
+    }
 
     # Algolia API
     ALGOLIA_BASE_URL = getenv("ALGOLIA_BASE_URL")
@@ -75,7 +77,7 @@ class Settings(BaseSettings):
     # Google Cloud storage
     GCP_BUCKET_URL = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME = getenv("GCP_BUCKET_NAME")
-    GOOGLE_APPLICATION_CREDENTIALS = path.join(basedir, "gcloud.json")
+    GOOGLE_APPLICATION_CREDENTIALS = getenv("GOOGLE_APPLICATION_CREDENTIALS")
     GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY = "roundup"
 
