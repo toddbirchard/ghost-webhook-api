@@ -53,6 +53,10 @@ class Settings(BaseSettings):
                 "name": "images",
                 "description": "Optimize images for retina and mobile devices.",
             },
+            {
+                "name": "Github",
+                "description": "Notify when Github issues and.",
+            },
         ],
     )
 

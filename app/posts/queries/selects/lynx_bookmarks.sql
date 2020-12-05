@@ -1,10 +1,11 @@
 SELECT
     id,
 	title,
-	html
+	html,
+	mobiledoc
 FROM
 	posts
 WHERE
 	title LIKE '%%Lynx%%'
-	AND status = 'scheduled'
+	AND status IN ('scheduled', 'draft')
 	AND html NOT LIKE '%%kg-bookmark-card%%';

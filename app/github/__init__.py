@@ -11,13 +11,17 @@ router = APIRouter(prefix="/github", tags=["github"])
 async def github_pr(request: Request):
     """Send SMS notification for all PR activity."""
     payload = await request.json()
-    action = payload.action
+    action = payload.get("action")
     user = payload["sender"].get("login")
     pull_request = payload["pull_request"]
+
     repo = payload["repository"]
     if user in ("toddbirchard", "dependabot-preview[bot]", "renovate[bot]"):
         return f"Activity from {user} ignored."
-    message = f'PR {action} for repository {repo["name"]}: {pull_request["title"]}` \n\n {pull_request["url"]}'
+    message = f'PR {action} for `{repo["name"]}`: \n \
+     {pull_request["title"]}  \
+     {pull_request["body"]} \
+     {pull_request["url"]}'
     LOGGER.info(message)
     sms.send_message(message)
     return {f"SMS notification sent for {action} for {user}."}

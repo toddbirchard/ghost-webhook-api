@@ -11,7 +11,7 @@ from clients.log import LOGGER
 from database import rdbms
 
 from .lynx.parse import generate_bookmark_html, generate_link_previews
-from .models import Post, PostUpdate
+from database.schemas import PostUpdate
 from .read import get_queries
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -81,34 +81,12 @@ def update_post(post_update: PostUpdate):
         body["posts"][0].update(
             {"og_image": feature_image, "twitter_image": feature_image}
         )
-    if body["posts"][0].mobiledoc:
+    if body["posts"][0]['mobiledoc']:
         sleep(1)
         time = get_current_time()
         body["posts"][0]["updated_at"] = time
     response, code = ghost.update_post(post_id, body, slug)
     return {str(code): response}
-
-
-@router.post("/test/html")
-def test_bookmark_cards(post_update: PostUpdate):
-    """Placeholder endpoint to test accuracy of scraping output"""
-    post = post_update.post.current
-    html = post.html
-    primary_tag = post.primary_tag
-    if html and ("kg-card" not in html) and primary_tag is not None:
-        doc = generate_bookmark_html(html)
-        return doc
-
-
-@router.post("/test/mobiledoc")
-def test_mobiledoc_cards(post_update: PostUpdate):
-    post = post_update.post.current
-    html = post.html
-    primary_tag = post.primary_tag
-    if html and ("kg-card" not in html):
-        doc = generate_link_previews(post.__dict__)
-        LOGGER.info(doc)
-        return doc
 
 
 @router.post("/embed")
@@ -121,7 +99,7 @@ def post_link_previews(post_update: PostUpdate):
     previous = post_update.post.previous
     primary_tag = post.primary_tag
     time = get_current_time()
-    if primary_tag["slug"] == "roundup":
+    if primary_tag.slug == "roundup":
         if html is not None and "kg-card" not in html:
             if previous is not None and "kg-card" not in previous["html"]:
                 doc = generate_link_previews(post.__dict__)
@@ -151,3 +129,26 @@ def backup_database():
     """Export JSON backup of database."""
     json = ghost.get_json_backup()
     return json
+
+
+@router.post("/test/html")
+def test_bookmark_cards(post_update: PostUpdate):
+    """Placeholder endpoint to test accuracy of HTML scrape output."""
+    post = post_update.post.current
+    html = post.html
+    primary_tag = post.primary_tag
+    if html and ("kg-card" not in html) and primary_tag is not None:
+        doc = generate_bookmark_html(html)
+        return doc
+
+
+@router.post("/test/mobiledoc")
+def test_mobiledoc_cards(post_update: PostUpdate):
+    """Placeholder endpoint to test accuracy of mobiledoc scrape output."""
+    post = post_update.post.current
+    html = post.html
+    primary_tag = post.primary_tag
+    if html and ("kg-card" not in html) and primary_tag is not None:
+        doc = generate_link_previews(post.__dict__)
+        LOGGER.info(doc)
+        return doc
