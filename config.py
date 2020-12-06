@@ -68,6 +68,10 @@ class Settings(BaseSettings):
     SQLALCHEMY_ENGINE_OPTIONS: dict = {
         "ssl": {"ca": "/Users/toddbirchard/auth/ca-certificate.crt"}
     }
+    if ENVIRONMENT == 'production':
+        SQLALCHEMY_ENGINE_OPTIONS: dict = {
+            "ssl": {"ca": "creds/ca-certificate.crt"}
+        }
 
     # Algolia API
     ALGOLIA_BASE_URL: str = getenv("ALGOLIA_BASE_URL")
