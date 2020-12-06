@@ -26,6 +26,8 @@ class Settings(BaseSettings):
         "https://hackersandslackers.app",
         "http://localhost",
         "http://localhost:8080",
+        "http://api.hackersandslackers.com",
+        "https://api.hackersandslackers.com"
     ]
     API_TAGS = (
         [
