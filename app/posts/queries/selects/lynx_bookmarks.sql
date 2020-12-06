@@ -8,4 +8,5 @@ FROM
 WHERE
 	title LIKE '%%Lynx%%'
 	AND status IN ('scheduled', 'draft')
-	AND html NOT LIKE '%%kg-bookmark-card%%';
+	AND mobiledoc NOT LIKE '%%bookmark%%'
+    LIMIT 1;

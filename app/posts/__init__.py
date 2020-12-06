@@ -6,12 +6,12 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
+from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from clients import gcs, ghost
 from clients.log import LOGGER
 from database import rdbms
 from database.schemas import PostUpdate
 
-from .lynx.parse import generate_bookmark_html, generate_link_previews
 from .read import collect_sql_queries
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -104,6 +104,13 @@ def batch_post_metadata():
     return results
 
 
+@router.get("/embed")
+def batch_lynx_previews():
+    num_embeds, result = batch_lynx_embeds()
+    LOGGER.success(f"Successfully created {num_embeds} embeds for {len(result)} posts")
+    return result
+
+
 @router.post("/embed")
 def post_link_previews(post_update: PostUpdate):
     """Render anchor tag link previews."""
@@ -113,15 +120,16 @@ def post_link_previews(post_update: PostUpdate):
     html = post.html
     previous = post_update.post.previous
     primary_tag = post.primary_tag
-    time = get_current_time()
     if primary_tag.slug == "roundup":
         if html is not None and "kg-card" not in html:
-            if previous is not None and "kg-card" not in previous["html"]:
-                doc = generate_link_previews(post.__dict__)
+            if previous.get("slug", None) is None:
+                num_embeds, doc = generate_link_previews(post.__dict__)
+                result = rdbms.execute_query(
+                    f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
+                    "hackers_prod",
+                )
                 LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
-                body = {"posts": [{"mobiledoc": doc, "updated_at": time}]}
-                response, code = ghost.update_post(post_id, body, slug)
-                return {f"Updated {slug} with code {code}": doc}
+                return result
         LOGGER.warning(f"Lynx post {slug} already contains previews.")
         return JSONResponse(
             {f"Lynx post {slug} already contains previews."},
@@ -135,17 +143,6 @@ def backup_database():
     """Export JSON backup of database."""
     json = ghost.get_json_backup()
     return json
-
-
-@router.post("/test/html")
-def test_bookmark_cards(post_update: PostUpdate):
-    """Placeholder endpoint to test accuracy of HTML scrape output."""
-    post = post_update.post.current
-    html = post.html
-    primary_tag = post.primary_tag
-    if html and ("kg-card" not in html) and primary_tag is not None:
-        doc = generate_bookmark_html(html)
-        return doc
 
 
 @router.post("/test/mobiledoc")

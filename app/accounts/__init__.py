@@ -1,4 +1,4 @@
-"""Ghost member management."""
+"""User account functionality."""
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -26,7 +26,7 @@ def new_ghost_member(user_event: UserEvent):
 
 @router.post(
     "/comment",
-    summary="New user comment.",
+    summary="New user comment",
     description="Store user-generated comments submitted on posts.",
 )
 def new_comment(comment: NewComment, db: Session = Depends(get_db)):
@@ -49,7 +49,7 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
 @router.post(
     "/donation",
     response_model=NewDonation,
-    summary="New donation.",
+    summary="New BuyMeACoffee donation",
     description="Save record of new donation to persistent ledger.",
 )
 def create_user(donation: NewDonation, db: Session = Depends(get_db)):

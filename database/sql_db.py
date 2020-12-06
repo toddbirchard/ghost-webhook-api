@@ -80,7 +80,7 @@ class Database:
         """
         try:
             query = open(sql_file, "r").read()
-            result = self.engines[database_name].execute(query)
+            result = self.engines[database_name].execute(query).fetchall()
             return result
         except SQLAlchemyError as e:
             LOGGER.error(e)
