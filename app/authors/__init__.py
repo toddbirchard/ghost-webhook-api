@@ -9,7 +9,7 @@ from database.schemas import PostUpdate
 router = APIRouter(prefix="/authors", tags=["authors"])
 
 
-@router.post("/posts/update")
+@router.post("/post/update")
 def author_post_created(post_update: PostUpdate):
     """Notify admin user upon author post creation."""
     data = post_update.post.current
@@ -27,7 +27,7 @@ def author_post_created(post_update: PostUpdate):
     )
 
 
-@router.post("/posts/created")
+@router.post("/post/created")
 def author_post_created(post_update: PostUpdate):
     """Notify when new authors create their first post."""
     data = post_update.post.current

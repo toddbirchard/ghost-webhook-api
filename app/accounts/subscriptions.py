@@ -7,7 +7,14 @@ from .models import NetlifyUser
 
 
 def new_ghost_subscription(user: NetlifyUser) -> Tuple[str, int]:
-    """Create Ghost member from Netlify identity signup."""
+    """
+    Create Ghost member from Netlify identity signup.
+
+    :param user: New user account from Netlify auth.
+    :type user: NetlifyUser
+
+    :returns: Tuple[str, int]
+    """
     body = {
         "accounts": [
             {

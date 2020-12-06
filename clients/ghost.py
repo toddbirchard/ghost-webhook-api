@@ -114,6 +114,11 @@ class Ghost:
             return e.response.content, e.response.status_code
 
     def get_authors(self) -> Optional[List[str]]:
+        """
+        Fetch all Ghost authors.
+
+        :returns: Optional[List[str]]
+        """
         try:
             req = requests.get(
                 f"{self.admin_api_url}/users/",
@@ -136,6 +141,8 @@ class Ghost:
 
         :param body: Create new Ghost member account used to receive newsletters.
         :param body: dict
+
+        :returns: Optional[List[str]]
         """
         try:
             req = requests.post(

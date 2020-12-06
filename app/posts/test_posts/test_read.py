@@ -1,4 +1,4 @@
-from app.posts.read import collect_sql_queries, fetch_sql_files, parse_sql_batch
+from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
 
 
 def test_fetch_sql_files():

@@ -17,7 +17,12 @@ router = APIRouter(prefix="/account", tags=["accounts"])
 
 @router.post("/")
 def new_ghost_member(user_event: UserEvent):
-    """Create Ghost member from Netlify identity signup."""
+    """
+    Create Ghost member from Netlify identity signup.
+
+    :param user_event: Newly created user account.
+    :type user_event: UserEvent
+    """
     user = user_event.member.current
     response, code = new_ghost_subscription(user)
     mx = create_mixpanel_record(user)
@@ -30,7 +35,14 @@ def new_ghost_member(user_event: UserEvent):
     description="Store user-generated comments submitted on posts.",
 )
 def new_comment(comment: NewComment, db: Session = Depends(get_db)):
-    """Save user-generated comment to SQL table, and notify post author."""
+    """
+    Save user-generated comment to SQL table, and notify post author.
+
+    :param comment: User-submitted comment.
+    :type comment: NewComment
+    :param db: ORM Database session.
+    :type db: Session
+    """
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
     if comment.user_email not in authors:
@@ -52,7 +64,15 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     summary="New BuyMeACoffee donation",
     description="Save record of new donation to persistent ledger.",
 )
-def create_user(donation: NewDonation, db: Session = Depends(get_db)):
+def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
+    """
+    Save donations from BuyMeACoffee to database.
+
+    :param donation: New donation.
+    :type donation: NewDonation
+    :param db: ORM Database session.
+    :type db: Session
+    """
     db_user = get_donation(db, donation.coffee_id)
     if db_user:
         raise HTTPException(status_code=400, detail="Donation already created")

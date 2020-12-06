@@ -1,6 +1,7 @@
 """Notify upon Github activity."""
 from fastapi import APIRouter, Request
 
+from app.moment import get_current_time
 from clients import sms
 from clients.log import LOGGER
 
@@ -25,14 +26,44 @@ async def github_pr(request: Request):
     pull_request = payload["pull_request"]
     repo = payload["repository"]
     if user in ("toddbirchard", "dependabot-preview[bot]", "renovate[bot]"):
-        return f"Activity from {user} ignored."
+        return {
+            "notification": {
+                "time": get_current_time(),
+                "status": "ignored",
+                "trigger": {
+                    "type": "github",
+                    "repo": repo["name"],
+                    "title": pull_request["title"],
+                    "user": user,
+                    "action": action,
+                },
+            }
+        }
     message = f'PR {action} for `{repo["name"]}`: \n \
      {pull_request["title"]}  \
      {pull_request["body"]} \
      {pull_request["url"]}'
-    LOGGER.info(message)
-    sms.send_message(message)
-    return {f"SMS notification sent for {action} for {user}."}
+    sms_message = sms.send_message(message)
+    LOGGER.info(f"Github PR {action} for {repo['name']} generated SMS message")
+    return {
+        "notification": {
+            "time": get_current_time(),
+            "status": sms_message.status,
+            "trigger": {
+                "type": "github",
+                "repo": repo["name"],
+                "title": pull_request["title"],
+                "user": user,
+                "action": action,
+            },
+            "sms": {
+                "to": sms_message.to,
+                "from": sms_message.from_,
+                "date_sent": sms_message.date_sent,
+                "message": sms_message.body,
+            },
+        },
+    }
 
 
 @router.post(
@@ -40,7 +71,7 @@ async def github_pr(request: Request):
     summary="Notify upon Github Issue creation.",
     description="Send SMS and Discord notifications upon Issue creation in HackersAndSlackers Github projects.",
 )
-async def github_issue(request: Request):
+async def github_issue(request: Request) -> dict:
     """
     Send SMS and Discord notifications upon issue creation for HackersAndSlackers Github projects.
 
@@ -53,8 +84,38 @@ async def github_issue(request: Request):
     issue = payload["issue"]
     repo = payload["repository"]
     if user in ("toddbirchard", "dependabot-preview[bot]", "renovate[bot]"):
-        return {f"Activity from {user} ignored."}
+        return {
+            "notification": {
+                "time": get_current_time(),
+                "status": "ignored",
+                "trigger": {
+                    "type": "github",
+                    "repo": repo["name"],
+                    "title": issue["title"],
+                    "user": user,
+                    "action": action,
+                },
+            }
+        }
     message = f'Issue {action} for repository {repo["name"]}: `{issue["title"]}` \n\n {issue["url"]}'
-    LOGGER.info(message)
-    sms.send_message(message)
-    return {f"SMS notification sent for {action} for {user}."}
+    sms_message = sms.send_message(message)
+    LOGGER.info(f"Github issue {action} for {repo['name']} generated SMS message")
+    return {
+        "notification": {
+            "time": get_current_time(),
+            "status": sms_message.status,
+            "trigger": {
+                "type": "github",
+                "repo": repo["name"],
+                "title": issue["title"],
+                "user": user,
+                "action": action,
+            },
+            "sms": {
+                "to": sms_message.to,
+                "from": sms_message.from_,
+                "date_sent": sms_message.date_sent,
+                "message": sms_message.body,
+            },
+        },
+    }

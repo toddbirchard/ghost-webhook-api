@@ -10,9 +10,8 @@ from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from clients import gcs, ghost
 from clients.log import LOGGER
 from database import rdbms
+from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
 from database.schemas import PostUpdate
-
-from .read import collect_sql_queries, fetch_raw_lynx_posts
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
@@ -72,12 +71,6 @@ def update_post(post_update: PostUpdate):
         html = html.replace("http://", "https://")
         body["posts"][0].update({"html": html})
         LOGGER.info(f"Resolved unsecure links in post `{slug}`")
-    """if html and ('kg-card' not in html):
-        doc = generate_link_previews(post)
-        LOGGER.info(f'Generated Previews for Lynx post {slug}.')
-        body['posts'][0].update({
-            "mobiledoc": doc
-        })"""
     # Update image meta tags
     if feature_image is not None:
         body["posts"][0].update(
@@ -98,10 +91,18 @@ def update_post(post_update: PostUpdate):
 )
 def batch_post_metadata():
     """Mass update post metadata."""
-    queries = collect_sql_queries()
-    results = rdbms.execute_queries(queries, "hackers_prod")
-    LOGGER.success(f"Successfully ran queries: {queries}")
-    return results
+    queries = collect_sql_queries(subdirectory="/posts/updates")
+    results, total_rows = rdbms.execute_queries(queries, "hackers_prod")
+    LOGGER.success(f"Successfully ran {len(queries)} post queries")
+    return {
+        "db": {
+            "type": "posts",
+            "num_queries": len(queries),
+            "db_name": "hackers_prod",
+            "rows_affected": total_rows,
+            "queries": results,
+        }
+    }
 
 
 @router.get(

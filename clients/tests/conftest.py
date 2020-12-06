@@ -1,7 +1,8 @@
 import pytest
-from config import Settings
+
 from clients.ghost import Ghost
 from clients.mail import Mailgun
+from config import Settings
 
 
 @pytest.fixture

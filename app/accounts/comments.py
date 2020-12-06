@@ -7,7 +7,16 @@ from .models import Comment
 
 
 def parse_comment(comment: Comment, post: dict) -> dict:
-    """Parse incoming user comment."""
+    """
+    Parse incoming user comment.
+
+    :param comment: User-submitted comment.
+    :type comment: Comment
+    :param post: Post on which comment was published.
+    :type post: dict
+
+    :returns: dict
+    """
     return {
         "comment_id": comment.comment_id,
         "user_name": comment.user_name,
@@ -24,7 +33,16 @@ def parse_comment(comment: Comment, post: dict) -> dict:
 
 
 def get_user_role(comment: Comment, post: dict) -> Optional[str]:
-    """Determine whether a commenter is the post author or site moderator."""
+    """
+    Determine if a commenter is a post author, site moderator, or regular user.
+
+    :param comment: User-submitted comment.
+    :type comment: Comment
+    :param post: Post on which comment was published.
+    :type post: dict
+
+    :returns: Optional[str]
+    """
     authors = ghost.get_authors()
     if post:
         if post["primary_author"]["email"] == comment.user_email:

@@ -1,5 +1,5 @@
 """Database client."""
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine, text
@@ -36,7 +36,7 @@ class Database:
         )
 
     @LOGGER.catch
-    def execute_queries(self, queries: dict, database_name: str) -> dict:
+    def execute_queries(self, queries: dict, database_name: str) -> Tuple[dict, int]:
         """Execute collection of SQL queries.
 
         :param queries: Map of query names -> SQL queries.
@@ -47,10 +47,12 @@ class Database:
         :returns: dict
         """
         results = {}
+        total_rows = 0
         for k, v in queries.items():
-            query_result = self.engines[database_name].execute(v)
+            query_result = self.engines[database_name].execute(text(v))
             results[k] = f"{query_result.rowcount} rows affected."
-        return results
+            total_rows += query_result.rowcount
+        return results, total_rows
 
     @LOGGER.catch
     def execute_query(self, query: str, database_name: str) -> Optional[ResultProxy]:

@@ -7,8 +7,7 @@ from clients import gcs
 from clients.log import LOGGER
 from config import Settings
 from database import rdbms
-
-from .models import PostUpdate
+from database.schemas import PostUpdate
 
 router = APIRouter(prefix="/images", tags=["images"])
 
@@ -19,7 +18,12 @@ router = APIRouter(prefix="/images", tags=["images"])
     description="Generate retina and mobile feature_image for a single post upon update.",
 )
 def optimize_post_image(post_update: PostUpdate):
-    """Generate retina version of a post's feature image if one doesn't exist."""
+    """
+    Generate retina version of a post's feature image if one doesn't exist.
+
+    :param post_update: Incoming payload for an updated Ghost post.
+    :type post_update: PostUpdate
+    """
     post = post_update.post.current
     feature_image = post.feature_image
     title = post.title
@@ -41,6 +45,9 @@ def bulk_transform_images(directory: Optional[str] = None):
     """
     Apply transformations to images uploaded within the current month.
     Optionally accepts a `directory` parameter to override image directory.
+
+    :param directory: Remote directory to recursively fetch images and apply transformations.
+    :type directory: Optional[str]
     """
     if directory is None:
         directory = Settings().GCP_BUCKET_FOLDER
@@ -57,16 +64,6 @@ def bulk_transform_images(directory: Optional[str] = None):
         "mobile": mobile_images,
         "standard": standard_images,
     }
-
-
-@router.get("/purge")
-def purge_images(directory: Optional[str] = None):
-    """Purge unwanted images."""
-    if directory is None:
-        directory = Settings().GCP_BUCKET_FOLDER
-    purged_images = gcs.purge_unwanted_images(directory)
-    LOGGER.success(f"Deleted {purged_images} unwanted images")
-    return {"purged": purged_images}
 
 
 @router.get("/lynx")

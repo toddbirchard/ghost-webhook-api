@@ -3,14 +3,16 @@ from os import listdir
 from os.path import isfile, join
 from typing import List
 
+from sqlalchemy.engine.result import ResultProxy
+
 from clients.log import LOGGER
 from config import basedir
 from database import rdbms
 
 
-def collect_sql_queries() -> dict:
+def collect_sql_queries(subdirectory: str = "") -> dict:
     """Create dict of queries to be run against database."""
-    sql_file_paths = fetch_sql_files()
+    sql_file_paths = fetch_sql_files(subdirectory)
     sql_queries = parse_sql_batch(sql_file_paths)
     sql_file_names = [file.split("/")[-1] for file in sql_file_paths]
     query_dict = dict(zip(sql_file_names, sql_queries))
@@ -18,8 +20,15 @@ def collect_sql_queries() -> dict:
 
 
 def fetch_sql_files(subdirectory: str = "") -> List[str]:
-    """Fetch all SQL query files in folder."""
-    folder = f"{basedir}/app/posts/queries{subdirectory}"
+    """
+    Fetch all SQL query files in folder.
+
+    :param subdirectory: Subdirectory containing SQL files to fetch.
+    :type subdirectory: str
+
+    :returns: List[str]
+    """
+    folder = f"{basedir}/database/queries{subdirectory}"
     directory = listdir(folder)
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f
@@ -28,8 +37,15 @@ def fetch_sql_files(subdirectory: str = "") -> List[str]:
     return files
 
 
-def parse_sql_batch(sql_file_paths: List) -> List[str]:
-    """Read SQL queries from .sql files."""
+def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
+    """
+    Read SQL queries from .sql files.
+
+    :param sql_file_paths: List of paths to SQL files to read and parse.
+    :type sql_file_paths: List[str]
+
+    :returns: List[str]
+    """
     queries = []
     for file in sql_file_paths:
         sql_file = open(file, "r")
@@ -39,9 +55,9 @@ def parse_sql_batch(sql_file_paths: List) -> List[str]:
     return queries
 
 
-def fetch_raw_lynx_posts():
+def fetch_raw_lynx_posts() -> ResultProxy:
     """Find all Lynx posts lacking embedded link previews."""
-    sql_file = open(f"{basedir}/app/posts/queries/selects/lynx_bookmarks.sql", "r")
+    sql_file = open(f"{basedir}/database/queries/selects/lynx_bookmarks.sql", "r")
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").fetchall()
     return posts
