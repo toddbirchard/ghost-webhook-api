@@ -45,9 +45,10 @@ jobs:
         GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
         GHOST_API_USERNAME: ${{ secrets.GHOST_API_USERNAME }}
         GHOST_API_PASSWORD: ${{ secrets.GHOST_API_PASSWORD }}
+        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
         GCP_BUCKET_NAME: ${{ secrets.GCP_BUCKET_NAME }}
         GCP_BUCKET_URL: ${{ secrets.GCP_BUCKET_URL }}
-        GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
         GCP_BIGQUERY_TABLE: ${{ secrets.GCP_BIGQUERY_TABLE }}
         GCP_BIGQUERY_DATASET: ${{ secrets.GCP_BIGQUERY_DATASET }}
       run: |
