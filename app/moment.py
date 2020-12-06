@@ -6,7 +6,7 @@ import pytz
 
 def get_current_time() -> str:
     """Get current UTC time."""
-    now = datetime.now(pytz.timezone("UTC"))
+    now = datetime.now()
     return f'{now.strftime("%Y-%m-%dT%H:%M:%S")}.000Z'
 
 

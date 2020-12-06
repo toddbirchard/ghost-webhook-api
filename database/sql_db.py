@@ -2,7 +2,7 @@
 from typing import List, Optional
 
 from pandas import DataFrame
-from sqlalchemy import MetaData, Table, create_engine
+from sqlalchemy import MetaData, Table, create_engine, text
 from sqlalchemy.engine.result import ResultProxy
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -63,7 +63,7 @@ class Database:
         :type database_name: str
         """
         try:
-            result = self.engines[database_name].execute(query)
+            result = self.engines[database_name].execute(text(query))
             return result
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")

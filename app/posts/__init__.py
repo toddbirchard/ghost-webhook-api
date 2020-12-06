@@ -12,7 +12,7 @@ from clients.log import LOGGER
 from database import rdbms
 from database.schemas import PostUpdate
 
-from .read import collect_sql_queries
+from .read import collect_sql_queries, fetch_raw_lynx_posts
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
@@ -104,14 +104,22 @@ def batch_post_metadata():
     return results
 
 
-@router.get("/embed")
+@router.get(
+    "/embed",
+    summary="Batch create Lynx embeds.",
+    description="Fetch raw Lynx post and generate embedded link previews.",
+)
 def batch_lynx_previews():
-    num_embeds, result = batch_lynx_embeds()
-    LOGGER.success(f"Successfully created {num_embeds} embeds for {len(result)} posts")
+    posts = fetch_raw_lynx_posts()
+    result = batch_lynx_embeds(posts)
     return result
 
 
-@router.post("/embed")
+@router.post(
+    "/embed",
+    summary="Embed Lynx links.",
+    description="Generate embedded link previews for a single Lynx post.",
+)
 def post_link_previews(post_update: PostUpdate):
     """Render anchor tag link previews."""
     post = post_update.post.current
@@ -143,15 +151,3 @@ def backup_database():
     """Export JSON backup of database."""
     json = ghost.get_json_backup()
     return json
-
-
-@router.post("/test/mobiledoc")
-def test_mobiledoc_cards(post_update: PostUpdate):
-    """Placeholder endpoint to test accuracy of mobiledoc scrape output."""
-    post = post_update.post.current
-    html = post.html
-    primary_tag = post.primary_tag
-    if html and ("kg-card" not in html) and primary_tag is not None:
-        doc = generate_link_previews(post.__dict__)
-        LOGGER.info(doc)
-        return doc

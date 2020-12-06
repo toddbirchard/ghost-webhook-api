@@ -8,13 +8,12 @@ from requests.exceptions import HTTPError, SSLError
 
 from app.posts.lynx.mobiledoc import mobile_doc
 from app.posts.lynx.scrape import scrape_link
+from app.posts.update import update_lynx_post
 from clients.log import LOGGER
-from config import basedir
-from database import rdbms
 
 
 @LOGGER.catch
-def generate_link_previews(post: dict) -> (int, str):
+def generate_link_previews(post: dict) -> (List, str):
     """Replace <a> tags in Lynx posts with link previews."""
     new_mobiledoc = mobile_doc
     html = post["html"]
@@ -22,11 +21,12 @@ def generate_link_previews(post: dict) -> (int, str):
     links = remove_404s(urls)
     if links is not None:
         link_previews = [scrape_link(link) for link in links if link is not None]
+        link_previews = [link for link in link_previews if link is not None]
         new_mobiledoc["cards"] = link_previews
         for i, link in enumerate(link_previews):
             new_mobiledoc["sections"].append([10, i])
-        return len(link_previews), json.dumps(new_mobiledoc).replace("\n", "")
-    return 0, post["mobiledoc"]
+        return links, json.dumps(new_mobiledoc)
+    return [], post["mobiledoc"]
 
 
 @LOGGER.catch
@@ -57,20 +57,25 @@ def remove_404s(links: List[str]) -> List[str]:
     return valid_links
 
 
-def batch_lynx_embeds() -> (int, List[dict]):
+def batch_lynx_embeds(posts: List[dict]) -> dict:
+    """Generate link embeds for multiple Lynx posts."""
     total_embeds = 0
     updated_posts = []
-    sql_file = open(f"{basedir}/app/posts/queries/selects/lynx_bookmarks.sql", "r")
-    query = sql_file.read()
-    posts = rdbms.execute_query(query, "hackers_prod").fetchall()
     for post in posts:
-        post_id = post["id"]
         post_title = post["title"]
-        num_links, doc = generate_link_previews(post)
-        total_embeds += num_links
-        rdbms.execute_query(
-            f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
-            "hackers_prod",
+        links, mobiledoc = generate_link_previews(post)
+        update_lynx_post(post, mobiledoc)
+        total_embeds += len(links)
+        updated_posts.append(
+            {post["id"]: {"title": post_title, "count": len(links), "links": links}}
         )
-        updated_posts.append({post_title: f"{num_links} link embeds created."})
-    return total_embeds, updated_posts
+        LOGGER.success(
+            f"Successfully created {len(links)} embeds for {updated_posts} posts"
+        )
+    return {
+        "summary": {
+            "posts_updated": len(posts),
+            "links_updated": total_embeds,
+            "posts": updated_posts,
+        }
+    }

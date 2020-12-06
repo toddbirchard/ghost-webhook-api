@@ -5,6 +5,7 @@ from typing import List
 
 from clients.log import LOGGER
 from config import basedir
+from database import rdbms
 
 
 def collect_sql_queries() -> dict:
@@ -36,3 +37,11 @@ def parse_sql_batch(sql_file_paths: List) -> List[str]:
         queries.append(query)
         sql_file.close()
     return queries
+
+
+def fetch_raw_lynx_posts():
+    """Find all Lynx posts lacking embedded link previews."""
+    sql_file = open(f"{basedir}/app/posts/queries/selects/lynx_bookmarks.sql", "r")
+    query = sql_file.read()
+    posts = rdbms.execute_query(query, "hackers_prod").fetchall()
+    return posts

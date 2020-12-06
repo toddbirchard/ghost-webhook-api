@@ -1,5 +1,6 @@
 SELECT
     id,
+    slug,
 	title,
 	html,
 	mobiledoc
