@@ -46,7 +46,7 @@ def scrape_link(url: str) -> Optional[List[dict]]:
                 "url": get_canonical(json_ld, html),
                 "metadata": {
                     "url": get_canonical(json_ld, html),
-                    "title": get_title(json_ld, html).replace('"', "'"),
+                    "title": get_title(json_ld, html),
                     "description": get_description(json_ld, html),
                     "author": get_author(json_ld, html),
                     "publisher": get_publisher(json_ld),
@@ -80,14 +80,14 @@ def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         elif isinstance(json_ld.get("headline"), str):
             title = json_ld.get("headline")
         if bool(title) and isinstance(title, str):
-            return title.replace("'", "")
+            return title.replace("'", "").strip()
     if bool(json_ld) and json_ld.get("title"):
         if isinstance(json_ld.get("title"), list):
             title = json_ld["title"][0]
         elif isinstance(json_ld.get("title"), str):
             title = json_ld.get("title")
         if bool(title) and isinstance(title, str):
-            return title
+            return title.strip()
     # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("title"):
         title = html.find("title").string
@@ -98,7 +98,7 @@ def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     elif html.find("h1"):
         title = html.find("h1").string
     if title:
-        return title.replace("'", "")
+        return title.replace("'", "").strip()
 
 
 def get_image(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
@@ -114,7 +114,7 @@ def get_image(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         elif isinstance(json_ld.get("image"), dict):
             image = json_ld["image"].get("url")
         if bool(image) and isinstance(image, str):
-            return image
+            return image.strip()
     # Fallback to BeautifulSoup if target lacks structured data
     if html.find("meta", property="image"):
         image = html.find("meta", property="image").get("content")
@@ -122,14 +122,16 @@ def get_image(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         image = html.find("meta", property="og:image").get("content")
     elif html.find("meta", property="twitter:image"):
         image = html.find("meta", property="twitter:image").get("content")
-    return image
+    if bool(image):
+        return image.strip()
+    return None
 
 
 def get_description(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     """Fetch description via extruct with BeautifulSoup fallback."""
     description = None
     if bool(json_ld) and json_ld.get("description"):
-        return json_ld["description"].replace("'", "")
+        return json_ld["description"].replace("'", "").strip()
     # Fallback to BeautifulSoup if target lacks structured data
     if html.find("meta", property="description"):
         description = html.find("meta", property="description").get("content")
@@ -138,7 +140,8 @@ def get_description(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     elif html.find("meta", property="twitter:description"):
         description = html.find("meta", property="twitter:description").get("content")
     if description:
-        return description.replace("'", "")
+        return description.replace("'", "").strip()
+    return None
 
 
 def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
@@ -152,11 +155,11 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
             if any(isinstance(author, dict) for i in author):
                 author = author.get("name")
             elif any(isinstance(author, str) for i in author):
-                return ", ".join(author)
+                return ", ".join(author).strip()
         if bool(author) and isinstance(author, dict):
             author = author.get("name")
         if bool(author) and isinstance(author, str):
-            return author
+            return author.strip()
     # Fallback to BeautifulSoup if target lacks structured data
     elif html.find("meta", property="author"):
         author = html.find("meta", property="author").get("content")
@@ -166,9 +169,8 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         author = html.find("a", attrs={"class": "commit-author"}).get("href")
     if author:
         LOGGER.info(author)
-        return author
-    else:
-        return ""
+        return author.strip()
+    return None
 
 
 def get_publisher(json_ld: dict) -> Optional[str]:
@@ -180,8 +182,8 @@ def get_publisher(json_ld: dict) -> Optional[str]:
         if bool(publisher) and isinstance(publisher, dict):
             publisher = json_ld["publisher"].get("name")
         if bool(publisher) and isinstance(publisher, str):
-            return publisher
-        return ""
+            return publisher.strip()
+        return None
 
 
 def get_favicon(html: BeautifulSoup, base_url: str) -> Optional[str]:
@@ -201,7 +203,9 @@ def get_favicon(html: BeautifulSoup, base_url: str) -> Optional[str]:
         favicon = base_url + favicon
     if favicon is None:
         favicon = base_url + "/favicon.ico"
-    return favicon
+    if bool(favicon):
+        return favicon.strip()
+    return None
 
 
 def get_canonical(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
@@ -219,7 +223,9 @@ def get_canonical(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         canonical = html.find("link", attrs={"rel": "og:url"}).get("content")
     elif html.find("link", attrs={"rel": "twitter:url"}):
         canonical = html.find("link", attrs={"rel": "twitter:url"}).get("content")
-    return canonical
+    if bool(canonical):
+        return canonical.strip()
+    return None
 
 
 def embed_twitter_card(url: str) -> Optional[List[dict]]:
