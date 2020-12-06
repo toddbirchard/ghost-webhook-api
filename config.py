@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     }
     if ENVIRONMENT == 'production':
         SQLALCHEMY_ENGINE_OPTIONS: dict = {
-            "ssl": {"ca": "creds/ca-certificate.crt"}
+            "ssl": {"ca": f"{basedir}/creds/ca-certificate.crt"}
         }
 
     # Algolia API
@@ -81,9 +81,11 @@ class Settings(BaseSettings):
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
-    GOOGLE_APPLICATION_CREDENTIALS: str = getenv("GOOGLE_APPLICATION_CREDENTIALS")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
+    GOOGLE_APPLICATION_CREDENTIALS: str = "/Users/toddbirchard/auth/gcloud.json"
+    if ENVIRONMENT == 'production':
+        GOOGLE_APPLICATION_CREDENTIALS: str = f"{basedir}/gcloud.json"
 
     # Google BigQuery
     GCP_PROJECT: str = getenv("GCP_PROJECT")
