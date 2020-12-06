@@ -1,7 +1,8 @@
 # JAMStack Automation
 
 ![Python](https://img.shields.io/badge/Python-^3.8-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
-![FastAPI](https://img.shields.io/badge/FastAPI-^v0.62.0-blue.svg?longCache=true&logo=flask&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![FastAPI](https://img.shields.io/badge/FastAPI-^v0.62.0-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![Pydantic](https://img.shields.io/badge/Pydantic-^v1.7.3-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Ghost](https://img.shields.io/badge/Ghost-^v3.0.0-lightgrey.svg?longCache=true&style=flat-square&logo=ghost&logoColor=white&colorB=656c82&colorA=4c566a)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/google/skia.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=a3be8c)
 [![GitHub Issues](https://img.shields.io/github/issues/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/issues)
@@ -16,8 +17,8 @@ REST API to provide JAMStack-based sites content & image optimization automation
 ## Endpoints
 
 #### Posts
-  * **GET** `/posts/`: Populate metadata for all posts en masse. Supports meta titles, og titles & descriptions, and feature images.
-  * **POST** `/posts/`: Populate metadata for a single post upon publish. Supports meta title, og title & description, and feature image where applicable.
+  * **GET** `/posts`: Populate metadata for all posts en masse. Supports meta titles, og titles & descriptions, and feature images.
+  * **POST** `/posts`: Populate metadata for a single post upon publish. Supports meta title, og title & description, and feature image where applicable.
   * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
   * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds for a given post upon publish.
 #### Analytics
@@ -25,10 +26,8 @@ REST API to provide JAMStack-based sites content & image optimization automation
   * **GET** `/analytics/searches/week`: Fetch top Algolia search queries for the current week and save to an SQL database (useful for building search-related features, ie: search suggestions).
   * **GET** `/analytics/searches/historical`: Fetch top Algolia search queries for the current week and save to an SQL database (non-destructive export intended for historical table of searches).
 #### Image Optimization
-  * **POST** `/image/transform`: Generate retina and mobile feature_image for a single post upon update.
-  * **GET** `/images/transform`: Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
-  * **GET** `/images/transform/lynx`: Apply transformations to all Lynx posts.
-  * **GET** `/images/purge`: Delete unwanted files such as duplicate images, invalid filetypes, etc.
+  * **POST** `/images`: Generate retina and mobile feature_image for a single post upon update.
+  * **GET** `/images`: Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **GET** `/images/sort`: Transverses CDN in a given directory (`?directory=`) to organize images into subdirectories based on image type (retina, mobile, etc).
 #### Accounts

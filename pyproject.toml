@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "api"
+name = "jamstack-api"
 version = "0.1.0"
 description = "Webhook endpoints to optimize your JAMStack static site."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
@@ -19,6 +19,8 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
+fastapi = "^0.62.0"
+pydantic = "^1.7.3"
 pandas = "*"
 sqlalchemy = "*"
 pymysql = "*"
@@ -40,8 +42,6 @@ simplejson = "*"
 boto = "*"
 botocore = "*"
 pyarrow = "^2.0.0"
-fastapi = "^0.62.0"
-pydantic = "^1.7.3"
 uvicorn = "^0.12.3"
 ddtrace = "^0.44.0"
 
