@@ -27,7 +27,7 @@ class Settings(BaseSettings):
         "http://localhost",
         "http://localhost:8080",
         "http://api.hackersandslackers.com",
-        "https://api.hackersandslackers.com"
+        "https://api.hackersandslackers.com",
     ]
     API_TAGS = (
         [
@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_ENGINE_OPTIONS: dict = {
         "ssl": {"ca": "/Users/toddbirchard/auth/ca-certificate.crt"}
     }
-    if ENVIRONMENT == 'production':
+    if ENVIRONMENT == "production":
         SQLALCHEMY_ENGINE_OPTIONS: dict = {
             "ssl": {"ca": f"{basedir}/creds/ca-certificate.crt"}
         }
@@ -86,7 +86,7 @@ class Settings(BaseSettings):
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
     GOOGLE_APPLICATION_CREDENTIALS: str = "/Users/toddbirchard/auth/gcloud.json"
-    if ENVIRONMENT == 'production':
+    if ENVIRONMENT == "production":
         GOOGLE_APPLICATION_CREDENTIALS: str = f"{basedir}/gcloud.json"
 
     # Google BigQuery

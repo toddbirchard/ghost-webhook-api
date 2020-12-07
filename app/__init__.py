@@ -1,6 +1,7 @@
 """Initialize api."""
 from functools import lru_cache
 
+from ddtrace import patch_all
 from ddtrace.contrib.asgi import TraceMiddleware
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import accounts, analytics, authors, github, images, newsletter, posts
 from config import Settings
 from database.orm import Base, engine
+
+patch_all()
 
 
 @lru_cache()
