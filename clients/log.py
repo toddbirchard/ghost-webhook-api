@@ -4,7 +4,7 @@ from sys import stdout
 import simplejson as json
 from loguru import logger
 
-from config import Config
+from config import Settings
 
 
 def formatter(record):
@@ -48,7 +48,7 @@ def create_logger() -> logger:
         + "<light-white>{message}</light-white>",
     )
     logger.add("logs/info.json", format=formatter, rotation="500 MB", compression="zip")
-    if Config.FLASK_ENV == "production":
+    if Settings().ENVIRONMENT == "production":
         # Datadog
         logger.add(
             "logs/info.json", format=formatter, rotation="500 MB", compression="zip"

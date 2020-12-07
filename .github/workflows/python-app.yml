@@ -32,5 +32,24 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+        SQLALCHEMY_DATABASE_URI: ${{ secrets.TWILIO_ACCOUNT_SID }}
+        ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        APP_NAME: ${{ secrets.APP_NAME }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        GHOST_BASE_URL: ${{ secrets.GHOST_BASE_URL }}
+        GHOST_CLIENT_ID: ${{ secrets.GHOST_CLIENT_ID }}
+        GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
+        GHOST_API_USERNAME: ${{ secrets.GHOST_API_USERNAME }}
+        GHOST_API_PASSWORD: ${{ secrets.GHOST_API_PASSWORD }}
+        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+        GCP_BUCKET_NAME: ${{ secrets.GCP_BUCKET_NAME }}
+        GCP_BUCKET_URL: ${{ secrets.GCP_BUCKET_URL }}
+        GCP_BIGQUERY_TABLE: ${{ secrets.GCP_BIGQUERY_TABLE }}
+        GCP_BIGQUERY_DATASET: ${{ secrets.GCP_BIGQUERY_DATASET }}
       run: |
         pytest

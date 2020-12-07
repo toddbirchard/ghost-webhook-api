@@ -45,7 +45,7 @@ restart: env
 .PHONY: deploy
 deploy: update
 	service $(PROJECTNAME) stop
-	$(shell . ./deploy.sh)
+	$(shell . deploy.sh)
 	service $(PROJECTNAME) start
 	service $(PROJECTNAME) status
 
@@ -55,6 +55,7 @@ update: env
 	.venv/bin/python3 -m pip install -U pip
 	poetry update
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
+	make format
 
 
 .PHONY: format

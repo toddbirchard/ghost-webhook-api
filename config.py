@@ -1,76 +1,129 @@
 """Flask API configuration."""
 import datetime
-from os import environ, path
+from os import getenv, path
 
 from dotenv import load_dotenv
+from pydantic import BaseSettings
 
 # Load variables from .env
 basedir = path.abspath(path.dirname(__file__))
 load_dotenv(path.join(basedir, ".env"))
 
 
-class Config:
-    """Flask API config from environment variables."""
-
-    dt = datetime.datetime.today()
+class Settings(BaseSettings):
+    app_name: str = "Jamstack API"
+    title: str = "Jamstack API"
+    description: str = "API to automate optimizations for JAMStack sites."
+    items_per_user: int = 50
+    debug: bool = True
 
     # General Config
-    SECRET_KEY = environ.get("SECRET_KEY")
-    FLASK_APP = environ.get("FLASK_APP")
-    FLASK_ENV = environ.get("FLASK_ENV")
+    SECRET_KEY: str = getenv("SECRET_KEY")
+    ENVIRONMENT: str = getenv("ENVIRONMENT")
+    dt: datetime.datetime = datetime.datetime.today()
+    CORS_ORIGINS: list = [
+        "http://hackersandslackers.com",
+        "https://hackersandslackers.app",
+        "http://localhost",
+        "http://localhost:8080",
+        "http://api.hackersandslackers.com",
+        "https://api.hackersandslackers.com",
+    ]
+    API_TAGS = (
+        [
+            {
+                "name": "posts",
+                "description": "Sanitation and optimization of post metadata.",
+            },
+            {
+                "name": "accounts",
+                "description": "User account signup and actions.",
+            },
+            {
+                "name": "authors",
+                "description": "Author management.",
+            },
+            {
+                "name": "newsletter",
+                "description": "Ghost newsletter subscription management.",
+            },
+            {
+                "name": "analytics",
+                "description": "Migrate site traffic & search query analytics.",
+            },
+            {
+                "name": "images",
+                "description": "Optimize images for retina and mobile devices.",
+            },
+            {
+                "name": "github",
+                "description": "Send notifications when Github issues/PRs are opened for HackersAndSlackers repos.",
+            },
+        ],
+    )
+
+    env_file = ".env"
 
     # Database
-    SQLALCHEMY_DATABASE_URI = environ.get("SQLALCHEMY_DATABASE_URI")
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS = {"ssl": {"ca": "./creds/ca-certificate.crt"}}
+    SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ENGINE_OPTIONS: dict = {
+        "ssl": {"ca": "/Users/toddbirchard/auth/ca-certificate.crt"}
+    }
+    if ENVIRONMENT == "production":
+        SQLALCHEMY_ENGINE_OPTIONS: dict = {
+            "ssl": {"ca": f"{basedir}/creds/ca-certificate.crt"}
+        }
 
     # Algolia API
-    ALGOLIA_BASE_URL = environ.get("ALGOLIA_BASE_URL")
-    ALGOLIA_APP_ID = environ.get("ALGOLIA_APP_ID")
-    ALGOLIA_API_KEY = environ.get("ALGOLIA_API_KEY")
+    ALGOLIA_BASE_URL: str = getenv("ALGOLIA_BASE_URL")
+    ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
+    ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
 
     # Google Cloud storage
-    GCP_BUCKET_URL = environ.get("GCP_BUCKET_URL")
-    GCP_BUCKET_NAME = environ.get("GCP_BUCKET_NAME")
-    GOOGLE_APPLICATION_CREDENTIALS = path.join(basedir, "gcloud.json")
-    GCP_BUCKET_FOLDER = [f'{dt.year}/{dt.strftime("%m")}']
-    GCP_LYNX_DIRECTORY = "roundup"
+    GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
+    GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
+    GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
+    GCP_LYNX_DIRECTORY: str = "roundup"
+    GOOGLE_APPLICATION_CREDENTIALS: str = "/Users/toddbirchard/auth/gcloud.json"
+    if ENVIRONMENT == "production":
+        GOOGLE_APPLICATION_CREDENTIALS: str = f"{basedir}/gcloud.json"
 
     # Google BigQuery
-    GCP_PROJECT = environ.get("GCP_PROJECT")
-    GCP_BIGQUERY_TABLE = environ.get("GCP_BIGQUERY_TABLE")
-    GCP_BIGQUERY_DATASET = environ.get("GCP_BIGQUERY_DATASET")
-    GCP_BIGQUERY_URI = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
+    GCP_PROJECT: str = getenv("GCP_PROJECT")
+    GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
+    GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
+    GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
 
     # Ghost
-    GHOST_BASE_URL = environ.get("GHOST_BASE_URL")
-    GHOST_ADMIN_API_URL = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
-    GHOST_CONTENT_API_URL = f"{GHOST_BASE_URL}/ghost/api/v3/"
-    GHOST_API_USERNAME = environ.get("GHOST_API_USERNAME")
-    GHOST_API_PASSWORD = environ.get("GHOST_API_PASSWORD")
-    GHOST_CLIENT_ID = environ.get("GHOST_CLIENT_ID")
-    GHOST_ADMIN_API_KEY = environ.get("GHOST_ADMIN_API_KEY")
-    GHOST_API_EXPORT_URL = f"{GHOST_BASE_URL}/admin/db/"
-    GHOST_NETLIFY_BUILD_HOOK = environ.get("GHOST_NETLIFY_BUILD_HOOK")
+    GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
+    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
+    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/"
+    GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
+    GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")
+    GHOST_CLIENT_ID: str = getenv("GHOST_CLIENT_ID")
+    GHOST_ADMIN_API_KEY: str = getenv("GHOST_ADMIN_API_KEY")
+    GHOST_API_EXPORT_URL: str = f"{GHOST_BASE_URL}/admin/db/"
+    GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
     # Mailgun
-    MAILGUN_EMAIL_SERVER = environ.get("MAILGUN_EMAIL_SERVER")
-    MAILGUN_EMAIL_TEMPLATE = environ.get("MAILGUN_EMAIL_TEMPLATE")
-    MAILGUN_API_KEY = environ.get("MAILGUN_API_KEY")
-    MAILGUN_FROM_SENDER = environ.get("MAILGUN_FROM_SENDER")
-    MAILGUN_SUBJECT_LINE = "To Hack or to Slack; That is the Question."
-    MAILGUN_PERSONAL_EMAIL = environ.get("MAILGUN_PERSONAL_EMAIL")
+    MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
+    MAILGUN_EMAIL_TEMPLATE: str = getenv("MAILGUN_EMAIL_TEMPLATE")
+    MAILGUN_API_KEY: str = getenv("MAILGUN_API_KEY")
+    MAILGUN_FROM_SENDER: str = getenv("MAILGUN_FROM_SENDER")
+    MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
+    MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
 
     # Mixpanel
-    MIXPANEL_API_TOKEN = environ.get("MIXPANEL_API_TOKEN")
+    MIXPANEL_API_TOKEN: str = getenv("MIXPANEL_API_TOKEN")
 
     # Twilio
-    TWILIO_SENDER_PHONE = environ.get("TWILIO_SENDER_PHONE")
-    TWILIO_RECIPIENT_PHONE = environ.get("TWILIO_RECIPIENT_PHONE")
-    TWILIO_AUTH_TOKEN = environ.get("TWILIO_AUTH_TOKEN")
-    TWILIO_ACCOUNT_SID = environ.get("TWILIO_ACCOUNT_SID")
+    TWILIO_SENDER_PHONE: str = getenv("TWILIO_SENDER_PHONE")
+    TWILIO_RECIPIENT_PHONE: str = getenv("TWILIO_RECIPIENT_PHONE")
+    TWILIO_AUTH_TOKEN: str = getenv("TWILIO_AUTH_TOKEN")
+    TWILIO_ACCOUNT_SID: str = getenv("TWILIO_ACCOUNT_SID")
 
     # Datadog
-    DATADOG_TRACE_ENABLED = environ.get("DATADOG_TRACE_ENABLED")
-    DATADOG_API_KEY = environ.get("DATADOG_API_KEY")
-    DATADOG_APP_KEY = environ.get("DATADOG_APP_KEY")
+    DATADOG_API_KEY: str = getenv("DATADOG_API_KEY")
+    DATADOG_APP_KEY: str = getenv("DATADOG_APP_KEY")
+    dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")

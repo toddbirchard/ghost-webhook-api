@@ -1,5 +1,6 @@
 """Create Twilio SMS client."""
 from twilio.rest import Client
+from twilio.rest.api.v2010.account.message import MessageInstance
 
 
 class Twilio:
@@ -12,7 +13,7 @@ class Twilio:
         self.sender = sender
         self.client = Client(self.sid, self.token)
 
-    def send_message(self, msg: str):
+    def send_message(self, msg: str) -> MessageInstance:
         """Send Twilio message."""
         message = self.client.messages.create(
             to=self.recipient, from_=self.sender, body=msg

@@ -21,7 +21,7 @@ class Mailgun:
         try:
             req = requests.post(
                 self.endpoint,
-                auth=("api", self.api_key),
+                auth=("app", self.api_key),
                 data=body,
             )
             LOGGER.success(
@@ -29,6 +29,11 @@ class Mailgun:
             )
             return req
         except HTTPError as e:
+            LOGGER.error(
+                f"Failed to send email to `{body['to']}` with subject `{body['subject']}`: {e}"
+            )
+            return None
+        except Exception as e:
             LOGGER.error(
                 f"Failed to send email to `{body['to']}` with subject `{body['subject']}`: {e}"
             )

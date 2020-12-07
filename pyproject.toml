@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "api"
+name = "jamstack-api"
 version = "0.1.0"
 description = "Webhook endpoints to optimize your JAMStack static site."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
@@ -11,15 +11,16 @@ repository = "https://github.com/toddbirchard/jamstack-api/"
 documentation = "https://github.com/toddbirchard/jamstack-api/"
 keywords = [
   "API",
-  "JAMStack",
+  "Rest API",
   "Automation",
-  "Ghost",
+  "FastAPI",
   "Webhooks"
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-flask = "*"
+fastapi = "^0.62.0"
+pydantic = "^1.7.3"
 pandas = "*"
 sqlalchemy = "*"
 pymysql = "*"
@@ -37,23 +38,22 @@ loguru = "*"
 twilio = "*"
 beautifulsoup4 = "*"
 extruct = "*"
-flask-cors = "*"
 simplejson = "*"
-ddtrace = "*"
 boto = "*"
 botocore = "*"
-uwsgi = "*"
 pyarrow = "^2.0.0"
+uvicorn = "^0.12.3"
+ddtrace = "^0.44.0"
 
 [tool.poetry.dev-dependencies]
-pytest-flask = "*"
+pytest = "*"
 mock = "*"
 mypy = "*"
 black = "^20.8b1"
 isort = "^5.6.4"
 
 [tool.poetry.scripts]
-run = "wsgi:api"
+run = "asgi:app"
 
 [tool.poetry.urls]
 issues = "https://github.com/toddbirchard/jamstack-api/issues"
