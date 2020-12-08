@@ -1,6 +1,5 @@
-import pytest
-from config import basedir
 from clients import bigquery
+from config import basedir
 
 
 def test_fetch_weekly_bigquery():

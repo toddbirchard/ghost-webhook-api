@@ -3,6 +3,7 @@ import datetime
 from os import getenv, path
 
 from dotenv import load_dotenv
+from google.oauth2 import service_account
 from pydantic import BaseSettings
 
 # Load variables from .env
@@ -85,7 +86,12 @@ class Settings(BaseSettings):
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
-    GOOGLE_APPLICATION_CREDENTIALS: str = "gcloud.json"
+    GOOGLE_APPLICATION_CREDENTIALS: str = (
+        f'{basedir}/{getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
+    )
+    GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        GOOGLE_APPLICATION_CREDENTIALS
+    )
 
     # Google BigQuery
     GCP_PROJECT: str = getenv("GCP_PROJECT")

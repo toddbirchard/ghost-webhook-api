@@ -5,6 +5,7 @@ from app.analytics.algolia import fetch_algolia_searches
 from app.analytics.migrate import import_site_analytics
 from database import rdbms
 
+
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
@@ -14,8 +15,18 @@ def migrate_site_analytics():
     weekly_traffic = import_site_analytics("weekly")
     monthly_traffic = import_site_analytics("monthly")
     return {
-        "weekly_stats": f"{weekly_traffic} rows",
-        "monthly_traffic": f"{monthly_traffic} rows",
+        "weekly_stats": {
+            "count": len(weekly_traffic),
+            "rows": {
+                zip(weekly_traffic.slug.tolist(), weekly_traffic.views.tolist())
+            }
+        },
+        "monthly_traffic": {
+            "count": len(monthly_traffic),
+            "rows": {
+                zip(monthly_traffic.slug.tolist(), monthly_traffic.views.tolist())
+            }
+        }
     }
 
 

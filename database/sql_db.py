@@ -146,7 +146,7 @@ class Database:
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"
-    ) -> int:
+    ) -> DataFrame:
         """
         Insert Pandas DataFrame into SQL table.
 
@@ -163,4 +163,4 @@ class Database:
         LOGGER.info(
             f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`."
         )
-        return df.count
+        return df

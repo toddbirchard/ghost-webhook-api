@@ -1,10 +1,11 @@
 """Import analytics from data warehouse to application."""
 from clients import bigquery
-from database import rdbms
 from config import basedir
+from database import rdbms
+from pandas import DataFrame
 
 
-def import_site_analytics(timeframe: str) -> int:
+def import_site_analytics(timeframe: str) -> DataFrame:
     """
     Migrate raw analytics data from Google BigQuery to app Database.
 
