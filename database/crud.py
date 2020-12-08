@@ -2,8 +2,6 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.moment import get_current_date
-
 from .models import Comment, Donation
 from .schemas import NewComment, NewDonation
 

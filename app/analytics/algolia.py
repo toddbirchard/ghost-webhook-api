@@ -52,8 +52,6 @@ def filter_results(search_queries: list) -> List[Optional[str]]:
 
     :returns: List[Optional[str]]
     """
-    search_queries = list(filter(lambda x: len(x["search"]) > 2, search_queries))
-    search_queries = list(
-        filter(lambda x: x["search"].replace(" ", "") != "", search_queries)
-    )
+    search_queries = [query["search"].strip() for query in search_queries]
+    search_queries = list(filter(lambda x: len(x["search"]) > 3, search_queries))
     return search_queries
