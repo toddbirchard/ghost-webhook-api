@@ -9,16 +9,20 @@ from database.schemas import PostUpdate
 router = APIRouter(prefix="/authors", tags=["authors"])
 
 
-@router.post("/post/update")
+@router.post("/post/created")
 def author_post_created(post_update: PostUpdate):
-    """Notify admin user upon author post creation."""
+    """
+    Notify admin when new authors create their first post.
+
+    :param post_update: Post object generated upon update.
+    :param post_update: PostUpdate
+    """
     data = post_update.post.current
     title = data.title
     author_name = data.primary_author.name
     primary_author_id = data.primary_author.id
-    authors = data.authors
-    if primary_author_id == "1" and len(authors) > 1:
-        msg = f"{author_name} just updated an admin post: `{title}`."
+    if primary_author_id not in ("1", "5dc42cb612c9ce0d63f5bf39"):
+        msg = f"{author_name} just created a post: `{title}`."
         LOGGER.info(f"SMS notification triggered by post edit: {msg}")
         sms.send_message(msg)
         return msg
@@ -27,15 +31,21 @@ def author_post_created(post_update: PostUpdate):
     )
 
 
-@router.post("/post/created")
-def author_post_created(post_update: PostUpdate):
-    """Notify when new authors create their first post."""
+@router.post("/post/update")
+def author_post_updated(post_update: PostUpdate):
+    """
+    Notify admin user when another author modifies their post.
+
+    :param post_update: Post object generated upon update.
+    :param post_update: PostUpdate
+    """
     data = post_update.post.current
     title = data.title
     author_name = data.primary_author.name
     primary_author_id = data.primary_author.id
-    if primary_author_id not in ("1", "5dc42cb612c9ce0d63f5bf39"):
-        msg = f"{author_name} just updated a post: `{title}`."
+    authors = data.authors
+    if primary_author_id == "1" and len(authors) > 1:
+        msg = f"{author_name} just updated one of your posts: `{title}`."
         LOGGER.info(f"SMS notification triggered by post edit: {msg}")
         sms.send_message(msg)
         return msg
