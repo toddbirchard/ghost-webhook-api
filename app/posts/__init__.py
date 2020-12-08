@@ -87,20 +87,20 @@ def update_post(post_update: PostUpdate):
 @router.get(
     "/",
     summary="Sanitize metadata for all posts.",
-    description="Run a sequence of queries to ensure all posts have proper metadata.",
+    description="Run a sequence of analytics to ensure all posts have proper metadata.",
 )
 def batch_post_metadata():
     """Mass update post metadata."""
     queries = collect_sql_queries(subdirectory="/posts/updates")
     results, total_rows = rdbms.execute_queries(queries, "hackers_prod")
-    LOGGER.success(f"Successfully ran {len(queries)} post queries")
+    LOGGER.success(f"Successfully ran {len(queries)} post analytics")
     return {
         "db": {
             "type": "posts",
             "num_queries": len(queries),
             "db_name": "hackers_prod",
             "rows_affected": total_rows,
-            "queries": results,
+            "analytics": results,
         }
     }
 

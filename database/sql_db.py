@@ -37,9 +37,9 @@ class Database:
 
     @LOGGER.catch
     def execute_queries(self, queries: dict, database_name: str) -> Tuple[dict, int]:
-        """Execute collection of SQL queries.
+        """Execute collection of SQL analytics.
 
-        :param queries: Map of query names -> SQL queries.
+        :param queries: Map of query names -> SQL analytics.
         :type queries: dict
         :param database_name: Name of database to connect to.
         :type database_name: str
@@ -146,7 +146,7 @@ class Database:
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"
-    ):
+    ) -> DataFrame:
         """
         Insert Pandas DataFrame into SQL table.
 
@@ -163,4 +163,4 @@ class Database:
         LOGGER.info(
             f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`."
         )
-        return df.to_json(orient="records")
+        return df

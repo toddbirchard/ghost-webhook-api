@@ -32,8 +32,13 @@ sms = Twilio(
 )
 
 # Google BigQuery
-bigquery = bigquery_client.Client()
+bigquery = bigquery_client.Client(
+    project=Settings().GCP_PROJECT,
+    credentials=Settings().GCP_CREDENTIALS,
+    location="US",
+)
 
+# Mailgun SMTP
 mailgun = Mailgun(
     Settings().MAILGUN_EMAIL_SERVER,
     Settings().MAILGUN_FROM_SENDER,

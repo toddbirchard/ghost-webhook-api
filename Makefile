@@ -43,11 +43,8 @@ restart: env
 
 
 .PHONY: deploy
-deploy: update
-	service $(PROJECTNAME) stop
+deploy:
 	$(shell . deploy.sh)
-	service $(PROJECTNAME) start
-	service $(PROJECTNAME) status
 
 
 .PHONY: update

@@ -36,9 +36,9 @@ class Database:
 
     @LOGGER.catch
     def execute_queries(self, queries: dict, database_name: str) -> dict:
-        """Execute collection of SQL queries.
+        """Execute collection of SQL analytics.
 
-        :param queries: Map of query names -> SQL queries.
+        :param queries: Map of query names -> SQL analytics.
         :type queries: dict
         :param database_name: Name of database to connect to.
         :type database_name: str

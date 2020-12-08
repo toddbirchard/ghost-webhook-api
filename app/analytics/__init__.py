@@ -13,16 +13,23 @@ def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
     weekly_traffic = import_site_analytics("weekly")
     monthly_traffic = import_site_analytics("monthly")
-    result = {
-        "weekly_stats": f"{len(weekly_traffic)} rows",
-        "monthly_traffic": f"{len(monthly_traffic)} rows",
+    return {
+        "weekly_stats": {
+            "count": len(weekly_traffic),
+            "rows": {zip(weekly_traffic.slug.tolist(), weekly_traffic.views.tolist())},
+        },
+        "monthly_traffic": {
+            "count": len(monthly_traffic),
+            "rows": {
+                zip(monthly_traffic.slug.tolist(), monthly_traffic.views.tolist())
+            },
+        },
     }
-    return result
 
 
 @router.get("/searches/week")
 def week_searches():
-    """Save top search queries for the current week."""
+    """Save top search analytics for the current week."""
     records = fetch_algolia_searches(timeframe=7)
     rows = rdbms.insert_records(
         records,
@@ -35,7 +42,7 @@ def week_searches():
 
 @router.get("/searches/historical")
 def historical_searches():
-    """Save and persist top search queries for the current month."""
+    """Save and persist top search analytics for the current month."""
     records = fetch_algolia_searches(timeframe=30)
     rows = rdbms.insert_records(records, "algolia_searches_historical", "analytics")
     return (
