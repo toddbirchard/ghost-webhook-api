@@ -85,9 +85,7 @@ class Settings(BaseSettings):
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
-    GOOGLE_APPLICATION_CREDENTIALS: str = "/Users/toddbirchard/auth/gcloud.json"
-    if ENVIRONMENT == "production":
-        GOOGLE_APPLICATION_CREDENTIALS: str = f"{basedir}/gcloud.json"
+    GOOGLE_APPLICATION_CREDENTIALS: str = "gcloud.json"
 
     # Google BigQuery
     GCP_PROJECT: str = getenv("GCP_PROJECT")

@@ -1,4 +1,4 @@
-"""Read queries from local SQL files."""
+"""Read analytics from local SQL files."""
 from os import listdir
 from os.path import isfile, join
 from typing import List
@@ -11,7 +11,7 @@ from database import rdbms
 
 
 def collect_sql_queries(subdirectory: str = "") -> dict:
-    """Create dict of queries to be run against database."""
+    """Create dict of analytics to be run against database."""
     sql_file_paths = fetch_sql_files(subdirectory)
     sql_queries = parse_sql_batch(sql_file_paths)
     sql_file_names = [file.split("/")[-1] for file in sql_file_paths]
@@ -28,18 +28,18 @@ def fetch_sql_files(subdirectory: str = "") -> List[str]:
 
     :returns: List[str]
     """
-    folder = f"{basedir}/database/queries{subdirectory}"
+    folder = f"{basedir}/database/analytics{subdirectory}"
     directory = listdir(folder)
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f
     ]
-    LOGGER.info(f"Found {len(files)} queries in `{folder}`.")
+    LOGGER.info(f"Found {len(files)} analytics in `{folder}`.")
     return files
 
 
 def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
     """
-    Read SQL queries from .sql files.
+    Read SQL analytics from .sql files.
 
     :param sql_file_paths: List of paths to SQL files to read and parse.
     :type sql_file_paths: List[str]
@@ -57,7 +57,7 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
 
 def fetch_raw_lynx_posts() -> ResultProxy:
     """Find all Lynx posts lacking embedded link previews."""
-    sql_file = open(f"{basedir}/database/queries/selects/lynx_bookmarks.sql", "r")
+    sql_file = open(f"{basedir}/database/analytics/selects/lynx_bookmarks.sql", "r")
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").fetchall()
     return posts
