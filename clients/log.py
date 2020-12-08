@@ -6,6 +6,14 @@ from loguru import logger
 
 from config import Settings
 
+DD_APM_FORMAT = (
+    "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] "
+    "[dd.service=%(dd.service)s dd.env=%(dd.env)s "
+    "dd.version=%(dd.version)s "
+    "dd.trace_id=%(dd.trace_id)s dd.span_id=%(dd.span_id)s]"
+    "- %(message)s"
+)
+
 
 def formatter(record):
     """Pass raw log to be serialized."""
@@ -52,6 +60,9 @@ def create_logger() -> logger:
         # Datadog
         logger.add(
             "logs/info.json", format=formatter, rotation="500 MB", compression="zip"
+        )
+        logger.add(
+            "logs/apm.log", format=DD_APM_FORMAT, rotation="500 MB", compression="zip"
         )
     return logger
 
