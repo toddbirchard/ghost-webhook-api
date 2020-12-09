@@ -68,3 +68,8 @@ def test_batch_post_metadata():
     assert response.json()["db"]["db_name"] == "hackers_prod"
     assert response.json()["db"]["rows_affected"] > 0
     LOGGER.info(response.json()["db"]["rows_affected"])
+
+
+def assign_img_alt_attr():
+    result = client.get("/posts/alt")
+    LOGGER.info(result.json())

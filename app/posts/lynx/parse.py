@@ -5,6 +5,7 @@ from typing import List
 import requests
 import simplejson as json
 from requests.exceptions import HTTPError, SSLError
+from sqlalchemy.engine.result import ResultProxy
 
 from app.posts.lynx.mobiledoc import mobile_doc
 from app.posts.lynx.scrape import scrape_link
@@ -57,7 +58,7 @@ def remove_404s(links: List[str]) -> List[str]:
     return valid_links
 
 
-def batch_lynx_embeds(posts: List[dict]) -> dict:
+def batch_lynx_embeds(posts: ResultProxy) -> dict:
     """Generate link embeds for multiple Lynx posts."""
     total_embeds = 0
     updated_posts = []

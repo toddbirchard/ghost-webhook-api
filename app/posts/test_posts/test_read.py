@@ -13,7 +13,7 @@ def test_collect_sql_queries():
 
 
 def test_select_query(rdbms):
-    files = fetch_sql_files(subdirectory="/selects")
+    files = fetch_sql_files(subdirectory="/posts/selects")
     parsed_sql = parse_sql_batch(files)
     query_result = rdbms.execute_query(parsed_sql[0], "hackers_prod")
     assert len(files) == 1

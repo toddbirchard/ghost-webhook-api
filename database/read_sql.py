@@ -28,7 +28,7 @@ def fetch_sql_files(subdirectory: str = "") -> List[str]:
 
     :returns: List[str]
     """
-    folder = f"{basedir}/database/analytics{subdirectory}"
+    folder = f"{basedir}/database/queries{subdirectory}"
     directory = listdir(folder)
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f
