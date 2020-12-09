@@ -151,33 +151,49 @@ def post_link_previews(post_update: PostUpdate):
 
 @router.get(
     "/alt",
-    summary="Post image alt text.",
+    summary="Image alt text.",
     description="Assign missing alt text to embedded images.",
 )
 def assign_img_alt_attr():
-    """Find <img>s missing alt text, and assign their caption as `alt` attribute."""
+    """Find <img>s missing alt text and assign `alt`, `title` attributes."""
     sql_query = f"{basedir}/database/queries/posts/selects/img_alt_missing.sql"
     posts = rdbms.execute_query_from_file(sql_query, "hackers_prod")
     fixed_images = []
     for post in posts:
+        post_html = post["html"]
         image_matcher = '(?<=<figure class=\\"kg-card kg-image-card kg-card-hascaption\\").*?(?=<\\/figure>)'
-        images = re.findall(image_matcher, post["html"])
+        images = re.findall(image_matcher, post_html)
         images = filter(lambda x: "<a href" not in x, images)
         if bool(images):
             captions_per_post = []
-            for image in images:
+            for i, image in enumerate(images):
+                img_tag = re.search("<img.*?(?=>)>", image).group()
                 caption = re.search(
                     "(?<=<figcaption>).*?(?=</figcaption>)", image
                 ).group()
-                captions_per_post.append(caption)
-            fixed_images.append(
-                {
-                    post.slug: {
-                        "count": len(captions_per_post),
-                        "captions": captions_per_post,
+                if caption:
+                    img_src = re.search('(?<=src=").*?(?=\\")', image).group()
+                    img_tag_new = f'<a data-srcset="{img_src}" alt="{caption}" title="{caption}" class="kg-image lazyload"/>'
+                    post_html = post_html.replace(img_src, img_tag_new)
+                    captions_per_post.append(
+                        {
+                            i: {
+                                "img_src": img_src,
+                                "caption": caption,
+                                "img_tag": img_tag,
+                                "img_tag_new": img_tag_new,
+                            }
+                        }
+                    )
+                # rdbms.execute_query(f"UPDATE posts SET html = '{post_html}' WHERE id = '{post['id']}';", "hackers_prod")
+                fixed_images.append(
+                    {
+                        post.slug: {
+                            "count": len(captions_per_post),
+                            "images": captions_per_post,
+                        }
                     }
-                }
-            )
+                )
     return fixed_images
 
 
