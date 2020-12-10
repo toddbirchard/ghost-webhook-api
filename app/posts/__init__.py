@@ -1,5 +1,4 @@
 """Routes to transform post data."""
-import re
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -11,7 +10,6 @@ from app.posts.img_tags import assign_alt_text_to_imgs
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from clients import gcs, ghost
 from clients.log import LOGGER
-from config import basedir
 from database import rdbms
 from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
 from database.schemas import PostUpdate
