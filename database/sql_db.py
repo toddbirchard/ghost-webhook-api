@@ -72,7 +72,7 @@ class Database:
             return None
 
     @LOGGER.catch
-    def execute_query_from_file(self, sql_file: str, database_name: str):
+    def execute_query_from_file(self, sql_file: str, database_name: str) -> Optional[ResultProxy]:
         """Execute single SQL query.
 
         :param sql_file: Filepath of SQL query to run.
@@ -85,8 +85,7 @@ class Database:
             result = self.engines[database_name].execute(query).fetchall()
             return result
         except SQLAlchemyError as e:
-            LOGGER.error(e)
-            return f"Failed to execute SQL {sql_file}: {e}"
+            LOGGER.error(f"Failed to execute SQL {sql_file}: {e}")
 
     @LOGGER.catch
     def fetch_records(self, query: str, database_name: str) -> Optional[List[str]]:

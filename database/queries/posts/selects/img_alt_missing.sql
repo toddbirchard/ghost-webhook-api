@@ -1,6 +1,5 @@
 SELECT
-	slug,
-	html
+	id
 FROM
 	posts
 WHERE
