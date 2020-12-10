@@ -72,7 +72,9 @@ class Database:
             return None
 
     @LOGGER.catch
-    def execute_query_from_file(self, sql_file: str, database_name: str) -> Optional[ResultProxy]:
+    def execute_query_from_file(
+        self, sql_file: str, database_name: str
+    ) -> Optional[ResultProxy]:
         """Execute single SQL query.
 
         :param sql_file: Filepath of SQL query to run.

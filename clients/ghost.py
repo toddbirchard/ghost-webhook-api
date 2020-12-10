@@ -60,11 +60,7 @@ class Ghost:
                 "Authorization": self.session_token,
                 "Content-Type": "application/json",
             }
-            params = {
-                "include": "authors",
-                "key": self.client_id,
-                'formats': 'html'
-            }
+            params = {"include": "authors", "key": self.client_id, "formats": "html"}
             endpoint = f"{self.admin_api_url}/posts/{post_id}"
             req = requests.get(endpoint, headers=headers, params=params)
             if req.json().get("errors") is not None:

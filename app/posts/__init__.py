@@ -7,6 +7,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
+from app.posts.img_tags import assign_alt_text_to_imgs
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from clients import gcs, ghost
 from clients.log import LOGGER
@@ -151,34 +152,12 @@ def post_link_previews(post_update: PostUpdate):
 
 @router.get(
     "/alt",
-    summary="Post image alt text.",
+    summary="Image alt text.",
     description="Assign missing alt text to embedded images.",
 )
 def assign_img_alt_attr():
-    """Find <img>s missing alt text, and assign their caption as `alt` attribute."""
-    sql_query = f"{basedir}/database/queries/posts/selects/img_alt_missing.sql"
-    posts = rdbms.execute_query_from_file(sql_query, "hackers_prod")
-    fixed_images = []
-    for post in posts:
-        image_matcher = '(?<=<figure class=\\"kg-card kg-image-card kg-card-hascaption\\").*?(?=<\\/figure>)'
-        images = re.findall(image_matcher, post["html"])
-        images = filter(lambda x: "<a href" not in x, images)
-        if bool(images):
-            captions_per_post = []
-            for image in images:
-                caption = re.search(
-                    "(?<=<figcaption>).*?(?=</figcaption>)", image
-                ).group()
-                captions_per_post.append(caption)
-            fixed_images.append(
-                {
-                    post.slug: {
-                        "count": len(captions_per_post),
-                        "captions": captions_per_post,
-                    }
-                }
-            )
-    return fixed_images
+    """Find <img>s missing alt text and assign `alt`, `title` attributes."""
+    return assign_alt_text_to_imgs()
 
 
 @router.get("/backup")
