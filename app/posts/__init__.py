@@ -8,10 +8,12 @@ from fastapi.responses import JSONResponse
 from app.moment import get_current_datetime, get_current_time
 from app.posts.img_tags import assign_alt_text_to_imgs
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
+from app.posts.update import batch_update_metadata
 from clients import gcs, ghost
 from clients.log import LOGGER
+from config import basedir
 from database import rdbms
-from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
+from database.read_sql import fetch_raw_lynx_posts
 from database.schemas import PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -23,6 +25,7 @@ router = APIRouter(prefix="/posts", tags=["posts"])
     description="Generates retina and mobile varieties of post feature_images. \
         Defaults to images uploaded within the current month; \
         accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
+    response_model=PostUpdate,
 )
 def update_post(post_update: PostUpdate):
     """Enrich post metadata upon update."""
@@ -81,7 +84,7 @@ def update_post(post_update: PostUpdate):
         sleep(1)
         time = get_current_time()
         body["posts"][0]["updated_at"] = time
-    response, code = ghost.update_post(post_id, body, slug)
+    response, code = ghost.update_mobiledoc(post_id, body, slug)
     return {str(code): response}
 
 
@@ -90,19 +93,20 @@ def update_post(post_update: PostUpdate):
     summary="Sanitize metadata for all posts.",
     description="Run a sequence of analytics to ensure all posts have proper metadata.",
 )
-def batch_post_metadata():
-    """Mass update post metadata."""
-    queries = collect_sql_queries(subdirectory="/posts/updates")
-    results, total_rows = rdbms.execute_queries(queries, "hackers_prod")
-    LOGGER.success(f"Successfully ran {len(queries)} post analytics")
+def batch_insert_metadata():
+    post_inserts = rdbms.execute_query_from_file(
+        f"{basedir}/database/queries/posts/selects/missing_all_metadata.sql",
+        "hackers_prod",
+    )
+    post_updates = rdbms.execute_query_from_file(
+        f"{basedir}/database/queries/posts/selects/post_mismatched_metadata.sql",
+        "hackers_prod",
+    )
+    inserted_metadata = batch_update_metadata(post_inserts)
+    updated_metadata = batch_update_metadata(post_updates)
     return {
-        "db": {
-            "type": "posts",
-            "num_queries": len(queries),
-            "db_name": "hackers_prod",
-            "rows_affected": total_rows,
-            "analytics": results,
-        }
+        "inserted": {"count": len(inserted_metadata), "posts": inserted_metadata},
+        "updated": {"count": len(updated_metadata), "posts": updated_metadata},
     }
 
 

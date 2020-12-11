@@ -44,7 +44,7 @@ restart: env
 
 .PHONY: deploy
 deploy:
-	$(shell . deploy.sh)
+	$(shell . ./deploy.sh)
 
 
 .PHONY: update

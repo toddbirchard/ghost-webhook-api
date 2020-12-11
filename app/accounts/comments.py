@@ -3,10 +3,10 @@ from typing import Optional
 
 from clients import ghost
 
-from .models import Comment
+from database.schemas import NewComment
 
 
-def parse_comment(comment: Comment, post: dict) -> dict:
+def parse_comment(comment: NewComment, post: dict) -> dict:
     """
     Parse incoming user comment.
 
@@ -32,7 +32,7 @@ def parse_comment(comment: Comment, post: dict) -> dict:
     }
 
 
-def get_user_role(comment: Comment, post: dict) -> Optional[str]:
+def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
     """
     Determine if a commenter is a post author, site moderator, or regular user.
 

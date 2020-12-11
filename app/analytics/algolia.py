@@ -6,7 +6,7 @@ from requests.exceptions import HTTPError
 
 from app.moment import get_current_date
 from clients.log import LOGGER
-from config import Settings
+from config import settings
 
 
 def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
@@ -16,10 +16,10 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
     :timeframe: Number of days for which to fetch recent search analytics.
     :type timeframe: int
     """
-    endpoint = f"{Settings().ALGOLIA_BASE_URL}/searches"
+    endpoint = f"{settings.ALGOLIA_BASE_URL}/searches"
     headers = {
-        "x-algolia-application-id": Settings().ALGOLIA_APP_ID,
-        "x-algolia-api-key": Settings().ALGOLIA_API_KEY,
+        "x-algolia-application-id": settings.ALGOLIA_APP_ID,
+        "x-algolia-api-key": settings.ALGOLIA_API_KEY,
     }
     params = {
         "index": "hackers_posts",

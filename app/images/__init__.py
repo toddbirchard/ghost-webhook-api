@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 from clients import gcs
 from clients.log import LOGGER
-from config import Settings
+from config import settings, basedir
 from database import rdbms
 from database.schemas import PostUpdate
 
@@ -50,7 +50,7 @@ def bulk_transform_images(directory: Optional[str] = None):
     :type directory: Optional[str]
     """
     if directory is None:
-        directory = Settings().GCP_BUCKET_FOLDER
+        directory = settings.GCP_BUCKET_FOLDER
     purged_images = gcs.purge_unwanted_images(directory)
     retina_images = gcs.retina_transformations(directory)
     mobile_images = gcs.mobile_transformations(directory)
@@ -70,7 +70,7 @@ def bulk_transform_images(directory: Optional[str] = None):
 def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = rdbms.execute_query_from_file(
-        "app/images/sql/lynx_missing_images.sql", "hackers_prod"
+        f"{basedir}/database/queries/images/lynx_missing_images.sql", "hackers_prod"
     )
     posts = [result.id for result in results]
     for post in posts:
@@ -89,7 +89,7 @@ def bulk_assign_lynx_images():
 def bulk_organize_images(directory: Optional[str] = None):
     """"""
     if directory is None:
-        directory = Settings().GCP_BUCKET_FOLDER
+        directory = settings.GCP_BUCKET_FOLDER
     retina_images = gcs.organize_retina_images(directory)
     image_headers = gcs.image_headers(directory)
     LOGGER.success(

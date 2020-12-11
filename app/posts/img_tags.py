@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import simplejson as json
 
-from app.posts.update import update_post
+from app.posts.update import update_mobiledoc
 from clients import ghost
 from config import basedir
 from database import rdbms
@@ -19,7 +19,7 @@ def assign_alt_text_to_imgs():
         mobiledoc = json.loads(post["mobiledoc"])
         new_cards = update_image_cards(mobiledoc)
         mobiledoc["cards"] = new_cards
-        post_update = update_post(post, json.dumps(mobiledoc))
+        post_update = update_mobiledoc(post, json.dumps(mobiledoc))
         if post_update:
             updated_posts.append(
                 {

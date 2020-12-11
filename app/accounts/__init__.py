@@ -4,13 +4,12 @@ from sqlalchemy.orm import Session
 
 from app.accounts.comments import parse_comment
 from app.accounts.mixpanel import create_mixpanel_record
-from app.accounts.models import Comment, Donation, UserEvent
+from database.schemas import NewComment, NewDonation, UserEvent
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from clients.log import LOGGER
 from database.crud import create_comment, create_donation, get_comment, get_donation
 from database.orm import get_db
-from database.schemas import NewComment, NewDonation
 
 router = APIRouter(prefix="/account", tags=["accounts"])
 
@@ -78,4 +77,4 @@ def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Donation already created")
     result = create_donation(db=db, donation=donation)
     if bool(result):
-        return result.__dict__
+        return donation

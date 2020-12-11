@@ -9,7 +9,7 @@ from sqlalchemy.engine.result import ResultProxy
 
 from app.posts.lynx.mobiledoc import mobile_doc
 from app.posts.lynx.scrape import scrape_link
-from app.posts.update import update_post
+from app.posts.update import update_mobiledoc
 from clients.log import LOGGER
 
 
@@ -65,7 +65,7 @@ def batch_lynx_embeds(posts: ResultProxy) -> dict:
     for post in posts:
         post_title = post["title"]
         links, mobiledoc = generate_link_previews(post)
-        update_post(post, mobiledoc)
+        update_mobiledoc(post, mobiledoc)
         total_embeds += len(links)
         updated_posts.append(
             {post["id"]: {"title": post_title, "count": len(links), "links": links}}

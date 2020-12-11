@@ -1,10 +1,10 @@
 """Newsletter subscription management."""
 from fastapi import APIRouter
 
-from app.newsletter.models import Subscription
+from database.schemas import Subscription
 from clients import mailgun
 from clients.log import LOGGER
-from config import Settings
+from config import settings
 
 router = APIRouter(prefix="/subscription", tags=["newsletter"])
 
@@ -19,8 +19,8 @@ async def newsletter_subscribe(subscription: Subscription):
     body = {
         "from": "todd@hackersandslackers.com",
         "to": subscription.member.current.email,
-        "subject": Settings().MAILGUN_SUBJECT_LINE,
-        "template": Settings().MAILGUN_EMAIL_TEMPLATE,
+        "subject": settings.MAILGUN_SUBJECT_LINE,
+        "template": settings.MAILGUN_EMAIL_TEMPLATE,
         "h:X-Mailgun-Variables": {"name": subscription.member.current.name},
         "o:tracking": True,
     }

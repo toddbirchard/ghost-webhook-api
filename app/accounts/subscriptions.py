@@ -3,7 +3,7 @@ from typing import Tuple
 from clients import ghost
 from clients.log import LOGGER
 
-from .models import NetlifyUser
+from database.schemas import NetlifyUser
 
 
 def new_ghost_subscription(user: NetlifyUser) -> Tuple[str, int]:

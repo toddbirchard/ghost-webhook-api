@@ -1,24 +1,16 @@
 """Initialize api."""
-from functools import lru_cache
-
 from ddtrace import patch_all
 from ddtrace.contrib.asgi import TraceMiddleware
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import accounts, analytics, authors, github, images, newsletter, posts
-from config import Settings
+from config import settings
 from database.orm import Base, engine
 
 patch_all()
-
-
-@lru_cache()
-def get_settings():
-    return Settings()
-
-
 Base.metadata.create_all(bind=engine)
+
 
 api = FastAPI(
     title="Jamstack API",
@@ -27,14 +19,12 @@ api = FastAPI(
     debug=True,
     docs_url="/",
     openapi_url="/api.json",
-    openapi_tags=Settings().API_TAGS,
+    openapi_tags=settings.API_TAGS,
 )
-
-settings = Depends(get_settings)
 
 api.add_middleware(
     CORSMiddleware,
-    allow_origins=Settings().CORS_ORIGINS,
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,5 +38,5 @@ api.include_router(authors.router)
 api.include_router(images.router)
 api.include_router(github.router)
 
-if Settings().ENVIRONMENT == "production":
+if settings.ENVIRONMENT == "production":
     api = TraceMiddleware(api)

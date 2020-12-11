@@ -63,7 +63,8 @@ class Settings(BaseSettings):
         ],
     )
 
-    env_file = ".env"
+    class Config:
+        env_file = ".env"
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
@@ -127,3 +128,6 @@ class Settings(BaseSettings):
     DATADOG_API_KEY: str = getenv("DATADOG_API_KEY")
     DATADOG_APP_KEY: str = getenv("DATADOG_APP_KEY")
     dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
+
+
+settings = Settings()

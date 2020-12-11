@@ -61,13 +61,11 @@ def test_github_issue(github_issue_user):
     )
 
 
-def test_batch_post_metadata():
+def test_batch_insert_metadata():
     response = client.get("/posts")
     assert response.status_code == 200
-    assert response.json()["db"]["num_queries"] == 18
-    assert response.json()["db"]["db_name"] == "hackers_prod"
-    assert response.json()["db"]["rows_affected"] > 0
-    LOGGER.info(response.json()["db"]["rows_affected"])
+    assert response.json().get('inserted') is not None
+    assert response.json().get('updated') is not None
 
 
 def assign_img_alt_attr():
