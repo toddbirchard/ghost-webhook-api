@@ -1,10 +1,10 @@
 """Newsletter subscription management."""
 from fastapi import APIRouter
 
-from database.schemas import Subscription
 from clients import mailgun
 from clients.log import LOGGER
 from config import settings
+from database.schemas import Subscription, SubscriptionWelcomeEmail
 
 router = APIRouter(prefix="/subscription", tags=["newsletter"])
 
@@ -13,6 +13,7 @@ router = APIRouter(prefix="/subscription", tags=["newsletter"])
     "/",
     summary="Welcome newsletter subscriber.",
     description="Send a welcome email to new subscribers to Ghost newsletter.",
+    response_model=SubscriptionWelcomeEmail,
 )
 async def newsletter_subscribe(subscription: Subscription):
     """Send welcome email to newsletter subscriber."""
@@ -25,7 +26,13 @@ async def newsletter_subscribe(subscription: Subscription):
         "o:tracking": True,
     }
     response = mailgun.send_email(body)
-    return {subscription.member.current.email: f"{response.status_code}"}
+    if bool(response):
+        return SubscriptionWelcomeEmail(
+            from_email=subscription.MAILGUN_PERSONAL_EMAIL,
+            to_email=subscription.member.current.email,
+            subject=settings.MAILGUN_SUBJECT_LINE,
+            template=settings.MAILGUN_EMAIL_TEMPLATE,
+        )
 
 
 @router.delete("/")

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request
 from app.moment import get_current_time
 from clients import sms
 from clients.log import LOGGER
+from config import settings
 
 router = APIRouter(prefix="/github", tags=["github"])
 
@@ -25,9 +26,9 @@ async def github_pr(request: Request):
     user = payload["sender"].get("login")
     pull_request = payload["pull_request"]
     repo = payload["repository"]
-    if user in ("toddbirchard", "dependabot-preview[bot]", "renovate[bot]"):
+    if user in (settings.GITHUB_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
         return {
-            "notification": {
+            "pr": {
                 "time": get_current_time(),
                 "status": "ignored",
                 "trigger": {
@@ -46,7 +47,7 @@ async def github_pr(request: Request):
     sms_message = sms.send_message(message)
     LOGGER.info(f"Github PR {action} for {repo['name']} generated SMS message")
     return {
-        "notification": {
+        "pr": {
             "time": get_current_time(),
             "status": sms_message.status,
             "trigger": {
@@ -56,12 +57,12 @@ async def github_pr(request: Request):
                 "user": user,
                 "action": action,
             },
-            "sms": {
-                "to": sms_message.to,
-                "from": sms_message.from_,
-                "date_sent": sms_message.date_sent,
-                "message": sms_message.body,
-            },
+        },
+        "sms": {
+            "phone_recipient": sms_message.to,
+            "phone_sender": sms_message.from_,
+            "date_sent": sms_message.date_sent,
+            "message": sms_message.body,
         },
     }
 
@@ -83,9 +84,9 @@ async def github_issue(request: Request) -> dict:
     user = payload["sender"].get("login")
     issue = payload["issue"]
     repo = payload["repository"]
-    if user in ("toddbirchard", "dependabot-preview[bot]", "renovate[bot]"):
+    if user in (settings.GITHUB_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
         return {
-            "notification": {
+            "issue": {
                 "time": get_current_time(),
                 "status": "ignored",
                 "trigger": {
@@ -101,7 +102,7 @@ async def github_issue(request: Request) -> dict:
     sms_message = sms.send_message(message)
     LOGGER.info(f"Github issue {action} for {repo['name']} generated SMS message")
     return {
-        "notification": {
+        "issue": {
             "time": get_current_time(),
             "status": sms_message.status,
             "trigger": {
@@ -111,11 +112,11 @@ async def github_issue(request: Request) -> dict:
                 "user": user,
                 "action": action,
             },
-            "sms": {
-                "to": sms_message.to,
-                "from": sms_message.from_,
-                "date_sent": sms_message.date_sent,
-                "message": sms_message.body,
-            },
+        },
+        "sms": {
+            "phone_recipient": sms_message.to,
+            "phone_sender": sms_message.from_,
+            "date_sent": sms_message.date_sent,
+            "message": sms_message.body,
         },
     }

@@ -1,7 +1,6 @@
 from mixpanel import Mixpanel
 
 from config import settings
-
 from database.schemas import NetlifyUser
 
 

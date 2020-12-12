@@ -1,11 +1,11 @@
 """Generate optimized images to be served from Google Cloud CDN."""
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
 from clients import gcs
 from clients.log import LOGGER
-from config import settings, basedir
+from config import basedir, settings
 from database import rdbms
 from database.schemas import PostUpdate
 
@@ -41,7 +41,14 @@ def optimize_post_image(post_update: PostUpdate):
             Defaults to images uploaded within the current month; \
             accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
 )
-def bulk_transform_images(directory: Optional[str] = None):
+def bulk_transform_images(
+    directory: Optional[str] = Query(
+        default=None,
+        title="directory",
+        description="Subdirectory of remote CDN to transverse and transform images.",
+        max_length=50,
+    )
+):
     """
     Apply transformations to images uploaded within the current month.
     Optionally accepts a `directory` parameter to override image directory.

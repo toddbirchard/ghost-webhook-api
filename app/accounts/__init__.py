@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 
 from app.accounts.comments import parse_comment
 from app.accounts.mixpanel import create_mixpanel_record
-from database.schemas import NewComment, NewDonation, UserEvent
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from clients.log import LOGGER
 from database.crud import create_comment, create_donation, get_comment, get_donation
 from database.orm import get_db
+from database.schemas import NewComment, NewDonation, UserEvent
 
 router = APIRouter(prefix="/account", tags=["accounts"])
 
@@ -32,6 +32,7 @@ def new_ghost_member(user_event: UserEvent):
     "/comment",
     summary="New user comment",
     description="Store user-generated comments submitted on posts.",
+    response_model=NewComment,
 )
 def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
@@ -54,7 +55,7 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
         f"New comment `{comment.comment_id}` saved on post `{comment.post_slug}`"
     )
     ghost.rebuild_netlify_site()
-    return result.__dict__
+    return comment
 
 
 @router.post(

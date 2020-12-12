@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Optional
 
 from clients import ghost
-
 from database.schemas import NewComment
 
 

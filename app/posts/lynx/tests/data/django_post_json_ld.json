@@ -5,7 +5,7 @@
     "@type": "Person",
     "name": "Todd Birchard",
     "image": "https://hackersandslackers-cdn.storage.googleapis.com/2020/04/todd@2x.jpg",
-    "sameAs": ["https://toddbirchard.com", "https://twitter.com/ToddRBirchard"]
+    "sameAs": ["https://example", "https://twitter.com/ToddRBirchard"]
   },
   "keywords": "Django, Python, Software Development",
   "headline": "Creating Interactive Views in Django",

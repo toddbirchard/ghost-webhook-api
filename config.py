@@ -129,5 +129,8 @@ class Settings(BaseSettings):
     DATADOG_APP_KEY: str = getenv("DATADOG_APP_KEY")
     dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
 
+    # Github
+    GITHUB_USERNAME: str = getenv("GITHUB_USERNAME")
+
 
 settings = Settings()
