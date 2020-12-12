@@ -83,12 +83,13 @@ class Settings(BaseSettings):
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
-    GOOGLE_APPLICATION_CREDENTIALS: str = (
-        f'{basedir}/{getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
-    )
-    GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        GOOGLE_APPLICATION_CREDENTIALS
-    )
+    if ENVIRONMENT == "production":
+        GOOGLE_APPLICATION_CREDENTIALS: str = (
+            f'{basedir}/{getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
+        )
+        GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
+            GOOGLE_APPLICATION_CREDENTIALS
+        )
 
     # Google BigQuery
     GCP_PROJECT: str = getenv("GCP_PROJECT")
