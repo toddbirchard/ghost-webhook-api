@@ -1,5 +1,5 @@
 """Helper functions to fetch search query activity from Algolia."""
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 import requests
 from requests.exceptions import HTTPError
@@ -43,7 +43,9 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
         return None
 
 
-def filter_results(search_queries: list) -> List[Optional[str]]:
+def filter_results(
+    search_queries: List[Optional[Dict[str, Any]]]
+) -> List[Optional[str]]:
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
@@ -52,6 +54,5 @@ def filter_results(search_queries: list) -> List[Optional[str]]:
 
     :returns: List[Optional[str]]
     """
-    search_queries = [query["search"].strip() for query in search_queries]
-    search_queries = list(filter(lambda x: len(x["search"]) > 3, search_queries))
+    search_queries = [query for query in search_queries if len(query["search"]) > 3]
     return search_queries

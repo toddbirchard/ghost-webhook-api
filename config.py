@@ -74,7 +74,7 @@ class Settings(BaseSettings):
     }
 
     # Algolia API
-    ALGOLIA_BASE_URL: str = getenv("ALGOLIA_BASE_URL")
+    ALGOLIA_BASE_URL: str = "https://analytics.algolia.com/2"
     ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
     ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
 
@@ -92,6 +92,13 @@ class Settings(BaseSettings):
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
+    if ENVIRONMENT == "production":
+        GOOGLE_APPLICATION_CREDENTIALS: str = (
+            f'{basedir}/{getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
+        )
+        GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
+            GOOGLE_APPLICATION_CREDENTIALS
+        )
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
