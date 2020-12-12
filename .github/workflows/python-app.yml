@@ -37,7 +37,7 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
-        credentials_file_path: "/gcloud.json"
+        credentials_file_path: "gcloud.json"
     - name: Test with pytest
       env:
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
