@@ -7,7 +7,6 @@ import requests
 from requests.exceptions import HTTPError
 
 from clients.log import LOGGER
-from database.schemas import Post
 
 
 class Ghost:

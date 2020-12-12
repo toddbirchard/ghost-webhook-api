@@ -59,18 +59,23 @@ def render_json_ltd(html: bytes, base_url: str) -> Optional[dict]:
 def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     """Fetch title via extruct with BeautifulSoup fallback."""
     title = None
-    if bool(json_ld) and json_ld.get("headline"):
-        if isinstance(json_ld.get("headline"), list):
-            title = json_ld["headline"][0]
-        elif isinstance(json_ld.get("headline"), str):
-            title = json_ld.get("headline")
-        if bool(title) and isinstance(title, str):
-            return title.replace("'", "").strip()
-    if bool(json_ld) and json_ld.get("title"):
-        if isinstance(json_ld.get("title"), list):
-            title = json_ld["title"][0]
-        elif isinstance(json_ld.get("title"), str):
-            title = json_ld.get("title")
+    if bool(json_ld):
+        if isinstance(json_ld, dict):
+            if json_ld.get("headline"):
+                title = json_ld.get("headline")
+            elif json_ld.get("title"):
+                title = json_ld.get("title")
+            if isinstance(json_ld, list):
+                title = title[0]
+            if isinstance(title, str):
+                return title.replace("'", "").strip()
+        elif isinstance(json_ld, list):
+            title = json_ld[0]
+            if isinstance(title, dict):
+                if title.get("headline"):
+                    title = title.get("headline")
+                elif title.get("title"):
+                    title = title.get("title")
         if bool(title) and isinstance(title, str):
             return title.strip()
     # Fallback to BeautifulSoup if target lacks structured data
@@ -82,8 +87,9 @@ def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         title = html.find("meta", property="twitter:title").get("content")
     elif html.find("h1"):
         title = html.find("h1").string
-    if title:
+    if bool(title) and isinstance(title, str):
         return title.replace("'", "").strip()
+    return None
 
 
 def get_image(html: BeautifulSoup) -> Optional[str]:
@@ -116,8 +122,8 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
     author = None
     if bool(json_ld) and json_ld.get("author"):
         author = json_ld["author"]
-        if isinstance(json_ld["author"], list):
-            if len(json_ld["author"]) == 1:
+        if isinstance(author, list):
+            if len(author) == 1:
                 author = json_ld["author"][0]
             if any(isinstance(author, dict) for i in author):
                 author = author.get("name")
@@ -134,8 +140,7 @@ def get_author(json_ld: dict, html: BeautifulSoup) -> Optional[str]:
         author = html.find("meta", property="twitter:creator").get("content")
     elif html.find("a", attrs={"class": "commit-author"}):
         author = html.find("a", attrs={"class": "commit-author"}).get("href")
-    if author:
-        LOGGER.info(f"author: {author}")
+    if bool(author) and isinstance(author, str):
         return author.strip()
     return None
 
@@ -153,25 +158,25 @@ def get_publisher(json_ld: dict) -> Optional[str]:
         return None
 
 
-def get_favicon(html: BeautifulSoup, base_url: str) -> Optional[str]:
-    """Fetch favicon with BeautifulSoup."""
-    favicon = None
+def get_icon(html: BeautifulSoup, base_url: str) -> Optional[str]:
+    """Fetch icon with BeautifulSoup."""
+    icon = None
     if html.find("link", attrs={"rel": "icon"}):
-        favicon = html.find("link", attrs={"rel": "icon"}).get("href")
+        icon = html.find("link", attrs={"rel": "icon"}).get("href")
     elif html.find("link", attrs={"rel": "fluid-icon"}):
-        favicon = html.find("link", attrs={"rel": "fluid-icon"}).get("href")
+        icon = html.find("link", attrs={"rel": "fluid-icon"}).get("href")
     elif html.find("link", attrs={"rel": "mask-icon"}):
-        favicon = html.find("link", attrs={"rel": "mask-icon"}).get("href")
+        icon = html.find("link", attrs={"rel": "mask-icon"}).get("href")
     elif html.find("link", attrs={"rel": "icon"}):
-        favicon = html.find("link", attrs={"rel": "icon"}).get("href")
+        icon = html.find("link", attrs={"rel": "icon"}).get("href")
     elif html.find("link", attrs={"rel": "shortcut icon"}):
-        favicon = html.find("link", attrs={"rel": "shortcut icon"}).get("href")
-    if favicon and "http" not in favicon:
-        favicon = base_url + favicon
-    if favicon is None:
-        favicon = base_url + "/favicon.ico"
-    if bool(favicon):
-        return favicon.strip()
+        icon = html.find("link", attrs={"rel": "shortcut icon"}).get("href")
+    if icon and "http" not in icon:
+        icon = base_url + icon
+    if icon is None:
+        icon = base_url + "/icon.ico"
+    if bool(icon) and isinstance(icon, str):
+        return icon.strip()
     return None
 
 
@@ -209,7 +214,7 @@ def create_bookmark_card(
                 "author": get_author(json_ld, html),
                 "publisher": get_publisher(json_ld),
                 "image": get_image(html),
-                "icon": get_favicon(html, base_url),
+                "icon": get_icon(html, base_url),
             },
         },
     ]

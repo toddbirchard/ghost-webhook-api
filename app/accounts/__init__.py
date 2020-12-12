@@ -2,7 +2,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.accounts.comments import parse_comment
 from app.accounts.mixpanel import create_mixpanel_record
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
@@ -50,12 +49,12 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     existing_comment = get_comment(db, comment.comment_id)
     if existing_comment:
         raise HTTPException(status_code=400, detail="Comment already created")
-    result = create_comment(db, comment)
+    user_comment = create_comment(db, comment)
     LOGGER.success(
         f"New comment `{comment.comment_id}` saved on post `{comment.post_slug}`"
     )
     ghost.rebuild_netlify_site()
-    return comment
+    return user_comment
 
 
 @router.post(
