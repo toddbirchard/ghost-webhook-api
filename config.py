@@ -69,10 +69,9 @@ class Settings(BaseSettings):
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_PEM: str = getenv("SQLALCHEMY_DATABASE_PEM")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
-    SQLALCHEMY_ENGINE_OPTIONS: dict = {
-        "ssl": {"ca": f"{basedir}/creds/ca-certificate.crt"}
-    }
+    SQLALCHEMY_ENGINE_OPTIONS: dict = {"ssl": {"key": SQLALCHEMY_DATABASE_PEM}}
 
     # Algolia API
     ALGOLIA_BASE_URL: str = "https://analytics.algolia.com/2"
