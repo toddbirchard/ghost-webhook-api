@@ -131,7 +131,6 @@ class Ghost:
             )
             if req.status_code == 200:
                 author_emails = [author.get("email") for author in req.json()["users"]]
-                LOGGER.info(f"Fetched Ghost authors: {', '.join(author_emails)}")
                 return author_emails
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")

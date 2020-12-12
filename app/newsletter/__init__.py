@@ -28,15 +28,15 @@ async def newsletter_subscribe(subscription: Subscription):
     response = mailgun.send_email(body)
     if bool(response):
         return SubscriptionWelcomeEmail(
-            from_email=subscription.MAILGUN_PERSONAL_EMAIL,
+            from_email=settings.MAILGUN_PERSONAL_EMAIL,
             to_email=subscription.member.current.email,
             subject=settings.MAILGUN_SUBJECT_LINE,
             template=settings.MAILGUN_EMAIL_TEMPLATE,
-        )
+        ).dict()
 
 
 @router.delete("/")
 def newsletter_unsubscribe(subscription: Subscription):
     """Track user unsubscribe events and spam complaints."""
     LOGGER.info(f"`{subscription.member.previous.name}` unsubscribed from newsletter.")
-    return subscription.member.previous
+    return subscription.member.previous.dict()

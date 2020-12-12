@@ -58,7 +58,7 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
         f"New comment `{comment.comment_id}` saved on post `{comment.post_slug}`"
     )
     ghost.rebuild_netlify_site()
-    return user_comment
+    return user_comment.dict()
 
 
 @router.post(
@@ -80,4 +80,4 @@ def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Donation already created")
     new_donation = create_donation(db=db, donation=donation)
-    return new_donation
+    return new_donation.dict()

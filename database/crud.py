@@ -40,7 +40,7 @@ def create_comment(db: Session, comment: NewComment):
         body=comment.body,
         created_at=datetime.now(),
         post_slug=comment.post_slug,
-        author_name=comment.author_name,
+        post_id=comment.post_id,
     )
     db.add(db_item)
     db.commit()
