@@ -4,10 +4,10 @@ from .orm import Base
 
 
 class Comment(Base):
-    __tablename__ = "comment"
+    __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, index=True)
-    comment_id = Column(String(255), unique=True)
+    comment_id = Column(String(255), unique=True, index=True)
     email = Column(String(255), unique=False)
     user_name = Column(String(255), unique=False)
     user_avatar = Column(Text, unique=False)
@@ -20,13 +20,13 @@ class Comment(Base):
 
 
 class Donation(Base):
-    __tablename__ = "donation"
+    __tablename__ = "donations"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=False)
     name = Column(String(255), unique=False)
     count = Column(Integer, unique=False)
     message = Column(Text, unique=False)
-    link = Column(String(255), unique=True)
+    link = Column(String(255))
     created_at = Column(DateTime)
-    coffee_id = Column(Integer, unique=True)
+    coffee_id = Column(Integer, unique=True, index=True)

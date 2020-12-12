@@ -13,7 +13,11 @@ from database.schemas import NewComment, NewDonation, UserEvent
 router = APIRouter(prefix="/account", tags=["accounts"])
 
 
-@router.post("/")
+@router.post(
+    "/",
+    summary="Add new user account to Ghost.",
+    description="Create free-tier Ghost membership for Netlify user account upon signup.",
+)
 def new_ghost_member(user_event: UserEvent):
     """
     Create Ghost member from Netlify identity signup.
@@ -44,11 +48,11 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
-    if comment.user_email not in authors:
-        mailgun.send_comment_notification_email(post, comment.__dict__)
     existing_comment = get_comment(db, comment.comment_id)
     if existing_comment:
         raise HTTPException(status_code=400, detail="Comment already created")
+    elif comment.user_email not in authors:
+        mailgun.send_comment_notification_email(post, comment.__dict__)
     user_comment = create_comment(db, comment)
     LOGGER.success(
         f"New comment `{comment.comment_id}` saved on post `{comment.post_slug}`"
@@ -75,6 +79,5 @@ def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     db_user = get_donation(db, donation.coffee_id)
     if db_user:
         raise HTTPException(status_code=400, detail="Donation already created")
-    result = create_donation(db=db, donation=donation)
-    if bool(result):
-        return donation
+    new_donation = create_donation(db=db, donation=donation)
+    return new_donation
