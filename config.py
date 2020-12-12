@@ -130,7 +130,7 @@ class Settings(BaseSettings):
     dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
 
     # Github
-    GITHUB_USERNAME: str = getenv("GITHUB_USERNAME")
+    GH_USERNAME: str = getenv("GH_USERNAME")
 
 
 settings = Settings()
