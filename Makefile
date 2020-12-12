@@ -45,6 +45,7 @@ restart: env
 
 .PHONY: deploy
 deploy:
+	make clean
 	$(shell . ./deploy.sh)
 
 
@@ -73,5 +74,5 @@ clean:
 	find . -name '__pycache__' -delete
 	find . -name 'poetry.lock' -delete
 	find . -name 'Pipefile.lock' -delete
-	find . -name 'logs/*.log' -delete
+	find . -name 'logs/*' -delete
 	find . -name '.pytest_cache' -delete

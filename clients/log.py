@@ -48,12 +48,14 @@ def create_logger() -> logger:
     )
     # Readable logs
     logger.add(
-        "logs/info.log",
+        "logs/error.log",
         colorize=True,
         catch=True,
         format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
         + "<light-green>{level}</light-green>: "
         + "<light-white>{message}</light-white>",
+        rotation="500 MB",
+        compression="zip",
     )
     logger.add("logs/info.json", format=formatter, rotation="500 MB", compression="zip")
     if Settings().ENVIRONMENT == "production":

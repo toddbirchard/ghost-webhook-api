@@ -1,6 +1,5 @@
 """Initialize api."""
-from ddtrace import patch_all
-from ddtrace.contrib.asgi import TraceMiddleware
+from ddtrace_asgi.middleware import TraceMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -8,7 +7,6 @@ from app import accounts, analytics, authors, github, images, newsletter, posts
 from config import settings
 from database.orm import Base, engine
 
-patch_all()
 Base.metadata.create_all(bind=engine)
 
 
@@ -21,6 +19,9 @@ api = FastAPI(
     openapi_url="/api.json",
     openapi_tags=settings.API_TAGS,
 )
+
+if settings.ENVIRONMENT == "production":
+    api.add_middleware(TraceMiddleware, service=settings.app_name)
 
 api.add_middleware(
     CORSMiddleware,
@@ -37,6 +38,3 @@ api.include_router(accounts.router)
 api.include_router(authors.router)
 api.include_router(images.router)
 api.include_router(github.router)
-
-if settings.ENVIRONMENT == "production":
-    api = TraceMiddleware(api)

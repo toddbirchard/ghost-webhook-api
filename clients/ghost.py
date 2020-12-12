@@ -50,7 +50,6 @@ class Ghost:
         token = jwt.encode(
             payload, bytes.fromhex(self.secret), algorithm="HS256", headers=header
         )
-        LOGGER.info(f"Granted Ghost auth token.")
         return f"Ghost {token.decode()}"
 
     def get_post(self, post_id) -> Optional[dict]:
