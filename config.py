@@ -78,24 +78,20 @@ class Settings(BaseSettings):
     ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
     ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
 
+    # GCP
+    GCP_PROJECT: str = getenv("GCP_PROJECT")
+    GCP_PROJECT_ID: str = getenv("GCP_PROJECT_ID")
+
+    # Google BigQuery
+    GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
+    GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
+    GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
+
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
-    if ENVIRONMENT == "production":
-        GOOGLE_APPLICATION_CREDENTIALS: str = (
-            f'{basedir}/{getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
-        )
-        GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
-            GOOGLE_APPLICATION_CREDENTIALS
-        )
-
-    # Google BigQuery
-    GCP_PROJECT: str = getenv("GCP_PROJECT")
-    GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
-    GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
-    GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
