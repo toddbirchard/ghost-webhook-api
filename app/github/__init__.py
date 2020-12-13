@@ -26,14 +26,15 @@ async def github_pr(request: Request):
     user = payload["sender"].get("login")
     pull_request = payload["pull_request"]
     repo = payload["repository"]
-    if user in (settings.GITHUB_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
+    if user in (settings.GH_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
         return {
             "pr": {
+                "id": pull_request["number"],
                 "time": get_current_time(),
                 "status": "ignored",
                 "trigger": {
                     "type": "github",
-                    "repo": repo["name"],
+                    "repo": repo["full_name"],
                     "title": pull_request["title"],
                     "user": user,
                     "action": action,
@@ -48,11 +49,12 @@ async def github_pr(request: Request):
     LOGGER.info(f"Github PR {action} for {repo['name']} generated SMS message")
     return {
         "pr": {
+            "id": pull_request["number"],
             "time": get_current_time(),
             "status": sms_message.status,
             "trigger": {
                 "type": "github",
-                "repo": repo["name"],
+                "repo": repo["full_name"],
                 "title": pull_request["title"],
                 "user": user,
                 "action": action,
@@ -84,14 +86,15 @@ async def github_issue(request: Request) -> dict:
     user = payload["sender"].get("login")
     issue = payload["issue"]
     repo = payload["repository"]
-    if user in (settings.GITHUB_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
+    if user in (settings.GH_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
         return {
             "issue": {
+                "id": issue["id"],
                 "time": get_current_time(),
                 "status": "ignored",
                 "trigger": {
                     "type": "github",
-                    "repo": repo["name"],
+                    "repo": repo["full_name"],
                     "title": issue["title"],
                     "user": user,
                     "action": action,
@@ -103,11 +106,12 @@ async def github_issue(request: Request) -> dict:
     LOGGER.info(f"Github issue {action} for {repo['name']} generated SMS message")
     return {
         "issue": {
+            "id": issue["id"],
             "time": get_current_time(),
             "status": sms_message.status,
             "trigger": {
                 "type": "github",
-                "repo": repo["name"],
+                "repo": repo["full_name"],
                 "title": issue["title"],
                 "user": user,
                 "action": action,

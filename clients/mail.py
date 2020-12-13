@@ -48,6 +48,8 @@ class Mailgun:
             "to": post["primary_author"]["email"],
             "subject": f"Hackers and Slackers: {comment.get('user_name')} commented on your post `{post['title']}`",
             "o:tracking": True,
+            "o:tracking-opens": True,
+            "o:tracking-clicks": True,
             "text": f"Your post `{post['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['url'].replace('.app', '.com')}",
         }
         return self.send_email(body)

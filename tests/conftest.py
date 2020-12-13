@@ -1,57 +1,65 @@
 import pytest
+from github import Github
 
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
-from config import Settings
+from config import settings
 from database.sql_db import Database
 
 
 @pytest.fixture
 def sms():
     return Twilio(
-        sid=Settings().TWILIO_ACCOUNT_SID,
-        token=Settings().TWILIO_AUTH_TOKEN,
-        recipient=Settings().TWILIO_RECIPIENT_PHONE,
-        sender=Settings().TWILIO_SENDER_PHONE,
+        sid=settings.TWILIO_ACCOUNT_SID,
+        token=settings.TWILIO_AUTH_TOKEN,
+        recipient=settings.TWILIO_RECIPIENT_PHONE,
+        sender=settings.TWILIO_SENDER_PHONE,
     )
 
 
 @pytest.fixture
 def ghost():
     return Ghost(
-        admin_api_url=Settings().GHOST_ADMIN_API_URL,
-        content_api_url=Settings().GHOST_CONTENT_API_URL,
-        client_id=Settings().GHOST_CLIENT_ID,
-        client_secret=Settings().GHOST_ADMIN_API_KEY,
-        netlify_build_url=Settings().GHOST_NETLIFY_BUILD_HOOK,
+        admin_api_url=settings.GHOST_ADMIN_API_URL,
+        content_api_url=settings.GHOST_CONTENT_API_URL,
+        client_id=settings.GHOST_CLIENT_ID,
+        client_secret=settings.GHOST_ADMIN_API_KEY,
+        netlify_build_url=settings.GHOST_NETLIFY_BUILD_HOOK,
     )
 
 
 @pytest.fixture
 def mailgun():
     return Mailgun(
-        Settings().MAILGUN_EMAIL_SERVER,
-        Settings().MAILGUN_FROM_SENDER,
-        Settings().MAILGUN_API_KEY,
+        settings.MAILGUN_EMAIL_SERVER,
+        settings.MAILGUN_FROM_SENDER,
+        settings.MAILGUN_API_KEY,
     )
 
 
 @pytest.fixture
 def gcs():
     return GCS(
-        bucket_name=Settings().GCP_BUCKET_NAME,
-        bucket_url=Settings().GCP_BUCKET_URL,
-        bucket_lynx=Settings().GCP_LYNX_DIRECTORY,
+        bucket_name=settings.GCP_BUCKET_NAME,
+        bucket_url=settings.GCP_BUCKET_URL,
+        bucket_lynx=settings.GCP_LYNX_DIRECTORY,
     )
 
 
 @pytest.fixture
 def rdbms():
     return Database(
-        uri=Settings().SQLALCHEMY_DATABASE_URI,
-        args=Settings().SQLALCHEMY_ENGINE_OPTIONS,
+        uri=settings.SQLALCHEMY_DATABASE_URI,
+        args=settings.SQLALCHEMY_ENGINE_OPTIONS,
+    )
+
+
+@pytest.fixture
+def gh():
+    return Github(
+        settings.GH_API_KEY,
     )
 
 
@@ -968,12 +976,12 @@ def github_issue_user():
     return {
         "action": "opened",
         "issue": {
-            "url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues/21",
-            "repository_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial",
-            "labels_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues/21/labels{/name}",
-            "comments_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues/21/comments",
-            "events_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues/21/events",
-            "html_url": "https://github.com/toddbirchard/flasklogin-tutorial/issues/21",
+            "url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/21",
+            "repository_url": "https://api.github.com/repos/toddbirchard/jamstack-api",
+            "labels_url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/21/labels{/name}",
+            "comments_url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/21/comments",
+            "events_url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/21/events",
+            "html_url": "https://github.com/toddbirchard/jamstack-api/issues/21",
             "id": 756606573,
             "node_id": "MDU6SXNzdWU3NTY2MDY1NzM=",
             "number": 21,
@@ -1002,7 +1010,7 @@ def github_issue_user():
                 {
                     "id": 1304794335,
                     "node_id": "MDU6TGFiZWwxMzA0Nzk0MzM1",
-                    "url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/labels/question",
+                    "url": "https://api.github.com/repos/toddbirchard/jamstack-api/labels/question",
                     "name": "question",
                     "color": "d876e3",
                     "default": True,
@@ -1021,8 +1029,8 @@ def github_issue_user():
         "repository": {
             "id": 179583023,
             "node_id": "MDEwOlJlcG9zaXRvcnkxNzk1ODMwMjM=",
-            "name": "flasklogin-tutorial",
-            "full_name": "toddbirchard/flasklogin-tutorial",
+            "name": "jamstack-api",
+            "full_name": "toddbirchard/jamstack-api",
             "private": False,
             "owner": {
                 "login": "toddbirchard",
@@ -1044,53 +1052,53 @@ def github_issue_user():
                 "type": "User",
                 "site_admin": False,
             },
-            "html_url": "https://github.com/toddbirchard/flasklogin-tutorial",
+            "html_url": "https://github.com/toddbirchard/jamstack-api",
             "description": ":man_technologist: :key: Tutorial to accompany corresponding post on hackersandslackers.com",
             "fork": False,
-            "url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial",
-            "forks_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/forks",
-            "keys_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/keys{/key_id}",
-            "collaborators_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/collaborators{/collaborator}",
-            "teams_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/teams",
-            "hooks_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/hooks",
-            "issue_events_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues/events{/number}",
-            "events_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/events",
-            "assignees_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/assignees{/user}",
-            "branches_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/branches{/branch}",
-            "tags_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/tags",
-            "blobs_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/git/blobs{/sha}",
-            "git_tags_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/git/tags{/sha}",
-            "git_refs_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/git/refs{/sha}",
-            "trees_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/git/trees{/sha}",
-            "statuses_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/statuses/{sha}",
-            "languages_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/languages",
-            "stargazers_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/stargazers",
-            "contributors_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/contributors",
-            "subscribers_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/subscribers",
-            "subscription_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/subscription",
-            "commits_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/commits{/sha}",
-            "git_commits_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/git/commits{/sha}",
-            "comments_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/comments{/number}",
-            "issue_comment_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues/comments{/number}",
-            "contents_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/contents/{+path}",
-            "compare_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/compare/{base}...{head}",
-            "merges_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/merges",
-            "archive_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/{archive_format}{/ref}",
-            "downloads_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/downloads",
-            "issues_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/issues{/number}",
-            "pulls_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/pulls{/number}",
-            "milestones_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/milestones{/number}",
-            "notifications_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/notifications{?since,all,participating}",
-            "labels_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/labels{/name}",
-            "releases_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/releases{/id}",
-            "deployments_url": "https://api.github.com/repos/toddbirchard/flasklogin-tutorial/deployments",
+            "url": "https://api.github.com/repos/toddbirchard/jamstack-api",
+            "forks_url": "https://api.github.com/repos/toddbirchard/jamstack-api/forks",
+            "keys_url": "https://api.github.com/repos/toddbirchard/jamstack-api/keys{/key_id}",
+            "collaborators_url": "https://api.github.com/repos/toddbirchard/jamstack-api/collaborators{/collaborator}",
+            "teams_url": "https://api.github.com/repos/toddbirchard/jamstack-api/teams",
+            "hooks_url": "https://api.github.com/repos/toddbirchard/jamstack-api/hooks",
+            "issue_events_url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/events{/number}",
+            "events_url": "https://api.github.com/repos/toddbirchard/jamstack-api/events",
+            "assignees_url": "https://api.github.com/repos/toddbirchard/jamstack-api/assignees{/user}",
+            "branches_url": "https://api.github.com/repos/toddbirchard/jamstack-api/branches{/branch}",
+            "tags_url": "https://api.github.com/repos/toddbirchard/jamstack-api/tags",
+            "blobs_url": "https://api.github.com/repos/toddbirchard/jamstack-api/git/blobs{/sha}",
+            "git_tags_url": "https://api.github.com/repos/toddbirchard/jamstack-api/git/tags{/sha}",
+            "git_refs_url": "https://api.github.com/repos/toddbirchard/jamstack-api/git/refs{/sha}",
+            "trees_url": "https://api.github.com/repos/toddbirchard/jamstack-api/git/trees{/sha}",
+            "statuses_url": "https://api.github.com/repos/toddbirchard/jamstack-api/statuses/{sha}",
+            "languages_url": "https://api.github.com/repos/toddbirchard/jamstack-api/languages",
+            "stargazers_url": "https://api.github.com/repos/toddbirchard/jamstack-api/stargazers",
+            "contributors_url": "https://api.github.com/repos/toddbirchard/jamstack-api/contributors",
+            "subscribers_url": "https://api.github.com/repos/toddbirchard/jamstack-api/subscribers",
+            "subscription_url": "https://api.github.com/repos/toddbirchard/jamstack-api/subscription",
+            "commits_url": "https://api.github.com/repos/toddbirchard/jamstack-api/commits{/sha}",
+            "git_commits_url": "https://api.github.com/repos/toddbirchard/jamstack-api/git/commits{/sha}",
+            "comments_url": "https://api.github.com/repos/toddbirchard/jamstack-api/comments{/number}",
+            "issue_comment_url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/comments{/number}",
+            "contents_url": "https://api.github.com/repos/toddbirchard/jamstack-api/contents/{+path}",
+            "compare_url": "https://api.github.com/repos/toddbirchard/jamstack-api/compare/{base}...{head}",
+            "merges_url": "https://api.github.com/repos/toddbirchard/jamstack-api/merges",
+            "archive_url": "https://api.github.com/repos/toddbirchard/jamstack-api/{archive_format}{/ref}",
+            "downloads_url": "https://api.github.com/repos/toddbirchard/jamstack-api/downloads",
+            "issues_url": "https://api.github.com/repos/toddbirchard/jamstack-api/issues{/number}",
+            "pulls_url": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls{/number}",
+            "milestones_url": "https://api.github.com/repos/toddbirchard/jamstack-api/milestones{/number}",
+            "notifications_url": "https://api.github.com/repos/toddbirchard/jamstack-api/notifications{?since,all,participating}",
+            "labels_url": "https://api.github.com/repos/toddbirchard/jamstack-api/labels{/name}",
+            "releases_url": "https://api.github.com/repos/toddbirchard/jamstack-api/releases{/id}",
+            "deployments_url": "https://api.github.com/repos/toddbirchard/jamstack-api/deployments",
             "created_at": "2019-04-04T21:56:12Z",
             "updated_at": "2020-11-30T02:57:21Z",
             "pushed_at": "2020-11-30T02:57:19Z",
-            "git_url": "git://github.com/toddbirchard/flasklogin-tutorial.git",
-            "ssh_url": "git@github.com:toddbirchard/flasklogin-tutorial.git",
-            "clone_url": "https://github.com/toddbirchard/flasklogin-tutorial.git",
-            "svn_url": "https://github.com/toddbirchard/flasklogin-tutorial",
+            "git_url": "git://github.com/toddbirchard/jamstack-api.git",
+            "ssh_url": "git@github.com:toddbirchard/jamstack-api.git",
+            "clone_url": "https://github.com/toddbirchard/jamstack-api.git",
+            "svn_url": "https://github.com/toddbirchard/jamstack-api",
             "homepage": "https://hackersandslackers.com/authenticating-users-with-flask-login/",
             "size": 235,
             "stargazers_count": 95,

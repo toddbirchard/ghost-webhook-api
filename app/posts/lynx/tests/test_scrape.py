@@ -81,20 +81,20 @@ def test_render_json_ltd(hackers_fetched_post):
 
 
 def test_get_image_1(mock_jsonld_1, mock_html_1):
-    image = get_image(mock_jsonld_1, mock_html_1)
+    image = get_image(mock_html_1)
     assert image == "https://miro.medium.com/max/1200/1*_rYEpi3Crp_pX0lWBbFeOg.jpeg"
 
 
 def test_get_image_2(mock_jsonld_2, mock_html_2):
-    image = get_image(mock_jsonld_2, mock_html_2)
+    image = get_image(mock_html_2)
     assert (
         image
         == "https://cdn.vox-cdn.com/thumbor/C65cXI5Wcs45ZiRqvPMNWWVWi2E=/0x65:1920x1070/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/19312831/Evergarden_Screenshot_1.png"
     )
 
 
-def test_get_image_3(mock_jsonld_3, mock_html_3):
-    image = get_image(mock_jsonld_3, mock_html_3)
+def test_get_image_3(mock_html_3):
+    image = get_image(mock_html_3)
     assert (
         image
         == "https://imgix.bustle.com/uploads/image/2020/2/21/20b7ba9d-8d72-4278-ad7f-38a1e07e7370-gettyimages-1137737073-removebg-preview.png?w=1200&h=630&q=70&fit=crop&crop=faces&fm=jpg"

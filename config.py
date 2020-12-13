@@ -92,13 +92,10 @@ class Settings(BaseSettings):
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
-    if ENVIRONMENT == "production":
-        GOOGLE_APPLICATION_CREDENTIALS: str = (
-            f'{basedir}/{getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
-        )
-        GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
-            GOOGLE_APPLICATION_CREDENTIALS
-        )
+    GOOGLE_APPLICATION_CREDENTIALS: str = getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        f"{basedir}/{GOOGLE_APPLICATION_CREDENTIALS}"
+    )
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
@@ -135,6 +132,7 @@ class Settings(BaseSettings):
 
     # Github
     GH_USERNAME: str = getenv("GH_USERNAME")
+    GH_API_KEY: str = getenv("GH_API_KEY")
 
 
 settings = Settings()

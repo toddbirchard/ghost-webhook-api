@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from app.moment import get_current_datetime, get_current_time
 from app.posts.img_tags import assign_alt_text_to_imgs
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
-from app.posts.update import batch_update_metadata
+from app.posts.update import batch_update_metadata, update_mobiledoc
 from clients import gcs, ghost
 from clients.log import LOGGER
 from config import basedir
@@ -84,7 +84,7 @@ def update_post(post_update: PostUpdate):
         sleep(1)
         time = get_current_time()
         body["posts"][0]["updated_at"] = time
-    response, code = ghost.update_mobiledoc(post_id, body, slug)
+    response, code = update_mobiledoc(post_id, body, slug)
     return {str(code): response}
 
 

@@ -1,5 +1,7 @@
 import pytest
 
+from clients.log import LOGGER
+
 
 @pytest.fixture
 def comment_body():
@@ -19,6 +21,7 @@ def comment_body():
 def test_comment_email(comment_body, ghost, mailgun):
     post = ghost.get_post("5dc42cb812c9ce0d63f5c0c3")
     response = mailgun.send_comment_notification_email(post, comment_body)
+    LOGGER.info(response.content)
     assert post["primary_author"]["name"] == "Todd Birchard"
     assert post["primary_author"]["email"] is not None
     assert comment_body["user_name"] != post["primary_author"]["name"]

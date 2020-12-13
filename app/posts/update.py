@@ -14,7 +14,7 @@ def update_mobiledoc(post: dict, mobiledoc: str) -> Tuple[str, int]:
             }
         ]
     }
-    return ghost.update_mobiledoc(post["id"], body, post["slug"])
+    return ghost.update_post(post["id"], body, post["slug"])
 
 
 def batch_update_metadata(post_dicts: List[dict]):

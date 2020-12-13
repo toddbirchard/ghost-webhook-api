@@ -26,14 +26,16 @@ def test_batch_lynx_previews(rdbms):
         LOGGER.info(post["title"])
 
 
-def test_github_pr(github_pr_owner, github_pr_user):
+def test_github_pr(github_pr_owner, github_pr_user, gh):
     owner_response = client.post("/github/pr", json=github_pr_owner)
+    pr = owner_response.json()["pr"]
+    repo = pr["trigger"]["repo"]
     assert owner_response.status_code == 200
     assert owner_response.json()["pr"]["status"] == "ignored"
     assert owner_response.json()["pr"]["trigger"]["type"] == "github"
     assert (
         owner_response.json()["pr"]["trigger"]["repo"]
-        == github_pr_user["pull_request"]["head"]["repo"]["name"]
+        == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
     )
 
     user_response = client.post("/github/pr", json=github_pr_user)
@@ -41,26 +43,28 @@ def test_github_pr(github_pr_owner, github_pr_user):
     assert user_response.json()["pr"]["trigger"]["type"] == "github"
     assert (
         user_response.json()["pr"]["trigger"]["repo"]
-        == github_pr_user["pull_request"]["head"]["repo"]["name"]
+        == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
     )
     assert user_response.json()["pr"]["status"] == "queued"
     assert user_response.json()["sms"]["phone_sender"] == settings.TWILIO_SENDER_PHONE
+    gh.get_repo(repo).get_pull(pr["id"]).edit(state="closed")
 
 
-def test_github_issue(github_issue_user):
+def test_github_issue(github_issue_user, gh):
     user_response = client.post("/github/issue", json=github_issue_user)
     assert user_response.status_code == 200
-    assert user_response.json()["issue"]["status"] == "queued"
-    assert user_response.json()["issue"]["trigger"]["type"] == "github"
-    assert (
-        user_response.json()["issue"]["trigger"]["repo"]
-        == github_issue_user["repository"]["name"]
-    )
-    assert (
-        user_response.json()["issue"]["trigger"]["title"]
-        == github_issue_user["issue"]["title"]
-    )
+    issue = user_response.json()["issue"]
+    LOGGER.info(user_response.json()["issue"]["trigger"]["repo"])
+    repo = issue["trigger"]["repo"]
+    assert issue["status"] == "queued"
+    assert issue["trigger"]["type"] == "github"
+    assert issue["trigger"]["repo"] == github_issue_user["repository"]["full_name"]
+    assert issue["trigger"]["title"] == github_issue_user["issue"]["title"]
     assert user_response.json()["sms"]["phone_sender"] == settings.TWILIO_SENDER_PHONE
+    gh_issues = gh.get_repo(repo).get_issues(state="open")
+    for gh_issue in gh_issues:
+        if gh_issue.title == issue["trigger"]["title"]:
+            gh_issue.edit(state="closed")
 
 
 def test_batch_insert_metadata():
