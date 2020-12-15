@@ -1,10 +1,19 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from clients import ghost
 
 
 def update_mobiledoc(post: dict, mobiledoc: str) -> Tuple[str, int]:
-    """Update Lynx post with proper embedded links."""
+    """
+    Update Lynx post with proper embedded links.
+
+    :param post: Post as dictionary.
+    :type post: dict
+    :param mobiledoc: Mobiledoc encoded as string with escaped characters.
+    :type mobiledoc: str
+
+    :returns: Tuple[str, int]
+    """
     ghost_post = ghost.get_post(post["id"])
     body = {
         "posts": [
@@ -17,8 +26,15 @@ def update_mobiledoc(post: dict, mobiledoc: str) -> Tuple[str, int]:
     return ghost.update_post(post["id"], body, post["slug"])
 
 
-def batch_update_metadata(post_dicts: List[dict]):
-    """Update Ghost posts with bad or missing metadata."""
+def batch_update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
+    """
+    Update Ghost posts with bad or missing metadata.
+
+    :param post_dicts: Ghost posts as list of dictionaries.
+    :type post_dicts: List[dict]
+
+    :returns: List[Optional[dict]]
+    """
     updated_posts = []
     for post_dict in post_dicts:
         post = ghost.get_post(post_dict["id"])

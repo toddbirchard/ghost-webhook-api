@@ -6,7 +6,7 @@ from app.accounts.mixpanel import create_mixpanel_record
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from clients.log import LOGGER
-from database.crud import create_comment, create_donation, get_comment, get_donation
+from database.crud import create_comment, create_donation, get_donation
 from database.orm import get_db
 from database.schemas import NewComment, NewDonation, UserEvent
 
@@ -48,10 +48,7 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
-    existing_comment = get_comment(db, comment.id)
-    if existing_comment:
-        raise HTTPException(status_code=400, detail="Comment already created")
-    elif comment.user_email not in authors:
+    if comment.user_email not in authors:
         mailgun.send_comment_notification_email(post, comment.__dict__)
     user_comment = create_comment(db, comment)
     LOGGER.success(f"New comment `{comment.id}` saved on post `{comment.post_slug}`")
