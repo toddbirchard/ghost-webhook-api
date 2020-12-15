@@ -17,7 +17,6 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
     :returns: dict
     """
     return {
-        "comment_id": comment.comment_id,
         "user_name": comment.user_name,
         "user_avatar": comment.user_avatar,
         "user_id": comment.user_id,

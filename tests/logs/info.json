@@ -1747,3 +1747,7 @@
 {"time": "12/12/2020, 23:14:27", "message": "Github PR opened for jamstack-api generated SMS message", "level": "INFO", "function": "github_pr", "module": "app.github"},
 {"time": "12/12/2020, 23:14:28", "message": "Github issue opened for jamstack-api generated SMS message", "level": "INFO", "function": "github_issue", "module": "app.github"},
 {"time": "12/12/2020, 23:14:28", "message": "toddbirchard/jamstack-api", "level": "INFO", "function": "test_github_issue", "module": "tests.test_api"},
+{"time": "12/14/2020, 23:07:54", "message": "Lynx Roundup, December 21st 2020", "level": "INFO", "function": "test_batch_lynx_previews", "module": "tests.test_api"},
+{"time": "12/14/2020, 23:07:54", "message": "Github PR opened for jamstack-api generated SMS message", "level": "INFO", "function": "github_pr", "module": "app.github"},
+{"time": "12/14/2020, 23:07:55", "message": "Github issue opened for jamstack-api generated SMS message", "level": "INFO", "function": "github_issue", "module": "app.github"},
+{"time": "12/14/2020, 23:07:55", "message": "toddbirchard/jamstack-api", "level": "INFO", "function": "test_github_issue", "module": "tests.test_api"},

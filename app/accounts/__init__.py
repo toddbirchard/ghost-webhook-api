@@ -48,15 +48,13 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
-    existing_comment = get_comment(db, comment.comment_id)
+    existing_comment = get_comment(db, comment.id)
     if existing_comment:
         raise HTTPException(status_code=400, detail="Comment already created")
     elif comment.user_email not in authors:
         mailgun.send_comment_notification_email(post, comment.__dict__)
     user_comment = create_comment(db, comment)
-    LOGGER.success(
-        f"New comment `{comment.comment_id}` saved on post `{comment.post_slug}`"
-    )
+    LOGGER.success(f"New comment `{comment.id}` saved on post `{comment.post_slug}`")
     ghost.rebuild_netlify_site()
     return user_comment.dict()
 

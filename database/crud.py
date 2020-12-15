@@ -26,13 +26,12 @@ def create_donation(db: Session, donation: NewDonation):
     return db_item
 
 
-def get_comment(db: Session, comment_id: str):
-    return db.query(Comment).filter(Comment.comment_id == comment_id).first()
+def get_comment(db: Session, comment_id: int):
+    return db.query(Comment).filter(Comment.id == comment_id).first()
 
 
 def create_comment(db: Session, comment: NewComment):
     db_item = Comment(
-        comment_id=comment.comment_id,
         user_name=comment.user_name,
         user_avatar=comment.user_avatar,
         user_id=comment.user_id,

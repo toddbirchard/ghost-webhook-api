@@ -32,7 +32,7 @@ REST API to provide JAMStack-based sites content & image optimization automation
   * **GET** `/images/sort`: Transverses CDN in a given directory (`?directory=`) to organize images into subdirectories based on image type (retina, mobile, etc).
 #### Accounts
   * **POST** `/account`: Create Ghost member from Netlify Auth service (supports auth providers Github, Google, etc.)
-  * **POST** `/account/comments`: Accept user-submitted comments for posts. Each submission notifies the post’s author via a Mailgun email.
+  * **POST** `/account/comment`: Accept user-submitted comments for posts. Each submission notifies the post’s author via a Mailgun email.
   * **POST** `/account/donation`: Adds BuyMeACoffee donations to a historical ledger.
 #### Newsletter
   * **POST** `/subscription`: Send welcome email to newsletter subscribers via Mailgun.

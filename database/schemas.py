@@ -25,7 +25,7 @@ class NewDonation(BaseModel):
 
 
 class NewComment(BaseModel):
-    comment_id: str
+    id: int
     post_id: str
     post_slug: str
     user_id: str
