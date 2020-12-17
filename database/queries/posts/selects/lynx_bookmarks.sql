@@ -10,4 +10,4 @@ WHERE
 	title LIKE '%%Lynx%%'
 	AND status IN ('scheduled', 'draft')
 	AND mobiledoc NOT LIKE '%%bookmark%%'
-    LIMIT 1;
+	AND html IS NOT NULL;

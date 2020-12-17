@@ -57,7 +57,7 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
 
 def fetch_raw_lynx_posts() -> ResultProxy:
     """Find all Lynx posts lacking embedded link previews."""
-    sql_file = open(f"{basedir}/database/analytics/selects/lynx_bookmarks.sql", "r")
+    sql_file = open(f"{basedir}/database/queries/posts/selects/lynx_bookmarks.sql", "r")
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").fetchall()
     return posts

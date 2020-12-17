@@ -1,3 +1,5 @@
+import pprint
+
 from fastapi.testclient import TestClient
 
 from app import api
@@ -5,6 +7,7 @@ from clients.log import LOGGER
 from config import basedir, settings
 
 client = TestClient(api)
+pp = pprint.PrettyPrinter(indent=4)
 
 
 def test_api_docs():
@@ -72,8 +75,11 @@ def test_batch_insert_metadata():
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
     assert response.json().get("updated") is not None
+    LOGGER.info("TEST RESULTS FOR BATCH INSERT METADATA")
+    pp.pprint(response.json())
 
 
 def assign_img_alt_attr():
     result = client.get("/posts/alt")
-    LOGGER.info(result.json())
+    LOGGER.info("TEST RESULTS FOR ASSIGNING IMG ALT TAGS")
+    pp.pprint(result.json())

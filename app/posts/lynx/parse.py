@@ -75,7 +75,7 @@ def batch_lynx_embeds(posts: ResultProxy) -> dict:
         )
     return {
         "summary": {
-            "posts_updated": posts.rowcount(),
+            "posts_updated": posts.rowCount(),
             "links_updated": total_embeds,
             "posts": updated_posts,
         }
