@@ -16,8 +16,11 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
 
     :returns: dict
     """
+    username = comment.user_name
+    if comment.user_name is None and comment.user_email:
+        username = comment.user_email.split("@")[0]
     return {
-        "user_name": comment.user_name,
+        "user_name": username,
         "user_avatar": comment.user_avatar,
         "user_id": comment.user_id,
         "body": comment.body,

@@ -1,16 +1,16 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class NewDonation(BaseModel):
-    email: str
-    name: str
-    count: int
-    message: str
-    link: str
-    created_at: str
-    coffee_id: int
+    email: str = Field(None, example="paypal@example.com")
+    name: str = Field(None, example="Todd")
+    count: int = Field(None, example=5)
+    message: str = Field(None, example="Great tutorials but this is a test message.")
+    link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
+    created_at: str = Field(None, example="2019-11-07 00:00:00")
+    coffee_id: int = Field(None, example=3453543)
 
     class Config:
         schema_extra = {
@@ -25,16 +25,16 @@ class NewDonation(BaseModel):
 
 
 class NewComment(BaseModel):
-    id: Optional[str]
-    post_id: str
-    post_slug: str
-    user_id: str
-    user_name: str
-    user_avatar: Optional[str]
-    user_email: str
-    body: str
-    created_at: str
-    author_name: str
+    post_id: str = Field(None, example="5dc42cb812c9ce0d63f5bf96")
+    post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
+    user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
+    user_name: Optional[str] = Field(None, example="Todd Birchard")
+    user_avatar: Optional[str] = Field(
+        None, example="https://avatars3.githubusercontent.com/u/2747442?v=4"
+    )
+    user_email: str = Field(None, example="person@example.com")
+    body: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
+    created_at: str = Field(None, example="2020-12-15T04:52:03.928Z")
 
     class Config:
         schema_extra = {
@@ -61,23 +61,32 @@ class Role(BaseModel):
 
 
 class Author(BaseModel):
-    id: str
-    name: str
-    slug: str
-    email: Optional[str]
-    profile_image: Optional[str]
-    cover_image: Optional[str]
-    bio: Optional[str]
-    website: Optional[str]
-    location: Optional[str]
-    twitter: Optional[str]
-    status: str
-    tour: str
-    last_seen: str
-    created_at: str
-    updated_at: str
-    roles: List[Role]
-    url: Optional[str]
+    id: str = Field(None, example=1)
+    name: str = Field(None, example="Todd Birchard")
+    slug: str = Field(None, example="todd")
+    email: Optional[str] = Field(None, example="fake@example.com")
+    profile_image: Optional[str] = Field(
+        None,
+        example="https://hackersandslackers-cdn.storage.googleapis.com/authors/todd@2x.jpg",
+    )
+    cover_image: Optional[str] = Field(
+        None,
+        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/03/fantasticmrfox.jpg",
+    )
+    bio: Optional[str] = Field(
+        None,
+        example="Engineer with an ongoing identity crisis. Breaks everything before learning best practices. Completely normal and emotionally stable.",
+    )
+    website: Optional[str] = Field(None, example="https://toddbirchard.com")
+    location: Optional[str] = Field(None, example="New York City")
+    twitter: Optional[str] = Field(None, example="@ToddRBirchard")
+    status: str = Field(None, example="active")
+    tour: str = Field(None, example='["upload-a-theme","getting-started"]')
+    last_seen: str = Field(None, example="2020-12-20 10:54:20")
+    created_at: str = Field(None, example="2019-11-07 14:38:35")
+    updated_at: str = Field(None, example="2020-12-20 10:54:20")
+    roles: List[Role] = Field(None, example=["5dc42c6b4b25bc0d1367444c"])
+    url: Optional[str] = Field(None, example="fake@example.com")
 
 
 class Tag(BaseModel):
@@ -99,23 +108,32 @@ class Tag(BaseModel):
 
 
 class PrimaryAuthor(BaseModel):
-    id: str
-    name: str
-    slug: str
-    email: Optional[str]
-    profile_image: Optional[str]
-    cover_image: Optional[str]
-    bio: Optional[str]
-    website: Optional[str]
-    location: Optional[str]
-    twitter: Optional[str]
-    status: str
-    tour: Optional[str]
-    last_seen: str
-    created_at: str
-    updated_at: str
-    roles: List[Role]
-    url: Optional[str]
+    id: str = Field(None, example=1)
+    name: str = Field(None, example="Todd Birchard")
+    slug: str = Field(None, example="todd")
+    email: Optional[str] = Field(None, example="fake@example.com")
+    profile_image: Optional[str] = Field(
+        None,
+        example="https://hackersandslackers-cdn.storage.googleapis.com/authors/todd@2x.jpg",
+    )
+    cover_image: Optional[str] = Field(
+        None,
+        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/03/fantasticmrfox.jpg",
+    )
+    bio: Optional[str] = Field(
+        None,
+        example="Engineer with an ongoing identity crisis. Breaks everything before learning best practices. Completely normal and emotionally stable.",
+    )
+    website: Optional[str] = Field(None, example="https://toddbirchard.com")
+    location: Optional[str] = Field(None, example="New York City")
+    twitter: Optional[str] = Field(None, example="@ToddRBirchard")
+    status: str = Field(None, example="active")
+    tour: str = Field(None, example='["upload-a-theme","getting-started"]')
+    last_seen: str = Field(None, example="2020-12-20 10:54:20")
+    created_at: str = Field(None, example="2019-11-07 14:38:35")
+    updated_at: str = Field(None, example="2020-12-20 10:54:20")
+    roles: List[Role] = Field(None, example=["5dc42c6b4b25bc0d1367444c"])
+    url: Optional[str] = Field(None, example="fake@example.com")
 
 
 class PrimaryTag(BaseModel):
@@ -374,10 +392,10 @@ class Subscription(BaseModel):
 
 
 class SubscriptionWelcomeEmail(BaseModel):
-    from_email: str
-    to_email: str
-    subject: str
-    template: str
+    from_email: str = Field(None, example="fake@example.com")
+    to_email: str = Field(None, example="recipient@example.com")
+    subject: str = Field(None, example="Welcome to Hackers & Slackers")
+    template: str = Field(None, example="This is an email")
 
     class Config:
         schema_extra = {

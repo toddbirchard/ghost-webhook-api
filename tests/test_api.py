@@ -26,7 +26,7 @@ def test_batch_lynx_previews(rdbms):
         assert "Lynx" in post["title"]
         assert "bookmark" not in post["mobiledoc"]
         assert "kg-card" not in post["html"]
-        LOGGER.info(post["title"])
+        LOGGER.debug(post["title"])
 
 
 def test_github_pr(github_pr_owner, github_pr_user, gh):
@@ -57,7 +57,7 @@ def test_github_issue(github_issue_user, gh):
     user_response = client.post("/github/issue", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
-    LOGGER.info(user_response.json()["issue"]["trigger"]["repo"])
+    LOGGER.debug(user_response.json()["issue"]["trigger"]["repo"])
     repo = issue["trigger"]["repo"]
     assert issue["status"] == "queued"
     assert issue["trigger"]["type"] == "github"
@@ -75,11 +75,11 @@ def test_batch_insert_metadata():
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
     assert response.json().get("updated") is not None
-    LOGGER.info("TEST RESULTS FOR BATCH INSERT METADATA")
+    LOGGER.debug("TEST RESULTS FOR BATCH INSERT METADATA")
     pp.pprint(response.json())
 
 
 def assign_img_alt_attr():
     result = client.get("/posts/alt")
-    LOGGER.info("TEST RESULTS FOR ASSIGNING IMG ALT TAGS")
+    LOGGER.debug("TEST RESULTS FOR ASSIGNING IMG ALT TAGS")
     pp.pprint(result.json())
