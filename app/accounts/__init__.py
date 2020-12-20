@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from app.accounts.mixpanel import create_mixpanel_record
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
-from clients.log import LOGGER
 from database.crud import create_comment, create_donation, get_donation
 from database.orm import get_db
 from database.schemas import NewComment, NewDonation, UserEvent
@@ -51,16 +50,15 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     if comment.user_email not in authors:
         mailgun.send_comment_notification_email(post, comment.__dict__)
     user_comment = create_comment(db, comment)
-    LOGGER.success(f"New comment `{comment.id}` saved on post `{comment.post_slug}`")
     ghost.rebuild_netlify_site()
-    return user_comment.dict()
+    return NewComment.parse_obj(user_comment.dict())
 
 
 @router.post(
     "/donation",
-    response_model=NewDonation,
     summary="New BuyMeACoffee donation",
     description="Save record of new donation to persistent ledger.",
+    response_model=NewDonation,
 )
 def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     """
@@ -74,5 +72,4 @@ def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     db_user = get_donation(db, donation.coffee_id)
     if db_user:
         raise HTTPException(status_code=400, detail="Donation already created")
-    new_donation = create_donation(db=db, donation=donation)
-    return new_donation.dict()
+    return create_donation(db=db, donation=donation)

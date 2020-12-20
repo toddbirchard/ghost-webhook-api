@@ -19,8 +19,10 @@ REST API to provide JAMStack-based sites content & image optimization automation
 #### Posts
   * **GET** `/posts`: Populate metadata for all posts en masse. Supports meta titles, og titles & descriptions, and feature images.
   * **POST** `/posts`: Populate metadata for a single post upon publish. Supports meta title, og title & description, and feature image where applicable.
-  * **GET** `/posts/backup`: Fetch JSON backup of all blog data.
+  * **GET** `/posts/backup`: Fetch JSON backup of all blog data
+  * **GET** `/posts/embed`: Batch update all Lynx posts missing embedded link previews.
   * **POST** `/posts/embed`: Replace HTML anchor tags with rich-content link embeds for a given post upon publish.
+  * **GET** `/posts/alt`: Batch update all posts with `<img>` tags missing an `alt` attribute.
 #### Analytics
   * **GET** `/analytics/`: Export site analytics from a data warehouse to a SQL database. Useful for trend-related features ie: "trending this week" widget.
   * **GET** `/analytics/searches/week`: Fetch top Algolia search queries for the current week and save to an SQL database (useful for building search-related features, ie: search suggestions).
@@ -38,7 +40,8 @@ REST API to provide JAMStack-based sites content & image optimization automation
   * **POST** `/subscription`: Send welcome email to newsletter subscribers via Mailgun.
   * **DELETE** `/subscription`: Track newsletter unsubscribe events.
 #### Authors
-  * **POST** `/authors/post`: Notify site admin/editor when posts are ready for review.
+  * **POST** `/authors/post/created`: Notify site admin/editor when posts are ready for review.
+  * **POST** `/authors/post/update`: Notify admin user when another author modifies their post.
 #### Github
   *  **POST** `/github/pr`: Trigger SMS notification when contributors open a Github PR in a specified Github org.
   *  **POST** `/github/issue`: Trigger SMS notification when contributors open a Github issue in a specified Github org.

@@ -90,107 +90,118 @@ class Author(BaseModel):
 
 
 class Tag(BaseModel):
-    id: str
-    name: str
-    slug: str
-    description: Optional[str]
-    visibility: str
-    meta_title: Optional[str]
-    meta_description: Optional[str]
-    created_at: str
-    updated_at: str
-    og_title: Optional[str]
-    og_description: Optional[str]
-    twitter_title: Optional[str]
-    twitter_description: Optional[str]
-    accent_color: Optional[str]
-    url: Optional[str]
-
-
-class PrimaryAuthor(BaseModel):
-    id: str = Field(None, example=1)
-    name: str = Field(None, example="Todd Birchard")
-    slug: str = Field(None, example="todd")
-    email: Optional[str] = Field(None, example="fake@example.com")
-    profile_image: Optional[str] = Field(
+    id: str = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
+    name: str = Field(None, example="Python")
+    slug: str = Field(None, example="python")
+    description: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/authors/todd@2x.jpg",
+        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold.",
     )
-    cover_image: Optional[str] = Field(
+    feature_image: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/03/fantasticmrfox.jpg",
+        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/05/python.png",
     )
-    bio: Optional[str] = Field(
+    visibility: str = Field(None, example="public")
+    meta_title: Optional[str] = Field(
+        None, example="Python Tricks, Hacks, and Snippets"
+    )
+    meta_description: Optional[str] = Field(
         None,
-        example="Engineer with an ongoing identity crisis. Breaks everything before learning best practices. Completely normal and emotionally stable.",
+        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold",
     )
-    website: Optional[str] = Field(None, example="https://toddbirchard.com")
-    location: Optional[str] = Field(None, example="New York City")
-    twitter: Optional[str] = Field(None, example="@ToddRBirchard")
-    status: str = Field(None, example="active")
-    tour: str = Field(None, example='["upload-a-theme","getting-started"]')
-    last_seen: str = Field(None, example="2020-12-20 10:54:20")
-    created_at: str = Field(None, example="2019-11-07 14:38:35")
-    updated_at: str = Field(None, example="2020-12-20 10:54:20")
-    roles: List[Role] = Field(None, example=["5dc42c6b4b25bc0d1367444c"])
-    url: Optional[str] = Field(None, example="fake@example.com")
+    created_at: str = Field(None, example="2017-11-17 20:44:09")
+    updated_at: str = Field(None, example="2020-08-03 05:21:42")
+    og_title: Optional[str] = Field(None, example="Python Tricks, Hacks, and Snippets")
+    og_description: Optional[str] = Field(
+        None,
+        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold.",
+    )
+    og_image: Optional[str] = Field(
+        None,
+        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/05/python.png",
+    )
+    twitter_title: Optional[str] = Field(
+        None, example="Python Tricks, Hacks, and Snippets"
+    )
+    twitter_description: Optional[str] = Field(
+        None,
+        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold.",
+    )
+    twitter_image: Optional[str] = Field(
+        None,
+        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/05/python.png",
+    )
+    accent_color: Optional[str] = Field(None, example="#4B8BBE")
+    canonical_url: Optional[str] = None
 
 
-class PrimaryTag(BaseModel):
-    id: str
-    name: str
-    slug: str
-    description: Optional[str]
-    visibility: str
-    meta_title: Optional[str]
-    meta_description: Optional[str]
-    created_at: str
-    updated_at: str
-    og_title: Optional[str]
-    og_description: Optional[str]
-    twitter_title: Optional[str]
-    twitter_description: Optional[str]
-    accent_color: Optional[str]
-    url: Optional[str]
+class PrimaryAuthor(Author):
+    pass
 
 
-class Current(BaseModel):
-    id: str
-    uuid: str
-    title: Optional[str]
-    slug: str
-    mobiledoc: Optional[str] = None
-    html: Optional[str] = None
-    comment_id: str
-    plaintext: Optional[str]
-    feature_image: Optional[str] = None
-    featured: bool
-    status: str
-    visibility: str
-    email_recipient_filter: Optional[str]
-    created_at: str
-    updated_at: str
-    custom_excerpt: Optional[str] = None
-    authors: List[Author]
-    tags: Optional[List[Tag]] = None
-    primary_author: Optional[PrimaryAuthor]
-    primary_tag: Optional[PrimaryTag] = None
-    url: Optional[str]
-    excerpt: Optional[str] = None
-    reading_time: int
-    send_email_when_published: bool
-    og_image: Optional[str] = None
-    og_title: Optional[str] = None
-    og_description: Optional[str] = None
-    twitter_image: Optional[str] = None
-    twitter_title: Optional[str] = None
-    twitter_description: Optional[str] = None
-    meta_title: Optional[str] = None
-    meta_description: Optional[str] = None
+class PrimaryTag(Tag):
+    pass
+
+
+class BasePost(BaseModel):
+    id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
+    uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
+    title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
+    slug: str = Field(None, example="welcome-to-hackers-and-slackers")
+    mobiledoc: Optional[str] = Field(
+        None,
+        example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}',
+    )
+    html: Optional[str] = Field(
+        None,
+        example='<p>Welcome to the Hackers and Slackers blog, the official counterpart to <a href="http://hackersandslackers.com">hackersandslackers.com</a>.</p><p>H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it.</p><p>While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that.</p><p>If you\'re somebody who likes to learn and be casually badass, maybe you should join us.</p>',
+    )
+    comment_id: str = Field(None, example="5a0f4699e38d612cc8261306")
+    plaintext: Optional[str] = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
+    feature_image: Optional[str] = Field(
+        None,
+        example="https://storage.googleapis.com/hackersandslackers-cdn/2017/11/welcome.jpg",
+    )
+    featured: bool = Field(None, example=False)
+    status: str = Field(None, example="published")
+    visibility: str = Field(None, example="public")
+    email_recipient_filter: Optional[str] = Field(None, example=None)
+    created_at: str = Field(None, example="2017-11-17T20:29:13.000Z")
+    updated_at: str = Field(None, example="2019-10-26T06:52:53.000Z")
+    published_at: str = Field(None, example="2017-11-13T20:37:00.000Z")
+    custom_excerpt: Optional[str] = Field(None, example="Technology for badasses.")
+    authors: List[Author] = Field(None, example=[Author.schema()])
+    tags: Optional[List[Tag]] = Field(None, example=[Tag.schema()])
+    primary_author: Optional[PrimaryAuthor] = Field(
+        None, example=PrimaryAuthor.schema()
+    )
+    primary_tag: Optional[PrimaryTag] = Field(None, example=Tag.schema().get("example"))
+    url: Optional[str] = Field(
+        None, example="https://hackersandslackers.app/welcome-to-hackers-and-slackers/"
+    )
+    excerpt: Optional[str] = Field(None, example="Technology for badasses.")
+    reading_time: int = Field(None, example=1)
+    send_email_when_published: bool = Field(None, example=False)
+    og_image: Optional[str] = Field(
+        None,
+        example="https://storage.googleapis.com/hackersandslackers-cdn/2017/11/welcome.jpg",
+    )
+    og_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
+    og_description: Optional[str] = Field(None, example="Technology for badasses")
+    twitter_image: Optional[str] = Field(
+        None,
+        example="https://storage.googleapis.com/hackersandslackers-cdn/2017/11/welcome.jpg",
+    )
+    twitter_title: Optional[str] = Field(
+        None, example="Welcome to Hackers and Slackers"
+    )
+    twitter_description: Optional[str] = Field(None, example="Technology for badasses")
+    meta_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
+    meta_description: Optional[str] = Field(None, example="Technology for badasses")
 
 
 class Post(BaseModel):
-    current: Current
+    current: BasePost
     previous: Optional[Dict[str, Any]]
 
 
