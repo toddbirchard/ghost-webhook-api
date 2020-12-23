@@ -1,10 +1,12 @@
 """User account functionality."""
 from fastapi import APIRouter, Depends, HTTPException
+from mixpanel import MixpanelException
 from sqlalchemy.orm import Session
 
 from app.accounts.mixpanel import create_mixpanel_record
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
+from clients.log import LOGGER
 from database.crud import create_comment, create_donation, get_donation
 from database.orm import get_db
 from database.schemas import NewComment, NewDonation, UserEvent
@@ -24,10 +26,16 @@ def new_ghost_member(user_event: UserEvent):
     :param user_event: Newly created user account.
     :type user_event: UserEvent
     """
-    user = user_event.member.current
-    response, code = new_ghost_subscription(user)
-    mx = create_mixpanel_record(user)
-    return {"ghost": response, "mixpanel": mx}
+    try:
+        user = user_event.member.current
+        ghost_subscription = new_ghost_subscription(user)
+        mx = create_mixpanel_record(user)
+        return {"subscriptions": ghost_subscription, "mixpanel": mx}
+    except MixpanelException as e:
+        LOGGER.error(f"Error creating user in Mixpanel: {e}")
+        raise HTTPException(
+            status_code=400, detail=f"Error creating user in Mixpanel: {e}"
+        )
 
 
 @router.post(

@@ -1,10 +1,13 @@
+"""New user analytics."""
+from typing import Optional
+
 from mixpanel import Mixpanel
 
 from config import settings
 from database.schemas import NetlifyUser
 
 
-def create_mixpanel_record(user: NetlifyUser):
+def create_mixpanel_record(user: NetlifyUser) -> Optional[dict]:
     """
     Add user record to Mixpanel.
 
