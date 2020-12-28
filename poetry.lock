@@ -75,7 +75,7 @@ python-versions = "*"
 
 [[package]]
 name = "botocore"
-version = "1.19.42"
+version = "1.19.43"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -1199,8 +1199,8 @@ boto = [
     {file = "boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a"},
 ]
 botocore = [
-    {file = "botocore-1.19.42-py2.py3-none-any.whl", hash = "sha256:5261404957e4db40fa6aa04aaf440ec4029a8690e0892e7bd6c451ec4719c156"},
-    {file = "botocore-1.19.42.tar.gz", hash = "sha256:f0b071fd08f4d72d7ba2c547da529abebe052705c1595be6d12a2151a75a6029"},
+    {file = "botocore-1.19.43-py2.py3-none-any.whl", hash = "sha256:795a67338cadb0c3a45014a6c81659da6af623a4e973812f87a6f9d9fb7712e9"},
+    {file = "botocore-1.19.43.tar.gz", hash = "sha256:7398c900dbd4e3d61647269215396ea3e8082f494f3e7b65d9b6aca049c1d463"},
 ]
 cachetools = [
     {file = "cachetools-4.2.0-py3-none-any.whl", hash = "sha256:c6b07a6ded8c78bf36730b3dc452dfff7d95f2a12a2fed856b1a0cb13ca78c61"},
