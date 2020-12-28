@@ -10,7 +10,7 @@ colorama==0.4.4; python_version >= "3.5" and python_full_version < "3.0.0" and s
 ddtrace-asgi==0.3.0; python_version >= "3.6"
 ddtrace==0.44.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 deprecated==1.2.10; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
-extruct==0.11.0
+extruct==0.12.0
 fastapi==0.62.0; python_version >= "3.6"
 google-api-core==1.24.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
 google-auth==1.24.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
