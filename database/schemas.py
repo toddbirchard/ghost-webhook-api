@@ -85,7 +85,18 @@ class Author(BaseModel):
     last_seen: str = Field(None, example="2020-12-20 10:54:20")
     created_at: str = Field(None, example="2019-11-07 14:38:35")
     updated_at: str = Field(None, example="2020-12-20 10:54:20")
-    roles: List[Role] = Field(None, example=["5dc42c6b4b25bc0d1367444c"])
+    roles: List[Role] = Field(
+        None,
+        example=[
+            {
+                "id": "5dc42c6b4b25bc0d13674448",
+                "name": "Administrator",
+                "description": "Administrators",
+                "created_at": "2019-11-07T14:38:35.000Z",
+                "updated_at": "2019-11-07T14:38:35.000Z",
+            }
+        ],
+    )
     url: Optional[str] = Field(None, example="fake@example.com")
 
 

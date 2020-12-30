@@ -8,6 +8,7 @@ from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from clients.log import LOGGER
 from database.crud import create_comment, create_donation, get_donation
+from database.models import Account, Comment
 from database.orm import get_db
 from database.schemas import NewComment, NewDonation, UserEvent
 
@@ -81,3 +82,11 @@ def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Donation already created")
     return create_donation(db=db, donation=donation)
+
+
+@router.get("/comments", summary="Test get comments via ORM")
+def test_orm(db: Session = Depends(get_db)):
+    comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
+    for comment in comments:
+        LOGGER.info(comment.user)
+    return comments
