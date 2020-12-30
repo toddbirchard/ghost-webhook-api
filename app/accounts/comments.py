@@ -18,11 +18,14 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
     :returns: dict
     """
     username = comment.user_name
+    avatar = comment.user_avatar
     if comment.user_name is None and comment.user_email:
         username = comment.user_email.split("@")[0]
+    if avatar == "undefined":
+        avatar = None
     return {
         "user_name": username,
-        "user_avatar": comment.user_avatar,
+        "user_avatar": avatar,
         "user_id": comment.user_id,
         "body": comment.body,
         "post_id": comment.post_id,

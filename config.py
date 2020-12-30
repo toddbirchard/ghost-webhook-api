@@ -12,8 +12,8 @@ load_dotenv(path.join(basedir, ".env"))
 
 
 class Settings(BaseSettings):
-    app_name: str = "Jamstack API"
-    title: str = "Jamstack API"
+    app_name: str = "JAMStack API"
+    title: str = "JAMStack API"
     description: str = "API to automate optimizations for JAMStack sites."
     items_per_user: int = 50
     debug: bool = True
@@ -47,7 +47,7 @@ class Settings(BaseSettings):
             },
             {
                 "name": "newsletter",
-                "description": "Ghost newsletter subscription management.",
+                "description": "Ghost newsletter subscriptions.",
             },
             {
                 "name": "analytics",
@@ -55,11 +55,11 @@ class Settings(BaseSettings):
             },
             {
                 "name": "images",
-                "description": "Optimize images for retina and mobile devices.",
+                "description": "Image optimization for retina and mobile devices.",
             },
             {
                 "name": "github",
-                "description": "Send notifications when Github issues/PRs are opened for HackersAndSlackers repos.",
+                "description": "Github notifications for new issues/PRs.",
             },
         ],
     )
