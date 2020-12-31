@@ -4,7 +4,7 @@ from os import getenv, path
 
 from dotenv import load_dotenv
 from google.oauth2 import service_account
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings
 
 # Load variables from .env
 basedir = path.abspath(path.dirname(__file__))

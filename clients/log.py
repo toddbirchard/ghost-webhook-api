@@ -4,7 +4,7 @@ from sys import stdout
 import simplejson as json
 from loguru import logger
 
-from config import Settings
+from config import settings
 
 DD_APM_FORMAT = (
     "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] "
@@ -48,7 +48,7 @@ def create_logger() -> logger:
     )
     # Readable logs
     logger.add(
-        "logs/error.log",
+        f"{settings.basedir}/logs/error.log",
         colorize=True,
         catch=True,
         format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
@@ -58,13 +58,13 @@ def create_logger() -> logger:
         compression="zip",
     )
     logger.add("logs/info.json", format=formatter, rotation="500 MB", compression="zip")
-    if Settings().ENVIRONMENT == "production":
+    if settings.ENVIRONMENT == "production":
         # Datadog
         logger.add(
-            "logs/info.json", format=formatter, rotation="500 MB", compression="zip"
+            f"{settings.basedir}/logs/info.json", format=formatter, rotation="500 MB", compression="zip"
         )
         logger.add(
-            "logs/apm.log", format=DD_APM_FORMAT, rotation="500 MB", compression="zip"
+            f"{settings.basedir}/logs/apm.log", format=DD_APM_FORMAT, rotation="500 MB", compression="zip"
         )
     return logger
 

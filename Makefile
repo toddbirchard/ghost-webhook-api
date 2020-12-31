@@ -73,4 +73,7 @@ clean:
 	find . -name 'poetry.lock' -delete
 	find . -name 'Pipefile.lock' -delete
 	find . -name 'logs/*' -delete
-	find . -name '.pytest_cache' -delete
+	find . -name '*.log' -delete
+	find . -name '*/.pytest_cache' -delete
+	rm -rf .pytest_cache
+	rm -rf tests/.pytest_cache
