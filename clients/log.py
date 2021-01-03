@@ -61,10 +61,16 @@ def create_logger() -> logger:
     if settings.ENVIRONMENT == "production":
         # Datadog
         logger.add(
-            f"{settings.basedir}/logs/info.json", format=formatter, rotation="500 MB", compression="zip"
+            f"{settings.basedir}/logs/info.json",
+            format=formatter,
+            rotation="500 MB",
+            compression="zip",
         )
         logger.add(
-            f"{settings.basedir}/logs/apm.log", format=DD_APM_FORMAT, rotation="500 MB", compression="zip"
+            f"{settings.basedir}/logs/apm.log",
+            format=DD_APM_FORMAT,
+            rotation="500 MB",
+            compression="zip",
         )
     return logger
 
