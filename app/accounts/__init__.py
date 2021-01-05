@@ -1,4 +1,4 @@
-"""User account functionality."""
+"""User accounts."""
 from fastapi import APIRouter, Depends, HTTPException
 from mixpanel import MixpanelException
 from sqlalchemy.orm import Session
