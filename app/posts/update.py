@@ -3,18 +3,18 @@ from typing import List, Optional, Tuple
 from clients import ghost
 
 
-def update_mobiledoc(post: dict, mobiledoc: str) -> Tuple[str, int]:
+def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     """
     Update Lynx post with proper embedded links.
 
-    :param post: Post as dictionary.
-    :type post: dict
+    :param post_id: ID of post to be updated.
+    :type post_id: str
     :param mobiledoc: Mobiledoc encoded as string with escaped characters.
     :type mobiledoc: str
 
     :returns: Tuple[str, int]
     """
-    ghost_post = ghost.get_post(post["id"])
+    ghost_post = ghost.get_post(post_id)
     body = {
         "posts": [
             {
@@ -23,7 +23,7 @@ def update_mobiledoc(post: dict, mobiledoc: str) -> Tuple[str, int]:
             }
         ]
     }
-    return ghost.update_post(post["id"], body, post["slug"])
+    return ghost.update_post(ghost_post["id"], body, ghost_post["slug"])
 
 
 def batch_update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:

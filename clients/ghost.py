@@ -52,8 +52,15 @@ class Ghost:
         )
         return f"Ghost {token.decode()}"
 
-    def get_post(self, post_id) -> Optional[dict]:
-        """Fetch post by ID."""
+    def get_post(self, post_id: str) -> Optional[dict]:
+        """
+        Fetch post by ID.
+
+        :param post_id: ID of post to fetch.
+        :type post_id: str
+
+        :returns: Optional[dict]
+        """
         try:
             headers = {
                 "Authorization": self.session_token,
@@ -75,16 +82,13 @@ class Ghost:
             LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
             return post
         except HTTPError as e:
-            LOGGER.error(f"Failed to fetch post `{post_id}`: {e}")
-            return None
+            LOGGER.error(f"Ghost HTTPError while fetching post `{post_id}`: {e}")
         except KeyError as e:
             LOGGER.error(f"KeyError for `{e}` occurred while fetching post `{post_id}`")
-            return None
         except Exception as e:
             LOGGER.error(
                 f"Unexpected error occurred while fetching post `{post_id}`: {e}"
             )
-            return None
 
     def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
         """
@@ -96,6 +100,8 @@ class Ghost:
         :type body: dict
         :param slug: Human-readable post identifier.
         :type slug: str
+
+        :returns: Tuple[str, int]
         """
         try:
             req = requests.put(
@@ -106,12 +112,13 @@ class Ghost:
                     "Content-Type": "application/json",
                 },
             )
-            response = f"Received code {req.status_code} when updating `{slug}`."
             if req.status_code > 300:
                 LOGGER.warning(f"Failed to update post `{slug}`: {req.text}")
-            else:
-                LOGGER.info(f"Successfully updated post `{slug}`: {body}")
-            return response, req.status_code
+            LOGGER.success(f"Successfully updated post `{slug}`: {body}")
+            return (
+                f"Received code {req.status_code} when updating `{slug}`.",
+                req.status_code,
+            )
         except HTTPError as e:
             LOGGER.error(e.response)
             return e.response.content, e.response.status_code
@@ -133,10 +140,8 @@ class Ghost:
                 return author_emails
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
-            return None
         except KeyError as e:
             LOGGER.error(f"KeyError while fetching Ghost authors: {e}")
-            return None
 
     def create_member(self, body: dict) -> Tuple[str, int]:
         """Create new Ghost member.
@@ -165,9 +170,11 @@ class Ghost:
             req = requests.post(
                 self.netlify_build_url,
             )
-            response = f"Triggered Netlify build with status code {req.status_code}."
-            LOGGER.info(response)
-            return response, req.status_code
+            LOGGER.info(f"Triggered Netlify build with status code {req.status_code}.")
+            return (
+                f"Triggered Netlify build with status code {req.status_code}.",
+                req.status_code,
+            )
         except HTTPError as e:
             LOGGER.error(f"Failed to rebuild Netlify site: {e.response.content}")
             return e.response.content, e.response.status_code

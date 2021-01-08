@@ -26,10 +26,10 @@ REST API to provide JAMStack-based sites content & image optimization automation
 #### Analytics
   * **GET** `/analytics/`: Export site analytics from a data warehouse to a SQL database. Useful for trend-related features ie: "trending this week" widget.
   * **GET** `/analytics/searches/week`: Fetch top Algolia search queries for the current week and save to an SQL database (useful for building search-related features, ie: search suggestions).
-  * **GET** `/analytics/searches/historical`: Fetch top Algolia search queries for the current week and save to an SQL database (non-destructive export intended for historical table of searches).
+  * **GET** `/analytics/searches/historical`: Fetch top Algolia search queries for the current week and save to an SQL database (non-destructive export intended for historical records).
 #### Image Optimization
   * **POST** `/images`: Generate retina and mobile feature_image for a single post upon update.
-  * **GET** `/images`: Generates both **retina** and **mobile** varieties of _all_ post feature_images. Defaults to images uploaded within the current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
+  * **GET** `/images`: Generates both **retina** and **mobile** varieties of _all_ images in a remote CDN directory. Defaults to directory containing images uploaded within current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
   * **GET** `/images/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **GET** `/images/sort`: Transverses CDN in a given directory (`?directory=`) to organize images into subdirectories based on image type (retina, mobile, etc).
 #### Accounts

@@ -1,7 +1,7 @@
-from app.posts.img_tags import assign_alt_text_to_imgs
+from app.posts.metadata import batch_assign_img_alt
 from clients.log import LOGGER
 
 
 def test_find_images():
-    images = assign_alt_text_to_imgs()
+    images = batch_assign_img_alt()
     LOGGER.info(images)

@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.img_tags import assign_alt_text_to_imgs
+from app.posts.metadata import batch_assign_img_alt, assign_img_alt
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from app.posts.update import batch_update_metadata, update_mobiledoc
 from clients import gcs, ghost
@@ -21,10 +21,9 @@ router = APIRouter(prefix="/posts", tags=["posts"])
 
 @router.post(
     "/",
-    summary="Optimize a single post image.",
-    description="Generates retina and mobile varieties of post feature_images. \
-        Defaults to images uploaded within the current month; \
-        accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
+    summary="Optimize post metadata.",
+    description="Performs multiple actions to optimize post SEO. \
+                Generates meta tags, ensures SSL hyperlinks, and populates missing <img /> `alt` attributes.",
     response_model=PostUpdate,
 )
 def update_post(post_update: PostUpdate):
@@ -41,13 +40,13 @@ def update_post(post_update: PostUpdate):
             LOGGER.warning("Post update ignored as post was just updated.")
             return "Post update ignored as post was just updated."
     post = post_update.post.current
-    post_id = post.id
     slug = post.slug
     title = post.title
     feature_image = post.feature_image
     custom_excerpt = post.custom_excerpt
     primary_tag = post.primary_tag
     html = post.html
+    mobiledoc = post.mobiledoc
     time = get_current_time()
     body = {
         "posts": [
@@ -74,17 +73,18 @@ def update_post(post_update: PostUpdate):
     if html and "http://" in html:
         html = html.replace("http://", "https://")
         body["posts"][0].update({"html": html})
-        LOGGER.info(f"Resolved unsecure links in post `{slug}`")
-    # Update image meta tags
+        LOGGER.info(f"Replaced unsecure links in post `{slug}`")
     if feature_image is not None:
         body["posts"][0].update(
             {"og_image": feature_image, "twitter_image": feature_image}
         )
-    if body["posts"][0]["mobiledoc"]:
-        sleep(1)
-        time = get_current_time()
-        body["posts"][0]["updated_at"] = time
-    response, code = update_mobiledoc(post_id, body, slug)
+    if mobiledoc:
+        mobiledoc = assign_img_alt(body["posts"][0]["mobiledoc"])
+        body["posts"][0].update({"mobiledoc": mobiledoc})
+    sleep(1)
+    time = get_current_time()
+    body["posts"][0]["updated_at"] = time
+    response, code = ghost.update_post(post.id, body, post.slug)
     return {str(code): response}
 
 
@@ -154,12 +154,12 @@ def post_link_previews(post_update: PostUpdate):
 
 @router.get(
     "/alt",
-    summary="Image alt text.",
+    summary="Populate missing alt text for images.",
     description="Assign missing alt text to embedded images.",
 )
 def assign_img_alt_attr():
     """Find <img>s missing alt text and assign `alt`, `title` attributes."""
-    return assign_alt_text_to_imgs()
+    return batch_assign_img_alt()
 
 
 @router.get("/backup")

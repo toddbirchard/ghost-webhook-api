@@ -11,15 +11,28 @@ images_updated = []
 posts_update = []
 
 
-def assign_alt_text_to_imgs():
-    """Find image cards lacking `alt` img attribute."""
+def assign_img_alt(mobiledoc: str) -> str:
+    """
+    Update <img/> tags in mobile doc with missing alt attributes.
+
+    :param mobiledoc: Raw Ghost post mobiledoc.
+    :type mobiledoc: str
+
+    :returns: str
+    """
+    mobiledoc = json.loads(mobiledoc)
+    mobiledoc["cards"] = [add_alt_tag(card) for card in mobiledoc["cards"]]
+    return json.dumps(mobiledoc)
+
+
+def batch_assign_img_alt():
+    """Update image cards lacking `alt` img attribute."""
     updated_posts = []
     posts = posts_missing_alt_text()
     for post in posts:
         mobiledoc = json.loads(post["mobiledoc"])
-        new_cards = update_image_cards(mobiledoc)
-        mobiledoc["cards"] = new_cards
-        post_update = update_mobiledoc(post, json.dumps(mobiledoc))
+        mobiledoc = assign_img_alt(mobiledoc)
+        post_update = update_mobiledoc(post, mobiledoc)
         if post_update:
             updated_posts.append(
                 {
@@ -38,7 +51,7 @@ def assign_alt_text_to_imgs():
     }
 
 
-def posts_missing_alt_text() -> Optional[List[str]]:
+def posts_missing_alt_text() -> Optional[List[dict]]:
     """Fetch IDs of posts which lack alt tags in image cards."""
     sql_query = (
         f"{basedir}/database/queries/posts/selects/img_alt_missing_mobiledoc.sql"
@@ -47,15 +60,15 @@ def posts_missing_alt_text() -> Optional[List[str]]:
     return [ghost.get_post(post["id"]) for post in posts]
 
 
-def update_image_cards(mobiledoc: dict) -> List[List[dict]]:
-    """Iterate through cards in mobiledoc."""
-    cards = mobiledoc["cards"]
-    cards = [add_alt_tag(card) for card in cards]
-    return cards
-
-
 def add_alt_tag(image_card: List) -> List[dict]:
-    """Set `alt` attribute equal to caption where missing."""
+    """
+    Set `alt` attribute equal to caption where missing.
+
+    :param image_card: Single image card in Ghost post.
+    :type image_card: List[dict]
+
+    :returns: List[dict]
+    """
     global images_updated
     if image_card[0] == "image":
         new_card = image_card

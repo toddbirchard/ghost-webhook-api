@@ -75,5 +75,7 @@ clean:
 	find . -name 'logs/*' -delete
 	find . -name '*.log' -delete
 	find . -name '*/.pytest_cache' -delete
+	find . -name '*/logs/*.json' -delete
 	rm -rf .pytest_cache
 	rm -rf tests/.pytest_cache
+	rm -rf clients/tests/.pytest_cache

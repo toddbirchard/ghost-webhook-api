@@ -1,6 +1,6 @@
 """Replace <a> tags in Lynx posts with cards."""
 import re
-from typing import List
+from typing import List, Tuple
 
 import requests
 import simplejson as json
@@ -14,7 +14,7 @@ from clients.log import LOGGER
 
 
 @LOGGER.catch
-def generate_link_previews(post: dict) -> (List, str):
+def generate_link_previews(post: dict) -> Tuple[List, str]:
     """Replace <a> tags in Lynx posts with link previews."""
     new_mobiledoc = mobile_doc
     html = post["html"]
@@ -75,7 +75,7 @@ def batch_lynx_embeds(posts: ResultProxy) -> dict:
         )
     return {
         "summary": {
-            "posts_updated": posts.rowCount(),
+            "posts_updated": posts.rowcount(),
             "links_updated": total_embeds,
             "posts": updated_posts,
         }
