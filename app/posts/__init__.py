@@ -85,6 +85,7 @@ async def update_post(post_update: PostUpdate):
     time = get_current_time()
     body["posts"][0]["updated_at"] = time
     response, code = ghost.update_post(post.id, body, post.slug)
+    LOGGER.success(f"Successfully updated post `{slug}`: {body}")
     return {str(code): response}
 
 
