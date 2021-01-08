@@ -9,7 +9,7 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
 @router.get("/")
-def migrate_site_analytics():
+async def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
     weekly_traffic = import_site_analytics("weekly")
     monthly_traffic = import_site_analytics("monthly")
@@ -28,7 +28,7 @@ def migrate_site_analytics():
 
 
 @router.get("/searches/week")
-def week_searches():
+async def week_searches():
     """Save top search analytics for the current week."""
     records = fetch_algolia_searches(timeframe=7)
     rows = rdbms.insert_records(
@@ -41,7 +41,7 @@ def week_searches():
 
 
 @router.get("/searches/historical")
-def historical_searches():
+async def historical_searches():
     """Save and persist top search analytics for the current month."""
     records = fetch_algolia_searches(timeframe=30)
     rows = rdbms.insert_records(records, "algolia_searches_historical", "analytics")

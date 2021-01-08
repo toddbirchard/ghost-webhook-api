@@ -10,7 +10,7 @@ router = APIRouter(prefix="/authors", tags=["authors"])
 
 
 @router.post("/post/created")
-def author_post_created(post_update: PostUpdate):
+async def author_post_created(post_update: PostUpdate):
     """
     Notify admin when new authors create their first post.
 
@@ -32,7 +32,7 @@ def author_post_created(post_update: PostUpdate):
 
 
 @router.post("/post/update")
-def author_post_updated(post_update: PostUpdate):
+async def author_post_updated(post_update: PostUpdate):
     """
     Notify admin user when another author modifies their post.
 

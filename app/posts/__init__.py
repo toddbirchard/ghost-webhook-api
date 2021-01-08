@@ -26,7 +26,7 @@ router = APIRouter(prefix="/posts", tags=["posts"])
                 Generates meta tags, ensures SSL hyperlinks, and populates missing <img /> `alt` attributes.",
     response_model=PostUpdate,
 )
-def update_post(post_update: PostUpdate):
+async def update_post(post_update: PostUpdate):
     """Enrich post metadata upon update."""
     previous_update = post_update.post.previous
     if previous_update:
@@ -93,7 +93,7 @@ def update_post(post_update: PostUpdate):
     summary="Sanitize metadata for all posts.",
     description="Run a sequence of analytics to ensure all posts have proper metadata.",
 )
-def batch_insert_metadata():
+async def batch_insert_metadata():
     post_inserts = rdbms.execute_query_from_file(
         f"{basedir}/database/queries/posts/selects/missing_all_metadata.sql",
         "hackers_prod",
@@ -115,7 +115,7 @@ def batch_insert_metadata():
     summary="Batch create Lynx embeds.",
     description="Fetch raw Lynx post and generate embedded link previews.",
 )
-def batch_lynx_previews():
+async def batch_lynx_previews():
     posts = fetch_raw_lynx_posts()
     result = batch_lynx_embeds(posts)
     return result
@@ -126,7 +126,7 @@ def batch_lynx_previews():
     summary="Embed Lynx links.",
     description="Generate embedded link previews for a single Lynx post.",
 )
-def post_link_previews(post_update: PostUpdate):
+async def post_link_previews(post_update: PostUpdate):
     """Render anchor tag link previews."""
     post = post_update.post.current
     post_id = post.id
@@ -157,13 +157,13 @@ def post_link_previews(post_update: PostUpdate):
     summary="Populate missing alt text for images.",
     description="Assign missing alt text to embedded images.",
 )
-def assign_img_alt_attr():
+async def assign_img_alt_attr():
     """Find <img>s missing alt text and assign `alt`, `title` attributes."""
     return batch_assign_img_alt()
 
 
 @router.get("/backup")
-def backup_database():
+async def backup_database():
     """Export JSON backup of database."""
     json = ghost.get_json_backup()
     return json

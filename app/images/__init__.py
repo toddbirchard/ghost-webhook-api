@@ -17,7 +17,7 @@ router = APIRouter(prefix="/images", tags=["images"])
     summary="Optimize single post image.",
     description="Generate retina and mobile feature_image for a single post upon update.",
 )
-def optimize_post_image(post_update: PostUpdate):
+async def optimize_post_image(post_update: PostUpdate):
     """
     Generate retina version of a post's feature image if one doesn't exist.
 
@@ -41,7 +41,7 @@ def optimize_post_image(post_update: PostUpdate):
             Defaults to images uploaded within the current month; \
             accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.",
 )
-def bulk_transform_images(
+async def bulk_transform_images(
     directory: Optional[str] = Query(
         default=None,
         title="directory",
@@ -74,7 +74,7 @@ def bulk_transform_images(
 
 
 @router.get("/lynx")
-def bulk_assign_lynx_images():
+async def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = rdbms.execute_query_from_file(
         f"{basedir}/database/queries/images/lynx_missing_images.sql", "hackers_prod"
@@ -93,7 +93,7 @@ def bulk_assign_lynx_images():
 
 
 @router.get("/sort")
-def bulk_organize_images(directory: Optional[str] = None):
+async def bulk_organize_images(directory: Optional[str] = None):
     """"""
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER

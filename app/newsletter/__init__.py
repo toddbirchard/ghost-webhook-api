@@ -36,7 +36,7 @@ async def newsletter_subscribe(subscription: Subscription):
 
 
 @router.delete("/")
-def newsletter_unsubscribe(subscription: Subscription):
+async def newsletter_unsubscribe(subscription: Subscription):
     """Track user unsubscribe events and spam complaints."""
     LOGGER.info(f"`{subscription.member.previous.name}` unsubscribed from newsletter.")
     return subscription.member.previous.dict()

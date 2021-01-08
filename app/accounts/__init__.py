@@ -20,7 +20,7 @@ router = APIRouter(prefix="/account", tags=["accounts"])
     summary="Add new user account to Ghost.",
     description="Create free-tier Ghost membership for Netlify user account upon signup.",
 )
-def new_ghost_member(user_event: UserEvent):
+async def new_ghost_member(user_event: UserEvent):
     """
     Create Ghost member from Netlify identity signup.
 
@@ -45,7 +45,7 @@ def new_ghost_member(user_event: UserEvent):
     description="Store user-generated comments submitted on posts.",
     response_model=NewComment,
 )
-def new_comment(comment: NewComment, db: Session = Depends(get_db)):
+async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
     Save user-generated comment to SQL table, and notify post author.
 
@@ -69,7 +69,7 @@ def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     description="Save record of new donation to persistent ledger.",
     response_model=NewDonation,
 )
-def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
+async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     """
     Save donations from BuyMeACoffee to database.
 
@@ -85,7 +85,7 @@ def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
 
 
 @router.get("/comments", summary="Test get comments via ORM")
-def test_orm(db: Session = Depends(get_db)):
+async def test_orm(db: Session = Depends(get_db)):
     comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in comments:
         LOGGER.info(comment.user)
