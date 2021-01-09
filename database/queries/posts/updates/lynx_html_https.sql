@@ -4,4 +4,4 @@ SET
 	html = REPLACE(html, 'http://', 'https://')
 WHERE
 	title LIKE '%%Lynx%%'
-	AND html LIKE '%http://%%';
+	AND html LIKE '%%http://%%';
