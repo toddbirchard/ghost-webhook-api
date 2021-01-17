@@ -62,7 +62,7 @@ def create_logger() -> logger:
             compression="zip",
         )
         logger.add(
-            f"/var/log/api/error.log",
+            f"/var/log/api/info.log",
             colorize=True,
             catch=True,
             format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
