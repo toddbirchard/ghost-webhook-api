@@ -50,14 +50,24 @@ def create_logger() -> logger:
     if settings.ENVIRONMENT == "production":
         # Datadog
         logger.add(
-            f"/var/log/api/info.json",
+            "/var/log/api/info.json",
             format=formatter,
             rotation="500 MB",
             compression="zip",
         )
         logger.add(
-            f"/var/log/api/logs/apm.log",
+            "/var/log/api/apm.log",
             format=DD_APM_FORMAT,
+            rotation="500 MB",
+            compression="zip",
+        )
+        logger.add(
+            f"/var/log/api/error.log",
+            colorize=True,
+            catch=True,
+            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
+                   + "<light-green>{level}</light-green>: "
+                   + "<light-white>{message}</light-white>",
             rotation="500 MB",
             compression="zip",
         )
