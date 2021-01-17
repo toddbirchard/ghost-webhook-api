@@ -4,6 +4,7 @@ from typing import List, Optional
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.engine.result import RowProxy
 
 from clients.log import LOGGER
 
@@ -27,7 +28,6 @@ class Database:
         :type table_name: str
         :param database_name: Name of database to connect to.
         :type database_name: str
-
         :returns: Table
         """
         return Table(
@@ -42,7 +42,6 @@ class Database:
         :type queries: dict
         :param database_name: Name of database to connect to.
         :type database_name: str
-
         :returns: dict
         """
         results = {}
@@ -52,7 +51,7 @@ class Database:
         return results
 
     @LOGGER.catch
-    def execute_query(self, query: str, database_name: str):
+    def execute_query(self, query: str, database_name: str) -> Optional[RowProxy]:
         """
         Execute single SQL query.
 
@@ -60,13 +59,13 @@ class Database:
         :type query: str
         :param database_name: Name of database to connect to.
         :type database_name: str
+        :returns: Optional[RowProxy]
         """
         try:
             result = self.engines[database_name].execute(query)
             return result
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
-            return None
 
     @LOGGER.catch
     def execute_query_from_file(self, sql_file: str, database_name: str):
@@ -101,7 +100,7 @@ class Database:
         return None
 
     @LOGGER.catch
-    def fetch_record(self, query: str, database_name: str) -> Optional[str]:
+    def fetch_record(self, query: str, database_name: str) -> Optional[RowProxy]:
         """
         Fetch a single row; typically used to verify whether a
         record already exists (ie: users).
@@ -127,6 +126,7 @@ class Database:
         :type database_name: Optional[str]
         :param replace: Flag to truncate table prior to insert.
         :type replace: bool
+        :returns: Optional[int]
         """
         try:
             if replace:
@@ -136,14 +136,12 @@ class Database:
             return len(rows)
         except SQLAlchemyError as e:
             LOGGER.error(e)
-            return None
         except IntegrityError as e:
             LOGGER.error(e)
-            return None
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"
-    ):
+    ) -> Optional[str]:
         """
         Insert Pandas DataFrame into SQL table.
 
@@ -155,6 +153,7 @@ class Database:
         :type database_name: str
         :param action: Method of dealing with duplicate rows.
         :type action: str
+        :returns: Optional[str]
         """
         df.to_sql(table_name, self.engines[database_name], if_exists=action)
         LOGGER.info(

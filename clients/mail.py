@@ -2,7 +2,7 @@
 from typing import Optional
 
 import requests
-from requests import HTTPError, request
+from requests import HTTPError, Response
 
 from clients.log import LOGGER
 
@@ -16,8 +16,14 @@ class Mailgun:
         self.api_key = api_key
         self.endpoint = f"https://api.mailgun.net/v3/{self.server}/messages"
 
-    def send_email(self, body: dict) -> Optional[request]:
-        """Send Mailgun email."""
+    def send_email(self, body: dict) -> Optional[Response]:
+        """
+        Send Mailgun email.
+
+        :param body: Properties of outbound email.
+        :type body: dict
+        :returns: Optional[request]
+        """
         try:
             req = requests.post(
                 self.endpoint,
@@ -30,19 +36,25 @@ class Mailgun:
             return req
         except HTTPError as e:
             LOGGER.error(
-                f"Failed to send email to `{body['to']}` with subject `{body['subject']}`: {e}"
+                f"HTTPError error send email to `{body['to']}` with subject `{body['subject']}`: {e}"
             )
-            return None
         except Exception as e:
             LOGGER.error(
-                f"Failed to send email to `{body['to']}` with subject `{body['subject']}`: {e}"
+                f"Exception send email to `{body['to']}` with subject `{body['subject']}`: {e}"
             )
-            return None
 
     def send_comment_notification_email(
         self, post: dict, comment: dict
-    ) -> Optional[request]:
-        """Notify post author when a comment is submitted."""
+    ) -> Optional[Response]:
+        """
+        Notify post author when a comment is submitted.
+
+        :param post: Ghost post body fetched from admin API.
+        :type post: dict
+        :param comment: User comment on a post.
+        :type comment: dict
+        :returns: Optional[Response]
+        """
         body = {
             "from": "todd@hackersandslackers.com",
             "to": post["primary_author"]["email"],

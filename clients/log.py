@@ -47,28 +47,28 @@ def create_logger() -> logger:
         + "<light-white>{message}</light-white>",
     )
     # Readable logs
-    logger.add(
-        f"{basedir}/logs/error.log",
-        colorize=True,
-        catch=True,
-        format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-        + "<light-green>{level}</light-green>: "
-        + "<light-white>{message}</light-white>",
-        rotation="500 MB",
-        compression="zip",
-    )
-    logger.add("logs/info.json", format=formatter, rotation="500 MB", compression="zip")
     if settings.ENVIRONMENT == "production":
         # Datadog
         logger.add(
-            f"{basedir}/logs/info.json",
+            f"/var/log/api/info.json",
             format=formatter,
             rotation="500 MB",
             compression="zip",
         )
         logger.add(
-            f"{basedir}/logs/apm.log",
+            f"/var/log/api/logs/apm.log",
             format=DD_APM_FORMAT,
+            rotation="500 MB",
+            compression="zip",
+        )
+    else:
+        logger.add(
+            f"{basedir}/logs/error.log",
+            colorize=True,
+            catch=True,
+            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
+            + "<light-green>{level}</light-green>: "
+            + "<light-white>{message}</light-white>",
             rotation="500 MB",
             compression="zip",
         )

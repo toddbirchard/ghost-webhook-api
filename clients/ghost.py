@@ -58,7 +58,6 @@ class Ghost:
 
         :param post_id: ID of post to fetch.
         :type post_id: str
-
         :returns: Optional[dict]
         """
         try:
@@ -100,7 +99,6 @@ class Ghost:
         :type body: dict
         :param slug: Human-readable post identifier.
         :type slug: str
-
         :returns: Tuple[str, int]
         """
         try:
@@ -144,11 +142,11 @@ class Ghost:
             LOGGER.error(f"KeyError while fetching Ghost authors: {e}")
 
     def create_member(self, body: dict) -> Tuple[str, int]:
-        """Create new Ghost member.
+        """
+        Create new Ghost member.
 
         :param body: Create new Ghost member account used to receive newsletters.
-        :param body: dict
-
+        :type body: dict
         :returns: Optional[List[str]]
         """
         try:
@@ -165,7 +163,11 @@ class Ghost:
             return e.response.content, e.response.status_code
 
     def rebuild_netlify_site(self) -> Tuple[str, int]:
-        """Trigger Netlify site rebuild."""
+        """
+        Trigger Netlify site rebuild.
+
+        :returns: Tuple[str, int]
+        """
         try:
             req = requests.post(
                 self.netlify_build_url,

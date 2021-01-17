@@ -72,7 +72,7 @@ clean:
 	find . -name '__pycache__' -delete
 	find . -name 'poetry.lock' -delete
 	find . -name 'Pipefile.lock' -delete
-	find . -name 'logs/*' -delete
+	find . -name 'logs/*.json' -delete
 	find . -name '*.log' -delete
 	find . -name '*/.pytest_cache' -delete
 	find . -name '*/logs/*.json' -delete
