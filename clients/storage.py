@@ -4,7 +4,6 @@ from io import BytesIO
 from random import randint
 from typing import List, Optional
 
-import requests
 from google.cloud import storage
 from google.cloud.exceptions import GoogleCloudError
 from google.cloud.storage.blob import Blob
@@ -283,7 +282,7 @@ class GCS:
         """
         image_folder, image_name = self._get_folder_and_filename(image_blob)
         if image_type == "standard":
-            new_image_name = f"{image_folder.replace('/_retina', '').replace('/_mobile', '')}/{image_name.replace('@2x', '')}"
+            new_image_name = f"{image_folder.replace('/_retina', '/').replace('/_mobile', '/')}{image_name.replace('@2x', '')}"
             self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
             LOGGER.info(f"Created standard image `{new_image_name}`")
             return new_image_name
@@ -314,8 +313,9 @@ class GCS:
         image = images[rand]
         return image
 
+    @staticmethod
     def _create_mobile_image(
-        self, original_image_blob: Blob, new_image_blob: Blob
+        original_image_blob: Blob, new_image_blob: Blob
     ) -> Optional[str]:
         """
         Create smaller image size to be served on mobile devices.
@@ -327,7 +327,8 @@ class GCS:
 
         :returns: Optional[str]
         """
-        img_bytes = self._fetch_image_via_http(original_image_blob.name)
+
+        img_bytes = original_image_blob.download_as_bytes()
         if img_bytes:
             stream = BytesIO(img_bytes)
             im = Image.open(stream)
@@ -362,24 +363,3 @@ class GCS:
         image_folder = image_blob.name.rsplit("/", 1)[0]
         image_name = image_blob.name.rsplit("/", 1)[1]
         return image_folder, image_name
-
-    @LOGGER.catch
-    def _fetch_image_via_http(self, image_name: str) -> Optional[bytes]:
-        """
-        Fetch raw image data via HTTP request.
-
-        :param image_name: Filepath of image to retrieve.
-        :type image_name: str
-
-        :returns: Optional[bytes]
-        """
-        url = f"{self.bucket_http_url}{image_name}"
-        req = requests.get(url)
-        if req.status_code == 200 and req.headers["Content-Type"] in (
-            "application/octet-stream",
-            "image/jpeg",
-            "image/jpg",
-            "image/png",
-        ):
-            return req.content
-        return None

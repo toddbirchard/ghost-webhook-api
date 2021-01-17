@@ -6,8 +6,8 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.metadata import batch_assign_img_alt, assign_img_alt
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
+from app.posts.metadata import assign_img_alt, batch_assign_img_alt
 from app.posts.update import batch_update_metadata, update_mobiledoc
 from clients import gcs, ghost
 from clients.log import LOGGER

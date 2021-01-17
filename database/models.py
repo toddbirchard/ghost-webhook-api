@@ -1,5 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from database.orm import Base
 
@@ -31,8 +32,8 @@ class Account(Base):
     role = Column(String(255), unique=False)
     provider = Column(String(255), unique=False)
     source = Column(String(255), unique=False)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
 
 
 class Donation(Base):
