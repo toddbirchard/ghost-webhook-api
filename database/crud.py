@@ -1,13 +1,14 @@
 from datetime import datetime
 
 from sqlalchemy.orm import Session
+from sqlalchemy.engine.result import ResultProxy
 
 from clients.log import LOGGER
 from database.models import Comment, Donation
 from database.schemas import NewComment, NewDonation
 
 
-def get_donation(db: Session, donation_id: int):
+def get_donation(db: Session, donation_id: int) -> ResultProxy:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -15,6 +16,7 @@ def get_donation(db: Session, donation_id: int):
     :type db: Session
     :param donation_id: Primary key for donation record.
     :type donation_id: int
+    :returns: ResultProxy
     """
     return db.query(Donation).filter(Donation.coffee_id == donation_id).first()
 
@@ -27,7 +29,6 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     :type db: Session
     :param donation: Donation schema object.
     :type donation: NewDonation
-
     :returns: Donation
     """
     db_item = Donation(
@@ -41,11 +42,10 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     )
     db.add(db_item)
     db.commit()
-    db.refresh(db_item)
     return db_item
 
 
-def get_comment(db: Session, comment_id: int):
+def get_comment(db: Session, comment_id: int) -> ResultProxy:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -53,6 +53,7 @@ def get_comment(db: Session, comment_id: int):
     :type db: Session
     :param comment_id: Primary key for user comment record.
     :type comment_id: int
+    :returns: ResultProxy
     """
     return db.query(Comment).filter(Comment.id == comment_id).first()
 
@@ -65,10 +66,9 @@ def create_comment(db: Session, comment: NewComment):
     :type db: Session
     :param comment: User comment schema object.
     :type comment: NewComment
-
     :returns: Comment
     """
-    db_item = Comment(
+    new_comment = Comment(
         user_name=comment.user_name,
         user_avatar=comment.user_avatar,
         user_id=comment.user_id,
@@ -78,10 +78,9 @@ def create_comment(db: Session, comment: NewComment):
         post_slug=comment.post_slug,
         post_id=comment.post_id,
     )
-    db.add(db_item)
+    db.add(new_comment)
     db.commit()
-    db.refresh(db_item)
     LOGGER.success(
-        f"New comment submitted by user `{db_item.user_name}` on post `{db_item.post_slug}`"
+        f"New comment submitted by user `{new_comment.user_name}` on post `{new_comment.post_slug}`"
     )
-    return db_item
+    return new_comment

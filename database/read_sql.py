@@ -10,8 +10,14 @@ from config import basedir
 from database import rdbms
 
 
-def collect_sql_queries(subdirectory: str = "") -> dict:
-    """Create dict of analytics to be run against database."""
+def collect_sql_queries(subdirectory: str) -> dict:
+    """
+    Create dict of analytics to be run against database.
+
+    :param subdirectory: Directory containing .sql queries to run in bulk.
+    :type subdirectory: str
+    :returns: dict
+    """
     sql_file_paths = fetch_sql_files(subdirectory)
     sql_queries = parse_sql_batch(sql_file_paths)
     sql_file_names = [file.split("/")[-1] for file in sql_file_paths]
@@ -19,13 +25,12 @@ def collect_sql_queries(subdirectory: str = "") -> dict:
     return query_dict
 
 
-def fetch_sql_files(subdirectory: str = "") -> List[str]:
+def fetch_sql_files(subdirectory: str) -> List[str]:
     """
     Fetch all SQL query files in folder.
 
     :param subdirectory: Subdirectory containing SQL files to fetch.
     :type subdirectory: str
-
     :returns: List[str]
     """
     folder = f"{basedir}/database/queries{subdirectory}"
@@ -43,7 +48,6 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
 
     :param sql_file_paths: List of paths to SQL files to read and parse.
     :type sql_file_paths: List[str]
-
     :returns: List[str]
     """
     queries = []
@@ -56,7 +60,11 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
 
 
 def fetch_raw_lynx_posts() -> ResultProxy:
-    """Find all Lynx posts lacking embedded link previews."""
+    """
+    Find all Lynx posts lacking embedded link previews.
+
+    :returns: ResultProxy
+    """
     sql_file = open(f"{basedir}/database/queries/posts/selects/lynx_bookmarks.sql", "r")
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").fetchall()

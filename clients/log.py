@@ -66,8 +66,8 @@ def create_logger() -> logger:
             colorize=True,
             catch=True,
             format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-                   + "<light-green>{level}</light-green>: "
-                   + "<light-white>{message}</light-white>",
+            + "<light-green>{level}</light-green>: "
+            + "<light-white>{message}</light-white>",
             rotation="500 MB",
             compression="zip",
         )

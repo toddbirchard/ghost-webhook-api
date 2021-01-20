@@ -7,6 +7,7 @@ from database.orm import Base
 
 class Comment(Base):
     """User-generated comment."""
+
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -25,6 +26,7 @@ class Comment(Base):
 
 class Account(Base):
     """Netlify-managed user account."""
+
     __tablename__ = "accounts"
 
     id = Column(String(255), primary_key=True, index=True)
@@ -40,6 +42,7 @@ class Account(Base):
 
 class Donation(Base):
     """BuyMeACoffee donation."""
+
     __tablename__ = "donations"
 
     id = Column(Integer, primary_key=True, index=True)

@@ -9,7 +9,7 @@ class NewDonation(BaseModel):
     count: int = Field(None, example=5)
     message: str = Field(None, example="Great tutorials but this is a test message.")
     link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
-    created_at: str = Field(None, example="2019-11-07 00:00:00")
+    created_at: str = Field(None, example="2019-11-07")
     coffee_id: int = Field(None, example=3453543)
 
     class Config:

@@ -43,8 +43,7 @@ class Database:
         :type queries: dict
         :param database_name: Name of database to connect to.
         :type database_name: str
-
-        :returns: dict
+        :returns: Tuple[dict, int]
         """
         results = {}
         total_rows = 0
@@ -63,29 +62,30 @@ class Database:
         :type query: str
         :param database_name: Name of database to connect to.
         :type database_name: str
+        :returns: Optional[ResultProxy]
         """
         try:
             result = self.engines[database_name].execute(text(query))
             return result
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
-            return None
 
     @LOGGER.catch
     def execute_query_from_file(
         self, sql_file: str, database_name: str
     ) -> Optional[ResultProxy]:
-        """Execute single SQL query.
+        """
+        Execute single SQL query.
 
         :param sql_file: Filepath of SQL query to run.
         :type sql_file: str
         :param database_name: Name of database to connect to.
         :type database_name: str
+        :returns: Optional[ResultProxy]
         """
         try:
             query = open(sql_file, "r").read()
-            result = self.engines[database_name].execute(query).fetchall()
-            return result
+            return self.engines[database_name].execute(query).fetchall()
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL {sql_file}: {e}")
 
@@ -98,6 +98,7 @@ class Database:
         :type query: str
         :param database_name: Name of database to connect to.
         :type database_name: str
+        :returns: Optional[List[str]]
         """
         rows = self.engines[database_name].execute(query).fetchall()
         if bool(rows):
@@ -114,6 +115,7 @@ class Database:
         :type query: str
         :param database_name: Name of database to connect to.
         :type database_name: Optional[str]
+        :returns: Optional[str]
         """
         return self.engines[database_name].execute(query).first()
 
@@ -131,6 +133,7 @@ class Database:
         :type database_name: Optional[str]
         :param replace: Flag to truncate table prior to insert.
         :type replace: bool
+        :returns: Optional[int]
         """
         try:
             if replace:
@@ -139,11 +142,9 @@ class Database:
             self.engines[database_name].execute(table.insert(), rows)
             return len(rows)
         except SQLAlchemyError as e:
-            LOGGER.error(e)
-            return None
+            LOGGER.error(f"SQLAlchemyError while inserting rows: {e}")
         except IntegrityError as e:
-            LOGGER.error(e)
-            return None
+            LOGGER.error(f"IntegrityError while inserting rows: {e}")
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"
@@ -159,6 +160,7 @@ class Database:
         :type database_name: str
         :param action: Method of dealing with duplicate rows.
         :type action: str
+        :returns: DataFrame
         """
         df.to_sql(table_name, self.engines[database_name], if_exists=action)
         LOGGER.info(
