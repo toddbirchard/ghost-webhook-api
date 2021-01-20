@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Optional
+from datetime import datetime
 
 from pydantic import BaseModel, Field
 
@@ -9,7 +10,7 @@ class NewDonation(BaseModel):
     count: int = Field(None, example=5)
     message: str = Field(None, example="Great tutorials but this is a test message.")
     link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
-    created_at: str = Field(None, example="2019-11-07")
+    created_at: datetime = Field(None, example="2019-11-07")
     coffee_id: int = Field(None, example=3453543)
 
     class Config:
@@ -34,7 +35,7 @@ class NewComment(BaseModel):
     )
     user_email: str = Field(None, example="person@example.com")
     body: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
-    created_at: str = Field(None, example="2020-12-15T04:52:03.928Z")
+    created_at: datetime = Field(None, example="2020-12-15T04:52:03.928Z")
 
     class Config:
         schema_extra = {
@@ -56,8 +57,8 @@ class Role(BaseModel):
     id: str
     name: str
     description: Optional[str]
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
 
 
 class Author(BaseModel):
@@ -83,8 +84,8 @@ class Author(BaseModel):
     status: str = Field(None, example="active")
     tour: str = Field(None, example='["upload-a-theme","getting-started"]')
     last_seen: str = Field(None, example="2020-12-20 10:54:20")
-    created_at: str = Field(None, example="2019-11-07 14:38:35")
-    updated_at: str = Field(None, example="2020-12-20 10:54:20")
+    created_at: datetime = Field(None, example="2019-11-07 14:38:35")
+    updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
     roles: List[Role] = Field(
         None,
         example=[
@@ -120,8 +121,8 @@ class Tag(BaseModel):
         None,
         example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold",
     )
-    created_at: str = Field(None, example="2017-11-17 20:44:09")
-    updated_at: str = Field(None, example="2020-08-03 05:21:42")
+    created_at: datetime = Field(None, example="2017-11-17 20:44:09")
+    updated_at: datetime = Field(None, example="2020-08-03 05:21:42")
     og_title: Optional[str] = Field(None, example="Python Tricks, Hacks, and Snippets")
     og_description: Optional[str] = Field(
         None,
@@ -177,8 +178,8 @@ class BasePost(BaseModel):
     status: str = Field(None, example="published")
     visibility: str = Field(None, example="public")
     email_recipient_filter: Optional[str] = Field(None, example=None)
-    created_at: str = Field(None, example="2017-11-17T20:29:13.000Z")
-    updated_at: str = Field(None, example="2019-10-26T06:52:53.000Z")
+    created_at: datetime = Field(None, example="2017-11-17T20:29:13.000Z")
+    updated_at: datetime = Field(None, example="2019-10-26T06:52:53.000Z")
     published_at: str = Field(None, example="2017-11-13T20:37:00.000Z")
     custom_excerpt: Optional[str] = Field(None, example="Technology for badasses.")
     authors: List[Author] = Field(None, example=[Author.schema()])
@@ -355,8 +356,8 @@ class NetlifyUser(BaseModel):
     name: Optional[str]
     note: Optional[str] = None
     subscribed: Optional[bool]
-    created_at: Optional[str]
-    updated_at: Optional[str]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
     labels: Optional[List] = None
     avatar_image: Optional[str] = None
     comped: Optional[bool]
@@ -377,8 +378,8 @@ class Member(BaseModel):
     name: Optional[str]
     note: Optional[str] = None
     subscribed: Optional[bool]
-    created_at: Optional[str]
-    updated_at: Optional[str]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
     labels: Optional[List] = None
     avatar_image: Optional[str] = None
     comped: Optional[bool]

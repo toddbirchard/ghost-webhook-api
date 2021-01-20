@@ -60,7 +60,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
         mailgun.send_comment_notification_email(post, comment.__dict__)
     user_comment = create_comment(db, comment)
     ghost.rebuild_netlify_site()
-    return NewComment.parse_obj(user_comment.dict())
+    return user_comment.__dict__
 
 
 @router.post(
