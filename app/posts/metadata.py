@@ -17,7 +17,6 @@ def assign_img_alt(mobiledoc: str) -> str:
 
     :param mobiledoc: Raw Ghost post mobiledoc.
     :type mobiledoc: str
-
     :returns: str
     """
     mobiledoc = json.loads(mobiledoc)
@@ -52,7 +51,11 @@ def batch_assign_img_alt():
 
 
 def posts_missing_alt_text() -> Optional[List[dict]]:
-    """Fetch IDs of posts which lack alt tags in image cards."""
+    """
+    Fetch IDs of posts which lack alt tags in image cards.
+
+    :returns: Optional[List[dict]]
+    """
     sql_query = (
         f"{basedir}/database/queries/posts/selects/img_alt_missing_mobiledoc.sql"
     )
@@ -66,7 +69,6 @@ def add_alt_tag(image_card: List) -> List[dict]:
 
     :param image_card: Single image card in Ghost post.
     :type image_card: List[dict]
-
     :returns: List[dict]
     """
     global images_updated

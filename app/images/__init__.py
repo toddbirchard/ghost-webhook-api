@@ -24,14 +24,19 @@ async def optimize_post_image(post_update: PostUpdate):
     :param post_update: Incoming payload for an updated Ghost post.
     :type post_update: PostUpdate
     """
+    new_images = []
     post = post_update.post.current
     feature_image = post.feature_image
     title = post.title
-    retina_image = gcs.create_single_retina_image(feature_image)
-    mobile_image = gcs.create_single_mobile_image(feature_image)
-    new_images = filter(lambda x: x is not None, [retina_image, mobile_image])
-    LOGGER.info(f"Generated images for post `{title}`: {', '.join(new_images)}")
-    return {"retina": retina_image, "mobile": mobile_image}
+    new_images.append(gcs.create_retina_image(feature_image))
+    new_images.append(gcs.create_mobile_image(feature_image))
+    new_images = [image for image in new_images if image is not None]
+    if bool(new_images):
+        LOGGER.info(
+            f"Generated {len(new_images)} images for post `{title}`: {new_images}"
+        )
+        return {post.title: new_images}
+    return f"Retina & mobile images already exist for {post.title}."
 
 
 @router.get(

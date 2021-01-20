@@ -1,4 +1,4 @@
-"""Routes to transform post data."""
+"""Post data enrichment."""
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -27,7 +27,12 @@ router = APIRouter(prefix="/posts", tags=["posts"])
     response_model=PostUpdate,
 )
 async def update_post(post_update: PostUpdate):
-    """Enrich post metadata upon update."""
+    """
+    Enrich post metadata upon update.
+
+    :param post_update: Request to update Ghost post.
+    :type post_update: PostUpdate
+    """
     previous_update = post_update.post.previous
     if previous_update:
         current_time = get_current_datetime()
@@ -128,7 +133,12 @@ async def batch_lynx_previews():
     description="Generate embedded link previews for a single Lynx post.",
 )
 async def post_link_previews(post_update: PostUpdate):
-    """Render anchor tag link previews."""
+    """
+    Render anchor tag link previews.
+
+    :param post_update: Request to update Ghost post.
+    :type post_update: PostUpdate
+    """
     post = post_update.post.current
     post_id = post.id
     slug = post.slug
