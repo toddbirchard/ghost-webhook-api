@@ -10,14 +10,12 @@ class NewDonation(BaseModel):
     count: int = Field(None, example=5)
     message: str = Field(None, example="Great tutorials but this is a test message.")
     link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
-    created_at: datetime = Field(None, example="2019-11-07")
     coffee_id: int = Field(None, example=3453543)
 
     class Config:
         schema_extra = {
             "coffee_id": 405127,
             "count": 1,
-            "created_at": "2020-12-02",
             "email": "fake@example.com",
             "link": "https://buymeacoffee.com/hackersslackers",
             "name": "Someone",
@@ -34,8 +32,8 @@ class NewComment(BaseModel):
         None, example="https://avatars3.githubusercontent.com/u/2747442?v=4"
     )
     user_email: str = Field(None, example="person@example.com")
-    body: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
-    created_at: datetime = Field(None, example="2020-12-15T04:52:03.928Z")
+    body: Optional[str] = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
+    created_at: str = Field(None, example="2020-12-15T04:52:03.928Z")
 
     class Config:
         schema_extra = {

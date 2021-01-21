@@ -38,7 +38,7 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
         message=donation.message,
         link=donation.link,
         coffee_id=donation.coffee_id,
-        created_at=datetime.strptime(donation.created_at, "%Y-%m-%d"),
+        created_at=datetime.now(),
     )
     db.add(db_item)
     db.commit()
