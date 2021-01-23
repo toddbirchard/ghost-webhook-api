@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip install flake8 pytest-flask
+        python3 -m pip install flake8 pytest-flask mock
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
@@ -42,7 +42,7 @@ jobs:
       env:
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
         TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-        SQLALCHEMY_DATABASE_URI: ${{ secrets.TWILIO_ACCOUNT_SID }}
+        SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
         ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
         ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
         APP_NAME: ${{ secrets.APP_NAME }}
