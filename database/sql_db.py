@@ -28,7 +28,6 @@ class Database:
         :type table_name: str
         :param database_name: Name of database to connect to.
         :type database_name: str
-
         :returns: Table
         """
         return Table(

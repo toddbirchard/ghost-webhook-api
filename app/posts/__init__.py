@@ -1,4 +1,4 @@
-"""Post data enrichment."""
+"""Ghost post enrichment of data."""
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -8,12 +8,12 @@ from fastapi.responses import JSONResponse
 from app.moment import get_current_datetime, get_current_time
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from app.posts.metadata import assign_img_alt, batch_assign_img_alt
-from app.posts.update import batch_update_metadata, update_mobiledoc
+from app.posts.update import update_metadata, update_mobiledoc
 from clients import gcs, ghost
 from clients.log import LOGGER
 from config import basedir
 from database import rdbms
-from database.read_sql import fetch_raw_lynx_posts
+from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
 from database.schemas import PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -99,20 +99,17 @@ async def update_post(post_update: PostUpdate):
     summary="Sanitize metadata for all posts.",
     description="Run a sequence of analytics to ensure all posts have proper metadata.",
 )
-async def batch_insert_metadata():
-    post_inserts = rdbms.execute_query_from_file(
+async def batch_update_metadata():
+    update_queries = collect_sql_queries("posts/updates")
+    update_results, num_updated = rdbms.execute_queries(update_queries, "hackers_prod")
+    insert_posts = rdbms.execute_query_from_file(
         f"{basedir}/database/queries/posts/selects/missing_all_metadata.sql",
         "hackers_prod",
     )
-    post_updates = rdbms.execute_query_from_file(
-        f"{basedir}/database/queries/posts/selects/post_mismatched_metadata.sql",
-        "hackers_prod",
-    )
-    inserted_metadata = batch_update_metadata(post_inserts)
-    updated_metadata = batch_update_metadata(post_updates)
+    insert_results = update_metadata(insert_posts)
     return {
-        "inserted": {"count": len(inserted_metadata), "posts": inserted_metadata},
-        "updated": {"count": len(updated_metadata), "posts": updated_metadata},
+        "inserted": {"count": len(insert_results), "posts": insert_results},
+        "updated": {"count": num_updated, "posts": update_results},
     }
 
 

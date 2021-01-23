@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.engine.result import RowProxy
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from clients.log import LOGGER
 

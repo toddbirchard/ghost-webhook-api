@@ -2,12 +2,12 @@
 import re
 from io import BytesIO
 from random import randint
-from typing import List, Optional, Iterator, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 from google.cloud import storage
 from google.cloud.exceptions import GoogleCloudError
-from google.cloud.storage.client import Client, Bucket
 from google.cloud.storage.blob import Blob
+from google.cloud.storage.client import Bucket, Client
 from PIL import Image
 
 from clients.log import LOGGER

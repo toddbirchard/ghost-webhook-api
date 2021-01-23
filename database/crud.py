@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
 from sqlalchemy.engine.result import ResultProxy
+from sqlalchemy.orm import Session
 
 from clients.log import LOGGER
 from database.models import Comment, Donation

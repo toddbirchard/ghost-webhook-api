@@ -12,7 +12,7 @@ from database import rdbms
 
 def collect_sql_queries(subdirectory: str) -> dict:
     """
-    Create dict of analytics to be run against database.
+    Create dict of SQL queries to be run where `keys` are filenames and `values` are queries.
 
     :param subdirectory: Directory containing .sql queries to run in bulk.
     :type subdirectory: str
@@ -33,7 +33,7 @@ def fetch_sql_files(subdirectory: str) -> List[str]:
     :type subdirectory: str
     :returns: List[str]
     """
-    folder = f"{basedir}/database/queries{subdirectory}"
+    folder = f"{basedir}/database/queries/{subdirectory}"
     directory = listdir(folder)
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f

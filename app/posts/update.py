@@ -26,13 +26,12 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     return ghost.update_post(ghost_post["id"], body, ghost_post["slug"])
 
 
-def batch_update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
+def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
     """
     Update Ghost posts with bad or missing metadata.
 
     :param post_dicts: Ghost posts as list of dictionaries.
     :type post_dicts: List[dict]
-
     :returns: List[Optional[dict]]
     """
     updated_posts = []
