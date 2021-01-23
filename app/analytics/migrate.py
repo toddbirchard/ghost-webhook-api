@@ -12,10 +12,12 @@ def import_site_analytics(timeframe: str) -> DataFrame:
 
     :param timeframe: Timeframe to fetch data for (weekly, monthly, yearly).
     :type timeframe: str
+    :returns: DataFrame
     """
     sql_query = open(f"{basedir}/database/queries/analytics/{timeframe}.sql").read()
     sql_table = f"{timeframe}_stats"
-    results = bigquery.query(sql_query).result()
-    df = results.to_dataframe()
+    query_job = bigquery.query(sql_query)
+    result = query_job.result()
+    df = result.to_dataframe()
     result = rdbms.insert_dataframe(df, sql_table, "analytics", action="replace")
     return result

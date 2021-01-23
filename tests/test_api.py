@@ -83,3 +83,7 @@ def assign_img_alt_attr():
     result = client.get("/posts/alt")
     LOGGER.debug("TEST RESULTS FOR ASSIGNING IMG ALT TAGS")
     pp.pprint(result.json())
+
+
+def test_import_site_analytics():
+    response = client.get("/analytics/")
