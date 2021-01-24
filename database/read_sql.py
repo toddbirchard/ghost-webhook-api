@@ -5,7 +5,6 @@ from typing import List
 
 from sqlalchemy.engine.result import ResultProxy
 
-from clients.log import LOGGER
 from config import basedir
 from database import rdbms
 
