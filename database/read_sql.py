@@ -38,7 +38,6 @@ def fetch_sql_files(subdirectory: str) -> List[str]:
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f
     ]
-    LOGGER.info(f"Found {len(files)} analytics in `{folder}`.")
     return files
 
 

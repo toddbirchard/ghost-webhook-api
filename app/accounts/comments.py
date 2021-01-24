@@ -1,4 +1,4 @@
-"""New comment creation."""
+"""Parse new comments from users."""
 from datetime import datetime
 from typing import Optional
 
@@ -14,7 +14,6 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
     :type comment: Comment
     :param post: Post on which comment was published.
     :type post: dict
-
     :returns: dict
     """
     username = comment.user_name
@@ -45,7 +44,6 @@ def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
     :type comment: Comment
     :param post: Post on which comment was published.
     :type post: dict
-
     :returns: Optional[str]
     """
     authors = ghost.get_authors()

@@ -3,16 +3,15 @@ from typing import Dict, List, Optional
 
 from clients import ghost
 from clients.log import LOGGER
-from database.schemas import NetlifyUser
+from database.schemas import NetlifyAccount
 
 
-def new_ghost_subscription(user: NetlifyUser) -> Optional[Dict[str, List[Dict]]]:
+def new_ghost_subscription(user: NetlifyAccount) -> Optional[Dict[str, List[Dict]]]:
     """
     Create Ghost member from Netlify identity signup.
 
     :param user: New user account from Netlify auth.
-    :type user: NetlifyUser
-
+    :type user: NetlifyAccount
     :returns: Optional[str, Dict[List[Dict]]]
     """
     body = {

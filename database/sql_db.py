@@ -48,7 +48,7 @@ class Database:
         total_rows = 0
         for k, v in queries.items():
             query_result = self.engines[database_name].execute(text(v))
-            results[k] = f"{query_result.rowcount} rows affected."
+            results[k] = query_result.rowcount
             total_rows += query_result.rowcount
         return results, total_rows
 

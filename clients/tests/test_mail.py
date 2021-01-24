@@ -20,7 +20,7 @@ def comment_body():
 
 def test_comment_email(comment_body, ghost, mailgun):
     post = ghost.get_post("5dc42cb812c9ce0d63f5c0c3")
-    response = mailgun.send_comment_notification_email(post, comment_body)
+    response = mailgun.email_notification_new_comment(post, comment_body)
     LOGGER.debug(response.content)
 
     assert post["primary_author"]["name"] == "Todd Birchard"

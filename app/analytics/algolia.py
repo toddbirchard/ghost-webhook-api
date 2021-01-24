@@ -30,18 +30,16 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
     try:
         req = requests.get(endpoint, headers=headers, params=params)
         search_queries = req.json()["searches"]
-        return filter_results(search_queries)
+        return filter_search_queries(search_queries)
     except HTTPError as e:
-        LOGGER.error(f"Failed to fetch Algolia searches: {e}")
+        LOGGER.error(f"HTTPError while fetching Algolia searches: {e}")
     except KeyError as e:
-        LOGGER.error(f"Experienced KeyError while fetching Algolia searches: {e}")
+        LOGGER.error(f"KeyError while fetching Algolia searches: {e}")
     except Exception as e:
-        LOGGER.error(
-            f"Experienced unexpected error while fetching Algolia searches: {e}"
-        )
+        LOGGER.error(f"Unexpected error while fetching Algolia searches: {e}")
 
 
-def filter_results(
+def filter_search_queries(
     search_queries: List[Optional[Dict[str, Any]]]
 ) -> List[Optional[str]]:
     """

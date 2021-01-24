@@ -47,7 +47,7 @@ async def new_ghost_member(user_event: UserEvent):
 )
 async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
-    Save user-generated comment to SQL table, and notify post author.
+    Save user comment to SQL table and notify post author.
 
     :param comment: User-submitted comment.
     :type comment: NewComment
@@ -57,10 +57,10 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
     if comment.user_email not in authors:
-        mailgun.send_comment_notification_email(post, comment.__dict__)
-    user_comment = create_comment(db, comment)
+        mailgun.email_notification_new_comment(post, comment.__dict__)
+    create_comment(db, comment)
     ghost.rebuild_netlify_site()
-    return user_comment.__dict__
+    return comment
 
 
 @router.post(

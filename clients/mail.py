@@ -36,18 +36,18 @@ class Mailgun:
             return req
         except HTTPError as e:
             LOGGER.error(
-                f"HTTPError error send email to `{body['to']}` with subject `{body['subject']}`: {e}"
+                f"HTTPError error while sending email to `{body['to']}` with subject `{body['subject']}`: {e}"
             )
         except Exception as e:
             LOGGER.error(
-                f"Exception send email to `{body['to']}` with subject `{body['subject']}`: {e}"
+                f"Unexpected error while sending email to `{body['to']}` with subject `{body['subject']}`: {e}"
             )
 
-    def send_comment_notification_email(
+    def email_notification_new_comment(
         self, post: dict, comment: dict
     ) -> Optional[Response]:
         """
-        Notify post author when a comment is submitted.
+        Notify author when a user comments on a post.
 
         :param post: Ghost post body fetched from admin API.
         :type post: dict

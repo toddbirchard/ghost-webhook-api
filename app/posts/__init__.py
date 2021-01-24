@@ -107,6 +107,9 @@ async def batch_update_metadata():
         "hackers_prod",
     )
     insert_results = update_metadata(insert_posts)
+    LOGGER.success(
+        f"Inserted metadata for {len(insert_results)} posts, updated {num_updated}."
+    )
     return {
         "inserted": {"count": len(insert_results), "posts": insert_results},
         "updated": {"count": num_updated, "posts": update_results},

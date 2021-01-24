@@ -347,7 +347,7 @@ class PostUpdate(BaseModel):
         }
 
 
-class NetlifyUser(BaseModel):
+class NetlifyAccount(BaseModel):
     id: str
     uuid: str
     email: str
@@ -362,7 +362,7 @@ class NetlifyUser(BaseModel):
 
 
 class NewUser(BaseModel):
-    current: Optional[NetlifyUser]
+    current: Optional[NetlifyAccount]
 
 
 class UserEvent(BaseModel):

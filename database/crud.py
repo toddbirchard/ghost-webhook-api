@@ -66,7 +66,7 @@ def create_comment(db: Session, comment: NewComment):
     :type db: Session
     :param comment: User comment schema object.
     :type comment: NewComment
-    :returns: Comment
+    :returns: NewComment
     """
     new_comment = Comment(
         user_name=comment.user_name,

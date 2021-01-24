@@ -1,4 +1,4 @@
-"""Import analytics from data warehouse to application."""
+"""Import site analytics from data warehouse to application."""
 from pandas import DataFrame
 
 from clients import gbq
@@ -8,7 +8,7 @@ from database import rdbms
 
 def import_site_analytics(timeframe: str) -> DataFrame:
     """
-    Migrate raw analytics data from Google BigQuery to app Database.
+    Migrate raw analytics data from Google BigQuery to application db.
 
     :param timeframe: Timeframe to fetch data for (weekly, monthly, yearly).
     :type timeframe: str
