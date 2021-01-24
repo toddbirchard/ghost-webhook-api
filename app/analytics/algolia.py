@@ -13,8 +13,9 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
     """
     Fetch single week of searches from Algolia API.
 
-    :timeframe: Number of days for which to fetch recent search analytics.
+    :param timeframe: Number of days for which to fetch recent search analytics.
     :type timeframe: int
+    :returns: Optional[List[str]]
     """
     endpoint = f"{settings.ALGOLIA_BASE_URL}/searches"
     headers = {
@@ -32,15 +33,12 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
         return filter_results(search_queries)
     except HTTPError as e:
         LOGGER.error(f"Failed to fetch Algolia searches: {e}")
-        return None
     except KeyError as e:
         LOGGER.error(f"Experienced KeyError while fetching Algolia searches: {e}")
-        return None
     except Exception as e:
         LOGGER.error(
             f"Experienced unexpected error while fetching Algolia searches: {e}"
         )
-        return None
 
 
 def filter_results(
@@ -49,9 +47,8 @@ def filter_results(
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
-    :param search_queries: Search analytics submitted by users while searching for posts.
-    :type search_queries: List[str]
-
+    :param search_queries: JSON of search queries submitted by users.
+    :type search_queries: List[Optional[Dict[str, Any]]]
     :returns: List[Optional[str]]
     """
     search_queries = [query for query in search_queries if len(query["search"]) > 3]

@@ -2,6 +2,7 @@ import pytest
 from github import Github
 
 from clients.ghost import Ghost
+from clients.google_bigquery import BigQuery
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
@@ -61,6 +62,12 @@ def gh():
     return Github(
         settings.GH_API_KEY,
     )
+
+
+@pytest.fixture
+def gbq():
+    gbq_class = BigQuery(settings.GCP_PROJECT, settings.GCP_CREDENTIALS)
+    return gbq_class.create_client()
 
 
 @pytest.fixture

@@ -3,6 +3,7 @@ from fastapi import APIRouter
 
 from app.analytics.algolia import fetch_algolia_searches
 from app.analytics.migrate import import_site_analytics
+from clients.log import LOGGER
 from database import rdbms
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
@@ -13,6 +14,9 @@ async def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
     weekly_traffic = import_site_analytics("weekly")
     monthly_traffic = import_site_analytics("monthly")
+    LOGGER.success(
+        f"Inserted {len(weekly_traffic)} rows into `weekly_stats`,  {len(monthly_traffic)}  into `monthly_stats`."
+    )
     return {
         "weekly_stats": {
             "count": len(weekly_traffic),
@@ -37,6 +41,7 @@ async def week_searches():
         "analytics",
         replace=True,
     )
+    LOGGER.success(f"Inserted {rows} rows into `algolia_searches_week` table.")
     return f"Successfully inserted {rows} rows into `algolia_searches_week` table."
 
 
@@ -45,6 +50,7 @@ async def historical_searches():
     """Save and persist top search analytics for the current month."""
     records = fetch_algolia_searches(timeframe=30)
     rows = rdbms.insert_records(records, "algolia_searches_historical", "analytics")
+    LOGGER.success(f"Inserted {rows} rows into `algolia_searches_week` table.")
     return (
         f"Successfully inserted {rows} rows into `algolia_searches_historical` table."
     )

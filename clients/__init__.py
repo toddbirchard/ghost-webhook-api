@@ -1,8 +1,8 @@
 """Initialize clients and third-party services."""
 from github import Github
 
-from clients.gbq import bigquery
 from clients.ghost import Ghost
+from clients.google_bigquery import BigQuery
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
@@ -33,7 +33,8 @@ sms = Twilio(
 )
 
 # Google BigQuery
-bigquery = bigquery(settings.GCP_PROJECT, settings.GCP_CREDENTIALS)
+gbq_class = BigQuery(settings.GCP_PROJECT, settings.GCP_CREDENTIALS)
+gbq = gbq_class.create_client()
 
 # Mailgun SMTP
 mailgun = Mailgun(
