@@ -12,5 +12,6 @@ class BigQuery:
     def create_client(self):
         """Instantiate Google BigQuery client."""
         return google_bigquery.Client(
-            project=self.gcp_project, credentials=self.gcp_creds
+            project=self.gcp_project,
+            # credentials=self.gcp_creds
         )
