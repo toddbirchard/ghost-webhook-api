@@ -1,3 +1,4 @@
+"""Data models."""
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -15,10 +16,11 @@ class Comment(Base):
     user_avatar = Column(Text, unique=False)
     user_id = Column(String(255), ForeignKey("accounts.id"))
     user_email = Column(String(255), unique=False)
+    user_role = Column(String(255), unique=False)
     body = Column(Text, unique=False)
-    created_at = Column(DateTime)
     post_slug = Column(String(255), unique=False)
     post_id = Column(String(255), unique=False)
+    created_at = Column(DateTime, server_default=func.now())
 
     # Relationships
     user = relationship("Account", backref="user_id")

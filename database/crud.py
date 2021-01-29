@@ -73,6 +73,7 @@ def create_comment(db: Session, comment: NewComment):
         user_avatar=comment.user_avatar,
         user_id=comment.user_id,
         user_email=comment.user_email,
+        user_role=comment.user_role,
         body=comment.body,
         created_at=datetime.now(),
         post_slug=comment.post_slug,

@@ -32,15 +32,13 @@ class NewComment(BaseModel):
         None, example="https://avatars3.githubusercontent.com/u/2747442?v=4"
     )
     user_email: str = Field(None, example="person@example.com")
+    user_role: Optional[str] = Field(None, example=None)
     body: Optional[str] = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
     created_at: str = Field(None, example="2020-12-15T04:52:03.928Z")
 
     class Config:
         schema_extra = {
-            "body": "hello",
-            "comment_id": "5acfd461583e28622a7833f9",
-            "created_at": "2020-12-12T05:26:14.794Z",
-            "email": "fake@example.com",
+            "comment_id": 999,
             "post_id": "5dc42cb812c9ce0d63f5bf96",
             "post_slug": "python-virtualenv-virtualenvwrapper",
             "post_url": "https://hackersandslackers.com/python-virtualenv-virtualenvwrapper/",
@@ -48,6 +46,9 @@ class NewComment(BaseModel):
             "user_email": "toddbirchard@gmail.com",
             "user_id": "8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385",
             "user_name": "Fake Name",
+            "user_role": None,
+            "body": "hello",
+            "created_at": "2020-12-12T05:26:14.794Z",
         }
 
 

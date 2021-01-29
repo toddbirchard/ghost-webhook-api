@@ -6,7 +6,6 @@ define HELP
 Manage $(PROJECTNAME). Usage:
 
 make run        - Run $(PROJECTNAME).
-make restart    - Purge cache & reinstall modules.
 make deploy     - Pull latest build and deploy to production.
 make update     - Update pip dependencies via Python Poetry.
 make format     - Format code with Python's `Black` library.
@@ -33,14 +32,6 @@ all help:
 .PHONY: run
 run: env
 	service $(PROJECTNAME) start
-
-
-.PHONY: restart
-restart: env
-	service $(PROJECTNAME) stop
-	make clean
-	service $(PROJECTNAME) start
-	service $(PROJECTNAME) status
 
 
 .PHONY: deploy

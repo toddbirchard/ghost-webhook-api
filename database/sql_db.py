@@ -144,6 +144,8 @@ class Database:
             LOGGER.error(f"SQLAlchemyError while inserting rows: {e}")
         except IntegrityError as e:
             LOGGER.error(f"IntegrityError while inserting rows: {e}")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error while inserting rows: {e}")
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"

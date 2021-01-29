@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from config import Settings
+from config import settings
 
-URI = Settings().SQLALCHEMY_DATABASE_URI
-ARGS = Settings().SQLALCHEMY_ENGINE_OPTIONS
+URI = settings.SQLALCHEMY_DATABASE_URI
+ARGS = settings.SQLALCHEMY_ENGINE_OPTIONS
 
 engine = create_engine(f"{URI}/hackers_prod", connect_args=ARGS, echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

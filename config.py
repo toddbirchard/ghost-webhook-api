@@ -30,6 +30,7 @@ class Settings(BaseSettings):
         "http://api.hackersandslackers.com",
         "https://api.hackersandslackers.com",
         "https://zapier.com",
+        "https://zapier.com/",
     ]
     API_TAGS = (
         [

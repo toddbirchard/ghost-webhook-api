@@ -99,7 +99,12 @@ async def bulk_assign_lynx_images():
 
 @router.get("/sort")
 async def bulk_organize_images(directory: Optional[str] = None):
-    """Sort retina and mobile images into their appropriate directories."""
+    """
+    Sort retina and mobile images into their appropriate directories.
+
+    :param directory: Remote directory to organize images into subdirectories.
+    :type directory: Optional[str]
+    """
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
     retina_images = gcs.organize_retina_images(directory)
