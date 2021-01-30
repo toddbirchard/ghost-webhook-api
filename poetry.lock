@@ -75,7 +75,7 @@ python-versions = "*"
 
 [[package]]
 name = "botocore"
-version = "1.19.62"
+version = "1.19.63"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -628,7 +628,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "packaging"
-version = "20.8"
+version = "20.9"
 description = "Core utilities for Python packages"
 category = "dev"
 optional = false
@@ -1214,8 +1214,8 @@ boto = [
     {file = "boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a"},
 ]
 botocore = [
-    {file = "botocore-1.19.62-py2.py3-none-any.whl", hash = "sha256:1046c152e5865aabbe6b10b2d33e652b3dd072516f3976e96cacc6b7c4460d02"},
-    {file = "botocore-1.19.62.tar.gz", hash = "sha256:29b4b9be5b40f392a033926c08c004c01bd6471384ef6f12eaa49ee3870a010c"},
+    {file = "botocore-1.19.63-py2.py3-none-any.whl", hash = "sha256:ad4adfcc195b5401d84b0c65d3a89e507c1d54c201879c8761ff10ef5c361e21"},
+    {file = "botocore-1.19.63.tar.gz", hash = "sha256:d3694f6ef918def8082513e5ef309cd6cd83b612e9984e3a66e8adc98c650a92"},
 ]
 cachetools = [
     {file = "cachetools-4.2.1-py3-none-any.whl", hash = "sha256:1d9d5f567be80f7c07d765e21b814326d78c61eb0c3a637dffc0e5d1796cb2e2"},
@@ -1601,8 +1601,8 @@ numpy = [
     {file = "numpy-1.19.5.zip", hash = "sha256:a76f502430dd98d7546e1ea2250a7360c065a5fdea52b2dffe8ae7180909b6f4"},
 ]
 packaging = [
-    {file = "packaging-20.8-py2.py3-none-any.whl", hash = "sha256:24e0da08660a87484d1602c30bb4902d74816b6985b93de36926f5bc95741858"},
-    {file = "packaging-20.8.tar.gz", hash = "sha256:78598185a7008a470d64526a8059de9aaa449238f280fc9eb6b13ba6c4109093"},
+    {file = "packaging-20.9-py2.py3-none-any.whl", hash = "sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a"},
+    {file = "packaging-20.9.tar.gz", hash = "sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5"},
 ]
 pandas = [
     {file = "pandas-1.2.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:50e6c0a17ef7f831b5565fd0394dbf9bfd5d615ee4dd4bb60a3d8c9d2e872323"},

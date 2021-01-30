@@ -348,26 +348,38 @@ class PostUpdate(BaseModel):
         }
 
 
+class NetlifyUserMetadata(BaseModel):
+    avatar_url: Optional[str] = Field(None, example="https://example.com/dsfdsf.jpg")
+    full_name: str = Field(None, example="Fake Name")
+
+
+class NetlifyUserAppMetadata(BaseModel):
+    provider: Optional[str] = Field(None, example="google")
+
+
 class NetlifyAccount(BaseModel):
-    id: str
-    uuid: str
-    email: str
-    name: Optional[str]
-    note: Optional[str] = None
-    subscribed: Optional[bool]
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
-    labels: Optional[List] = None
-    avatar_image: Optional[str] = None
-    comped: Optional[bool]
+    id: str = Field(None, example="4e7c4f1b-e51a-4abb-8a58-105483724713")
+    aud: Optional[str] = Field(None, example=None)
+    role: Optional[str] = Field(None, example=None)
+    email: str = Field(None, example="fake@example.com")
+    app_metadata: NetlifyUserAppMetadata
+    user_metadata: NetlifyUserMetadata
+    created_at: datetime = Field(None, example="2019-11-07 14:38:35")
+    updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
 
 
-class NewUser(BaseModel):
+class NetlifyUserEvent(BaseModel):
+    event: str = Field(None, example="signup")
+    instance_id: str = Field(None, example="dc76yfi-94b8-4b0f-8d45-gdffg76i")
+    user: NetlifyAccount
+
+
+class NewGhostUser(BaseModel):
     current: Optional[NetlifyAccount]
 
 
-class UserEvent(BaseModel):
-    member: NewUser
+class GhostMemberEvent(BaseModel):
+    member: NewGhostUser
 
 
 class Member(BaseModel):

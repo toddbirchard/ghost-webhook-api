@@ -4,8 +4,8 @@ from sqlalchemy.engine.result import ResultProxy
 from sqlalchemy.orm import Session
 
 from clients.log import LOGGER
-from database.models import Comment, Donation
-from database.schemas import NewComment, NewDonation
+from database.models import Comment, Donation, Account
+from database.schemas import NewComment, NewDonation, NetlifyAccount
 
 
 def get_donation(db: Session, donation_id: int) -> ResultProxy:
@@ -85,3 +85,42 @@ def create_comment(db: Session, comment: NewComment):
         f"New comment submitted by user `{new_comment.user_name}` on post `{new_comment.post_slug}`"
     )
     return new_comment
+
+
+def get_account(db: Session, account_email: str) -> ResultProxy:
+    """
+    Fetch account by email address.
+
+    :param db: ORM database session.
+    :type db: Session
+    :param account_email: Primary key for account record.
+    :type account_email: str
+    :returns: ResultProxy
+    """
+    return db.query(Account).filter(Account.email == account_email).first()
+
+
+def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
+    """
+    Create new account record sourced from Netlify.
+
+    :param db: ORM database session.
+    :type db: Session
+    :param account: User comment schema object.
+    :type account: NetlifyAccount
+    :returns: NetlifyAccount
+    """
+    new_account = Account(
+        id=account.id,
+        full_name=account.user_metadata.full_name,
+        avatar_url=account.user_metadata.avatar_url,
+        email=account.email,
+        role=account.role,
+        provider=account.app_metadata.provider,
+        created_at=account.created_at,
+        updated_at=account.updated_at,
+    )
+    db.add(new_account)
+    db.commit()
+    LOGGER.success(f"New account created `{account.user_metadata.full_name}`")
+    return account

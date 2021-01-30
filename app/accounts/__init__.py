@@ -7,10 +7,22 @@ from app.accounts.mixpanel import create_mixpanel_record
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from clients.log import LOGGER
-from database.crud import create_comment, create_donation, get_donation
+from database.crud import (
+    create_comment,
+    create_donation,
+    get_donation,
+    get_account,
+    create_account,
+)
 from database.models import Account, Comment
 from database.orm import get_db
-from database.schemas import NewComment, NewDonation, UserEvent
+from database.schemas import (
+    NewComment,
+    NewDonation,
+    GhostMemberEvent,
+    NetlifyUserEvent,
+    NetlifyAccount,
+)
 
 router = APIRouter(prefix="/account", tags=["accounts"])
 
@@ -20,12 +32,12 @@ router = APIRouter(prefix="/account", tags=["accounts"])
     summary="Add new user account to Ghost.",
     description="Create free-tier Ghost membership for Netlify user account upon signup.",
 )
-async def new_ghost_member(user_event: UserEvent):
+async def new_ghost_member(user_event: GhostMemberEvent):
     """
     Create Ghost member from Netlify identity signup.
 
     :param user_event: Newly created user account.
-    :type user_event: UserEvent
+    :type user_event: GhostMemberEvent
     """
     try:
         user = user_event.member.current
@@ -37,6 +49,33 @@ async def new_ghost_member(user_event: UserEvent):
         raise HTTPException(
             status_code=400, detail=f"Error creating user in Mixpanel: {e}"
         )
+
+
+@router.post(
+    "/new",
+    summary="Create new account from Netlify",
+    description="Create account sourced from Netlify Identity.",
+    response_model=NetlifyAccount,
+)
+async def new_account(
+    new_account_event: NetlifyUserEvent, db: Session = Depends(get_db)
+):
+    """
+    Create Ghost member from Netlify identity signup.
+
+    :param new_account_event: Newly created user account from Netlify.
+    :type new_account_event: NetlifyUserEvent
+    :param db: ORM Database session.
+    :type db: Session
+    :returns: NetlifyAccount
+    """
+    account = new_account_event.user
+    db_account = get_account(db, account.email)
+    if db_account:
+        raise HTTPException(
+            status_code=400, detail=f"Account already exists for email {account.email}"
+        )
+    return create_account(db, account)
 
 
 @router.post(

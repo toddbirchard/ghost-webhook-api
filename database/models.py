@@ -37,7 +37,6 @@ class Account(Base):
     email = Column(String(255), unique=True)
     role = Column(String(255), unique=False)
     provider = Column(String(255), unique=False)
-    source = Column(String(255), unique=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
