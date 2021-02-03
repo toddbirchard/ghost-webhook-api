@@ -5,21 +5,23 @@ from pydantic import BaseModel, Field
 
 
 class NewDonation(BaseModel):
-    email: str = Field(None, example="paypal@example.com")
-    name: str = Field(None, example="Todd")
+    name: str = Field(None, example="Fake Todd")
+    email: str = Field(None, example="fake@example.com")
     count: int = Field(None, example=5)
-    message: str = Field(None, example="Great tutorials but this is a test message.")
+    message: Optional[str] = Field(
+        None, example="Great tutorials but this is a test message."
+    )
     link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
     coffee_id: int = Field(None, example=3453543)
 
     class Config:
         schema_extra = {
-            "coffee_id": 405127,
-            "count": 1,
+            "name": "Fake Todd",
             "email": "fake@example.com",
+            "count": 1,
+            "message": "Great tutorials but this is a test message.",
             "link": "https://buymeacoffee.com/hackersslackers",
-            "name": "Someone",
-            "price": "5.00",
+            "coffee_id": 405127,
         }
 
 

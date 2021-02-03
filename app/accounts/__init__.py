@@ -1,4 +1,4 @@
-"""User accounts."""
+"""User account management & functionality."""
 from fastapi import APIRouter, Depends, HTTPException
 from mixpanel import MixpanelException
 from sqlalchemy.orm import Session
@@ -54,14 +54,14 @@ async def new_ghost_member(user_event: GhostMemberEvent):
 @router.post(
     "/new",
     summary="Create new account from Netlify",
-    description="Create account sourced from Netlify Identity.",
+    description="Create user account sourced from Netlify Identity.",
     response_model=NetlifyAccount,
 )
 async def new_account(
     new_account_event: NetlifyUserEvent, db: Session = Depends(get_db)
 ):
     """
-    Create Ghost member from Netlify identity signup.
+    Create user account from Netlify identity signup.
 
     :param new_account_event: Newly created user account from Netlify.
     :type new_account_event: NetlifyUserEvent
@@ -72,8 +72,10 @@ async def new_account(
     account = new_account_event.user
     db_account = get_account(db, account.email)
     if db_account:
+        LOGGER.warning(f"User account already exists for `{account.email}`.")
         raise HTTPException(
-            status_code=400, detail=f"Account already exists for email {account.email}"
+            status_code=400,
+            detail=f"User account already exists for `{account.email}`.",
         )
     return create_account(db, account)
 
@@ -81,7 +83,7 @@ async def new_account(
 @router.post(
     "/comment",
     summary="New user comment",
-    description="Store user-generated comments submitted on posts.",
+    description="Save user-generated comments submitted on posts.",
     response_model=NewComment,
 )
 async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
@@ -110,21 +112,28 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
 )
 async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     """
-    Save donations from BuyMeACoffee to database.
+    Save BuyMeACoffee donation to database.
 
     :param donation: New donation.
     :type donation: NewDonation
     :param db: ORM Database session.
     :type db: Session
     """
-    db_user = get_donation(db, donation.coffee_id)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Donation already created")
+    db_donation = get_donation(db, donation.coffee_id)
+    if db_donation:
+        LOGGER.warning(
+            f"Donation `{donation.coffee_id}` from `{donation.email}` already exists."
+        )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists.",
+        )
     return create_donation(db=db, donation=donation)
 
 
 @router.get("/comments", summary="Test get comments via ORM")
 async def test_orm(db: Session = Depends(get_db)):
+    """Test endpoint for fetching comments joined with user info."""
     comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in comments:
         LOGGER.info(comment.user)
