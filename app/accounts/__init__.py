@@ -34,7 +34,7 @@ router = APIRouter(prefix="/account", tags=["accounts"])
 )
 async def new_ghost_member(user_event: GhostMemberEvent):
     """
-    Create Ghost member from Netlify identity signup.
+    Create Ghost member.
 
     :param user_event: Newly created user account.
     :type user_event: GhostMemberEvent
@@ -88,7 +88,7 @@ async def new_account(
 )
 async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
-    Save user comment to SQL table and notify post author.
+    Save user comment to database and notify post author.
 
     :param comment: User-submitted comment.
     :type comment: NewComment
@@ -128,7 +128,9 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
             status_code=400,
             detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists.",
         )
-    return create_donation(db=db, donation=donation)
+    create_donation(db=db, donation=donation)
+    ghost.rebuild_netlify_site()
+    return donation
 
 
 @router.get("/comments", summary="Test get comments via ORM")
