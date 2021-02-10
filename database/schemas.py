@@ -398,6 +398,11 @@ class Member(BaseModel):
     comped: Optional[bool]
 
 
+class NewsletterSubscriber(BaseModel):
+    name: Optional[str] = Field(None, example=None)
+    email: str = Field(None, example="fake@example.com")
+
+
 class Subscriber(BaseModel):
     current: Optional[Member] = None
     previous: Optional[Member] = None

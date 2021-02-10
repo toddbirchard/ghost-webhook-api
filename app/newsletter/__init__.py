@@ -4,9 +4,13 @@ from fastapi import APIRouter
 from clients import mailgun
 from clients.log import LOGGER
 from config import settings
-from database.schemas import Subscription, SubscriptionWelcomeEmail
+from database.schemas import (
+    Subscription,
+    SubscriptionWelcomeEmail,
+    NewsletterSubscriber,
+)
 
-router = APIRouter(prefix="/subscription", tags=["newsletter"])
+router = APIRouter(prefix="/newsletter", tags=["newsletter"])
 
 
 @router.post(
@@ -15,21 +19,26 @@ router = APIRouter(prefix="/subscription", tags=["newsletter"])
     description="Send a welcome email to new subscribers to Ghost newsletter.",
     response_model=SubscriptionWelcomeEmail,
 )
-async def newsletter_subscribe(subscription: Subscription):
-    """Send welcome email to newsletter subscriber."""
+async def newsletter_subscribe(subscriber: NewsletterSubscriber):
+    """
+    Send welcome email to newsletter subscriber.
+
+    :param subscriber: New subscriber to newsletter.
+    :type subscriber: NewsletterSubscriber
+    """
     body = {
         "from": "todd@hackersandslackers.com",
-        "to": subscription.member.current.email,
+        "to": subscriber.email,
         "subject": settings.MAILGUN_SUBJECT_LINE,
         "template": settings.MAILGUN_EMAIL_TEMPLATE,
-        "h:X-Mailgun-Variables": {"name": subscription.member.current.name},
+        "h:X-Mailgun-Variables": {"name": subscriber.name},
         "o:tracking": True,
     }
     response = mailgun.send_email(body)
     if bool(response):
         return SubscriptionWelcomeEmail(
             from_email=settings.MAILGUN_PERSONAL_EMAIL,
-            to_email=subscription.member.current.email,
+            to_email=subscriber.email,
             subject=settings.MAILGUN_SUBJECT_LINE,
             template=settings.MAILGUN_EMAIL_TEMPLATE,
         ).dict()
