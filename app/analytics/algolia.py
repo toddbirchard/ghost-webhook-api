@@ -4,18 +4,19 @@ from typing import Any, Dict, List, Optional
 import requests
 from requests.exceptions import HTTPError
 
+from database import rdbms
 from app.moment import get_current_date
 from clients.log import LOGGER
 from config import settings
 
 
-def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
+def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:
     """
     Fetch single week of searches from Algolia API.
 
     :param timeframe: Number of days for which to fetch recent search analytics.
     :type timeframe: int
-    :returns: Optional[List[str]]
+    :returns: Optional[List[dict]]
     """
     endpoint = f"{settings.ALGOLIA_BASE_URL}/searches"
     headers = {
@@ -41,7 +42,7 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[str]]:
 
 def filter_search_queries(
     search_queries: List[Optional[Dict[str, Any]]]
-) -> List[Optional[str]]:
+) -> List[Optional[str, Any]]:
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
@@ -51,3 +52,23 @@ def filter_search_queries(
     """
     search_queries = [query for query in search_queries if len(query["search"]) > 3]
     return search_queries
+
+
+def import_algolia_search_queries(records: List[dict], table_name: str) -> str:
+    """
+    Save history of search queries executed on the site.
+
+    :param records: JSON of search queries submitted by users.
+    :type records: List[dict]
+    :param table_name: Name of SQL table to save data to.
+    :type table_name: str
+    :returns: str
+    """
+    rows = rdbms.insert_records(
+        records,
+        table_name,
+        "analytics",
+        replace=True,
+    )
+    LOGGER.success(f"Inserted {rows} rows into `{table_name}` table.")
+    return rows
