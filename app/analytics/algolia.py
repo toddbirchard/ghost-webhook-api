@@ -42,13 +42,13 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:
 
 def filter_search_queries(
     search_queries: List[Optional[Dict[str, Any]]]
-) -> List[Optional[str, Any]]:
+) -> List[Optional[Dict[str, Any]]]:
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
     :param search_queries: JSON of search queries submitted by users.
     :type search_queries: List[Optional[Dict[str, Any]]]
-    :returns: List[Optional[str]]
+    :returns: List[Optional[Dict[str, Any]]]
     """
     search_queries = [query for query in search_queries if len(query["search"]) > 3]
     return search_queries
