@@ -13,6 +13,9 @@ from database.crud import (
     get_donation,
     get_account,
     create_account,
+    get_comment_upvote,
+    submit_comment_upvote,
+    remove_comment_upvote,
 )
 from database.models import Account, Comment
 from database.orm import get_db
@@ -22,6 +25,7 @@ from database.schemas import (
     GhostMemberEvent,
     NetlifyUserEvent,
     NetlifyAccount,
+    UpvoteComment,
 )
 
 router = APIRouter(prefix="/account", tags=["accounts"])
@@ -102,6 +106,40 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     create_comment(db, comment)
     ghost.rebuild_netlify_site()
     return comment
+
+
+@router.post(
+    "/comment/upvote",
+    summary="Upvote a comment",
+    description="Increment a comment's upvote count, or revoke an existing upvote from a user.",
+    response_model=UpvoteComment,
+)
+async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(get_db)):
+    existing_vote = get_comment_upvote(
+        db, upvote_request.user_id, upvote_request.comment_id
+    )
+    if upvote_request.vote and existing_vote is None:
+        submit_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
+        return upvote_request
+    elif upvote_request.vote and existing_vote:
+        LOGGER.warning(
+            f"Upvote already submitted for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
+        )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Upvote already submitted for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
+        )
+    elif upvote_request.vote is False and existing_vote:
+        remove_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
+        return upvote_request
+    elif upvote_request.vote is False and existing_vote is None:
+        LOGGER.warning(
+            f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
+        )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
+        )
 
 
 @router.post(

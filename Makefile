@@ -1,5 +1,5 @@
 SRCPATH := $(shell pwd)
-PROJECTNAME := $(shell basename $(CURDIR))
+PROJECTNAME := $(shell basename $CURDIR)
 ENTRYPOINT := $(PROJECTNAME).ini
 
 define HELP
@@ -18,7 +18,7 @@ export HELP
 .PHONY: run restart deploy update format lint clean help
 
 requirements: .requirements.txt
-env: .venv/bin/activate
+env: ./.venv/bin/activate
 
 
 .requirements.txt: requirements.txt
@@ -37,7 +37,7 @@ run: env
 .PHONY: deploy
 deploy:
 	make clean
-	$(shell . ./deploy.sh)
+	. ./deploy.sh
 
 
 .PHONY: update
@@ -64,10 +64,10 @@ clean:
 	find . -name '__pycache__' -delete
 	find . -name 'poetry.lock' -delete
 	find . -name 'Pipefile.lock' -delete
-	find . -name 'logs/*.json' -delete
 	find . -name '*.log' -delete
-	find . -name '*/.pytest_cache' -delete
-	find . -name '*/logs/*.json' -delete
-	rm -rf .pytest_cache
+	find . -wholename 'logs/*.json' -delete
+	find . -wholename '*/.pytest_cache' -delete
+	find . -wholename '*/logs/*.json' -delete
+	find . -wholename '.webassets-cache/*' -delete
 	rm -rf tests/.pytest_cache
 	rm -rf clients/tests/.pytest_cache

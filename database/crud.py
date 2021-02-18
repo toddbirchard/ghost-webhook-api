@@ -1,14 +1,15 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy.engine.result import ResultProxy
 from sqlalchemy.orm import Session
 
 from clients.log import LOGGER
-from database.models import Comment, Donation, Account
+from database.models import Comment, Donation, Account, CommentUpvote
 from database.schemas import NewComment, NewDonation, NetlifyAccount
 
 
-def get_donation(db: Session, donation_id: int) -> ResultProxy:
+def get_donation(db: Session, donation_id: int) -> Optional[ResultProxy]:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -16,7 +17,7 @@ def get_donation(db: Session, donation_id: int) -> ResultProxy:
     :type db: Session
     :param donation_id: Primary key for donation record.
     :type donation_id: int
-    :returns: ResultProxy
+    :returns: Optional[ResultProxy]
     """
     return db.query(Donation).filter(Donation.coffee_id == donation_id).first()
 
@@ -45,7 +46,7 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     return db_item
 
 
-def get_comment(db: Session, comment_id: int) -> ResultProxy:
+def get_comment(db: Session, comment_id: int) -> Optional[ResultProxy]:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -53,18 +54,18 @@ def get_comment(db: Session, comment_id: int) -> ResultProxy:
     :type db: Session
     :param comment_id: Primary key for user comment record.
     :type comment_id: int
-    :returns: ResultProxy
+    :returns: Optional[ResultProxy]
     """
     return db.query(Comment).filter(Comment.id == comment_id).first()
 
 
-def create_comment(db: Session, comment: NewComment):
+def create_comment(db: Session, comment: NewComment) -> Comment:
     """
-    Create new BuyMeACoffee donation record.
+    Create new user-submitted comment.
 
     :param db: ORM database session.
     :type db: Session
-    :param comment: User comment schema object.
+    :param comment: User comment object.
     :type comment: NewComment
     :returns: NewComment
     """
@@ -87,7 +88,69 @@ def create_comment(db: Session, comment: NewComment):
     return new_comment
 
 
-def get_account(db: Session, account_email: str) -> ResultProxy:
+def submit_comment_upvote(db: Session, user_id: str, comment_id: int) -> CommentUpvote:
+    """
+    Create a record of a user's upvote for a given comment.
+
+    :param db: ORM database session.
+    :type db: Session
+    :param user_id: Primary key for account record.
+    :type user_id: str
+    :param comment_id: Unique ID of comment user attempted to upvote.
+    :type comment_id: int
+    :returns: CommentUpvote
+    """
+    upvote = CommentUpvote(user_id=user_id, comment_id=comment_id)
+    db.add(upvote)
+    db.commit()
+    LOGGER.success(
+        f"Upvote submitted for comment `{comment_id}` from user `{user_id}`."
+    )
+    return upvote
+
+
+def remove_comment_upvote(db: Session, user_id: str, comment_id: int):
+    """
+    Delete a record of a user's upvote for a given comment.
+
+    :param db: ORM database session.
+    :type db: Session
+    :param user_id: Primary key for account record.
+    :type user_id: str
+    :param comment_id: Unique ID of comment user attempted to upvote.
+    :type comment_id: int
+    :returns: CommentUpvote
+    """
+    upvote = CommentUpvote(user_id=user_id, comment_id=comment_id)
+    db.delete(upvote)
+    db.commit()
+    LOGGER.success(f"Removed upvote for comment `{comment_id}` from user `{user_id}`.")
+
+
+def get_comment_upvote(
+    db: Session, user_id: str, comment_id: int
+) -> Optional[ResultProxy]:
+    """
+    Validate whether a user has upvoted a given comment.
+
+    :param db: ORM database session.
+    :type db: Session
+    :param user_id: Primary key for account record.
+    :type user_id: str
+    :param comment_id: Unique ID of comment user attempted to upvote.
+    :type comment_id: int
+    :returns: Optional[ResultProxy]
+    """
+    return (
+        db.query(CommentUpvote)
+        .filter(
+            CommentUpvote.user_id == user_id and CommentUpvote.comment_id == comment_id
+        )
+        .first()
+    )
+
+
+def get_account(db: Session, account_email: str) -> Optional[ResultProxy]:
     """
     Fetch account by email address.
 
@@ -95,7 +158,7 @@ def get_account(db: Session, account_email: str) -> ResultProxy:
     :type db: Session
     :param account_email: Primary key for account record.
     :type account_email: str
-    :returns: ResultProxy
+    :returns: Optional[ResultProxy]
     """
     return db.query(Account).filter(Account.email == account_email).first()
 

@@ -26,6 +26,20 @@ class Comment(Base):
     user = relationship("Account", backref="user_id")
 
 
+class CommentUpvote(Base):
+    """Upvotes for user comments."""
+
+    __tablename__ = "upvotes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    comment_id = Column(Integer, ForeignKey("comments.id"))
+    user_id = Column(String(255), ForeignKey("accounts.id"))
+
+    # Relationships
+    comment = relationship("Comment", backref="comment_id")
+    user = relationship("Account", backref="user_id")
+
+
 class Account(Base):
     """Netlify-managed user account."""
 

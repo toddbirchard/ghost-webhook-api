@@ -54,6 +54,12 @@ class NewComment(BaseModel):
         }
 
 
+class UpvoteComment(BaseModel):
+    comment_id: int = Field(None, example=1)
+    user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
+    vote: bool = Field(None, example=True)
+
+
 class Role(BaseModel):
     id: str
     name: str
