@@ -71,7 +71,7 @@ twilio==6.51.0
 typing-extensions==3.7.4.3; python_version >= "3.6"
 typing-inspect==0.6.0; python_version >= "3.6"
 urllib3==1.26.2; python_version >= "2.7" and python_full_version < "3.0.0" and python_version != "3.4" or python_full_version >= "3.6.0" and python_version < "4" and python_version != "3.4"
-uvicorn==0.13.3
+uvicorn==0.13.4
 w3lib==1.22.0
 webencodings==0.5.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 webp-converter==4.1.0
