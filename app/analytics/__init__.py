@@ -50,6 +50,6 @@ async def save_user_search_queries():
         },
         "monthly_queries": {
             "count": len(monthly_searches),
-            "rows": {monthly_searches},
+            "rows": monthly_searches,
         },
     }

@@ -69,5 +69,3 @@ clean:
 	find . -wholename '*/.pytest_cache' -delete
 	find . -wholename '*/logs/*.json' -delete
 	find . -wholename '.webassets-cache/*' -delete
-	rm -rf tests/.pytest_cache
-	rm -rf clients/tests/.pytest_cache
