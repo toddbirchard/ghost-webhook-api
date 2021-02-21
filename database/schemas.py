@@ -75,11 +75,11 @@ class Author(BaseModel):
     email: Optional[str] = Field(None, example="fake@example.com")
     profile_image: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/authors/todd@2x.jpg",
+        example="https://cdn.hackersandslackers.com/authors/todd@2x.jpg",
     )
     cover_image: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/03/fantasticmrfox.jpg",
+        example="https://cdn.hackersandslackers.com/2020/03/fantasticmrfox.jpg",
     )
     bio: Optional[str] = Field(
         None,
@@ -114,11 +114,11 @@ class Tag(BaseModel):
     slug: str = Field(None, example="python")
     description: Optional[str] = Field(
         None,
-        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold.",
+        example="Let us feed your endless Python addiction!",
     )
     feature_image: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/05/python.png",
+        example="https://cdn.hackersandslackers.com/2020/05/python.png",
     )
     visibility: str = Field(None, example="public")
     meta_title: Optional[str] = Field(
@@ -126,40 +126,32 @@ class Tag(BaseModel):
     )
     meta_description: Optional[str] = Field(
         None,
-        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold",
+        example="Let us feed your endless Python addiction!",
     )
     created_at: datetime = Field(None, example="2017-11-17 20:44:09")
     updated_at: datetime = Field(None, example="2020-08-03 05:21:42")
     og_title: Optional[str] = Field(None, example="Python Tricks, Hacks, and Snippets")
     og_description: Optional[str] = Field(
         None,
-        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold.",
+        example="Let us feed your endless Python addiction!",
     )
     og_image: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/05/python.png",
+        example="https://cdn.hackersandslackers.com/2020/05/python.png",
     )
     twitter_title: Optional[str] = Field(
         None, example="Python Tricks, Hacks, and Snippets"
     )
     twitter_description: Optional[str] = Field(
         None,
-        example="Let us feed your endless Python addiction! Regardless of where you stand as a Pythonista, our team of pros are constantly teaching and sharing pythonic gold.",
+        example="Let us feed your endless Python addiction!",
     )
     twitter_image: Optional[str] = Field(
         None,
-        example="https://hackersandslackers-cdn.storage.googleapis.com/2020/05/python.png",
+        example="https://cdn.hackersandslackers.com/2020/05/python.png",
     )
     accent_color: Optional[str] = Field(None, example="#4B8BBE")
     canonical_url: Optional[str] = None
-
-
-class PrimaryAuthor(Author):
-    pass
-
-
-class PrimaryTag(Tag):
-    pass
 
 
 class BasePost(BaseModel):
@@ -179,7 +171,7 @@ class BasePost(BaseModel):
     plaintext: Optional[str] = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
     feature_image: Optional[str] = Field(
         None,
-        example="https://storage.googleapis.com/hackersandslackers-cdn/2017/11/welcome.jpg",
+        example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",
     )
     featured: bool = Field(None, example=False)
     status: str = Field(None, example="published")
@@ -191,25 +183,23 @@ class BasePost(BaseModel):
     custom_excerpt: Optional[str] = Field(None, example="Technology for badasses.")
     authors: List[Author] = Field(None, example=[Author.schema()])
     tags: Optional[List[Tag]] = Field(None, example=[Tag.schema()])
-    primary_author: Optional[PrimaryAuthor] = Field(
-        None, example=PrimaryAuthor.schema()
-    )
-    primary_tag: Optional[PrimaryTag] = Field(None, example=Tag.schema().get("example"))
+    primary_author: Author = Field(None, example=Author.schema())
+    primary_tag: Optional[Tag] = Field(None, example=Tag.schema().get("example"))
     url: Optional[str] = Field(
-        None, example="https://hackersandslackers.app/welcome-to-hackers-and-slackers/"
+        None, example="https://hackersandslackers.com/welcome-to-hackers-and-slackers/"
     )
     excerpt: Optional[str] = Field(None, example="Technology for badasses.")
     reading_time: int = Field(None, example=1)
     send_email_when_published: bool = Field(None, example=False)
     og_image: Optional[str] = Field(
         None,
-        example="https://storage.googleapis.com/hackersandslackers-cdn/2017/11/welcome.jpg",
+        example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",
     )
     og_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
     og_description: Optional[str] = Field(None, example="Technology for badasses")
     twitter_image: Optional[str] = Field(
         None,
-        example="https://storage.googleapis.com/hackersandslackers-cdn/2017/11/welcome.jpg",
+        example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",
     )
     twitter_title: Optional[str] = Field(
         None, example="Welcome to Hackers and Slackers"
@@ -239,7 +229,7 @@ class PostUpdate(BaseModel):
                     "html": '<figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://medium.com/cantors-paradise/dijkstras-shortest-path-algorithm-in-python-d955744c7064"><div class="kg-bookmark-content"><div class="kg-bookmark-title">Dijkstra’s Shortest Path Algorithm in Python</div><div class="kg-bookmark-description">From GPS navigation to network-layer link-state routing, Dijkstra’s Algorithm powers some of the most taken-for-granted modern services. Utilizing some basic data structures, let’s get an…</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="https://cdn-images-1.medium.com/fit/c/152/152/1*8I-HPL0bfoIzGied-dzOvA.png"><span class="kg-bookmark-author">Micah Shute</span><span class="kg-bookmark-publisher">Cantor’s Paradise</span></div></div><div class="kg-bookmark-thumbnail"><img src="https://miro.medium.com/max/1200/1*UEBb_0AUZf1QxVOHY71xRA.png"></div></a></figure><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://towardsdatascience.com/coding-ml-tools-like-you-code-ml-models-ddba3357eace"><div class="kg-bookmark-content"><div class="kg-bookmark-title">Turn Python Scripts into Beautiful ML Tools</div><div class="kg-bookmark-description">In my experience, every nontrivial machine learning project is eventually stitched together with bug-ridden and unmaintainable internal tools. These tools — often a patchwork of Jupyter Notebooks…</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="https://cdn-images-1.medium.com/fit/c/152/152/1*8I-HPL0bfoIzGied-dzOvA.png"><span class="kg-bookmark-author">Adrien Treuille</span><span class="kg-bookmark-publisher">Towards Data Science</span></div></div><div class="kg-bookmark-thumbnail"><img src="https://miro.medium.com/freeze/max/640/1*Mbn2SxozueUkGKPW1NJkOw.gif"></div></a></figure><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://github.com/jyhjinghwang/SegSort"><div class="kg-bookmark-content"><div class="kg-bookmark-title">jyhjinghwang/SegSort</div><div class="kg-bookmark-description">SegSort: Segmentation by Discriminative Sorting of Segments - jyhjinghwang/SegSort</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="https://github.githubassets.com/favicon.ico"><span class="kg-bookmark-author">jyhjinghwang</span><span class="kg-bookmark-publisher">GitHub</span></div></div><div class="kg-bookmark-thumbnail"><img src="https://avatars3.githubusercontent.com/u/7334548?s=400&amp;v=4"></div></a></figure><p><a href="https://docs.python-guide.org/writing/tests/">https://docs.python-guide.org/writing/tests/</a></p><p><a href="https://www.bloomberg.com/news/features/2019-09-25/polypropylene-plastic-can-finally-be-recycled">https://www.bloomberg.com/news/features/2019-09-25/polypropylene-plastic-can-finally-be-recycled</a></p><p><a href="https://lectures.quantecon.org/_downloads/pdf/py/Quantitative%20Economics%20with%20Python.pdf">https://lectures.quantecon.org/_downloads/pdf/py/Quantitative Economics with Python.pdf</a></p>',
                     "comment_id": "5e5cbed04965476b6cd6f16d",
                     "plaintext": "Dijkstra’s Shortest Path Algorithm in PythonFrom GPS navigation to\nnetwork-layer\nlink-state routing, Dijkstra’s Algorithm powers some of the most\ntaken-for-granted modern services. Utilizing some basic data structures, let’s\nget an…Micah ShuteCantor’s Paradise\n[https://medium.com/cantors-paradise/dijkstras-shortest-path-algorithm-in-python-d955744c7064]\nTurn Python Scripts into Beautiful ML ToolsIn my experience, every nontrivial\nmachine learning project is eventually stitched together with bug-ridden and\nunmaintainable internal tools. These tools — often a patchwork of Jupyter\nNotebooks…Adrien TreuilleTowards Data Science\n[https://towardsdatascience.com/coding-ml-tools-like-you-code-ml-models-ddba3357eace]\njyhjinghwang/SegSortSegSort: Segmentation by Discriminative Sorting of Segments\n- jyhjinghwang/SegSortjyhjinghwangGitHub\n[https://github.com/jyhjinghwang/SegSort]\nhttps://docs.python-guide.org/writing/tests/\n\nhttps://www.bloomberg.com/news/features/2019-09-25/polypropylene-plastic-can-finally-be-recycled\n\nhttps://lectures.quantecon.org/_downloads/pdf/py/Quantitative Economics with\nPython.pdf\n[https://lectures.quantecon.org/_downloads/pdf/py/Quantitative%20Economics%20with%20Python.pdf]",
-                    "feature_image": "https://hackersandslackers-cdn.storage.googleapis.com/roundup/125.jpg",
+                    "feature_image": "https://cdn.hackersandslackers.com/roundup/125.jpg",
                     "featured": False,
                     "status": "published",
                     "visibility": "public",
@@ -254,8 +244,8 @@ class PostUpdate(BaseModel):
                             "name": "Mister Man",
                             "slug": "man",
                             "email": "fake@example.com",
-                            "profile_image": "https://hackersandslackers-cdn.storage.googleapis.com/authors/mattavi@2x.jpg",
-                            "cover_image": "https://hackersandslackers-cdn.storage.googleapis.com/2020/03/lynxy.jpg",
+                            "profile_image": "https://cdn.hackersandslackers.com/authors/mattavi@2x.jpg",
+                            "cover_image": "https://cdn.hackersandslackers.com/2020/03/lynxy.jpg",
                             "bio": "Supervillain in somebody's action hero movie. Experienced a radioactive freak accident at a young age which rendered him part-snake and strangely adept at Python.\n\n",
                             "website": "https://github.com/mattalhonte",
                             "location": "Center of the Universe",
@@ -301,8 +291,8 @@ class PostUpdate(BaseModel):
                         "name": "Mister Man",
                         "slug": "man",
                         "email": "fake@example.com",
-                        "profile_image": "https://hackersandslackers-cdn.storage.googleapis.com/authors/mattavi@2x.jpg",
-                        "cover_image": "https://hackersandslackers-cdn.storage.googleapis.com/2020/03/lynxy.jpg",
+                        "profile_image": "https://cdn.hackersandslackers.com/authors/mattavi@2x.jpg",
+                        "cover_image": "https://cdn.hackersandslackers.com/2020/03/lynxy.jpg",
                         "bio": "Supervillain in somebody's action hero movie. Experienced a radioactive freak accident at a young age which rendered him part-snake and strangely adept at Python.\n\n",
                         "website": "https://github.com/mattalhonte",
                         "location": "Center of the Universe",
@@ -314,9 +304,9 @@ class PostUpdate(BaseModel):
                         "updated_at": "2020-11-20T05:32:19.000Z",
                         "roles": [
                             {
-                                "id": "5dc42c6b4b25bc0d13674448",
-                                "name": "Administrator",
-                                "description": "Administrators",
+                                "id": "6dc42c6b4b25bc0d1367444c",
+                                "name": "Owner",
+                                "description": "Blog Owner",
                                 "created_at": "2019-11-07T14:38:35.000Z",
                                 "updated_at": "2019-11-07T14:38:35.000Z",
                             }
@@ -484,4 +474,36 @@ class GithubIssue:
                     "action": "opened",
                 },
             },
+        }
+
+
+class PostBulkUpdate(BaseModel):
+    inserted: dict = Field(None)
+    updated: dict = Field(None)
+
+    class Config:
+        schema_extra = {
+            "inserted": {
+                "count": 0,
+                "posts": []
+            },
+            "updated": {
+                "count": 0,
+                "posts": {
+                    "tags_meta_og_image.sql": 0,
+                    "tags_meta_og_description.sql": 0,
+                    "lynx_plaintext_https.sql": 0,
+                    "tags_meta_twitter_title.sql": 0,
+                    "feature_image_cdn_urls.sql": 0,
+                    "title_escape_quotes.sql": 0,
+                    "description_escape_quotes.sql": 0,
+                    "plaintext_cdn_urls.sql": 0,
+                    "tags_meta_twitter_description.sql": 0,
+                    "tags_meta_twitter_image.sql": 0,
+                    "email_unset_newsletter.sql": 0,
+                    "tags_meta_og_title.sql": 0,
+                    "lynx_html_https.sql": 0,
+                    "html_cdn_urls.sql": 0
+                }
+            }
         }
