@@ -1,5 +1,5 @@
 """Newsletter subscription management."""
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from clients import mailgun
 from clients.log import LOGGER
@@ -35,13 +35,14 @@ async def newsletter_subscribe(subscriber: NewsletterSubscriber):
         "o:tracking": True,
     }
     response = mailgun.send_email(body)
-    if bool(response):
-        return SubscriptionWelcomeEmail(
-            from_email=settings.MAILGUN_PERSONAL_EMAIL,
-            to_email=subscriber.email,
-            subject=settings.MAILGUN_SUBJECT_LINE,
-            template=settings.MAILGUN_EMAIL_TEMPLATE,
-        ).dict()
+    if response.status_code != 200:
+        raise HTTPException(response.status_code, response.content)
+    return SubscriptionWelcomeEmail(
+        from_email=settings.MAILGUN_PERSONAL_EMAIL,
+        to_email=subscriber.email,
+        subject=settings.MAILGUN_SUBJECT_LINE,
+        template=settings.MAILGUN_EMAIL_TEMPLATE,
+    )
 
 
 @router.delete("/")

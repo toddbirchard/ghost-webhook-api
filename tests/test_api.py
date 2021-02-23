@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from app import api
 from clients.log import LOGGER
 from config import basedir, settings
+from database.schemas import NewsletterSubscriber
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
@@ -89,3 +90,11 @@ def test_import_site_analytics():
     response = client.get("/analytics/")
     assert response.status_code == 200
     assert type(response.json()) == dict
+
+
+def test_newsletter_subscriber():
+    subscriber = NewsletterSubscriber(
+        name="Test name",
+        email="test@example.com"
+    )
+    response = client.post("/newsletter", subscriber)
