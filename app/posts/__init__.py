@@ -14,7 +14,7 @@ from clients.log import LOGGER
 from config import basedir
 from database import rdbms
 from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
-from database.schemas import PostUpdate, PostBulkUpdate
+from database.schemas import PostBulkUpdate, PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
@@ -98,7 +98,7 @@ async def update_post(post_update: PostUpdate):
     "/",
     summary="Sanitize metadata for all posts.",
     description="Run a sequence of analytics to ensure all posts have proper metadata.",
-    response_model=PostBulkUpdate
+    response_model=PostBulkUpdate,
 )
 async def batch_update_metadata():
     update_queries = collect_sql_queries("posts/updates")

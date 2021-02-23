@@ -53,7 +53,6 @@ def render_json_ltd(html: bytes, base_url: str) -> Optional[dict]:
         return metadata
     except Exception as e:
         LOGGER.error(e)
-        return None
 
 
 def get_title(json_ld: dict, html: BeautifulSoup) -> Optional[str]:

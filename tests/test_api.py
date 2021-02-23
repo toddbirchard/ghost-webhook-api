@@ -87,3 +87,5 @@ def assign_img_alt_attr():
 
 def test_import_site_analytics():
     response = client.get("/analytics/")
+    assert response.status_code == 200
+    assert type(response.json()) == dict

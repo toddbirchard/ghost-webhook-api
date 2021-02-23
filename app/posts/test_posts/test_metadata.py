@@ -1,7 +1,8 @@
-from app.posts import batch_insert_metadata
+from app.posts import batch_update_metadata
 from clients.log import LOGGER
 
 
 def test_batch_insert_metadata():
-    posts = batch_insert_metadata()
-    LOGGER.info(posts)
+    post_updates = batch_update_metadata()
+    assert type(post_updates) == dict
+    LOGGER.info(post_updates)

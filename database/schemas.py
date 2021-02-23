@@ -483,10 +483,7 @@ class PostBulkUpdate(BaseModel):
 
     class Config:
         schema_extra = {
-            "inserted": {
-                "count": 0,
-                "posts": []
-            },
+            "inserted": {"count": 0, "posts": []},
             "updated": {
                 "count": 0,
                 "posts": {
@@ -503,7 +500,7 @@ class PostBulkUpdate(BaseModel):
                     "email_unset_newsletter.sql": 0,
                     "tags_meta_og_title.sql": 0,
                     "lynx_html_https.sql": 0,
-                    "html_cdn_urls.sql": 0
-                }
-            }
+                    "html_cdn_urls.sql": 0,
+                },
+            },
         }

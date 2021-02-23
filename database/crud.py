@@ -5,8 +5,8 @@ from sqlalchemy.engine.result import ResultProxy
 from sqlalchemy.orm import Session
 
 from clients.log import LOGGER
-from database.models import Comment, Donation, Account, CommentUpvote
-from database.schemas import NewComment, NewDonation, NetlifyAccount
+from database.models import Account, Comment, CommentUpvote, Donation
+from database.schemas import NetlifyAccount, NewComment, NewDonation
 
 
 def get_donation(db: Session, donation_id: int) -> Optional[ResultProxy]:

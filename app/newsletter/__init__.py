@@ -5,9 +5,9 @@ from clients import mailgun
 from clients.log import LOGGER
 from config import settings
 from database.schemas import (
+    NewsletterSubscriber,
     Subscription,
     SubscriptionWelcomeEmail,
-    NewsletterSubscriber,
 )
 
 router = APIRouter(prefix="/newsletter", tags=["newsletter"])
