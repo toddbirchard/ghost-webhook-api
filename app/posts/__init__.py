@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from app.moment import get_current_datetime, get_current_time
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from app.posts.metadata import assign_img_alt, batch_assign_img_alt
-from app.posts.update import update_metadata, update_mobiledoc
+from app.posts.update import update_metadata
 from clients import gcs, ghost
 from clients.log import LOGGER
 from config import basedir

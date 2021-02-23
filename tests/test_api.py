@@ -70,7 +70,7 @@ def test_github_issue(github_issue_user, gh):
             gh_issue.edit(state="closed")
 
 
-def test_batch_insert_metadata():
+def test_batch_update_metadata():
     response = client.get("/posts")
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
