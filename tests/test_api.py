@@ -93,8 +93,5 @@ def test_import_site_analytics():
 
 
 def test_newsletter_subscriber():
-    subscriber = NewsletterSubscriber(
-        name="Test name",
-        email="test@example.com"
-    )
+    subscriber = NewsletterSubscriber(name="Test name", email="test@example.com")
     response = client.post("/newsletter", subscriber)

@@ -49,13 +49,22 @@ update: env
 
 .PHONY: format
 format: env
-	$(shell . .venv/bin/activate && isort ./)
-	$(shell . .venv/bin/activate && black ./)
+	isort
+	black
 
 
 .PHONY: lint
 lint:
-	flake8 ./app --count --select=E9,F63,F7,F82 --show-source --statistics
+	flake8 ./app --count \
+			--select=E9,F63,F7,F82 \
+			--exclude .git,.github,__pycache__,.pytest_cache,.venv,logs,creds \
+			--show-source \
+			--statistics
+	flake8 ./clients --count \
+			--select=E9,F63,F7,F82 \
+			--exclude .git,.github,__pycache__,.pytest_cache,.venv,logs,creds \
+			--show-source \
+			--statistics
 
 
 .PHONY: clean
