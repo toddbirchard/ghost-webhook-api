@@ -28,15 +28,17 @@ async def optimize_post_image(post_update: PostUpdate):
     post = post_update.post.current
     feature_image = post.feature_image
     title = post.title
-    new_images.append(gcs.create_retina_image(feature_image))
-    new_images.append(gcs.create_mobile_image(feature_image))
-    new_images = [image for image in new_images if image is not None]
-    if bool(new_images):
-        LOGGER.info(
-            f"Generated {len(new_images)} images for post `{title}`: {new_images}"
-        )
-        return {post.title: new_images}
-    return f"Retina & mobile images already exist for {post.title}."
+    if feature_image:
+        new_images.append(gcs.create_retina_image(feature_image))
+        new_images.append(gcs.create_mobile_image(feature_image))
+        new_images = [image for image in new_images if image is not None]
+        if bool(new_images):
+            LOGGER.info(
+                f"Generated {len(new_images)} images for post `{title}`: {new_images}"
+            )
+            return {post.title: new_images}
+        return f"Retina & mobile images already exist for {post.title}."
+    return f"Post `{post.slug}` ignored; no image exists for optimization."
 
 
 @router.get(
