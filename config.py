@@ -3,8 +3,9 @@ import datetime
 from os import getenv, path
 
 from dotenv import load_dotenv
-from google.oauth2 import service_account
 from pydantic import BaseSettings
+
+# from google.oauth2 import service_account
 
 # Load variables from .env
 basedir = path.abspath(path.dirname(__file__))
@@ -93,10 +94,10 @@ class Settings(BaseSettings):
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
     GCP_LYNX_DIRECTORY: str = "roundup"
-    GOOGLE_APPLICATION_CREDENTIALS: str = getenv("GOOGLE_APPLICATION_CREDENTIALS")
-    GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        f"{basedir}/{GOOGLE_APPLICATION_CREDENTIALS}"
-    )
+    # GOOGLE_APPLICATION_CREDENTIALS: str = getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    # GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    #     f"{basedir}/{GOOGLE_APPLICATION_CREDENTIALS}"
+    # )
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")

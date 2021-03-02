@@ -8,13 +8,13 @@ from fastapi.responses import JSONResponse
 from app.moment import get_current_datetime, get_current_time
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from app.posts.metadata import assign_img_alt, batch_assign_img_alt
-from app.posts.update import update_metadata, update_mobiledoc
+from app.posts.update import update_metadata
 from clients import gcs, ghost
 from clients.log import LOGGER
 from config import basedir
 from database import rdbms
 from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
-from database.schemas import PostUpdate, PostBulkUpdate
+from database.schemas import PostBulkUpdate, PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
@@ -98,7 +98,7 @@ async def update_post(post_update: PostUpdate):
     "/",
     summary="Sanitize metadata for all posts.",
     description="Run a sequence of analytics to ensure all posts have proper metadata.",
-    response_model=PostBulkUpdate
+    response_model=PostBulkUpdate,
 )
 async def batch_update_metadata():
     update_queries = collect_sql_queries("posts/updates")

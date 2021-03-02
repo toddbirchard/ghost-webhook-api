@@ -76,8 +76,9 @@ def add_alt_tag(image_card: List) -> List[dict]:
         new_card = image_card
         caption = image_card[1].get("caption")
         alt = image_card[1].get("alt")
-        if caption and not alt:
+        src = image_card[1].get("alt")
+        if caption and not alt and "cloudinary" not in src:
             new_card[1].update({"alt": caption})
-            images_updated.append(new_card[1].get("src"))
+            images_updated.append(src)
             return new_card
     return image_card
