@@ -1,9 +1,11 @@
 """Fetch site traffic & search query analytics."""
-from fastapi import APIRouter, HTTPException
-
-from app.analytics.algolia import fetch_algolia_searches, import_algolia_search_queries
+from app.analytics.algolia import (
+    fetch_algolia_searches,
+    import_algolia_search_queries
+)
 from app.analytics.migrate import import_site_analytics
 from clients.log import LOGGER
+from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
