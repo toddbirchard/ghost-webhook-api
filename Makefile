@@ -71,6 +71,7 @@ clean:
 	find . -name 'Pipefile.lock' -delete
 	find . -name '*.log' -delete
 	find . -wholename 'logs/*.json' -delete
+	find . -wholename '.pytest_cache' -delete
 	find . -wholename '*/.pytest_cache' -delete
 	find . -wholename '*/logs/*.json' -delete
 	find . -wholename '.webassets-cache/*' -delete

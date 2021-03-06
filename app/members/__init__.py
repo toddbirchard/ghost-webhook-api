@@ -1,4 +1,4 @@
-"""Newsletter subscription management."""
+"""Ghost member subscription management."""
 from app.members.mixpanel import create_mixpanel_record
 from clients import mailgun
 from clients.log import LOGGER
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/members", tags=["members"])
 
 @router.post(
     "/",
-    summary="Welcome members subscriber.",
+    summary="New Ghost Member.",
     description="Send a welcome email to new subscribers to Ghost members.",
 )
 async def member_subscribe(subscribe_event: GhostMemberEvent):

@@ -3,7 +3,6 @@ import pprint
 from app import api
 from clients.log import LOGGER
 from config import basedir, settings
-from database.schemas import GhostMemberEvent, NewGhostMember
 from fastapi.testclient import TestClient
 
 client = TestClient(api)
@@ -91,5 +90,5 @@ def test_import_site_analytics():
     assert type(response.json()) == dict
 
 
-def test_newsletter_subscriber(ghost_member_event):
+def test_member_subscribe(ghost_member_event):
     response = client.post("/members", ghost_member_event)
