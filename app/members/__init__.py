@@ -6,6 +6,7 @@ from config import settings
 from database.schemas import GhostMemberEvent
 from fastapi import APIRouter, HTTPException
 
+
 router = APIRouter(prefix="/members", tags=["members"])
 
 
@@ -13,6 +14,7 @@ router = APIRouter(prefix="/members", tags=["members"])
     "/",
     summary="New Ghost Member.",
     description="Send a welcome email to new subscribers to Ghost members.",
+    response_model=GhostMemberEvent
 )
 async def member_subscribe(subscribe_event: GhostMemberEvent):
     """
@@ -22,7 +24,7 @@ async def member_subscribe(subscribe_event: GhostMemberEvent):
     :type subscribe_event: GhostMemberEvent
     """
     subscriber = subscribe_event.member.current
-    mp_result = create_mixpanel_record(subscriber)
+    create_mixpanel_record(subscriber)
     body = {
         "from": "todd@hackersandslackers.com",
         "to": subscriber.email,
@@ -34,13 +36,17 @@ async def member_subscribe(subscribe_event: GhostMemberEvent):
     mailgun_response = mailgun.send_email(body)
     if mailgun_response.status_code != 200:
         raise HTTPException(mailgun_response.status_code, mailgun_response.content)
-    response = {"member": {"mixpanel": mp_result, "email": mailgun_response.json()}}
-    return response
+    return subscribe_event
 
 
-@router.delete("/")
+@router.delete(
+    "/",
+    summary="Delete Ghost Member.",
+    description="Unsubscribe existing Ghost member from newsletters.",
+    response_model=GhostMemberEvent
+)
 async def member_unsubscribe(subscription: GhostMemberEvent):
     """Track user unsubscribe events and spam complaints."""
     subscriber = subscription.member.previous
     LOGGER.info(f"`{subscriber.name}` unsubscribed from members.")
-    return subscriber.dict()
+    return subscription

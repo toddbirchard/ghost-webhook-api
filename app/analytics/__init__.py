@@ -6,6 +6,8 @@ from app.analytics.algolia import (
 from app.analytics.migrate import import_site_analytics
 from clients.log import LOGGER
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
+
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
@@ -18,7 +20,7 @@ async def migrate_site_analytics():
     LOGGER.success(
         f"Inserted {len(weekly_traffic)} rows into `weekly_stats`,  {len(monthly_traffic)}  into `monthly_stats`."
     )
-    return {
+    return JSONResponse({
         "weekly_stats": {
             "count": len(weekly_traffic),
             "rows": {zip(weekly_traffic.slug.tolist(), weekly_traffic.views.tolist())},
@@ -29,10 +31,10 @@ async def migrate_site_analytics():
                 zip(monthly_traffic.slug.tolist(), monthly_traffic.views.tolist())
             },
         },
-    }
+    })
 
 
-@router.get("/searches/")
+@router.get("/searches")
 async def save_user_search_queries():
     """Save top search analytics for the current week."""
     weekly_searches = fetch_algolia_searches(7)
@@ -45,7 +47,7 @@ async def save_user_search_queries():
         f"Inserted {len(weekly_searches)} rows into `algolia_searches_week`, \
             {len(monthly_searches)} into `algolia_searches_historical."
     )
-    return {
+    return JSONResponse({
         "weekly_queries": {
             "count": len(weekly_searches),
             "rows": weekly_searches,
@@ -54,4 +56,4 @@ async def save_user_search_queries():
             "count": len(monthly_searches),
             "rows": monthly_searches,
         },
-    }
+    })

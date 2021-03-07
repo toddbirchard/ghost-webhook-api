@@ -375,21 +375,40 @@ class NetlifyUserEvent(BaseModel):
 
 
 class Member(BaseModel):
-    id: str = Field(None, example="604393b784657849344434dfe31d")
-    uuid: str = Field(None, example="e34567d5-5ac5-234e-4356-02f624cd3bbd")
-    email: str = Field(None, example="fake@example.com")
+    id: Optional[str] = Field(None, example="604393b784657849344434dfe31d")
+    uuid: Optional[str] = Field(None, example="e34567d5-5ac5-234e-4356-02f624cd3bbd")
+    email: Optional[str] = Field(None, example="fake@example.com")
     name: Optional[str] = Field(None, example="Name")
     note: Optional[str] = Field(None, example="")
-    subscribed: bool = Field(bool, example=True)
-    created_at: datetime = Field(None, example="2021-03-06T14:37:42.846Z")
-    updated_at: datetime = Field(None, example="2021-03-06T14:37:42.846Z")
-    labels: Optional[List] = Field(list, example=[])
+    subscribed: Optional[bool] = Field(None, example=True)
+    created_at: Optional[datetime] = Field(None, example="2021-03-06T14:37:42.846Z")
+    updated_at: Optional[datetime] = Field(None, example="2021-03-06T14:37:42.846Z")
+    labels: Optional[List[Optional[str]]] = Field([], example=[])
     avatar_image: Optional[str] = Field(
         None, example="https://gravatar.com/avatar/c611f62ef"
     )
-    comped: bool = Field(bool, example=False)
-    email_count: int = Field(bool, example=0)
-    email_opened_count: int = Field(bool, example=0)
+    comped: Optional[bool] = Field(bool, example=False)
+    email_count: Optional[int] = Field(bool, example=0)
+    email_opened_count: Optional[int] = Field(bool, example=0)
+
+    class Config:
+        schema_extra = {
+            "current": {
+                "id": "604393b65d4a222434dfe31d",
+                "uuid": "e90320d5-5ac5-490e-9814-02f624cd3bbd",
+                "email": "toddbirchard+fakeinfo@gmail.com",
+                "name": "Fake Name",
+                "subscribed": True,
+                "created_at": "2021-03-06T14:37:42.846Z",
+                "updated_at": "2021-03-06T14:37:42.846Z",
+                "labels": [],
+                "avatar_image": "https://gravatar.com/avatar/c611f62ef75d2fafe58ffb61661b22e0?s=250&d=blank",
+                "comped": False,
+                "email_count": 0,
+                "email_opened_count": 0
+            },
+            "previous": {}
+        }
 
 
 class NewGhostMember(BaseModel):
