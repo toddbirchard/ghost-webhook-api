@@ -362,7 +362,7 @@ class NetlifyAccount(BaseModel):
     email: str = Field(None, example="fake@example.com")
     app_metadata: NetlifyUserAppMetadata
     user_metadata: NetlifyUserMetadata
-    created_at: datetime = Field(None, example="2019-11-07 14:38:35")
+    created_at: datetime = Field(None, example="2020-12-20 10:54:20")
     updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
 
 
@@ -370,14 +370,6 @@ class NetlifyUserEvent(BaseModel):
     event: str = Field(None, example="signup")
     instance_id: str = Field(None, example="dc76yfi-94b8-4b0f-8d45-gdffg76i")
     user: NetlifyAccount
-
-
-class NewGhostUser(BaseModel):
-    current: Optional[NetlifyAccount]
-
-
-class GhostMemberEvent(BaseModel):
-    member: NewGhostUser
 
 
 class Member(BaseModel):
@@ -392,6 +384,11 @@ class Member(BaseModel):
     labels: Optional[List] = None
     avatar_image: Optional[str] = None
     comped: Optional[bool]
+
+
+class NetlifyAccountCreationResponse(BaseModel):
+    succeeded: Optional[NetlifyAccount] = Field(None, example=NetlifyAccount)
+    failed: Optional[NetlifyUserEvent] = Field(None, example=NetlifyUserEvent)
 
 
 class NewsletterSubscriber(BaseModel):

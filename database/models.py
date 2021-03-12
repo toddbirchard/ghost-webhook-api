@@ -33,11 +33,11 @@ class CommentUpvote(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     comment_id = Column(Integer, ForeignKey("comments.id"))
-    user_id = Column(String(255), ForeignKey("accounts.id"))
+    account_id = Column(String(255), ForeignKey("accounts.id"))
 
     # Relationships
     comment = relationship("Comment", backref="comment_id")
-    user = relationship("Account", backref="user_id")
+    user = relationship("Account", backref="account_id")
 
 
 class Account(Base):

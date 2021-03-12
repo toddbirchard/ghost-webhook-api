@@ -1,9 +1,7 @@
 """User account management & functionality."""
 from fastapi import APIRouter, Depends, HTTPException
-from mixpanel import MixpanelException
 from sqlalchemy.orm import Session
 
-from app.accounts.mixpanel import create_mixpanel_record
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from clients.log import LOGGER
@@ -20,8 +18,7 @@ from database.crud import (
 from database.models import Account, Comment
 from database.orm import get_db
 from database.schemas import (
-    GhostMemberEvent,
-    NetlifyAccount,
+    NetlifyAccountCreationResponse,
     NetlifyUserEvent,
     NewComment,
     NewDonation,
@@ -33,33 +30,9 @@ router = APIRouter(prefix="/account", tags=["accounts"])
 
 @router.post(
     "/",
-    summary="Add new user account to Ghost.",
-    description="Create free-tier Ghost membership for Netlify user account upon signup.",
-)
-async def new_ghost_member(user_event: GhostMemberEvent):
-    """
-    Create Ghost member.
-
-    :param user_event: Newly created user account.
-    :type user_event: GhostMemberEvent
-    """
-    try:
-        user = user_event.member.current
-        ghost_subscription = new_ghost_subscription(user)
-        mx = create_mixpanel_record(user)
-        return {"subscriptions": ghost_subscription, "mixpanel": mx}
-    except MixpanelException as e:
-        LOGGER.error(f"Error creating user in Mixpanel: {e}")
-        raise HTTPException(
-            status_code=400, detail=f"Error creating user in Mixpanel: {e}"
-        )
-
-
-@router.post(
-    "/new",
     summary="Create new account from Netlify",
     description="Create user account sourced from Netlify Identity.",
-    response_model=NetlifyAccount,
+    response_model=NetlifyAccountCreationResponse,
 )
 async def new_account(
     new_account_event: NetlifyUserEvent, db: Session = Depends(get_db)
@@ -71,7 +44,7 @@ async def new_account(
     :type new_account_event: NetlifyUserEvent
     :param db: ORM Database session.
     :type db: Session
-    :returns: NetlifyAccount
+    :returns: NetlifyAccountCreationResponse
     """
     account = new_account_event.user
     db_account = get_account(db, account.email)
@@ -81,7 +54,17 @@ async def new_account(
             status_code=400,
             detail=f"User account already exists for `{account.email}`.",
         )
-    return create_account(db, account)
+    create_account(db, account)
+    db_account = get_account(db, account.email)
+    if db_account:
+        return NetlifyAccountCreationResponse(
+            succeeded=db_account,
+            failed=None,
+        )
+    return NetlifyAccountCreationResponse(
+        succeeded=None,
+        failed=new_account_event,
+    )
 
 
 @router.post(
@@ -105,6 +88,8 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
         mailgun.email_notification_new_comment(post, comment.__dict__)
     create_comment(db, comment)
     ghost.rebuild_netlify_site()
+    if comment.user_email not in authors:
+        mailgun.email_notification_new_comment(post, comment.__dict__)
     return comment
 
 
