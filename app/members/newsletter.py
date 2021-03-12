@@ -1,6 +1,4 @@
 """Newsletter subscription management."""
-from fastapi import HTTPException
-
 from clients import mailgun
 from clients.log import LOGGER
 from config import settings

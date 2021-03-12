@@ -6,7 +6,7 @@ from app.members.newsletter import newsletter_subscribe
 from clients.log import LOGGER
 from database.schemas import Member, Subscriber
 
-router = APIRouter(prefix="/member", tags=["members"])
+router = APIRouter(prefix="/members", tags=["members"])
 
 
 @router.post(

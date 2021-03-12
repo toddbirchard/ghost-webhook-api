@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional, Dict
 
 from pydantic import BaseModel, Field
 
@@ -387,8 +387,8 @@ class Member(BaseModel):
 
 
 class NetlifyAccountCreationResponse(BaseModel):
-    succeeded: Optional[NetlifyAccount] = Field(None, example=NetlifyAccount)
-    failed: Optional[NetlifyUserEvent] = Field(None, example=NetlifyUserEvent)
+    succeeded: Optional[NetlifyAccount]
+    failed: Optional[NetlifyUserEvent]
 
 
 class NewsletterSubscriber(BaseModel):
@@ -397,8 +397,8 @@ class NewsletterSubscriber(BaseModel):
 
 
 class Subscriber(BaseModel):
-    current: Optional[Member] = None
-    previous: Optional[Member] = None
+    current: Optional[Member]
+    previous: Optional[Member]
 
 
 class Subscription(BaseModel):
@@ -475,8 +475,8 @@ class GithubIssue:
 
 
 class PostBulkUpdate(BaseModel):
-    inserted: dict = Field(None)
-    updated: dict = Field(None)
+    inserted: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
+    updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
     class Config:
         schema_extra = {
@@ -501,3 +501,8 @@ class PostBulkUpdate(BaseModel):
                 },
             },
         }
+
+
+class AnalyticsResponse(BaseModel):
+    weekly_stats: str = Field(None, example="fake@example.com")
+    monthly_stats: str = Field(None, example="recipient@example.com")

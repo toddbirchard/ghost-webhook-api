@@ -3,12 +3,18 @@ from fastapi import APIRouter, HTTPException
 
 from app.analytics.algolia import fetch_algolia_searches, import_algolia_search_queries
 from app.analytics.migrate import import_site_analytics
+from database.schemas import AnalyticsResponse
 from clients.log import LOGGER
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
-@router.get("/")
+@router.get(
+    "/",
+    summary="Import site analytics.",
+    description="Import site performance analytics from a data warehouse to a SQL database.",
+    response_model=AnalyticsResponse
+)
 async def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
     weekly_traffic = import_site_analytics("weekly")
