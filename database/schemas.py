@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional, Dict
 
 from pydantic import BaseModel, Field
 
@@ -362,7 +362,7 @@ class NetlifyAccount(BaseModel):
     email: str = Field(None, example="fake@example.com")
     app_metadata: NetlifyUserAppMetadata
     user_metadata: NetlifyUserMetadata
-    created_at: datetime = Field(None, example="2019-11-07 14:38:35")
+    created_at: datetime = Field(None, example="2020-12-20 10:54:20")
     updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
 
 
@@ -370,14 +370,6 @@ class NetlifyUserEvent(BaseModel):
     event: str = Field(None, example="signup")
     instance_id: str = Field(None, example="dc76yfi-94b8-4b0f-8d45-gdffg76i")
     user: NetlifyAccount
-
-
-class NewGhostUser(BaseModel):
-    current: Optional[NetlifyAccount]
-
-
-class GhostMemberEvent(BaseModel):
-    member: NewGhostUser
 
 
 class Member(BaseModel):
@@ -394,14 +386,19 @@ class Member(BaseModel):
     comped: Optional[bool]
 
 
+class NetlifyAccountCreationResponse(BaseModel):
+    succeeded: Optional[NetlifyAccount]
+    failed: Optional[NetlifyUserEvent]
+
+
 class NewsletterSubscriber(BaseModel):
     name: Optional[str] = Field(None, example=None)
     email: str = Field(None, example="fake@example.com")
 
 
 class Subscriber(BaseModel):
-    current: Optional[Member] = None
-    previous: Optional[Member] = None
+    current: Optional[Member]
+    previous: Optional[Member]
 
 
 class Subscription(BaseModel):
@@ -478,8 +475,8 @@ class GithubIssue:
 
 
 class PostBulkUpdate(BaseModel):
-    inserted: dict = Field(None)
-    updated: dict = Field(None)
+    inserted: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
+    updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
     class Config:
         schema_extra = {
@@ -504,3 +501,8 @@ class PostBulkUpdate(BaseModel):
                 },
             },
         }
+
+
+class AnalyticsResponse(BaseModel):
+    weekly_stats: str = Field(None, example="fake@example.com")
+    monthly_stats: str = Field(None, example="recipient@example.com")

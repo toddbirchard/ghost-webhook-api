@@ -3,7 +3,7 @@ from ddtrace_asgi.middleware import TraceMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import accounts, analytics, authors, github, images, newsletter, posts
+from app import accounts, analytics, authors, github, images, members, posts
 from config import settings
 from database.orm import Base, engine
 
@@ -32,7 +32,7 @@ api.add_middleware(
 )
 
 api.include_router(analytics.router)
-api.include_router(newsletter.router)
+api.include_router(members.router)
 api.include_router(posts.router)
 api.include_router(accounts.router)
 api.include_router(authors.router)
