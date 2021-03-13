@@ -1,4 +1,4 @@
-"""Newsletter subscription management."""
+"""Welcome newsletter subscribers ."""
 from clients import mailgun
 from clients.log import LOGGER
 from config import settings

@@ -1,4 +1,4 @@
-"""New user analytics."""
+"""Mixpanel user analytics."""
 from typing import Optional
 
 from mixpanel import Mixpanel, MixpanelException
@@ -13,7 +13,8 @@ def create_mixpanel_record(user: Member) -> Optional[dict]:
     Add user record to Mixpanel.
 
     :param user: New user account from Netlify auth.
-    :type user: NetlifyAccount
+    :type user: Member
+    :returns: Optional[dict]
     """
     try:
         mp = Mixpanel(settings.MIXPANEL_API_TOKEN)

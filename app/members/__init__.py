@@ -16,10 +16,10 @@ router = APIRouter(prefix="/members", tags=["members"])
 )
 async def new_ghost_member(user_event: Subscriber):
     """
-    Create Ghost member.
+    Welcome new Ghost subscriber & add analytics.
 
     :param user_event: Newly created user account.
-    :type user_event: GhostMemberEvent
+    :type user_event: Subscriber
     """
     try:
         user = user_event.current
@@ -41,9 +41,11 @@ async def new_ghost_member(user_event: Subscriber):
 @router.delete(
     "/",
     summary="Delete Ghost Member.",
-    description="Create free-tier Ghost membership for Netlify user account upon signup.",
+    description="Unsubscribe existing Ghost member from newsletters.",
+    response_model=Member,
 )
-async def newsletter_unsubscribe(member: Member):
+async def member_unsubscribe(subscription: Subscriber):
     """Track user unsubscribe events and spam complaints."""
-    LOGGER.info(f"`{member.name}` unsubscribed from newsletter.")
-    return member.dict()
+    subscriber = subscription.previous
+    LOGGER.info(f"`{subscriber.name}` unsubscribed from members.")
+    return subscription
