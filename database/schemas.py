@@ -503,6 +503,22 @@ class PostBulkUpdate(BaseModel):
         }
 
 
+class AnalyticsRowsUpdated(BaseModel):
+    weekly_stats: Dict[str, Any] = Field(
+        None,
+        example={
+            "count": 2,
+            "rows": [{"my-post-1": 2}, {"my-post-2": 3}],
+        },
+    )
+    monthly_stats: Dict[str, Any] = Field(
+        None,
+        example={
+            "count": 2,
+            "rows": [{"my-post-1": 2}, {"my-post-2": 3}],
+        },
+    )
+
+
 class AnalyticsResponse(BaseModel):
-    weekly_stats: str = Field(None, example="fake@example.com")
-    monthly_stats: str = Field(None, example="recipient@example.com")
+    updated: AnalyticsRowsUpdated

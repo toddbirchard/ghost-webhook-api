@@ -23,16 +23,20 @@ async def migrate_site_analytics():
         f"Inserted {len(weekly_traffic)} rows into `weekly_stats`,  {len(monthly_traffic)}  into `monthly_stats`."
     )
     return {
-        "weekly_stats": {
-            "count": len(weekly_traffic),
-            "rows": {zip(weekly_traffic.slug.tolist(), weekly_traffic.views.tolist())},
-        },
-        "monthly_traffic": {
-            "count": len(monthly_traffic),
-            "rows": {
-                zip(monthly_traffic.slug.tolist(), monthly_traffic.views.tolist())
+        "updated": {
+            "weekly_stats": {
+                "count": len(weekly_traffic),
+                "rows": {
+                    zip(weekly_traffic.slug.tolist(), weekly_traffic.views.tolist())
+                },
             },
-        },
+            "monthly_traffic": {
+                "count": len(monthly_traffic),
+                "rows": {
+                    zip(monthly_traffic.slug.tolist(), monthly_traffic.views.tolist())
+                },
+            },
+        }
     }
 
 
