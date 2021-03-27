@@ -65,19 +65,21 @@ async def bulk_transform_images(
     """
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
-    purged_images = gcs.purge_unwanted_images(directory)
-    retina_images = gcs.retina_transformations(directory)
-    mobile_images = gcs.mobile_transformations(directory)
-    standard_images = gcs.standard_transformations(directory)
-    LOGGER.success(
-        f"Transformed {len(mobile_images)} mobile, {len(retina_images)} retina, {len(standard_images)} standard images."
-    )
-    return {
-        "purged": purged_images,
-        "retina": retina_images,
-        "mobile": mobile_images,
-        "standard": standard_images,
+    images = {
+        "purged": gcs.purge_unwanted_images(directory),
+        "retina": gcs.retina_transformations(directory),
+        "mobile": gcs.mobile_transformations(directory),
+        "standard": gcs.standard_transformations(directory),
     }
+    log = "Transformed "
+    for k, v in images.items():
+        if v is not None:
+            log += f"{len(v)} {k}, "
+        else:
+            log += f"0 {k}, "
+    log += "images."
+    LOGGER.success(log.replace("standard, images", "standard images"))
+    return images
 
 
 @router.get("/lynx")
