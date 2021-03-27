@@ -43,7 +43,7 @@ deploy:
 .PHONY: update
 update: env
 	export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true
-	.venv/bin/python3 -m pip install --upgrade pip3 setuptools wheel
+	.venv/bin/python3 -m pip install --upgrade pip setuptools wheel
 	poetry update
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
 
