@@ -1,6 +1,6 @@
+import pytest
 from github import Github
 
-import pytest
 from clients.ghost import Ghost
 from clients.google_bigquery import BigQuery
 from clients.mail import Mailgun

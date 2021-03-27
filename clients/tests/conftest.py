@@ -1,4 +1,5 @@
 import pytest
+
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from config import settings

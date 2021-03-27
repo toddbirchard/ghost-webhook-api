@@ -3,7 +3,7 @@ from os import listdir
 from os.path import isfile, join
 from typing import List
 
-from sqlalchemy.engine.result import ResultProxy
+from sqlalchemy.engine.result import Result
 
 from config import basedir
 from database import rdbms
@@ -57,11 +57,11 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
     return queries
 
 
-def fetch_raw_lynx_posts() -> ResultProxy:
+def fetch_raw_lynx_posts() -> Result:
     """
     Find all Lynx posts lacking embedded link previews.
 
-    :returns: ResultProxy
+    :returns: Result
     """
     sql_file = open(f"{basedir}/database/queries/posts/selects/lynx_bookmarks.sql", "r")
     query = sql_file.read()

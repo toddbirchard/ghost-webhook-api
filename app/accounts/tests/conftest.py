@@ -1,4 +1,5 @@
 import pytest
+
 from database.schemas import NewComment
 
 

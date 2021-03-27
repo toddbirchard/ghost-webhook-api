@@ -1,4 +1,4 @@
-from sqlalchemy.engine.result import ResultProxy
+from sqlalchemy.engine.result import Result
 
 from clients.log import LOGGER
 from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
@@ -23,5 +23,5 @@ def test_select_query(rdbms):
     query_result = rdbms.execute_query(parsed_posts_sql[0], "hackers_prod")
     assert len(posts_sql) > 0
     assert type(parsed_posts_sql[0]) == str
-    assert type(query_result) == ResultProxy
+    assert type(query_result) == Result
     LOGGER.debug(query_result.rowcount)

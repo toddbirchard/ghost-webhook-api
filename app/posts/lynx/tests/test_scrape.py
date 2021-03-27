@@ -1,9 +1,8 @@
 """Parsing individual URLs and verify JSON-LD is returned."""
+import pytest
 import requests
 import simplejson as json
 from bs4 import BeautifulSoup
-
-import pytest
 from mock import Mock
 
 from ..scrape import get_image, render_json_ltd
