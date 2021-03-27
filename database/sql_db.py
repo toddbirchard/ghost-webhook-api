@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine, text
-from sqlalchemy.engine.result import ResultProxy
+from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from clients.log import LOGGER
@@ -53,7 +53,7 @@ class Database:
         return results, total_rows
 
     @LOGGER.catch
-    def execute_query(self, query: str, database_name: str) -> Optional[ResultProxy]:
+    def execute_query(self, query: str, database_name: str) -> Optional[Result]:
         """
         Execute single SQL query.
 
@@ -61,7 +61,7 @@ class Database:
         :type query: str
         :param database_name: Name of database to connect to.
         :type database_name: str
-        :returns: Optional[ResultProxy]
+        :returns: Optional[Result]
         """
         try:
             result = self.engines[database_name].execute(text(query))
@@ -72,7 +72,7 @@ class Database:
     @LOGGER.catch
     def execute_query_from_file(
         self, sql_file: str, database_name: str
-    ) -> Optional[ResultProxy]:
+    ) -> Optional[Result]:
         """
         Execute single SQL query.
 
@@ -80,7 +80,7 @@ class Database:
         :type sql_file: str
         :param database_name: Name of database to connect to.
         :type database_name: str
-        :returns: Optional[ResultProxy]
+        :returns: Optional[Result]
         """
         try:
             query = open(sql_file, "r").read()

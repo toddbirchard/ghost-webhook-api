@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy.engine.result import ResultProxy
+from sqlalchemy.engine.result import Result
 from sqlalchemy.orm import Session
 
 from clients.log import LOGGER
@@ -9,7 +9,7 @@ from database.models import Account, Comment, CommentUpvote, Donation
 from database.schemas import NetlifyAccount, NewComment, NewDonation
 
 
-def get_donation(db: Session, donation_id: int) -> Optional[ResultProxy]:
+def get_donation(db: Session, donation_id: int) -> Optional[Result]:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -17,7 +17,7 @@ def get_donation(db: Session, donation_id: int) -> Optional[ResultProxy]:
     :type db: Session
     :param donation_id: Primary key for donation record.
     :type donation_id: int
-    :returns: Optional[ResultProxy]
+    :returns: Optional[Result]
     """
     return db.query(Donation).filter(Donation.coffee_id == donation_id).first()
 
@@ -46,7 +46,7 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     return db_item
 
 
-def get_comment(db: Session, comment_id: int) -> Optional[ResultProxy]:
+def get_comment(db: Session, comment_id: int) -> Optional[Result]:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -54,7 +54,7 @@ def get_comment(db: Session, comment_id: int) -> Optional[ResultProxy]:
     :type db: Session
     :param comment_id: Primary key for user comment record.
     :type comment_id: int
-    :returns: Optional[ResultProxy]
+    :returns: Optional[Result]
     """
     return db.query(Comment).filter(Comment.id == comment_id).first()
 
@@ -127,9 +127,7 @@ def remove_comment_upvote(db: Session, user_id: str, comment_id: int):
     LOGGER.success(f"Removed upvote for comment `{comment_id}` from user `{user_id}`.")
 
 
-def get_comment_upvote(
-    db: Session, user_id: str, comment_id: int
-) -> Optional[ResultProxy]:
+def get_comment_upvote(db: Session, user_id: str, comment_id: int) -> Optional[Result]:
     """
     Validate whether a user has upvoted a given comment.
 
@@ -139,7 +137,7 @@ def get_comment_upvote(
     :type user_id: str
     :param comment_id: Unique ID of comment user attempted to upvote.
     :type comment_id: int
-    :returns: Optional[ResultProxy]
+    :returns: Optional[Result]
     """
     return (
         db.query(CommentUpvote)
@@ -150,7 +148,7 @@ def get_comment_upvote(
     )
 
 
-def get_account(db: Session, account_email: str) -> Optional[ResultProxy]:
+def get_account(db: Session, account_email: str) -> Optional[Result]:
     """
     Fetch account by email address.
 
@@ -158,7 +156,7 @@ def get_account(db: Session, account_email: str) -> Optional[ResultProxy]:
     :type db: Session
     :param account_email: Primary key for account record.
     :type account_email: str
-    :returns: Optional[ResultProxy]
+    :returns: Optional[Result]
     """
     return db.query(Account).filter(Account.email == account_email).first()
 
