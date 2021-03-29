@@ -6,7 +6,7 @@ from clients.google_bigquery import BigQuery
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
-from config import settings
+from config import settings, basedir
 from database.sql_db import Database
 
 
@@ -66,7 +66,7 @@ def gh():
 
 @pytest.fixture
 def gbq():
-    gbq_class = BigQuery(settings.GCP_PROJECT, settings.GCP_CREDENTIALS)
+    gbq_class = BigQuery(basedir)
     return gbq_class.create_client()
 
 

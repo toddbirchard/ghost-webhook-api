@@ -14,7 +14,7 @@ class Mailgun:
         self.server = server
         self.from_address = from_address
         self.api_key = api_key
-        self.endpoint = f"https://api.mailgun.net/v3/{self.server}/messages"
+        self.endpoint = f"https://api.mailgun.net/v3/{server}/messages"
 
     def send_email(self, body: dict, test_mode=False) -> Optional[Response]:
         """
