@@ -37,7 +37,7 @@ run: env
 .PHONY: deploy
 deploy:
 	make clean
-	. ./deploy.sh
+	$(shell . ./deploy.sh)
 
 
 .PHONY: update
@@ -72,6 +72,7 @@ clean:
 	find . -name '*.log' -delete
 	find . -wholename 'logs/*.json' -delete
 	find . -wholename '.pytest_cache' -delete
-	find . -wholename '*/.pytest_cache' -delete
+	find . -wholename '**/.pytest_cache' -delete
 	find . -wholename '*/logs/*.json' -delete
 	find . -wholename '.webassets-cache/*' -delete
+	find . -wholename '**/logs' -delete

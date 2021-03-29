@@ -71,14 +71,13 @@ async def bulk_transform_images(
         "mobile": gcs.mobile_transformations(directory),
         "standard": gcs.standard_transformations(directory),
     }
-    log = "Transformed "
+    log = []
     for k, v in images.items():
         if v is not None:
-            log += f"{len(v)} {k}, "
+            log.append(f"{len(v)} {k}")
         else:
-            log += f"0 {k}, "
-    log += "images."
-    LOGGER.success(log.replace("standard, images", "standard images"))
+            log.append(f"0 {k}")
+    LOGGER.success(f"Transformed {', '.join(log)} images")
     return images
 
 
