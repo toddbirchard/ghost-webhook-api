@@ -1,12 +1,12 @@
+import pytest
 from github import Github
 
-import pytest
 from clients.ghost import Ghost
 from clients.google_bigquery import BigQuery
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
-from config import settings, basedir
+from config import basedir, settings
 from database.sql_db import Database
 
 

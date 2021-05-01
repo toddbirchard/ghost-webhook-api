@@ -42,7 +42,6 @@ simplejson = "*"
 boto = "*"
 botocore = "*"
 uvicorn = "*"
-ddtrace = "*"
 ddtrace-asgi = "*"
 PyGithub = "*"
 

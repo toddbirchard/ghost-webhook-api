@@ -21,7 +21,10 @@ api = FastAPI(
 )
 
 if settings.ENVIRONMENT == "production":
-    api.add_middleware(TraceMiddleware, service=settings.app_name)
+    api.add_middleware(
+        TraceMiddleware,
+        service=settings.app_name
+    )
 
 api.add_middleware(
     CORSMiddleware,
