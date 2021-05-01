@@ -1,13 +1,16 @@
 """Initialize api."""
-from ddtrace_asgi.middleware import TraceMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from ddtrace import patch
 
 from app import accounts, analytics, authors, github, images, members, posts
 from config import settings
 from database.orm import Base, engine
 
 Base.metadata.create_all(bind=engine)
+
+
+patch(fastapi=True)
 
 
 api = FastAPI(
@@ -28,12 +31,12 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
-api.add_middleware(
+'''api.add_middleware(
     TraceMiddleware,
     service="API",
     tags={"env": settings.ENVIRONMENT},
     distributed_tracing=True
-)
+)'''
 
 api.include_router(analytics.router)
 api.include_router(members.router)

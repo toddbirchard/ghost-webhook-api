@@ -42,8 +42,8 @@ simplejson = "*"
 boto = "*"
 botocore = "*"
 uvicorn = "*"
-ddtrace-asgi = "*"
 PyGithub = "*"
+ddtrace = "^0.48.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

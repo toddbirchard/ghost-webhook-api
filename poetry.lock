@@ -156,18 +156,6 @@ tenacity = ">=5"
 opentracing = ["opentracing (>=2.0.0)"]
 
 [[package]]
-name = "ddtrace-asgi"
-version = "0.3.0"
-description = "Unofficial ddtrace integration for ASGI apps and frameworks"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-ddtrace = "*"
-starlette = "<1.0.0"
-
-[[package]]
 name = "deprecated"
 version = "1.2.12"
 description = "Python @deprecated decorator to deprecate old python classes, functions or methods."
@@ -1204,7 +1192,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "1b83dfedcd123cede2527c0e5059b9006dbc428ff68fd8ce86178f21272feac7"
+content-hash = "df428e877159d444a0e32f57a2d12fdccdb271528ac42236e2d81c63423a1d4c"
 
 [metadata.files]
 appdirs = [
@@ -1331,10 +1319,6 @@ ddtrace = [
     {file = "ddtrace-0.48.1-cp39-cp39-win32.whl", hash = "sha256:dd786bc677bce62180701583c635b9b2245430e6cb210befb5ae431a79c6faf9"},
     {file = "ddtrace-0.48.1-cp39-cp39-win_amd64.whl", hash = "sha256:97e05823064d6333f4feb38669c27858921a94f4aec80c64b6a1f930ba5ba702"},
     {file = "ddtrace-0.48.1.tar.gz", hash = "sha256:cb4bf6717948cb94dc3729aed3281aaa24997489691c83795b689550ae487dfe"},
-]
-ddtrace-asgi = [
-    {file = "ddtrace-asgi-0.3.0.tar.gz", hash = "sha256:424f3847eb4ad57897ad2c92c737365d0c5157bb9b6f21fafc74f975c235ff21"},
-    {file = "ddtrace_asgi-0.3.0-py3-none-any.whl", hash = "sha256:1628c8e3bcdbfba2cbfb879c2eae7710b147a22c913f9c7f7e634b7ae0aba71a"},
 ]
 deprecated = [
     {file = "Deprecated-1.2.12-py2.py3-none-any.whl", hash = "sha256:08452d69b6b5bc66e8330adde0a4f8642e969b9e1702904d137eeb29c8ffc771"},
