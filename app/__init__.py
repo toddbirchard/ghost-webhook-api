@@ -20,18 +20,19 @@ api = FastAPI(
     openapi_tags=settings.API_TAGS,
 )
 
-if settings.ENVIRONMENT == "production":
-    api.add_middleware(
-        TraceMiddleware,
-        service=settings.app_name
-    )
-
 api.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+api.add_middleware(
+    TraceMiddleware,
+    service="API",
+    tags={"env": settings.ENVIRONMENT},
+    distributed_tracing=True
 )
 
 api.include_router(analytics.router)
