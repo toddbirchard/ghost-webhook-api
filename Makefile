@@ -1,12 +1,14 @@
 SRCPATH := $(shell pwd)
 PROJECTNAME := $(shell basename $CURDIR)
 ENTRYPOINT := $(PROJECTNAME).ini
+VIRTUAL_ENVIRONMENT := $(CURDIR)/.venv
+LOCAL_PYTHON := $(VIRTUAL_ENVIRONMENT)/bin/python3
 
 define HELP
 Manage $(PROJECTNAME). Usage:
 
 make run        - Run $(PROJECTNAME).
-make deploy     - Pull latest build and deploy to production.
+make install    - Pull latest build and deploy to production.
 make update     - Update pip dependencies via Python Poetry.
 make format     - Format code with Python's `Black` library.
 make lint       - Check code formatting with flake8
@@ -34,15 +36,19 @@ run: env
 	service $(PROJECTNAME) start
 
 
-.PHONY: deploy
-deploy:
+.PHONY: install
+install:
 	make clean
-	$(shell . ./deploy.sh)
+	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
+	. $(VIRTUAL_ENVIRONMENT)/bin/activate
+	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
+	$(LOCAL_PYTHON) -m pip install -r requirements.txt
 
 
 .PHONY: update
-update: env
+update:
 	export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true
+	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
 	.venv/bin/python3 -m pip install --upgrade pip setuptools wheel
 	poetry update
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
