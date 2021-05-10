@@ -30,7 +30,7 @@ async def migrate_site_analytics():
                     zip(weekly_traffic.slug.tolist(), weekly_traffic.views.tolist())
                 },
             },
-            "monthly_traffic": {
+            "monthly_stats": {
                 "count": len(monthly_traffic),
                 "rows": {
                     zip(monthly_traffic.slug.tolist(), monthly_traffic.views.tolist())

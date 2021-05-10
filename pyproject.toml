@@ -43,7 +43,8 @@ boto = "*"
 botocore = "*"
 uvicorn = "*"
 PyGithub = "*"
-ddtrace = "^0.48.1"
+ddtrace = "*"
+pyarrow = "^4.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

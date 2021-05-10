@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.engine.result import Result
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from clients.log import LOGGER
@@ -32,18 +33,28 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     :type donation: NewDonation
     :returns: Donation
     """
-    db_item = Donation(
-        email=donation.email,
-        name=donation.name,
-        count=donation.count,
-        message=donation.message,
-        link=donation.link,
-        coffee_id=donation.coffee_id,
-        created_at=datetime.now(),
-    )
-    db.add(db_item)
-    db.commit()
-    return db_item
+    try:
+        db_item = Donation(
+            email=donation.email,
+            name=donation.name,
+            count=donation.count,
+            message=donation.message,
+            link=donation.link,
+            coffee_id=donation.coffee_id,
+            created_at=datetime.now(),
+        )
+        db.add(db_item)
+        db.commit()
+        LOGGER.success(
+            f"Received and recorded donation: `{donation.name}` donated `{donation.count}` coffees."
+        )
+        return db_item
+    except SQLAlchemyError as e:
+        LOGGER.error(f"SQLAlchemyError while creating donation record: {e}")
+    except IntegrityError as e:
+        LOGGER.error(f"IntegrityError while creating donation record: {e}")
+    except Exception as e:
+        LOGGER.error(f"Unexpected error while creating donation record: {e}")
 
 
 def get_comment(db: Session, comment_id: int) -> Optional[Result]:
@@ -69,23 +80,30 @@ def create_comment(db: Session, comment: NewComment) -> Comment:
     :type comment: NewComment
     :returns: Comment
     """
-    new_comment = Comment(
-        user_name=comment.user_name,
-        user_avatar=comment.user_avatar,
-        user_id=comment.user_id,
-        user_email=comment.user_email,
-        user_role=comment.user_role,
-        body=comment.body,
-        created_at=datetime.now(),
-        post_slug=comment.post_slug,
-        post_id=comment.post_id,
-    )
-    db.add(new_comment)
-    db.commit()
-    LOGGER.success(
-        f"New comment submitted by user `{new_comment.user_name}` on post `{new_comment.post_slug}`"
-    )
-    return new_comment
+    try:
+        new_comment = Comment(
+            user_name=comment.user_name,
+            user_avatar=comment.user_avatar,
+            user_id=comment.user_id,
+            user_email=comment.user_email,
+            user_role=comment.user_role,
+            body=comment.body,
+            created_at=datetime.now(),
+            post_slug=comment.post_slug,
+            post_id=comment.post_id,
+        )
+        db.add(new_comment)
+        db.commit()
+        LOGGER.success(
+            f"New comment submitted by user `{new_comment.user_name}` on post `{new_comment.post_slug}`"
+        )
+        return new_comment
+    except SQLAlchemyError as e:
+        LOGGER.error(f"SQLAlchemyError while creating comment: {e}")
+    except IntegrityError as e:
+        LOGGER.error(f"IntegrityError while creating comment: {e}")
+    except Exception as e:
+        LOGGER.error(f"Unexpected error while creating comment: {e}")
 
 
 def submit_comment_upvote(db: Session, user_id: str, comment_id: int) -> CommentUpvote:
@@ -100,13 +118,20 @@ def submit_comment_upvote(db: Session, user_id: str, comment_id: int) -> Comment
     :type comment_id: int
     :returns: CommentUpvote
     """
-    upvote = CommentUpvote(user_id=user_id, comment_id=comment_id)
-    db.add(upvote)
-    db.commit()
-    LOGGER.success(
-        f"Upvote submitted for comment `{comment_id}` from user `{user_id}`."
-    )
-    return upvote
+    try:
+        upvote = CommentUpvote(user_id=user_id, comment_id=comment_id)
+        db.add(upvote)
+        db.commit()
+        LOGGER.success(
+            f"Upvote submitted for comment `{comment_id}` from user `{user_id}`."
+        )
+        return upvote
+    except SQLAlchemyError as e:
+        LOGGER.error(f"SQLAlchemyError while registering comment upvote: {e}")
+    except IntegrityError as e:
+        LOGGER.error(f"IntegrityError while registering comment upvote: {e}")
+    except Exception as e:
+        LOGGER.error(f"Unexpected error while registering comment upvote: {e}")
 
 
 def remove_comment_upvote(db: Session, user_id: str, comment_id: int):
@@ -121,10 +146,19 @@ def remove_comment_upvote(db: Session, user_id: str, comment_id: int):
     :type comment_id: int
     :returns: CommentUpvote
     """
-    upvote = CommentUpvote(user_id=user_id, comment_id=comment_id)
-    db.delete(upvote)
-    db.commit()
-    LOGGER.success(f"Removed upvote for comment `{comment_id}` from user `{user_id}`.")
+    try:
+        upvote = CommentUpvote(user_id=user_id, comment_id=comment_id)
+        db.delete(upvote)
+        db.commit()
+        LOGGER.success(
+            f"Removed upvote for comment `{comment_id}` from user `{user_id}`."
+        )
+    except SQLAlchemyError as e:
+        LOGGER.error(f"SQLAlchemyError while attempting to remove comment upvote: {e}")
+    except IntegrityError as e:
+        LOGGER.error(f"IntegrityError while attempting to remove comment upvote: {e}")
+    except Exception as e:
+        LOGGER.error(f"Unexpected error while attempting to remove comment upvote: {e}")
 
 
 def get_comment_upvote(db: Session, user_id: str, comment_id: int) -> Optional[Result]:
@@ -171,17 +205,26 @@ def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
     :type account: NetlifyAccount
     :returns: NetlifyAccount
     """
-    new_account = Account(
-        id=account.id,
-        full_name=account.user_metadata.full_name,
-        avatar_url=account.user_metadata.avatar_url,
-        email=account.email,
-        role=account.role,
-        provider=account.app_metadata.provider,
-        created_at=account.created_at,
-        updated_at=account.updated_at,
-    )
-    db.add(new_account)
-    db.commit()
-    LOGGER.success(f"New account created `{account.user_metadata.full_name}`")
-    return account
+    try:
+        new_account = Account(
+            id=account.id,
+            full_name=account.user_metadata.full_name,
+            avatar_url=account.user_metadata.avatar_url,
+            email=account.email,
+            role=account.role,
+            provider=account.app_metadata.provider,
+            created_at=account.created_at,
+            updated_at=account.updated_at,
+        )
+        db.add(new_account)
+        db.commit()
+        LOGGER.success(
+            f"New Netlify account created: `{account.user_metadata.full_name}`"
+        )
+        return account
+    except SQLAlchemyError as e:
+        LOGGER.error(f"SQLAlchemyError while creating Netlify account: {e}")
+    except IntegrityError as e:
+        LOGGER.error(f"IntegrityError while creating Netlify account: {e}")
+    except Exception as e:
+        LOGGER.error(f"Unexpected error while creating Netlify account: {e}")

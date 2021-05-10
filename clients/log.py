@@ -15,7 +15,7 @@ DD_APM_FORMAT = (
 )
 
 
-def formatter(record):
+def json_formatter(record):
     """Pass raw log to be serialized."""
 
     def serialize(log):
@@ -35,6 +35,27 @@ def formatter(record):
     return "{extra[serialized]},\n"
 
 
+def log_formatter(record: dict) -> str:
+    """
+    Formatter for .log records
+
+    :param record: Log object containing log metadata & message.
+    :type record: dict
+    :returns: str
+    """
+    if record["level"].name == "TRACE":
+        return "<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | <fg #cfe2f3>{level}</fg #cfe2f3>: <light-white>{message}</light-white>\n"
+    elif record["level"].name == "INFO":
+        return "<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | <fg #b3cfe7>{level}</fg #b3cfe7>: <light-white>{message}</light-white>\n"
+    elif record["level"].name == "WARNING":
+        return "<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> |  <fg #b09057>{level}</fg #b09057>: <light-white>{message}</light-white>\n"
+    elif record["level"].name == "SUCCESS":
+        return "<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | <fg #6dac77>{level}</fg #6dac77>: <light-white>{message}</light-white>\n"
+    elif record["level"].name == "ERROR":
+        return "<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | <fg #a35252>{level}</fg #a35252>: <light-white>{message}</light-white>\n"
+    return "<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | <fg #b3cfe7>{level}</fg #b3cfe7>: <light-white>{message}</light-white>\n"
+
+
 def create_logger() -> logger:
     """Create custom logger."""
     logger.remove()
@@ -42,16 +63,14 @@ def create_logger() -> logger:
         stdout,
         colorize=True,
         catch=True,
-        format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-        + "<light-green>{level}</light-green>: "
-        + "<light-white>{message}</light-white>",
+        format=log_formatter,
     )
     # Readable logs
     if settings.ENVIRONMENT == "production":
         # Datadog
         logger.add(
             "/var/log/api/info.json",
-            format=formatter,
+            format=json_formatter,
             rotation="500 MB",
             compression="zip",
         )
@@ -65,8 +84,8 @@ def create_logger() -> logger:
             f"/var/log/api/error.log",
             colorize=True,
             catch=True,
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-            + "<light-green>{level}</light-green>: "
+            format="<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | "
+            + "<fg #5278a3>{level}</fg #5278a3>: "
             + "<light-white>{message}</light-white>",
             rotation="500 MB",
             compression="zip",
@@ -77,9 +96,7 @@ def create_logger() -> logger:
             f"{basedir}/logs/error.log",
             colorize=True,
             catch=True,
-            format="<light-cyan>{time:MM-DD-YYYY HH:mm:ss}</light-cyan> | "
-            + "<light-green>{level}</light-green>: "
-            + "<light-white>{message}</light-white>",
+            format=log_formatter,
             rotation="500 MB",
             compression="zip",
             level="ERROR",
