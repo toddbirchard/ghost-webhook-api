@@ -33,8 +33,10 @@ async def update_post(post_update: PostUpdate):
     :param post_update: Request to update Ghost post.
     :type post_update: PostUpdate
     """
+    LOGGER.info(f"Post update triggered by {post_update.post.current.slug}.")
     previous_update = post_update.post.previous
     if previous_update:
+        LOGGER.info(f"Post {post_update.post.current.slug} is not a `new` post.")
         current_time = get_current_datetime()
         previous_update_date = datetime.strptime(
             previous_update["updated_at"], "%Y-%m-%dT%H:%M:%S.000Z"
