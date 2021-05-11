@@ -53,7 +53,6 @@ async def update_post(post_update: PostUpdate):
     custom_excerpt = post.custom_excerpt
     primary_tag = post.primary_tag
     html = post.html
-    mobiledoc = post.mobiledoc
     time = get_current_time()
     body = {
         "posts": [
@@ -85,7 +84,7 @@ async def update_post(post_update: PostUpdate):
         body["posts"][0].update(
             {"og_image": feature_image, "twitter_image": feature_image}
         )
-    if mobiledoc:
+    if body["posts"][0].get("mobiledoc") is not None:
         mobiledoc = assign_img_alt(body["posts"][0]["mobiledoc"])
         body["posts"][0].update({"mobiledoc": mobiledoc})
     sleep(1)
