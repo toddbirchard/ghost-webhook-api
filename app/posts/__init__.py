@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from time import sleep
 
 from fastapi import APIRouter
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
@@ -41,11 +42,16 @@ async def update_post(post_update: PostUpdate):
         previous_update_date = datetime.strptime(
             previous_update["updated_at"], "%Y-%m-%dT%H:%M:%S.000Z"
         )
+        LOGGER.debug(
+            f"current_time=`{current_time}` previous_update_date=`{previous_update_date}`"
+        )
         if previous_update_date and current_time - previous_update_date < timedelta(
             seconds=5
         ):
             LOGGER.warning("Post update ignored as post was just updated.")
-            return "Post update ignored as post was just updated."
+            raise HTTPException(
+                status_code=422, detail="Post update ignored as post was just updated."
+            )
     post = post_update.post.current
     slug = post.slug
     title = post.title
