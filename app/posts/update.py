@@ -1,6 +1,7 @@
 from typing import List, Optional, Tuple
 
-from clients import ghost
+from clients import gcs, ghost
+from clients.log import LOGGER
 
 
 def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
@@ -63,3 +64,31 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
                 }
             )
     return updated_posts
+
+
+def update_add_lynx_image(body: dict) -> dict:
+    feature_image = gcs.fetch_random_lynx_image()
+    body["posts"][0].update(
+        {
+            "feature_image": feature_image,
+            "og_image": feature_image,
+            "twitter_image": feature_image,
+        }
+    )
+    LOGGER.info(
+        f"Fetched random Lynx image `{feature_image}` for `{body['posts'][0]['slug']}`"
+    )
+    return body
+
+
+def update_html_ssl_links(html: str, body: dict) -> dict:
+    html = html.replace("http://", "https://")
+    body["posts"][0].update({"html": html})
+    LOGGER.info(f"Replaced unsecure links in post `{body['posts'][0]['slug']}`")
+    return body
+
+
+def update_metadata_images(feature_image: str, body: dict) -> dict:
+    body["posts"][0].update({"og_image": feature_image, "twitter_image": feature_image})
+    LOGGER.info(f"Updated metadata images for post `{body['posts'][0]['slug']}`")
+    return body

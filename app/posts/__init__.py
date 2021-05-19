@@ -9,8 +9,13 @@ from fastapi.responses import JSONResponse
 from app.moment import get_current_datetime, get_current_time
 from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from app.posts.metadata import assign_img_alt, batch_assign_img_alt
-from app.posts.update import update_metadata
-from clients import gcs, ghost
+from app.posts.update import (
+    update_add_lynx_image,
+    update_html_ssl_links,
+    update_metadata,
+    update_metadata_images,
+)
+from clients import ghost
 from clients.log import LOGGER
 from config import basedir
 from database import rdbms
@@ -74,22 +79,11 @@ async def update_post(post_update: PostUpdate):
         ]
     }
     if primary_tag.slug == "roundup" and feature_image is None:
-        feature_image = gcs.fetch_random_lynx_image()
-        body["posts"][0].update(
-            {
-                "feature_image": feature_image,
-                "og_image": feature_image,
-                "twitter_image": feature_image,
-            }
-        )
+        body = update_add_lynx_image(body)
     if html and "http://" in html:
-        html = html.replace("http://", "https://")
-        body["posts"][0].update({"html": html})
-        LOGGER.info(f"Replaced unsecure links in post `{slug}`")
+        body = update_html_ssl_links(html, body)
     if feature_image is not None:
-        body["posts"][0].update(
-            {"og_image": feature_image, "twitter_image": feature_image}
-        )
+        body = update_metadata_images(feature_image, body)
     if body["posts"][0].get("mobiledoc") is not None:
         mobiledoc = assign_img_alt(body["posts"][0]["mobiledoc"])
         body["posts"][0].update({"mobiledoc": mobiledoc})
