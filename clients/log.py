@@ -81,15 +81,12 @@ def create_logger() -> logger:
             compression="zip",
         )
         logger.add(
-            f"/var/log/api/error.log",
+            f"/var/log/api/info.log",
             colorize=True,
             catch=True,
-            format="<fg #5278a3>{time:MM-DD-YYYY HH:mm:ss}</fg #5278a3> | "
-            + "<fg #5278a3>{level}</fg #5278a3>: "
-            + "<light-white>{message}</light-white>",
+            format=log_formatter,
             rotation="500 MB",
             compression="zip",
-            level="ERROR",
         )
     else:
         logger.add(
