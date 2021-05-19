@@ -38,8 +38,12 @@ async def optimize_post_image(post_update: PostUpdate):
                 f"Generated {len(new_images)} images for post `{title}`: {new_images}"
             )
             return {post.title: new_images}
-        return PlainTextResponse(content=f"Retina & mobile images already exist for {post.title}.")
-    return PlainTextResponse(content=f"Post `{post.slug}` ignored; no image exists for optimization.")
+        return PlainTextResponse(
+            content=f"Retina & mobile images already exist for {post.title}."
+        )
+    return PlainTextResponse(
+        content=f"Post `{post.slug}` ignored; no image exists for optimization."
+    )
 
 
 @router.get(

@@ -4,6 +4,7 @@ from io import BytesIO
 from random import randint
 from typing import Iterator, List, Optional, Tuple
 
+from fastapi.exceptions import HTTPException
 from google.cloud import storage
 from google.cloud.exceptions import GoogleCloudError
 from google.cloud.storage.blob import Blob
@@ -139,7 +140,7 @@ class GCS:
         for repeat_blob in repeat_blobs:
             self.bucket.delete_blob(repeat_blob)
             images_purged.append(repeat_blob)
-            LOGGER.info(f"Deleted {repeat_blob.name}")
+            LOGGER.info(f"Deleted {repeat_blob}")
 
     @LOGGER.catch
     def organize_retina_images(self, folder: str) -> List:
@@ -259,13 +260,20 @@ class GCS:
         :type image_url: str
         :returns: Optional[str]
         """
-        if image_url is not None:
-            relative_image_path = image_url.replace(self.bucket_url, "")
-            image_blob = storage.Blob(relative_image_path, self.bucket)
-            if image_blob.exists() is False:
-                retina_blob = self._new_image_blob(image_blob, "retina")
-                return f"{self.bucket_http_url}{retina_blob}"
-        return None
+        try:
+            if image_url is not None:
+                relative_image_path = image_url.replace(self.bucket_url, "")
+                image_blob = storage.Blob(relative_image_path, self.bucket)
+                if image_blob.exists() is False:
+                    retina_blob = self._new_image_blob(image_blob, "retina")
+                    return f"{self.bucket_http_url}{retina_blob}"
+            return None
+        except GoogleCloudError as e:
+            LOGGER.error(f"GoogleCloudError occurred when optimizing image: {e}")
+            raise HTTPException(status_code=422, detail=e)
+        except Exception as e:
+            LOGGER.error(f"Unexpected exception occurred when optimizing image: {e}")
+            raise HTTPException(status_code=422, detail=e)
 
     @LOGGER.catch
     def create_mobile_image(self, image_url: Optional[str]) -> Optional[str]:
