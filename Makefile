@@ -1,17 +1,15 @@
-SRCPATH := $(shell pwd)
-PROJECTNAME := $(shell basename $CURDIR)
-ENTRYPOINT := $(PROJECTNAME).ini
+PROJECT_NAME := $(shell basename $CURDIR)
 VIRTUAL_ENVIRONMENT := $(CURDIR)/.venv
 LOCAL_PYTHON := $(VIRTUAL_ENVIRONMENT)/bin/python3
 
 define HELP
-Manage $(PROJECTNAME). Usage:
+Manage $(PROJECT_NAME). Usage:
 
-make run        - Run $(PROJECTNAME).
-make install    - Pull latest build and deploy to production.
-make update     - Update pip dependencies via Python Poetry.
+make run        - Run $(PROJECT_NAME).
+make install    - Pull latest version, install dependencies, and run project.
+make update     - Update pip dependencies via Python's Poetry and output requirements.txt.
 make format     - Format code with Python's `Black` library.
-make lint       - Check code formatting with flake8
+make lint       - Check code formatting with flake8.
 make clean      - Remove cached files and lock files.
 endef
 export HELP
@@ -33,14 +31,14 @@ all help:
 
 .PHONY: run
 run: env
-	service $(PROJECTNAME) start
+	if [[ "$CURDIR" == *"$/var/www"* ]]; then service $(PROJECT_NAME) start; else $(LOCAL_PYTHON) asgi.py; fi
 
 
 .PHONY: install
 install:
 	make clean
 	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
-	. $(VIRTUAL_ENVIRONMENT)/bin/activate
+	. .venv/bin/activate
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt
 
