@@ -18,7 +18,7 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:
     :type timeframe: int
     :returns: Optional[List[dict]]
     """
-    endpoint = f"{settings.ALGOLIA_BASE_URL}/searches"
+    endpoint = "http://analytics.algolia.com/2/searches"
     headers = {
         "x-algolia-application-id": settings.ALGOLIA_APP_ID,
         "x-algolia-api-key": settings.ALGOLIA_API_KEY,
