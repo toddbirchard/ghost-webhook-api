@@ -176,6 +176,7 @@ class BasePost(BaseModel):
     featured: bool = Field(None, example=False)
     status: str = Field(None, example="published")
     visibility: str = Field(None, example="public")
+    email_subject: Optional[str] = Field(None, example="My Newsletter")
     email_recipient_filter: Optional[str] = Field(None, example=None)
     created_at: datetime = Field(None, example="2017-11-17T20:29:13.000Z")
     updated_at: datetime = Field(None, example="2019-10-26T06:52:53.000Z")
@@ -207,6 +208,11 @@ class BasePost(BaseModel):
     twitter_description: Optional[str] = Field(None, example="Technology for badasses")
     meta_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
     meta_description: Optional[str] = Field(None, example="Technology for badasses")
+    canonical_url: Optional[str] = Field(
+        None, example="https://hackersandslackers.com/post"
+    )
+    frontmatter: Optional[str] = Field(None)
+    custom_template: Optional[str] = Field(None, example="custom-authors")
 
 
 class Post(BaseModel):

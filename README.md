@@ -62,7 +62,8 @@ Logistics of adding or removing newsletter subscriptions.
 
 Insight to scenarios where Authors likely need assistance.
 
- * **POST** `/authors/post`: Notify site admin/editor when posts are ready for review, or when another author modifies an admin post.
+ * **POST** `/authors/post/created`: Notify site editor when posts are ready for review
+ * **POST** `/authors/post/updated`: Notify original post author when a peer edits a post.
 
 #### Github
 
