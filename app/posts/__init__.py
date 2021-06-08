@@ -39,10 +39,8 @@ async def update_post(post_update: PostUpdate):
     :param post_update: Request to update Ghost post.
     :type post_update: PostUpdate
     """
-    LOGGER.info(f"Post update triggered by {post_update.post.current.slug}.")
     previous_update = post_update.post.previous
     if previous_update:
-        LOGGER.info(f"Post {post_update.post.current.slug} is not a `new` post.")
         current_time = get_current_datetime()
         previous_update_date = datetime.strptime(
             previous_update["updated_at"], "%Y-%m-%dT%H:%M:%S.000Z"
@@ -157,7 +155,6 @@ async def post_link_previews(post_update: PostUpdate):
                 )
                 LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
                 return result
-        LOGGER.warning(f"Lynx post {slug} already contains previews.")
         return JSONResponse(
             {f"Lynx post {slug} already contains previews."},
             status_code=202,
