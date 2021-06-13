@@ -30,6 +30,7 @@ class Settings(BaseSettings):
         "http://localhost:8080",
         "http://api.hackersandslackers.com",
         "https://api.hackersandslackers.com",
+        "http://zapier.com",
         "https://zapier.com",
         "https://zapier.com/",
         "https://zapier.com/*",
@@ -113,12 +114,13 @@ class Settings(BaseSettings):
     GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
     # Mailgun
-    MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
-    MAILGUN_EMAIL_TEMPLATE: str = getenv("MAILGUN_EMAIL_TEMPLATE")
-    MAILGUN_API_KEY: str = getenv("MAILGUN_API_KEY")
+    MAILGUN_SERVER: str = getenv("MAILGUN_SERVER")
+    MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")
+    MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
     MAILGUN_FROM_SENDER: str = getenv("MAILGUN_FROM_SENDER")
-    MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
+
+    MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
 
     # Mixpanel
     MIXPANEL_API_TOKEN: str = getenv("MIXPANEL_API_TOKEN")

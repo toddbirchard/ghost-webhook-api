@@ -5,10 +5,10 @@ from fastapi import APIRouter, Query
 from fastapi.responses import PlainTextResponse
 
 from clients import gcs
-from clients.log import LOGGER
 from config import basedir, settings
 from database import rdbms
 from database.schemas import PostUpdate
+from log import LOGGER
 
 router = APIRouter(prefix="/images", tags=["images"])
 

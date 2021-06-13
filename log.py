@@ -101,4 +101,5 @@ def create_logger() -> logger:
     return logger
 
 
+# Custom logger
 LOGGER = create_logger()

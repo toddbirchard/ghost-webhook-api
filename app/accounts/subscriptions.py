@@ -2,8 +2,8 @@
 from typing import Dict, List, Optional
 
 from clients import ghost
-from clients.log import LOGGER
 from database.schemas import NetlifyAccount
+from log import LOGGER
 
 
 def new_ghost_subscription(user: NetlifyAccount) -> Optional[Dict[str, List[Dict]]]:

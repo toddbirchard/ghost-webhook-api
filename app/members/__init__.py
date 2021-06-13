@@ -3,8 +3,8 @@ from mixpanel import MixpanelException
 
 from app.members.mixpanel import create_mixpanel_record
 from app.members.newsletter import newsletter_subscribe
-from clients.log import LOGGER
 from database.schemas import Member, Subscriber
+from log import LOGGER
 
 router = APIRouter(prefix="/members", tags=["members"])
 

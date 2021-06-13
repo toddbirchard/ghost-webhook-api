@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple
 
 from clients import gcs, ghost
-from clients.log import LOGGER
+from log import LOGGER
 
 
 def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:

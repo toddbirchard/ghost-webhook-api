@@ -6,7 +6,7 @@ from sqlalchemy import MetaData, Table, create_engine, text
 from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
-from clients.log import LOGGER
+from log import LOGGER
 
 
 class Database:

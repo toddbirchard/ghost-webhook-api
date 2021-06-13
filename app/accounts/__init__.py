@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
-from clients.log import LOGGER
 from database.crud import (
     create_account,
     create_comment,
@@ -24,6 +23,7 @@ from database.schemas import (
     NewDonation,
     UpvoteComment,
 )
+from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
 

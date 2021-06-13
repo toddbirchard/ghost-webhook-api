@@ -3,8 +3,8 @@ from fastapi import APIRouter, Request
 
 from app.moment import get_current_time
 from clients import sms
-from clients.log import LOGGER
 from config import settings
+from log import LOGGER
 
 router = APIRouter(prefix="/github", tags=["github"])
 

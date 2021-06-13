@@ -1,6 +1,6 @@
 import pytest
 
-from clients.log import LOGGER
+from log import LOGGER
 
 
 @pytest.fixture

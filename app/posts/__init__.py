@@ -16,11 +16,11 @@ from app.posts.update import (
     update_metadata_images,
 )
 from clients import ghost
-from clients.log import LOGGER
 from config import basedir
 from database import rdbms
 from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
 from database.schemas import PostBulkUpdate, PostUpdate
+from log import LOGGER
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 

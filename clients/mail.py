@@ -4,7 +4,7 @@ from typing import Optional
 import requests
 from requests import HTTPError, Response
 
-from clients.log import LOGGER
+from log import LOGGER
 
 
 class Mailgun:

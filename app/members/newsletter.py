@@ -1,8 +1,8 @@
 """Welcome newsletter subscribers ."""
 from clients import mailgun
-from clients.log import LOGGER
 from config import settings
 from database.schemas import Member, SubscriptionWelcomeEmail
+from log import LOGGER
 
 
 def newsletter_subscribe(subscriber: Member):
@@ -16,7 +16,7 @@ def newsletter_subscribe(subscriber: Member):
         "from": "todd@hackersandslackers.com",
         "to": subscriber.email,
         "subject": settings.MAILGUN_SUBJECT_LINE,
-        "template": settings.MAILGUN_EMAIL_TEMPLATE,
+        "template": settings.MAILGUN_NEWSLETTER_TEMPLATE,
         "h:X-Mailgun-Variables": {"name": subscriber.name},
         "o:tracking": True,
     }
@@ -28,5 +28,5 @@ def newsletter_subscribe(subscriber: Member):
         from_email=settings.MAILGUN_PERSONAL_EMAIL,
         to_email=subscriber.email,
         subject=settings.MAILGUN_SUBJECT_LINE,
-        template=settings.MAILGUN_EMAIL_TEMPLATE,
+        template=settings.MAILGUN_NEWSLETTER_TEMPLATE,
     )

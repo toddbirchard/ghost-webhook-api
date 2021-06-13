@@ -45,6 +45,7 @@ uvicorn = "*"
 PyGithub = "*"
 ddtrace = "*"
 pyarrow = "^4.0.0"
+jwt = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

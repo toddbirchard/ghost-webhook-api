@@ -3,21 +3,23 @@ import pprint
 from fastapi.testclient import TestClient
 
 from app import api
-from clients.log import LOGGER
 from config import basedir, settings
 from database.schemas import NewsletterSubscriber
+from log import LOGGER
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
 
 
 def test_api_docs():
+    """API docs health check."""
     response = client.get("/")
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "text/html; charset=utf-8"
 
 
 def test_batch_lynx_previews(rdbms):
+    """"""
     sql_file = open(f"{basedir}/database/queries/posts/selects/lynx_bookmarks.sql", "r")
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").fetchall()
@@ -27,10 +29,10 @@ def test_batch_lynx_previews(rdbms):
         assert "Lynx" in post["title"]
         assert "bookmark" not in post["mobiledoc"]
         assert "kg-card" not in post["html"]
-        LOGGER.debug(post["title"])
+    LOGGER.debug(f"Collected {len(posts)} healthy lynx posts.")
 
 
-def test_github_pr(github_pr_owner, github_pr_user, gh):
+def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
     owner_response = client.post("/github/pr", json=github_pr_owner)
     pr = owner_response.json()["pr"]
     repo = pr["trigger"]["repo"]

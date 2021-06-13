@@ -11,7 +11,7 @@ from google.cloud.storage.blob import Blob
 from google.cloud.storage.client import Bucket, Client
 from PIL import Image
 
-from clients.log import LOGGER
+from log import LOGGER
 
 
 class GCS:
@@ -272,7 +272,9 @@ class GCS:
             LOGGER.error(f"GoogleCloudError occurred when creating retina image: {e}")
             raise HTTPException(status_code=422, detail=e)
         except Exception as e:
-            LOGGER.error(f"Unexpected exception occurred when creating retina image: {e}")
+            LOGGER.error(
+                f"Unexpected exception occurred when creating retina image: {e}"
+            )
             raise HTTPException(status_code=422, detail=e)
 
     @LOGGER.catch

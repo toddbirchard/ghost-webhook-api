@@ -5,9 +5,9 @@ import requests
 from requests.exceptions import HTTPError
 
 from app.moment import get_current_date
-from clients.log import LOGGER
 from config import settings
 from database import rdbms
+from log import LOGGER
 
 
 def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:

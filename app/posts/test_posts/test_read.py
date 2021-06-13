@@ -1,7 +1,7 @@
 from sqlalchemy.engine.result import Result
 
-from clients.log import LOGGER
 from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
+from log import LOGGER
 
 
 def test_fetch_sql_files():

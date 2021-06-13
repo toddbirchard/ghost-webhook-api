@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import accounts, analytics, authors, github, images, members, posts
-from clients.log import LOGGER
 from config import settings
 from database.orm import Base, engine
+from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
 

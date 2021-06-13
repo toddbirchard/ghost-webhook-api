@@ -39,9 +39,9 @@ gbq = gbq_class.create_client()
 
 # Mailgun SMTP
 mailgun = Mailgun(
-    settings.MAILGUN_EMAIL_SERVER,
+    settings.MAILGUN_SERVER,
     settings.MAILGUN_FROM_SENDER,
-    settings.MAILGUN_API_KEY,
+    settings.MAILGUN_SENDER_API_KEY,
 )
 
 # Github

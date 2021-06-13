@@ -3,9 +3,9 @@ from typing import Optional
 
 from mixpanel import Mixpanel, MixpanelException
 
-from clients.log import LOGGER
 from config import settings
 from database.schemas import Member
+from log import LOGGER
 
 
 def create_mixpanel_record(user: Member) -> Optional[dict]:

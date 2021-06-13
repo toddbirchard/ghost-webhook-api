@@ -1,6 +1,6 @@
 from app.accounts.comments import parse_comment
 from clients import ghost
-from clients.log import LOGGER
+from log import LOGGER
 
 
 def test_parse_comment(comment_missing_username):

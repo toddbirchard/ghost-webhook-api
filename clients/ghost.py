@@ -6,7 +6,7 @@ import jwt
 import requests
 from requests.exceptions import HTTPError
 
-from clients.log import LOGGER
+from log import LOGGER
 
 
 class Ghost:
@@ -54,7 +54,7 @@ class Ghost:
 
     def get_post(self, post_id: str) -> Optional[dict]:
         """
-        Fetch post by ID.
+        Fetch Ghost post by ID.
 
         :param post_id: ID of post to fetch.
         :type post_id: str

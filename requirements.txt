@@ -9,6 +9,7 @@ cffi==1.14.5; python_version >= "3.6" and python_full_version < "3.0.0" or pytho
 chardet==4.0.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 click==8.0.1; python_version >= "3.6"
 colorama==0.4.4; python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" and platform_system == "Windows" or sys_platform == "win32" and python_version >= "3.6" and python_full_version >= "3.5.0" and platform_system == "Windows"
+cryptography==3.4.7; python_version >= "3.6"
 ddtrace==0.49.3; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 deprecated==1.2.12; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 extruct==0.12.0
@@ -31,6 +32,7 @@ idna==2.10; python_version >= "2.7" and python_full_version < "3.0.0" or python_
 isodate==0.6.0
 jmespath==0.10.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 jstyleson==0.0.2
+jwt==1.2.0; python_version >= "3.6"
 libcst==0.3.19; python_version >= "3.6"
 loguru==0.5.3; python_version >= "3.5"
 lxml==4.6.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
