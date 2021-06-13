@@ -266,13 +266,13 @@ class GCS:
                 image_blob = storage.Blob(relative_image_path, self.bucket)
                 if image_blob.exists() is False:
                     retina_blob = self._new_image_blob(image_blob, "retina")
-                    return f"{self.bucket_http_url}{retina_blob}"
+                    return retina_blob
             return None
         except GoogleCloudError as e:
-            LOGGER.error(f"GoogleCloudError occurred when optimizing image: {e}")
+            LOGGER.error(f"GoogleCloudError occurred when creating retina image: {e}")
             raise HTTPException(status_code=422, detail=e)
         except Exception as e:
-            LOGGER.error(f"Unexpected exception occurred when optimizing image: {e}")
+            LOGGER.error(f"Unexpected exception occurred when creating retina image: {e}")
             raise HTTPException(status_code=422, detail=e)
 
     @LOGGER.catch
@@ -304,7 +304,7 @@ class GCS:
         if image_type == "standard":
             new_image_name = f"{image_folder.replace('/_retina', '/').replace('/_mobile', '/')}{image_name.replace('@2x', '')}"
             self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
-            LOGGER.info(f"Created standard image `{new_image_name}`")
+            LOGGER.success(f"Created standard image `{new_image_name}`")
             return new_image_name
         elif image_type == "retina" and "/_retina" not in image_folder:
             new_image_name = (
@@ -313,7 +313,7 @@ class GCS:
             new_image_blob = self.bucket.blob(new_image_name)
             if new_image_blob.exists() is False:
                 self.bucket.copy_blob(image_blob, self.bucket, new_image_name)
-                LOGGER.info(f"Created retina image `{new_image_name}`")
+                LOGGER.success(f"Created retina image `{new_image_name}`")
                 return new_image_name
         elif image_type == "mobile" and "@2x" in image_name:
             new_image_name = (
