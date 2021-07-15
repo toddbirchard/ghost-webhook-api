@@ -77,11 +77,11 @@ async def update_post(post_update: PostUpdate):
         ]
     }
     if primary_tag.slug == "roundup" and feature_image is None:
-        body = update_add_lynx_image(body)
+        body = update_add_lynx_image(body, slug)
     if html and "http://" in html:
-        body = update_html_ssl_links(html, body)
+        body = update_html_ssl_links(html, body, slug)
     if feature_image is not None:
-        body = update_metadata_images(feature_image, body)
+        body = update_metadata_images(feature_image, body, slug)
     if body["posts"][0].get("mobiledoc") is not None:
         mobiledoc = assign_img_alt(body["posts"][0]["mobiledoc"])
         body["posts"][0].update({"mobiledoc": mobiledoc})
@@ -96,7 +96,7 @@ async def update_post(post_update: PostUpdate):
 @router.get(
     "/",
     summary="Sanitize metadata for all posts.",
-    description="Run a sequence of analytics to ensure all posts have proper metadata.",
+    description="REnsure all posts have properly optimized metadata.",
     response_model=PostBulkUpdate,
 )
 async def batch_update_metadata():

@@ -6,8 +6,8 @@ define HELP
 Manage $(PROJECT_NAME). Usage:
 
 make run        - Run $(PROJECT_NAME).
-make install    - Pull latest version, install dependencies, and run project.
-make update     - Update pip dependencies via Python's Poetry and output requirements.txt.
+make install    - Create virtual env, install dependencies, and run project.
+make update     - Update pip dependencies via Poetry and output requirements.txt.
 make format     - Format code with Python's `Black` library.
 make lint       - Check code formatting with flake8.
 make clean      - Remove cached files and lock files.

@@ -1,5 +1,6 @@
 """Custom logger."""
 from sys import stdout
+from os import path
 
 import simplejson as json
 from loguru import logger
@@ -15,10 +16,10 @@ DD_APM_FORMAT = (
 )
 
 
-def json_formatter(record):
+def json_formatter(record: dict):
     """Pass raw log to be serialized."""
 
-    def serialize(log):
+    def serialize(log: dict):
         """Parse log message into Datadog JSON format."""
         subset = {
             "time": log["time"].strftime("%m/%d/%Y, %H:%M:%S"),
@@ -65,21 +66,22 @@ def create_logger() -> logger:
         catch=True,
         format=log_formatter,
     )
-    # Readable logs
-    if settings.ENVIRONMENT == "production":
-        # Datadog
+    if settings.ENVIRONMENT == "production" and path.isdir("/var/log/api"):
+        # Datadog JSON logs
         logger.add(
             "/var/log/api/info.json",
             format=json_formatter,
             rotation="500 MB",
             compression="zip",
         )
+        # Datadog APM tracing
         logger.add(
             "/var/log/api/apm.log",
             format=DD_APM_FORMAT,
             rotation="500 MB",
             compression="zip",
         )
+        # Readable logs
         logger.add(
             f"/var/log/api/info.log",
             colorize=True,

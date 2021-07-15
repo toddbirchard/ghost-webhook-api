@@ -66,12 +66,14 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
     return updated_posts
 
 
-def update_add_lynx_image(body: dict) -> dict:
+def update_add_lynx_image(body: dict, slug: str) -> dict:
     """
     Assign random Lynx feature image to Lynx post.
 
     :param body: JSON body representing Ghost post.
     :type body: dict
+    :param slug: Unique post identifier for logging purposes.
+    :type slug: str
     :returns: dict
     """
     feature_image = gcs.fetch_random_lynx_image()
@@ -83,12 +85,12 @@ def update_add_lynx_image(body: dict) -> dict:
         }
     )
     LOGGER.info(
-        f"Fetched random Lynx image `{feature_image}` for `{body['posts'][0]['slug']}`"
+        f"Fetched random Lynx image `{feature_image}` for `{slug}`"
     )
     return body
 
 
-def update_html_ssl_links(html: str, body: dict) -> dict:
+def update_html_ssl_links(html: str, body: dict, slug: str) -> dict:
     """
     Replace hyperlinks in post with SSL equivalents
 
@@ -96,15 +98,17 @@ def update_html_ssl_links(html: str, body: dict) -> dict:
     :type html: str
     :param body: JSON body representing Ghost post.
     :type body: dict
+    :param slug: Unique post identifier for logging purposes.
+    :type slug: str
     :returns: dict
     """
     html = html.replace("http://", "https://")
     body["posts"][0].update({"html": html})
-    LOGGER.info(f"Replaced unsecure links in post `{body['posts'][0]['slug']}`")
+    LOGGER.info(f"Replaced unsecure links in post `{slug}`")
     return body
 
 
-def update_metadata_images(feature_image: str, body: dict) -> dict:
+def update_metadata_images(feature_image: str, body: dict, slug: str) -> dict:
     """
     Update OG and Twitter images to match feature image.
 
@@ -112,8 +116,10 @@ def update_metadata_images(feature_image: str, body: dict) -> dict:
     :type feature_image: str
     :param body: JSON body representing Ghost post.
     :type body: dict
+    :param slug: Unique post identifier for logging purposes.
+    :type slug: str
     :returns: dict
     """
     body["posts"][0].update({"og_image": feature_image, "twitter_image": feature_image})
-    LOGGER.info(f"Updated metadata images for post `{body['posts'][0]['slug']}`")
+    LOGGER.info(f"Updated metadata images for post `{slug}`")
     return body
