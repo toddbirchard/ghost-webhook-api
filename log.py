@@ -1,6 +1,6 @@
 """Custom logger."""
-from sys import stdout
 from os import path
+from sys import stdout
 
 import simplejson as json
 from loguru import logger

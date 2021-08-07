@@ -20,7 +20,7 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
         "posts": [
             {
                 "mobiledoc": mobiledoc,
-                "updated_at": ghost_post["updated_at"],
+                "updated_at": ghost_post.updated_at,
             }
         ]
     }
@@ -84,9 +84,7 @@ def update_add_lynx_image(body: dict, slug: str) -> dict:
             "twitter_image": feature_image,
         }
     )
-    LOGGER.info(
-        f"Fetched random Lynx image `{feature_image}` for `{slug}`"
-    )
+    LOGGER.info(f"Fetched random Lynx image `{feature_image}` for `{slug}`")
     return body
 
 

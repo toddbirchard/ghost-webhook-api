@@ -3,9 +3,8 @@ import datetime
 from os import getenv, path
 
 from dotenv import load_dotenv
-from pydantic import BaseSettings
-
 from google.oauth2 import service_account
+from pydantic import BaseSettings
 
 # Load variables from .env
 basedir = path.abspath(path.dirname(__file__))

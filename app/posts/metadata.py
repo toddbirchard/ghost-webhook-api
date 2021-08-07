@@ -31,7 +31,7 @@ def batch_assign_img_alt():
     for post in posts:
         mobiledoc = json.loads(post["mobiledoc"])
         mobiledoc = assign_img_alt(mobiledoc)
-        post_update = update_mobiledoc(post, mobiledoc)
+        post_update = update_mobiledoc(post["id"], mobiledoc)
         if post_update:
             updated_posts.append(
                 {

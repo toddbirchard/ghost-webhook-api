@@ -8,7 +8,7 @@ from requests.exceptions import HTTPError, SSLError
 from sqlalchemy.engine.result import Result
 
 from app.posts.lynx.mobiledoc import mobile_doc
-from app.posts.lynx.scrape import scrape_link
+from app.posts.lynx.scrape import scrape_metadata_from_url
 from app.posts.update import update_mobiledoc
 from log import LOGGER
 
@@ -21,7 +21,9 @@ def generate_link_previews(post: dict) -> Tuple[List, str]:
     urls = re.findall('<a href="(.*?)"', html)
     links = remove_404s(urls)
     if links is not None:
-        link_previews = [scrape_link(link) for link in links if link is not None]
+        link_previews = [
+            scrape_metadata_from_url(link) for link in links if link is not None
+        ]
         link_previews = [link for link in link_previews if link is not None]
         new_mobiledoc["cards"] = link_previews
         for i, link in enumerate(link_previews):
@@ -48,13 +50,10 @@ def remove_404s(links: List[str]) -> List[str]:
                 valid_links.append(link)
         except SSLError as e:
             LOGGER.error(e)
-            pass
         except HTTPError as e:
             LOGGER.error(e)
-            pass
         except Exception as e:
             LOGGER.error(e)
-            pass
     return valid_links
 
 
@@ -65,7 +64,7 @@ def batch_lynx_embeds(posts: Result) -> dict:
     for post in posts:
         post_title = post["title"]
         links, mobiledoc = generate_link_previews(post)
-        update_mobiledoc(post, mobiledoc)
+        update_mobiledoc(post["id"], mobiledoc)
         total_embeds += len(links)
         updated_posts.append(
             {post["id"]: {"title": post_title, "count": len(links), "links": links}}
@@ -75,7 +74,7 @@ def batch_lynx_embeds(posts: Result) -> dict:
         )
     return {
         "summary": {
-            "posts_updated": posts.rowcount(),
+            "posts_updated": posts.all(),
             "links_updated": total_embeds,
             "posts": updated_posts,
         }

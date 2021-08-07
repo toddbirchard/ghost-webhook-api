@@ -44,6 +44,14 @@ class Ghost:
     @property
     def session_token(self) -> str:
         """Generate session token for Ghost admin API."""
+        # Split the key into ID and SECRET
+        id, secret = key.split(":")
+
+        # Prepare header and payload
+        iat = int(date.now().timestamp())
+
+        header = {"alg": "HS256", "typ": "JWT", "kid": id}
+        payload = {"iat": iat, "exp": iat + 5 * 60, "aud": "/v3/admin/"}
         iat = int(date.now().timestamp())
         header = {"alg": "HS256", "typ": "JWT", "kid": self.client_id}
         payload = {"iat": iat, "exp": iat + 5 * 60, "aud": "/v3/admin/"}

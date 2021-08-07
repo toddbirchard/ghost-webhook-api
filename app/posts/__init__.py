@@ -4,6 +4,7 @@ from time import sleep
 
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
+from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
@@ -116,7 +117,7 @@ async def batch_update_metadata():
     }
 
 
-@router.get(
+"""@router.get(
     "/embed",
     summary="Batch create Lynx embeds.",
     description="Fetch raw Lynx post and generate embedded link previews.",
@@ -124,7 +125,7 @@ async def batch_update_metadata():
 async def batch_lynx_previews():
     posts = fetch_raw_lynx_posts()
     result = batch_lynx_embeds(posts)
-    return result
+    return result"""
 
 
 @router.post(
@@ -146,15 +147,62 @@ async def post_link_previews(post_update: PostUpdate):
     previous = post_update.post.previous
     primary_tag = post.primary_tag
     if primary_tag.slug == "roundup":
+        if html is not None and "kg-card" not in html and previous.get("slug") is None:
+            num_embeds, doc = generate_link_previews(post.__dict__)
+            result = rdbms.execute_query(
+                f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
+                "hackers_prod",
+            )
+            LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
+            return result
+        return JSONResponse(
+            {f"Lynx post {slug} already contains previews."},
+            status_code=202,
+            headers={"content-type": "text/plain"},
+        )
+
+
+@router.get(
+    "/embed",
+    summary="Embed Lynx links.",
+    description="Generate embedded link previews for a single Lynx post.",
+)
+async def test_post_link_previews(post_id: str):
+    """
+    Render anchor tag link previews.
+
+    :param post_id: Request to update Ghost post.
+    :type post_id: PostUpdate
+    """
+    if post_id is None:
+        raise HTTPException(
+            status_code=422, detail="Post ID required to test endpoint."
+        )
+    post = ghost.get_post(post_id)
+    slug = post.slug
+    html = post.html
+    primary_tag = post.primary_tag
+    if primary_tag.slug == "roundup":
         if html is not None and "kg-card" not in html:
-            if previous.get("slug", None) is None:
-                num_embeds, doc = generate_link_previews(post.__dict__)
-                result = rdbms.execute_query(
-                    f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
-                    "hackers_prod",
-                )
-                LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
-                return result
+            num_embeds, doc = generate_link_previews(post.__dict__)
+            body = {
+                "posts": [
+                    {
+                        "meta_title": title,
+                        "og_title": title,
+                        "twitter_title": title,
+                        "meta_description": custom_excerpt,
+                        "twitter_description": custom_excerpt,
+                        "og_description": custom_excerpt,
+                        "updated_at": time,
+                    }
+                ]
+            }
+            ghost.update_post(
+                post_id,
+            )
+            LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
+            return result
         return JSONResponse(
             {f"Lynx post {slug} already contains previews."},
             status_code=202,
