@@ -10,10 +10,9 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
     """
     Parse incoming user comment.
 
-    :param comment: User-submitted comment.
-    :type comment: Comment
-    :param post: Post on which comment was published.
-    :type post: dict
+    :param Comment comment: User-submitted comment.
+    :param dict post: Post on which comment was published.
+
     :returns: dict
     """
     username = comment.user_name
@@ -40,10 +39,9 @@ def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
     """
     Determine if a commenter is a post author, site moderator, or regular user.
 
-    :param comment: User-submitted comment.
-    :type comment: Comment
-    :param post: Post on which comment was published.
-    :type post: dict
+    :param Comment comment: User-submitted comment.
+    :param dict post: Post on which comment was published.
+
     :returns: Optional[str]
     """
     authors = ghost.get_authors()

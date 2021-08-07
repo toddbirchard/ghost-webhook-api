@@ -14,11 +14,10 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:
     """
     Fetch single week of searches from Algolia API.
 
-    :param timeframe: Number of days for which to fetch recent search analytics.
-    :type timeframe: int
+    :param int timeframe: Number of days for which to fetch recent search analytics.
+
     :returns: Optional[List[dict]]
     """
-    endpoint = "http://analytics.algolia.com/2/searches"
     headers = {
         "x-algolia-application-id": settings.ALGOLIA_APP_ID,
         "x-algolia-api-key": settings.ALGOLIA_API_KEY,
@@ -29,7 +28,9 @@ def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:
         "startDate": get_current_date(timeframe),
     }
     try:
-        req = requests.get(endpoint, headers=headers, params=params)
+        req = requests.get(
+            settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params
+        )
         search_queries = req.json()["searches"]
         return filter_search_queries(search_queries)
     except HTTPError as e:
@@ -46,8 +47,8 @@ def filter_search_queries(
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
-    :param search_queries: JSON of search queries submitted by users.
-    :type search_queries: List[Optional[Dict[str, Any]]]
+    :param List[Optional[Dict[str, Any]]] search_queries: JSON of search queries submitted by users.
+
     :returns: List[Optional[Dict[str, Any]]]
     """
     search_queries = [query for query in search_queries if len(query["search"]) > 3]
@@ -58,10 +59,9 @@ def import_algolia_search_queries(records: List[dict], table_name: str) -> str:
     """
     Save history of search queries executed on the site.
 
-    :param records: JSON of search queries submitted by users.
-    :type records: List[dict]
-    :param table_name: Name of SQL table to save data to.
-    :type table_name: str
+    :param List[dict] records: JSON of search queries submitted by users.
+    :param str table_name: Name of SQL table to save data to.
+
     :returns: str
     """
     rows = rdbms.insert_records(

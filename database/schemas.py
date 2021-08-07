@@ -355,6 +355,7 @@ class PostUpdate(BaseModel):
 class NetlifyUserMetadata(BaseModel):
     avatar_url: Optional[str] = Field(None, example="https://example.com/dsfdsf.jpg")
     full_name: str = Field(None, example="Fake Name")
+    roles: Optional[List[str]] = Field(None, example=["admin"])
 
 
 class NetlifyUserAppMetadata(BaseModel):
@@ -364,7 +365,6 @@ class NetlifyUserAppMetadata(BaseModel):
 class NetlifyAccount(BaseModel):
     id: str = Field(None, example="4e7c4f1b-e51a-4abb-8a58-105483724713")
     aud: Optional[str] = Field(None, example=None)
-    role: Optional[str] = Field(None, example=None)
     email: str = Field(None, example="fake@example.com")
     app_metadata: NetlifyUserAppMetadata
     user_metadata: NetlifyUserMetadata

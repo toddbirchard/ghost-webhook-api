@@ -40,10 +40,9 @@ async def new_account(
     """
     Create user account from Netlify identity signup.
 
-    :param new_account_event: Newly created user account from Netlify.
-    :type new_account_event: NetlifyUserEvent
-    :param db: ORM Database session.
-    :type db: Session
+    :param NetlifyUserEvent new_account_event: Newly created user account from Netlify.
+    :param Session db: ORM Database session.
+
     :returns: NetlifyAccountCreationResponse
     """
     account = new_account_event.user
@@ -55,10 +54,10 @@ async def new_account(
             detail=f"User account already exists for `{account.email}`.",
         )
     create_account(db, account)
-    db_account = get_account(db, account.email)
-    if db_account:
+    db_account_created = get_account(db, account.email)
+    if db_account_created:
         return NetlifyAccountCreationResponse(
-            succeeded=db_account,
+            succeeded=db_account_created,
             failed=None,
         )
     return NetlifyAccountCreationResponse(
@@ -77,10 +76,8 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
     Save user comment to database and notify post author.
 
-    :param comment: User-submitted comment.
-    :type comment: NewComment
-    :param db: ORM Database session.
-    :type db: Session
+    :param NewComment comment: User-submitted comment.
+    :param Session db: ORM Database session.
     """
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
@@ -100,6 +97,12 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     response_model=UpvoteComment,
 )
 async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(get_db)):
+    """
+    Cast a user upvote for another user's comment.
+
+    :param UpvoteComment upvote_request: User-generated request to upvote a comment.
+    :param Session db: ORM Database session.
+    """
     existing_vote = get_comment_upvote(
         db, upvote_request.user_id, upvote_request.comment_id
     )
@@ -137,10 +140,8 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
     """
     Save BuyMeACoffee donation to database.
 
-    :param donation: New donation.
-    :type donation: NewDonation
-    :param db: ORM Database session.
-    :type db: Session
+    :param NewDonation donation: New donation.
+    :param Session db: ORM Database session.
     """
     db_donation = get_donation(db, donation.coffee_id)
     if db_donation:
