@@ -19,14 +19,12 @@ async def new_ghost_member(subscriber: Subscriber):
     """
     Welcome new Ghost subscriber & add analytics.
 
-    :param subscriber: New subscriber to Hackers newsletter.
-    :type subscriber: Subscriber
+    :param Subscriber subscriber: New subscriber to Hackers newsletter.
     """
     try:
         subscriber = subscriber.current
         email = newsletter_subscribe(subscriber)
-        mx = create_mixpanel_record(subscriber)
-        return JSONResponse({"email": email, "mixpanel": mx})
+        return JSONResponse({"email": email})
     except MixpanelException as e:
         LOGGER.error(f"Error creating user in Mixpanel: {e}")
         raise HTTPException(
@@ -49,8 +47,8 @@ async def member_unsubscribe(subscriber: Subscriber):
     """
     Track user unsubscribe events and spam complaints.
 
-    :param subscriber: Current Ghost newsletter subscriber.
-    :type subscriber: Subscriber
+    :param Subscriber subscriber: Current Ghost newsletter subscriber.
+
     :return: Subscriber
     """
     subscriber = subscriber.previous
