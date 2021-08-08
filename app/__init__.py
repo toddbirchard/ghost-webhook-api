@@ -1,4 +1,4 @@
-"""Initialize api."""
+"""Initialize API."""
 from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,8 +10,8 @@ from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
 
-
-patch(fastapi=True)
+if settings.ENVIRONMENT == "production":
+    patch(fastapi=True)
 
 
 api = FastAPI(
@@ -31,13 +31,6 @@ api.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-"""api.add_middleware(
-    TraceMiddleware,
-    service="API",
-    tags={"env": settings.ENVIRONMENT},
-    distributed_tracing=True
-)"""
 
 api.include_router(analytics.router)
 api.include_router(members.router)

@@ -4,7 +4,6 @@ from time import sleep
 
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
-from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
@@ -20,7 +19,7 @@ from clients import ghost
 from config import basedir
 from database import rdbms
 from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
-from database.schemas import PostBulkUpdate, PostUpdate
+from database.schemas import FetchedPost, PostBulkUpdate, PostUpdate
 from log import LOGGER
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -181,6 +180,7 @@ async def test_post_link_previews(post_id: str):
     post = ghost.get_post(post_id)
     slug = post.slug
     html = post.html
+    time = get_current_time()
     primary_tag = post.primary_tag
     if primary_tag.slug == "roundup":
         if html is not None and "kg-card" not in html:
@@ -188,19 +188,17 @@ async def test_post_link_previews(post_id: str):
             body = {
                 "posts": [
                     {
-                        "meta_title": title,
-                        "og_title": title,
-                        "twitter_title": title,
-                        "meta_description": custom_excerpt,
-                        "twitter_description": custom_excerpt,
-                        "og_description": custom_excerpt,
+                        "meta_title": post.title,
+                        "og_title": post.title,
+                        "twitter_title": post.title,
+                        "meta_description": post.custom_excerpt,
+                        "twitter_description": post.custom_excerpt,
+                        "og_description": post.custom_excerpt,
                         "updated_at": time,
                     }
                 ]
             }
-            ghost.update_post(
-                post_id,
-            )
+            result = ghost.update_post(post_id, body, slug)
             LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
             return result
         return JSONResponse(
@@ -225,3 +223,20 @@ async def backup_database():
     """Export JSON backup of database."""
     json = ghost.get_json_backup()
     return json
+
+
+@router.get(
+    "/post",
+    summary="Get a post.",
+)
+async def get_single_post(post_id: str):
+    """
+    Request to get Ghost post.
+
+    :param str post_id: Post to fetch
+    """
+    if post_id is None:
+        raise HTTPException(
+            status_code=422, detail="Post ID required to test endpoint."
+        )
+    return ghost.get_post(post_id)

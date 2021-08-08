@@ -106,6 +106,10 @@ class Author(BaseModel):
         ],
     )
     url: Optional[str] = Field(None, example="fake@example.com")
+    accessibility: str = Field(
+        None,
+        example='{"nightShift":true,"views":[{"name":"WIP","route":"posts","color":"green","filter":{"type":"draft","author":"todd"}},{"name":"Series: Lynx Roundup","route":"posts","color":"pink","filter":{"tag":"roundup"}},{"name":"Series: Building Flask Apps","route":"posts","color":"blue","filter":{"tag":"building-flask-apps","author":"todd"}},{"name":"Series: Pandas","route":"posts","color":"purple","filter":{"tag":"data-analysis-pandas"}},{"name":"Series: Code Snippet Corner","route":"posts","color":"teal","filter":{"tag":"code-snippet-corner"}},{"name":"Todds Posts","route":"posts","color":"midgrey","filter":{"author":"todd"}}],"navigation":{"expanded":{"posts":false}},"whatsNew":{"lastSeenDate":"2021-04-05T16:01:11.000+00:00"}}',
+    )
 
 
 class Tag(BaseModel):
@@ -157,15 +161,11 @@ class Tag(BaseModel):
 class BasePost(BaseModel):
     id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
     uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
-    title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
+    title: str = Field(None, example="Welcome to Hackers and Slackers")
     slug: str = Field(None, example="welcome-to-hackers-and-slackers")
-    mobiledoc: Optional[str] = Field(
+    mobiledoc: str = Field(
         None,
         example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}',
-    )
-    html: Optional[str] = Field(
-        None,
-        example='<p>Welcome to the Hackers and Slackers blog, the official counterpart to <a href="http://hackersandslackers.com">hackersandslackers.com</a>.</p><p>H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it.</p><p>While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that.</p><p>If you\'re somebody who likes to learn and be casually badass, maybe you should join us.</p>',
     )
     comment_id: str = Field(None, example="5a0f4699e38d612cc8261306")
     plaintext: Optional[str] = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
@@ -213,11 +213,16 @@ class BasePost(BaseModel):
     )
     frontmatter: Optional[str] = Field(None)
     custom_template: Optional[str] = Field(None, example="custom-authors")
+    type: str = Field(None, example="Post")
 
 
 class Post(BaseModel):
     current: BasePost
-    previous: Optional[Dict[str, Any]]
+    previous: Optional[BasePost]
+
+
+class FetchedPost(BaseModel):
+    posts: List[BasePost]
 
 
 class PostUpdate(BaseModel):
