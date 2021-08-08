@@ -21,12 +21,12 @@ class Ghost:
         netlify_build_url: str,
     ):
         """
-        Ghost admin API client constructor.
+        Ghost Admin API client constructor.
 
-        :param client_id: Self-supplied client ID
-        :param client_secret: Self-supplied client secret
-        :param admin_api_url: Ghost's admin API base URL
-        :param netlify_build_url: Netlify webhook to trigger full site rebuild.
+        :param str client_id: Self-supplied client ID
+        :param str client_secret: Self-supplied client secret
+        :param str admin_api_url: Ghost's admin API base URL
+        :param str netlify_build_url: Netlify webhook to trigger full site rebuild.
         """
         self.client_id = client_id
         self.content_api_url = content_api_url
@@ -44,14 +44,6 @@ class Ghost:
     @property
     def session_token(self) -> str:
         """Generate session token for Ghost admin API."""
-        # Split the key into ID and SECRET
-        id, secret = key.split(":")
-
-        # Prepare header and payload
-        iat = int(date.now().timestamp())
-
-        header = {"alg": "HS256", "typ": "JWT", "kid": id}
-        payload = {"iat": iat, "exp": iat + 5 * 60, "aud": "/v3/admin/"}
         iat = int(date.now().timestamp())
         header = {"alg": "HS256", "typ": "JWT", "kid": self.client_id}
         payload = {"iat": iat, "exp": iat + 5 * 60, "aud": "/v3/admin/"}
@@ -64,8 +56,8 @@ class Ghost:
         """
         Fetch Ghost post by ID.
 
-        :param post_id: ID of post to fetch.
-        :type post_id: str
+        :param str post_id: ID of post to fetch.
+
         :returns: Optional[dict]
         """
         try:
@@ -101,12 +93,10 @@ class Ghost:
         """
         Update post by ID.
 
-        :param post_id: Ghost post ID
-        :type post_id: str
-        :param body: Payload containing post updates.
-        :type body: dict
-        :param slug: Human-readable post identifier.
-        :type slug: str
+        :param str post_id: Ghost post ID
+        :param dict body: Payload containing post updates.
+        :param str slug: Human-readable unique identifier.
+
         :returns: Tuple[str, int]
         """
         try:
@@ -151,10 +141,10 @@ class Ghost:
 
     def create_member(self, body: dict) -> Tuple[str, int]:
         """
-        Create new Ghost member.
+        Create new Ghost member account used to receive newsletters.
 
-        :param body: Create new Ghost member account used to receive newsletters.
-        :type body: dict
+        :param dict body: Payload containing member information.
+
         :returns: Optional[List[str]]
         """
         try:
