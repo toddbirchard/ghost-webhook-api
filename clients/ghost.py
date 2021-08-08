@@ -2,7 +2,7 @@
 from datetime import datetime as date
 from typing import List, Optional, Tuple
 
-import jwt
+from jwt import encode
 import requests
 from requests.exceptions import HTTPError
 
@@ -47,7 +47,7 @@ class Ghost:
         iat = int(date.now().timestamp())
         header = {"alg": "HS256", "typ": "JWT", "kid": self.client_id}
         payload = {"iat": iat, "exp": iat + 5 * 60, "aud": "/v3/admin/"}
-        token = jwt.encode(
+        token = encode(
             payload, bytes.fromhex(self.secret), algorithm="HS256", headers=header
         )
         return f"Ghost {token.decode()}"
