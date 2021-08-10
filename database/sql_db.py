@@ -24,10 +24,9 @@ class Database:
 
     def _table(self, table_name: str, database_name: str) -> Table:
         """
-        :param table_name: Name of database table to fetch
-        :type table_name: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str table_name: Name of database table to fetch
+        :param str database_name: Name of database to connect to.
+
         :returns: Table
         """
         return Table(
@@ -38,10 +37,9 @@ class Database:
     def execute_queries(self, queries: dict, database_name: str) -> Tuple[dict, int]:
         """Execute collection of SQL analytics.
 
-        :param queries: Map of query names -> SQL analytics.
-        :type queries: dict
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param dict queries: Map of query names -> SQL analytics.
+        :param str database_name: Name of database to connect to.
+
         :returns: Tuple[dict, int]
         """
         results = {}
@@ -57,10 +55,9 @@ class Database:
         """
         Execute single SQL query.
 
-        :param query: SQL query to run against database.
-        :type query: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str query: SQL query to run against database.
+        :param str database_name: Name of database to connect to.
+
         :returns: Optional[Result]
         """
         try:
@@ -76,10 +73,9 @@ class Database:
         """
         Execute single SQL query.
 
-        :param sql_file: Filepath of SQL query to run.
-        :type sql_file: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str sql_file: Filepath of SQL query to run.
+        :param str database_name: Name of database to connect to.
+
         :returns: Optional[Result]
         """
         try:
@@ -93,10 +89,9 @@ class Database:
         """
         Fetch all rows via query.
 
-        :param query: SQL query to run against database.
-        :type query: str
+        :param str query: SQL query to run against database.
         :param database_name: Name of database to connect to.
-        :type database_name: str
+
         :returns: Optional[List[str]]
         """
         rows = self.engines[database_name].execute(query).fetchall()
@@ -110,10 +105,9 @@ class Database:
         Fetch a single row; typically used to verify whether a
         record already exists (ie: users).
 
-        :param query: SQL query to run against database.
-        :type query: str
-        :param database_name: Name of database to connect to.
-        :type database_name: Optional[str]
+        :param str query: SQL query to run against database.
+        :param str database_name: Name of database to connect to.
+
         :returns: Optional[str]
         """
         return self.engines[database_name].execute(query).first()
@@ -124,14 +118,11 @@ class Database:
         """
         Insert rows into SQL table.
 
-        :param rows: List of dictionaries to insert where keys are columns.
-        :type rows: List[dict]
-        :param table_name: Name of database table to fetch.
-        :type table_name: str
-        :param database_name: Name of database to connect to.
-        :type database_name: Optional[str]
-        :param replace: Flag to truncate table prior to insert.
-        :type replace: bool
+        :param List[dict] rows: List of dictionaries to insert where keys are columns.
+        :param str table_name: Name of database table to fetch.
+        :param str database_name: Name of database to connect to.
+        :param bool replace: Flag to truncate table prior to insert.
+
         :returns: Optional[int]
         """
         try:
@@ -153,14 +144,11 @@ class Database:
         """
         Insert Pandas DataFrame into SQL table.
 
-        :param df: Tabular data to insert into SQL table.
-        :type df: DataFrame
-        :param table_name: Name of database table to insert into.
-        :type table_name: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
-        :param action: Method of dealing with duplicate rows.
-        :type action: str
+        :param DataFrame df: Tabular data to insert into SQL table.
+        :param str table_name: Name of database table to insert into.
+        :param str database_name: Name of database to connect to.
+        :param dtr action: Method of dealing with duplicate rows.
+
         :returns: DataFrame
         """
         df.to_sql(table_name, self.engines[database_name], if_exists=action)

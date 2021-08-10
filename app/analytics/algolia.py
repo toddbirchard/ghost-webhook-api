@@ -1,8 +1,7 @@
 """Helper functions to fetch search query activity from Algolia."""
 from typing import Any, Dict, List, Optional
 
-import requests
-from requests.exceptions import HTTPError
+from aiohttp import ClientError, ClientSession
 
 from app.moment import get_current_date
 from config import settings
@@ -10,30 +9,29 @@ from database import rdbms
 from log import LOGGER
 
 
-def fetch_algolia_searches(timeframe: int = 7) -> Optional[List[dict]]:
+async def fetch_algolia_searches(
+    session: ClientSession, timeframe: int = 7
+) -> Optional[List[dict]]:
     """
     Fetch single week of searches from Algolia API.
 
+    :param ClientSession session: Async HTTP request session.
     :param int timeframe: Number of days for which to fetch recent search analytics.
 
     :returns: Optional[List[dict]]
     """
-    headers = {
-        "x-algolia-application-id": settings.ALGOLIA_APP_ID,
-        "x-algolia-api-key": settings.ALGOLIA_API_KEY,
-    }
     params = {
         "index": "hackers_posts",
         "limit": 999999,
         "startDate": get_current_date(timeframe),
     }
     try:
-        req = requests.get(
-            settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params
-        )
-        search_queries = req.json()["searches"]
-        return filter_search_queries(search_queries)
-    except HTTPError as e:
+        async with session.get(
+            settings.ALGOLIA_SEARCHES_ENDPOINT, params=params
+        ) as resp:
+            data = await resp.json()
+            return filter_search_queries(data["searches"])
+    except ClientError as e:
         LOGGER.error(f"HTTPError while fetching Algolia searches: {e}")
     except KeyError as e:
         LOGGER.error(f"KeyError while fetching Algolia searches: {e}")
@@ -55,7 +53,7 @@ def filter_search_queries(
     return search_queries
 
 
-def import_algolia_search_queries(records: List[dict], table_name: str) -> str:
+async def import_algolia_search_queries(records: List[dict], table_name: str) -> str:
     """
     Save history of search queries executed on the site.
 
@@ -71,4 +69,4 @@ def import_algolia_search_queries(records: List[dict], table_name: str) -> str:
         replace=True,
     )
     LOGGER.success(f"Inserted {rows} rows into `{table_name}` table.")
-    return rows
+    return await rows
