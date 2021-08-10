@@ -66,18 +66,18 @@ async def save_user_search_queries():
                 monthly_searches, "algolia_searches_historical"
             )
             LOGGER.success(
-                f"Inserted {len(weekly_searches)} rows into `algolia_searches_week`, \
-                    {len(monthly_searches)} into `algolia_searches_historical."
+                f"Inserted {weekly_searches} rows into `algolia_searches_week`, \
+                    {monthly_searches} into `algolia_searches_historical."
             )
         else:
             raise HTTPException(500, "Unexpected error when saving search query data.")
     return {
         "weekly_queries": {
-            "count": len(weekly_searches),
+            "count": weekly_searches,
             "rows": weekly_searches,
         },
         "monthly_queries": {
-            "count": len(monthly_searches),
+            "count": monthly_searches,
             "rows": monthly_searches,
         },
     }

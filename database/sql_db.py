@@ -112,7 +112,7 @@ class Database:
         """
         return self.engines[database_name].execute(query).first()
 
-    def insert_records(
+    async def insert_records(
         self, rows: List[dict], table_name: str, database_name: str, replace=False
     ) -> Optional[int]:
         """
@@ -129,7 +129,7 @@ class Database:
             if replace:
                 self.engines[database_name].execute(f"TRUNCATE TABLE {table_name}")
             table = self._table(table_name, database_name)
-            self.engines[database_name].execute(table.insert(), rows)
+            rows = await self.engines[database_name].execute(table.insert(), rows)
             return len(rows)
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while inserting rows: {e}")

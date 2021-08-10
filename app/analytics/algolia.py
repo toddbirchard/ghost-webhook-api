@@ -45,7 +45,7 @@ def filter_search_queries(
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
-    :param List[Optional[Dict[str, Any]]] search_queries: JSON of search queries submitted by users.
+    :param List[Optional[Dict[str, Any]]] search_queries: JSON representing search queries submitted by users.
 
     :returns: List[Optional[Dict[str, Any]]]
     """
@@ -62,11 +62,10 @@ async def import_algolia_search_queries(records: List[dict], table_name: str) ->
 
     :returns: str
     """
-    rows = rdbms.insert_records(
+    rows = await rdbms.insert_records(
         records,
         table_name,
         "analytics",
         replace=True,
     )
-    LOGGER.success(f"Inserted {rows} rows into `{table_name}` table.")
-    return await rows
+    return rows
