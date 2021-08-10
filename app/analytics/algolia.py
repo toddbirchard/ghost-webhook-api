@@ -2,6 +2,7 @@
 from typing import Any, Dict, List, Optional
 
 from aiohttp import ClientError, ClientSession
+from sqlalchemy.engine.result import Result
 
 from app.moment import get_current_date
 from config import settings
@@ -53,19 +54,19 @@ def filter_search_queries(
     return search_queries
 
 
-async def import_algolia_search_queries(records: List[dict], table_name: str) -> str:
+async def import_algolia_search_queries(records: List[dict], table_name: str) -> Result:
     """
     Save history of search queries executed on the site.
 
     :param List[dict] records: JSON of search queries submitted by users.
     :param str table_name: Name of SQL table to save data to.
 
-    :returns: str
+    :returns: Result
     """
-    rows = await rdbms.insert_records(
+    rows = rdbms.insert_records(
         records,
         table_name,
         "analytics",
         replace=True,
     )
-    return rows
+    return await rows

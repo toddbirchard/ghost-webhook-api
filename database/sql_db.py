@@ -2,9 +2,11 @@
 from typing import List, Optional, Tuple
 
 from pandas import DataFrame
-from sqlalchemy import MetaData, Table, create_engine, text
-from sqlalchemy.engine.result import Result
+from sqlalchemy import MetaData, Table, text
+from sqlalchemy.engine.result import Result, Row
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.ext.asyncio import create_async_engine
+from config import Settings
 
 from log import LOGGER
 
@@ -12,30 +14,32 @@ from log import LOGGER
 class Database:
     """Database client."""
 
-    def __init__(self, uri: str, args: dict):
-        self.engines = {
-            "analytics": create_engine(
-                f"{uri}/analytics", connect_args=args, echo=False
-            ),
-            "hackers_prod": create_engine(
-                f"{uri}/hackers_prod", connect_args=args, echo=False
-            ),
-        }
+    blog_engine = await create_async_engine(
+        f"{Settings.SQLALCHEMY_DATABASE_URI}/analytics", connect_args=Settings.SQLALCHEMY_ENGINE_OPTIONS, echo=False
+    )
 
-    def _table(self, table_name: str, database_name: str) -> Table:
+    analytics_engine = await create_async_engine(
+        f"{Settings.SQLALCHEMY_DATABASE_URI}/analytics", connect_args=Settings.SQLALCHEMY_ENGINE_OPTIONS, echo=False
+    )
+
+    async def _table(self, table_name: str, database_name: str) -> Table:
         """
         :param str table_name: Name of database table to fetch
         :param str database_name: Name of database to connect to.
 
         :returns: Table
         """
-        return Table(
-            table_name, MetaData(bind=self.engines[database_name]), autoload=True
-        )
+        async with self.engines[database_name].connect() as conn:
+            table = await Table(
+                table_name, MetaData(bind=conn), autoload=True
+            )
+            await conn.dispose()
+            return table
 
     @LOGGER.catch
-    def execute_queries(self, queries: dict, database_name: str) -> Tuple[dict, int]:
-        """Execute collection of SQL analytics.
+    async def execute_queries(self, queries: dict, database_name: str) -> Tuple[dict, int]:
+        """
+        Execute collection of SQL analytics.
 
         :param dict queries: Map of query names -> SQL analytics.
         :param str database_name: Name of database to connect to.
@@ -45,13 +49,15 @@ class Database:
         results = {}
         total_rows = 0
         for k, v in queries.items():
-            query_result = self.engines[database_name].execute(text(v))
-            results[k] = query_result.rowcount
-            total_rows += query_result.rowcount
+            async with self.blog_engine.connect() as conn:
+                query_result = await self.blog_engine.execute(text(v))
+                results[k] = query_result.rowcount
+                total_rows += query_result.rowcount
+                await conn.dispose()
         return results, total_rows
 
     @LOGGER.catch
-    def execute_query(self, query: str, database_name: str) -> Optional[Result]:
+    async def execute_query(self, query: str, database_name: str) -> Optional[Result]:
         """
         Execute single SQL query.
 
@@ -61,13 +67,15 @@ class Database:
         :returns: Optional[Result]
         """
         try:
-            result = self.engines[database_name].execute(text(query))
-            return result
+            async with self.blog_engine.connect() as conn:
+                result = await conn.execute(text(query))
+                await conn.dispose()
+                return result
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
 
     @LOGGER.catch
-    def execute_query_from_file(
+    async def execute_query_from_file(
         self, sql_file: str, database_name: str
     ) -> Optional[Result]:
         """
@@ -79,28 +87,40 @@ class Database:
         :returns: Optional[Result]
         """
         try:
+            result = None
             query = open(sql_file, "r").read()
-            return self.engines[database_name].execute(query).fetchall()
+            async with self.blog_engine.connect() as conn:
+                result = await conn.execute(query).fetchall()
+                await conn.dispose()
+            return result
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL {sql_file}: {e}")
 
     @LOGGER.catch
-    def fetch_records(self, query: str, database_name: str) -> Optional[List[str]]:
+    async def fetch_records(self, query: str, database_name: str) -> Optional[List[dict]]:
         """
         Fetch all rows via query.
 
         :param str query: SQL query to run against database.
         :param database_name: Name of database to connect to.
 
-        :returns: Optional[List[str]]
+        :returns: Optional[List[dict]]
         """
-        rows = self.engines[database_name].execute(query).fetchall()
-        if bool(rows):
-            return [row.items() for row in rows]
-        return None
+        try:
+            result = None
+            async with self.blog_engine.connect() as conn:
+                rows = await conn.execute(query).fetchall()
+                result = [row.items() for row in rows]
+                await conn.dispose()
+                return result
+        except SQLAlchemyError as e:
+            LOGGER.error(f"SQLAlchemyError while fetching rows: {e}")
+        except IntegrityError as e:
+            LOGGER.error(f"IntegrityError while fetching rows: {e}")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error while fetching rows: {e}")
 
-    @LOGGER.catch
-    def fetch_record(self, query: str, database_name: str) -> Optional[str]:
+    async def fetch_record(self, query: str, database_name: str) -> Optional[Result]:
         """
         Fetch a single row; typically used to verify whether a
         record already exists (ie: users).
@@ -108,13 +128,24 @@ class Database:
         :param str query: SQL query to run against database.
         :param str database_name: Name of database to connect to.
 
-        :returns: Optional[str]
+        :returns: Optional[Result]
         """
-        return self.engines[database_name].execute(query).first()
+        try:
+            result = None
+            async with self.blog_engine.connect() as conn:
+                result = await conn.execute(query).first()
+                await conn.dispose()
+                return result
+        except SQLAlchemyError as e:
+            LOGGER.error(f"SQLAlchemyError while fetching rows: {e}")
+        except IntegrityError as e:
+            LOGGER.error(f"IntegrityError while fetching rows: {e}")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error while fetching rows: {e}")
 
     async def insert_records(
         self, rows: List[dict], table_name: str, database_name: str, replace=False
-    ) -> Optional[int]:
+    ) -> Optional[Result]:
         """
         Insert rows into SQL table.
 
@@ -123,14 +154,17 @@ class Database:
         :param str database_name: Name of database to connect to.
         :param bool replace: Flag to truncate table prior to insert.
 
-        :returns: Optional[int]
+        :returns: Optional[Result]
         """
         try:
-            if replace:
-                self.engines[database_name].execute(f"TRUNCATE TABLE {table_name}")
-            table = self._table(table_name, database_name)
-            rows = await self.engines[database_name].execute(table.insert(), rows)
-            return len(rows)
+            result = None
+            async with self.engines[database_name].connect() as conn:
+                if replace:
+                    conn.execute(f"TRUNCATE TABLE {table_name}")
+                table = self._table(table_name, database_name)
+                result = await conn.execute(table.insert(dialect="mysql"), rows)
+                await conn.dispose()
+            return result
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while inserting rows: {e}")
         except IntegrityError as e:
@@ -147,11 +181,11 @@ class Database:
         :param DataFrame df: Tabular data to insert into SQL table.
         :param str table_name: Name of database table to insert into.
         :param str database_name: Name of database to connect to.
-        :param dtr action: Method of dealing with duplicate rows.
+        :param str action: Method of dealing with duplicate rows.
 
         :returns: DataFrame
         """
-        df.to_sql(table_name, self.engines[database_name], if_exists=action)
+        df.to_sql(table_name, self.analytics_engine, if_exists=action)
         LOGGER.info(
             f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`."
         )

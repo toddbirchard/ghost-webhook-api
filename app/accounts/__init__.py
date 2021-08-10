@@ -15,7 +15,7 @@ from database.crud import (
     submit_comment_upvote,
 )
 from database.models import Account, Comment
-from database.orm import get_db
+from database.orm import get_blog_db
 from database.schemas import (
     NetlifyAccountCreationResponse,
     NetlifyUserEvent,
@@ -35,7 +35,7 @@ router = APIRouter(prefix="/account", tags=["accounts"])
     response_model=NetlifyAccountCreationResponse,
 )
 async def new_account(
-    new_account_event: NetlifyUserEvent, db: Session = Depends(get_db)
+    new_account_event: NetlifyUserEvent, db: Session = Depends(get_blog_db)
 ):
     """
     Create user account from Netlify identity signup.
@@ -72,7 +72,7 @@ async def new_account(
     description="Save user-generated comments submitted on posts.",
     response_model=NewComment,
 )
-async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
+async def new_comment(comment: NewComment, db: Session = Depends(get_blog_db)):
     """
     Save user comment to database and notify post author.
 
@@ -96,7 +96,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     description="Increment a comment's upvote count, or revoke an existing upvote from a user.",
     response_model=UpvoteComment,
 )
-async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(get_db)):
+async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(get_blog_db)):
     """
     Cast a user upvote for another user's comment.
 
@@ -136,7 +136,7 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
     description="Save record of new donation to persistent ledger.",
     response_model=NewDonation,
 )
-async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
+async def accept_donation(donation: NewDonation, db: Session = Depends(get_blog_db)):
     """
     Save BuyMeACoffee donation to database.
 
@@ -158,7 +158,7 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
 
 
 @router.get("/comments", summary="Test get comments via ORM")
-async def test_orm(db: Session = Depends(get_db)):
+async def test_orm(db: Session = Depends(get_blog_db)):
     """Test endpoint for fetching comments joined with user info."""
     comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in comments:

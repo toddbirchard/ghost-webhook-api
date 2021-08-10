@@ -1,21 +1,43 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from config import settings
 
-URI = settings.SQLALCHEMY_DATABASE_URI
-ARGS = settings.SQLALCHEMY_ENGINE_OPTIONS
+blog_engine = create_async_engine(
+    f"{settings.SQLALCHEMY_DATABASE_URI}/hackers_prod",
+    connect_args=settings.SQLALCHEMY_ENGINE_OPTIONS,
+    echo=False
+)
 
-engine = create_engine(f"{URI}/hackers_prod", connect_args=ARGS, echo=False)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+BlogSession = sessionmaker(
+    class_=AsyncSession,
+    autocommit=False,
+    autoflush=False,
+    bind=blog_engine,
+    expire_on_commit=False,
+)
 
-Base = declarative_base()
+analytics_engine = create_async_engine(
+    f"{settings.SQLALCHEMY_DATABASE_URI}/analytics",
+    connect_args=settings.SQLALCHEMY_ENGINE_OPTIONS,
+    echo=False
+)
+
+AnalyticsSession = sessionmaker(
+    class_=AsyncSession,
+    autocommit=False,
+    autoflush=False,
+    bind=analytics_engine,
+    expire_on_commit=False,
+)
 
 
-def get_db():
-    ses = SessionLocal()
-    try:
-        yield ses
-    finally:
-        ses.close()
+def get_blog_db():
+    async with BlogSession() as session:
+        yield session
+
+
+def get_analytics_db():
+    async with AnalyticsSession() as session:
+        yield session
+

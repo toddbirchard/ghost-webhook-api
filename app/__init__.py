@@ -5,10 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import accounts, analytics, authors, github, images, members, posts
 from config import settings
-from database.orm import Base, engine
+from database.orm import Base
 from log import LOGGER
 
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all()
 
 if settings.ENVIRONMENT == "production":
     patch(fastapi=True)

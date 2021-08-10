@@ -3,7 +3,9 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from database.orm import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class Comment(Base):
@@ -24,6 +26,8 @@ class Comment(Base):
 
     # Relationships
     user = relationship("Account", backref="user_id")
+
+    __mapper_args__ = {"eager_defaults": True}
 
 
 class CommentUpvote(Base):
@@ -54,6 +58,8 @@ class Account(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
+    __mapper_args__ = {"eager_defaults": True}
+
 
 class Donation(Base):
     """BuyMeACoffee donation."""
@@ -68,3 +74,6 @@ class Donation(Base):
     link = Column(String(255))
     created_at = Column(DateTime)
     coffee_id = Column(Integer, unique=True, index=True)
+
+
+
