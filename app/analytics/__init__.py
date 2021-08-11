@@ -1,10 +1,8 @@
 """Fetch site traffic & search query analytics."""
-import aiohttp
 from fastapi import APIRouter, HTTPException
 
 from app.analytics.algolia import fetch_algolia_searches, import_algolia_search_queries
 from app.analytics.migrate import import_site_analytics
-from config import settings
 from database.schemas import AnalyticsResponse
 from log import LOGGER
 
@@ -49,35 +47,26 @@ async def migrate_site_analytics():
     description="Store user search queries to a SQL database for analysis and suggestive search.",
     status_code=200,
 )
+@router.get("/searches/")
 async def save_user_search_queries():
     """Save top search analytics for the current week."""
-    headers = {
-        "x-algolia-application-id": settings.ALGOLIA_APP_ID,
-        "x-algolia-api-key": settings.ALGOLIA_API_KEY,
-    }
-    async with aiohttp.ClientSession(headers=headers) as session:
-        weekly_searches = await fetch_algolia_searches(session, 7)
-        monthly_searches = await fetch_algolia_searches(session, 30)
-        if weekly_searches is not None and monthly_searches is not None:
-            weekly_searches = await import_algolia_search_queries(
-                weekly_searches, "algolia_searches_week"
-            )
-            monthly_searches = await import_algolia_search_queries(
-                monthly_searches, "algolia_searches_historical"
-            )
-            LOGGER.success(
-                f"Inserted {weekly_searches} rows into `algolia_searches_week`, \
-                    {monthly_searches} into `algolia_searches_historical."
-            )
-        else:
-            raise HTTPException(500, "Unexpected error when saving search query data.")
+    weekly_searches = fetch_algolia_searches("algolia_searches_week", 7)
+    monthly_searches = fetch_algolia_searches("algolia_searches_historical", 30)
+    if weekly_searches and monthly_searches:
+        HTTPException(500, "Unexpected error when saving search query data.")
+    # import_algolia_search_queries(weekly_searches, "algolia_searches_week")
+    # import_algolia_search_queries(monthly_searches, "algolia_searches_historical")
+    LOGGER.success(
+        f"Inserted {len(weekly_searches)} rows into `algolia_searches_week`, \
+            {len(monthly_searches)} into `algolia_searches_historical."
+    )
     return {
         "weekly_queries": {
-            "count": weekly_searches,
+            "count": len(weekly_searches),
             "rows": weekly_searches,
         },
         "monthly_queries": {
-            "count": monthly_searches,
+            "count": len(monthly_searches),
             "rows": monthly_searches,
         },
     }

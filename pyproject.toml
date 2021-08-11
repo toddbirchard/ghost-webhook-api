@@ -46,7 +46,6 @@ ddtrace = "*"
 pyarrow = "^4.0.0"
 extraction = "^0.3"
 metadata-parser = "^0.10.5"
-aiohttp = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
