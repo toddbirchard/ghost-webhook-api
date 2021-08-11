@@ -45,12 +45,9 @@ async def new_ghost_member(subscriber: Subscriber):
 )
 async def member_unsubscribe(subscriber: Subscriber):
     """
-    Track user unsubscribe events and spam complaints.
+    Log user unsubscribe events.
 
     :param Subscriber subscriber: Current Ghost newsletter subscriber.
-
-    :return: Subscriber
     """
     subscriber = subscriber.previous
     LOGGER.info(f"`{subscriber.name}` unsubscribed from members.")
-    return subscriber
