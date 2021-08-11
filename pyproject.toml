@@ -46,6 +46,7 @@ ddtrace = "*"
 pyarrow = "^4.0.0"
 extraction = "^0.3"
 metadata-parser = "^0.10.5"
+fastapi-mail = "^0.4.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

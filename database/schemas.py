@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 
 class NewDonation(BaseModel):
@@ -394,6 +394,11 @@ class NetlifyAccountCreationResponse(BaseModel):
 class NewsletterSubscriber(BaseModel):
     name: Optional[str] = Field(None, example=None)
     email: str = Field(None, example="fake@example.com")
+
+
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+    body: Dict[str, Any]
 
 
 class Subscriber(BaseModel):

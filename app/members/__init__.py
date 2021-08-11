@@ -1,6 +1,17 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Body,
+    Depends,
+    FastAPI,
+    File,
+    Form,
+    HTTPException,
+    Query,
+    UploadFile,
+)
 from fastapi.responses import JSONResponse
-from mixpanel import MixpanelException
+from fastapi_mail.email_utils import DefaultChecker
 
 from app.members.mixpanel import create_mixpanel_record
 from app.members.newsletter import newsletter_subscribe
@@ -25,11 +36,6 @@ async def new_ghost_member(subscriber: Subscriber):
         subscriber = subscriber.current
         email = newsletter_subscribe(subscriber)
         return JSONResponse({"email": email})
-    except MixpanelException as e:
-        LOGGER.error(f"Error creating user in Mixpanel: {e}")
-        raise HTTPException(
-            status_code=400, detail=f"Error creating user in Mixpanel: {e}"
-        )
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -51,3 +57,23 @@ async def member_unsubscribe(subscriber: Subscriber):
     """
     subscriber = subscriber.previous
     LOGGER.info(f"`{subscriber.name}` unsubscribed from members.")
+
+
+async def default_checker():
+    checker = (
+        DefaultChecker()
+    )  # you can pass source argument for your own email domains
+    await checker.fetch_temp_email_domains()  # require to fetch temporary email domains
+    return checker
+
+
+@router.get("/email/disposable")
+async def simple_send(
+    domain: str = Query(...), checker: DefaultChecker = Depends(default_checker)
+) -> JSONResponse:
+    """Check that email recipient is legit."""
+    if await checker.is_dispasoble(domain):
+        return JSONResponse(
+            status_code=400, content={"message": "this is disposable domain"}
+        )
+    return JSONResponse(status_code=200, content={"message": "email has been sent"})

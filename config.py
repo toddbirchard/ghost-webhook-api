@@ -3,6 +3,7 @@ import datetime
 from os import getenv, path
 
 from dotenv import load_dotenv
+from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from pydantic import BaseSettings
 
@@ -118,8 +119,20 @@ class Settings(BaseSettings):
     MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
     MAILGUN_FROM_SENDER: str = getenv("MAILGUN_FROM_SENDER")
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
-
+    MAILGUN_LOGIN_PASSWORD: str = getenv("MAILGUN_LOGIN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
+
+    MAILGUN_CONF = ConnectionConfig(
+        MAIL_USERNAME="postmaster@hackersandslackers.com",
+        MAIL_PASSWORD=MAILGUN_LOGIN_PASSWORD,
+        MAIL_FROM=MAILGUN_FROM_SENDER,
+        MAIL_PORT=587,
+        MAIL_SERVER=MAILGUN_SERVER,
+        MAIL_TLS=True,
+        MAIL_SSL=False,
+        USE_CREDENTIALS=True,
+        VALIDATE_CERTS=True,
+    )
 
     # Mixpanel
     MIXPANEL_API_TOKEN: str = getenv("MIXPANEL_API_TOKEN")
