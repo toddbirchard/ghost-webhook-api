@@ -52,20 +52,18 @@ async def save_user_search_queries():
     """Save top search analytics for the current week."""
     weekly_searches = fetch_algolia_searches("algolia_searches_week", 7)
     monthly_searches = fetch_algolia_searches("algolia_searches_historical", 30)
-    if weekly_searches and monthly_searches:
+    if weekly_searches is None or monthly_searches is None:
         HTTPException(500, "Unexpected error when saving search query data.")
-    # import_algolia_search_queries(weekly_searches, "algolia_searches_week")
-    # import_algolia_search_queries(monthly_searches, "algolia_searches_historical")
     LOGGER.success(
         f"Inserted {len(weekly_searches)} rows into `algolia_searches_week`, \
             {len(monthly_searches)} into `algolia_searches_historical."
     )
     return {
-        "weekly_queries": {
+        "week": {
             "count": len(weekly_searches),
             "rows": weekly_searches,
         },
-        "monthly_queries": {
+        "month": {
             "count": len(monthly_searches),
             "rows": monthly_searches,
         },

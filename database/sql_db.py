@@ -24,10 +24,9 @@ class Database:
 
     def _table(self, table_name: str, database_name: str) -> Table:
         """
-        :param table_name: Name of database table to fetch
-        :type table_name: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str table_name: Name of database table to fetch
+        :param str database_name: Name of database to connect to.
+
         :returns: Table
         """
         return Table(
@@ -54,10 +53,8 @@ class Database:
         """
         Execute single SQL query.
 
-        :param query: SQL query to run against database.
-        :type query: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str query: SQL query to run against database.
+        :param str database_name: Name of database to connect to.
 
         :returns: Optional[Result]
         """
@@ -119,14 +116,13 @@ class Database:
         :param str database_name: Name of database to connect to.
         :param bool replace: Flag to truncate table prior to insert.
 
-        :returns: Optional[Result]
+        :returns: Optional[List[dict]]
         """
         try:
             if replace:
                 self.engines[database_name].execute(f"TRUNCATE TABLE {table_name}")
             table = self._table(table_name, database_name)
-            inserted_rows = self.engines[database_name].execute(table.insert(), rows)
-            return inserted_rows.fetchall()
+            self.engines[database_name].execute(table.insert(), rows)
         except SQLAlchemyError as e:
             LOGGER.error(e)
         except IntegrityError as e:
