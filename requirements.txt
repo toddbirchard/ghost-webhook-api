@@ -85,7 +85,7 @@ twilio==6.50.1
 typing-extensions==3.10.0.0; python_full_version >= "3.6.1" and python_version >= "3.6"
 typing-inspect==0.7.1; python_version >= "3.6"
 urllib3==1.26.6; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.6"
-uvicorn==0.14.0
+uvicorn==0.15.0
 webencodings==0.5.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 webp-converter==4.1.0
 win32-setctime==1.0.3; sys_platform == "win32" and python_version >= "3.5"
