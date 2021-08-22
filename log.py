@@ -5,7 +5,7 @@ from sys import stdout
 import simplejson as json
 from loguru import logger
 
-from config import basedir, settings
+from config import BASE_DIR, settings
 
 DD_APM_FORMAT = (
     "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] "
@@ -92,7 +92,7 @@ def create_logger() -> logger:
         )
     else:
         logger.add(
-            f"{basedir}/logs/error.log",
+            f"{BASE_DIR}/logs/error.log",
             colorize=True,
             catch=True,
             format=log_formatter,

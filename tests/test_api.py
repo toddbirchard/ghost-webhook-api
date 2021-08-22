@@ -3,7 +3,7 @@ import pprint
 from fastapi.testclient import TestClient
 
 from app import api
-from config import basedir, settings
+from config import BASE_DIR, settings
 from database.schemas import NewsletterSubscriber
 from log import LOGGER
 
@@ -20,7 +20,9 @@ def test_api_docs():
 
 def test_batch_lynx_previews(rdbms):
     """"""
-    sql_file = open(f"{basedir}/database/queries/posts/selects/lynx_bookmarks.sql", "r")
+    sql_file = open(
+        f"{BASE_DIR}/database/queries/posts/selects/lynx_bookmarks.sql", "r"
+    )
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").fetchall()
     assert isinstance(posts, list)

@@ -8,8 +8,8 @@ from google.oauth2 import service_account
 from pydantic import BaseSettings
 
 # Load variables from .env
-basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, ".env"))
+BASE_DIR = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(BASE_DIR, ".env"))
 
 
 class Settings(BaseSettings):

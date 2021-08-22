@@ -4,7 +4,7 @@ import simplejson as json
 
 from app.posts.update import update_mobiledoc
 from clients import ghost
-from config import basedir
+from config import BASE_DIR
 from database import rdbms
 
 images_updated = []
@@ -57,7 +57,7 @@ def posts_missing_alt_text() -> Optional[List[dict]]:
     :returns: Optional[List[dict]]
     """
     sql_query = (
-        f"{basedir}/database/queries/posts/selects/img_alt_missing_mobiledoc.sql"
+        f"{BASE_DIR}/database/queries/posts/selects/img_alt_missing_mobiledoc.sql"
     )
     posts = rdbms.execute_query_from_file(sql_query, "hackers_prod")
     return [ghost.get_post(post["id"]) for post in posts]

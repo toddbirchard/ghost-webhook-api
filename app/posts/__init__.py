@@ -16,10 +16,10 @@ from app.posts.update import (
     update_metadata_images,
 )
 from clients import ghost
-from config import basedir
+from config import BASE_DIR
 from database import rdbms
-from database.read_sql import collect_sql_queries, fetch_raw_lynx_posts
-from database.schemas import FetchedPost, PostBulkUpdate, PostUpdate
+from database.read_sql import collect_sql_queries
+from database.schemas import PostBulkUpdate, PostUpdate
 from log import LOGGER
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -43,7 +43,7 @@ async def update_post(post_update: PostUpdate):
     if previous_update:
         current_time = get_current_datetime()
         previous_update_date = datetime.strptime(
-            previous_update["updated_at"], "%Y-%m-%dT%H:%M:%S.000Z"
+            str(previous_update.updated_at), "%Y-%m-%dT%H:%M:%S.000Z"
         )
         LOGGER.debug(
             f"current_time=`{current_time}` previous_update_date=`{previous_update_date}`"
@@ -96,14 +96,14 @@ async def update_post(post_update: PostUpdate):
 @router.get(
     "/",
     summary="Sanitize metadata for all posts.",
-    description="REnsure all posts have properly optimized metadata.",
+    description="Ensure all posts have properly optimized metadata.",
     response_model=PostBulkUpdate,
 )
 async def batch_update_metadata():
     update_queries = collect_sql_queries("posts/updates")
     update_results, num_updated = rdbms.execute_queries(update_queries, "hackers_prod")
     insert_posts = rdbms.execute_query_from_file(
-        f"{basedir}/database/queries/posts/selects/missing_all_metadata.sql",
+        f"{BASE_DIR}/database/queries/posts/selects/missing_all_metadata.sql",
         "hackers_prod",
     )
     insert_results = update_metadata(insert_posts)
@@ -146,7 +146,7 @@ async def post_link_previews(post_update: PostUpdate):
     previous = post_update.post.previous
     primary_tag = post.primary_tag
     if primary_tag.slug == "roundup":
-        if html is not None and "kg-card" not in html and previous.get("slug") is None:
+        if html is not None and "kg-card" not in html and previous is None:
             num_embeds, doc = generate_link_previews(post.__dict__)
             result = rdbms.execute_query(
                 f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",

@@ -6,14 +6,14 @@ from clients.google_bigquery import BigQuery
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from clients.storage import GCS
-from config import basedir, settings
+from config import BASE_DIR, settings
 
 # Google Cloud Storage
 gcs = GCS(
     bucket_name=settings.GCP_BUCKET_NAME,
     bucket_url=settings.GCP_BUCKET_URL,
     bucket_lynx=settings.GCP_LYNX_DIRECTORY,
-    basedir=basedir,
+    basedir=BASE_DIR,
 )
 
 # Ghost Admin Client
@@ -34,7 +34,7 @@ sms = Twilio(
 )
 
 # Google BigQuery
-gbq_class = BigQuery(basedir)
+gbq_class = BigQuery(BASE_DIR)
 gbq = gbq_class.create_client()
 
 # Mailgun SMTP

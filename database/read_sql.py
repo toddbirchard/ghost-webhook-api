@@ -5,7 +5,7 @@ from typing import List
 
 from sqlalchemy.engine.result import Result
 
-from config import basedir
+from config import BASE_DIR
 from database import rdbms
 
 
@@ -32,7 +32,7 @@ def fetch_sql_files(subdirectory: str) -> List[str]:
     :type subdirectory: str
     :returns: List[str]
     """
-    folder = f"{basedir}/database/queries/{subdirectory}"
+    folder = f"{BASE_DIR}/database/queries/{subdirectory}"
     directory = listdir(folder)
     files = [
         folder + "/" + f for f in directory if isfile(join(folder, f)) if ".sql" in f
@@ -63,7 +63,9 @@ def fetch_raw_lynx_posts() -> Result:
 
     :returns: Result
     """
-    sql_file = open(f"{basedir}/database/queries/posts/selects/lynx_bookmarks.sql", "r")
+    sql_file = open(
+        f"{BASE_DIR}/database/queries/posts/selects/lynx_bookmarks.sql", "r"
+    )
     query = sql_file.read()
     posts = rdbms.execute_query(query, "hackers_prod").all()
     return posts

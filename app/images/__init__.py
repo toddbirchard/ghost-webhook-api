@@ -5,7 +5,7 @@ from fastapi import APIRouter, Query
 from fastapi.responses import PlainTextResponse
 
 from clients import gcs
-from config import basedir, settings
+from config import BASE_DIR, settings
 from database import rdbms
 from database.schemas import PostUpdate
 from log import LOGGER
@@ -90,7 +90,7 @@ async def bulk_transform_images(
 async def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = rdbms.execute_query_from_file(
-        f"{basedir}/database/queries/images/lynx_missing_images.sql", "hackers_prod"
+        f"{BASE_DIR}/database/queries/images/lynx_missing_images.sql", "hackers_prod"
     )
     posts = [result.id for result in results]
     for post in posts:
