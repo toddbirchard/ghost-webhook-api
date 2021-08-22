@@ -34,7 +34,7 @@ def ghost():
 @pytest.fixture
 def mailgun():
     return Mailgun(
-        settings.MAILGUN_SERVER,
+        settings.MAILGUN_EMAIL_SERVER,
         settings.MAILGUN_FROM_SENDER,
         settings.MAILGUN_SENDER_API_KEY,
     )
