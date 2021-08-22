@@ -1,15 +1,4 @@
-from fastapi import (
-    APIRouter,
-    BackgroundTasks,
-    Body,
-    Depends,
-    FastAPI,
-    File,
-    Form,
-    HTTPException,
-    Query,
-    UploadFile,
-)
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi_mail.email_utils import DefaultChecker
 
@@ -26,11 +15,13 @@ router = APIRouter(prefix="/members", tags=["members"])
     summary="Add new user account to Ghost.",
     description="Create free-tier Ghost membership for Netlify user account upon signup.",
 )
-async def new_ghost_member(subscriber: Subscriber):
+async def new_ghost_member(subscriber: Subscriber) -> JSONResponse:
     """
     Welcome new Ghost subscriber & add analytics.
 
     :param Subscriber subscriber: New subscriber to Hackers newsletter.
+
+    :returns: JSONResponse
     """
     try:
         subscriber = subscriber.current
@@ -71,7 +62,14 @@ async def default_checker():
 async def simple_send(
     domain: str = Query(...), checker: DefaultChecker = Depends(default_checker)
 ) -> JSONResponse:
-    """Check that email recipient is legit."""
+    """
+    Check that email recipient is legit.
+
+    :param str domain: TLD of email address.
+    :param DefaultChecker checker: Email validator.
+
+    :returns: JSONResponse
+    """
     if await checker.is_dispasoble(domain):
         return JSONResponse(
             status_code=400, content={"message": "this is disposable domain"}
