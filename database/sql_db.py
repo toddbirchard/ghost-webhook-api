@@ -1,8 +1,8 @@
 """Database client."""
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from pandas import DataFrame
-from sqlalchemy import MetaData, Table, create_engine
+from sqlalchemy import MetaData, Table, create_engine, text
 from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -13,6 +13,12 @@ class Database:
     """Database client."""
 
     def __init__(self, uri: str, args: dict):
+        self.blog_engine = create_engine(
+            f"{uri}/analytics", connect_args=args, echo=False
+        )
+        self.analytics_engine = create_engine(
+            f"{uri}/analytics", connect_args=args, echo=False
+        )
         self.engines = {
             "analytics": create_engine(
                 f"{uri}/analytics", connect_args=args, echo=False
@@ -33,20 +39,21 @@ class Database:
             table_name, MetaData(bind=self.engines[database_name]), autoload=True
         )
 
-    @LOGGER.catch
-    def execute_queries(self, queries: dict, database_name: str) -> dict:
-        """Execute collection of SQL analytics.
-
-        :param dict queries: Map of query names -> SQL analytics.
-        :param str database_name: Name of database to connect to.
-
-        :returns: dict
+    def execute_queries(self, queries: List[dict]):
         """
-        results = {}
-        for k, v in queries.items():
-            query_result = self.engines[database_name].execute(v)
-            results[k] = f"{query_result.rowcount} rows affected."
-        return results
+        Execute collection of SQL analytics.
+
+        :param List[dict] queries: Map of query names -> SQL analytics.
+        """
+        try:
+            for query in queries:
+                filename = list(query.keys())[0]
+                sql = list(query.values())[0]
+                LOGGER.info(f"{filename}: `{query}`")
+                query_result = self.blog_engine.execute(text(sql))
+                LOGGER.info(f"`{filename}`: Affected {query_result.rowcount} rows")
+        except SQLAlchemyError as e:
+            LOGGER.error(f"Failed to execute SQL queries {queries}: {e}")
 
     @LOGGER.catch
     def execute_query(self, query: str, database_name: str) -> Optional[Result]:
@@ -68,15 +75,13 @@ class Database:
     def execute_query_from_file(self, sql_file: str, database_name: str):
         """Execute single SQL query.
 
-        :param sql_file: Filepath of SQL query to run.
-        :type sql_file: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str sql_file: Filepath of SQL query to run.
+        :param str database_name: Name of database to connect to.
         """
         try:
             query = open(sql_file, "r").read()
             result = self.engines[database_name].execute(query)
-            return result
+            return result.all()
         except SQLAlchemyError as e:
             LOGGER.error(e)
             return f"Failed to execute SQL {sql_file}: {e}"

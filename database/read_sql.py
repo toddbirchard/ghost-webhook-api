@@ -9,27 +9,25 @@ from config import BASE_DIR
 from database import rdbms
 
 
-def collect_sql_queries(subdirectory: str) -> dict:
+def collect_sql_queries(subdirectory: str) -> List[dict]:
     """
     Create dict of SQL queries to be run where `keys` are filenames and `values` are queries.
 
-    :param subdirectory: Directory containing .sql queries to run in bulk.
-    :type subdirectory: str
-    :returns: dict
+    :param str subdirectory: Directory containing .sql queries to run in bulk.
+
+    :returns: List[dict]
     """
     sql_file_paths = fetch_sql_files(subdirectory)
     sql_queries = parse_sql_batch(sql_file_paths)
-    sql_file_names = [file.split("/")[-1] for file in sql_file_paths]
-    query_dict = dict(zip(sql_file_names, sql_queries))
-    return query_dict
+    return sql_queries
 
 
 def fetch_sql_files(subdirectory: str) -> List[str]:
     """
     Fetch all SQL query files in folder.
 
-    :param subdirectory: Subdirectory containing SQL files to fetch.
-    :type subdirectory: str
+    :param str subdirectory: Subdirectory containing SQL files to fetch.
+
     :returns: List[str]
     """
     folder = f"{BASE_DIR}/database/queries/{subdirectory}"
@@ -40,19 +38,20 @@ def fetch_sql_files(subdirectory: str) -> List[str]:
     return files
 
 
-def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
+def parse_sql_batch(sql_file_paths: List[str]) -> List[dict]:
     """
     Read SQL analytics from .sql files.
 
-    :param sql_file_paths: List of paths to SQL files to read and parse.
-    :type sql_file_paths: List[str]
-    :returns: List[str]
+    :param List[str] sql_file_paths: List of paths to SQL files to read and parse.
+
+    :returns: List[dict]
     """
     queries = []
     for file in sql_file_paths:
         sql_file = open(file, "r")
         query = sql_file.read()
-        queries.append(query)
+        query_dict = {file.split("/")[-1]: query}
+        queries.append(query_dict)
         sql_file.close()
     return queries
 

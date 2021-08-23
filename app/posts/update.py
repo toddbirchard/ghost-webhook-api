@@ -8,10 +8,8 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     """
     Update Lynx post with proper embedded links.
 
-    :param post_id: ID of post to be updated.
-    :type post_id: str
-    :param mobiledoc: Mobiledoc encoded as string with escaped characters.
-    :type mobiledoc: str
+    :param str post_id: ID of post to be updated.
+    :param str mobiledoc: Mobiledoc encoded as string with escaped characters.
 
     :returns: Tuple[str, int]
     """
@@ -27,13 +25,14 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     return ghost.update_post(ghost_post["id"], body, ghost_post["slug"])
 
 
-def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
+def update_metadata(post_dicts: List[dict]) -> Tuple[List[Optional[dict]], int]:
     """
     Update Ghost posts with bad or missing metadata.
 
     :param post_dicts: Ghost posts as list of dictionaries.
     :type post_dicts: List[dict]
-    :returns: List[Optional[dict]]
+
+    :returns: Tuple[List[Optional[dict]], int]
     """
     updated_posts = []
     for post_dict in post_dicts:
@@ -63,7 +62,7 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
                     "og_description": post["custom_excerpt"],
                 }
             )
-    return updated_posts
+    return updated_posts, len(updated_posts)
 
 
 def update_add_lynx_image(body: dict, slug: str) -> dict:

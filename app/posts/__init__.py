@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from time import sleep
 
 from fastapi import APIRouter
-from fastapi.exceptions import HTTPException
+from fastapi.exceptions import FastAPIError, HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
@@ -101,18 +101,20 @@ async def update_post(post_update: PostUpdate):
 )
 async def batch_update_metadata():
     update_queries = collect_sql_queries("posts/updates")
-    update_results, num_updated = rdbms.execute_queries(update_queries, "hackers_prod")
-    insert_posts = rdbms.execute_query_from_file(
+    rdbms.execute_queries(update_queries)
+    insert_queries = rdbms.execute_query_from_file(
         f"{BASE_DIR}/database/queries/posts/selects/missing_all_metadata.sql",
         "hackers_prod",
     )
-    insert_results = update_metadata(insert_posts)
+    inserted, num_inserted = update_metadata(insert_queries)
+    if inserted is None:
+        raise FastAPIError(f"No post metadata changed; all posts have valid metadata.")
     LOGGER.success(
-        f"Inserted metadata for {len(insert_results)} posts, updated {num_updated}."
+        f"Inserted metadata for {len(inserted)} posts, updated {num_updated}."
     )
     return {
-        "inserted": {"count": len(insert_results), "posts": insert_results},
-        "updated": {"count": num_updated, "posts": update_results},
+        "inserted": {"count": num_inserted, "posts": inserted},
+        "updated": {"count": num_updated, "posts": updated},
     }
 
 
@@ -136,8 +138,7 @@ async def post_link_previews(post_update: PostUpdate):
     """
     Render anchor tag link previews.
 
-    :param post_update: Request to update Ghost post.
-    :type post_update: PostUpdate
+    :param PostUpdate post_update: Request to update Ghost post.
     """
     post = post_update.post.current
     post_id = post.id
