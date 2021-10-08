@@ -326,7 +326,7 @@ test = ["pytest (>=6.2.4,<7.0.0)", "pytest-cov (>=2.12.0,<4.0.0)", "pytest-async
 
 [[package]]
 name = "fastapi-mail"
-version = "0.4.4"
+version = "1.0.1"
 description = "Simple lightweight mail library for FastApi"
 category = "main"
 optional = false
@@ -1369,7 +1369,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "aa753ad0a9508d291f5a1f69f05e4559da33c11d0d6ca43506fd2093301f3287"
+content-hash = "611bf6798929983b30c0b87d9c3f3933b61c2615113f5a2ad1785e8f78a5e868"
 
 [metadata.files]
 aioredis = [
@@ -1555,8 +1555,8 @@ fastapi = [
     {file = "fastapi-0.68.2.tar.gz", hash = "sha256:38526fc46bda73f7ec92033952677323c16061e70a91d15c95f18b11895da494"},
 ]
 fastapi-mail = [
-    {file = "fastapi-mail-0.4.4.tar.gz", hash = "sha256:da28fba1d2311db2ea45849a9ae5ff1feeed5df444f126f60ce737ceb45cf299"},
-    {file = "fastapi_mail-0.4.4-py3-none-any.whl", hash = "sha256:792cb24094be8e777eede84150dbdebd98067763931e727a3aa78ee8bbdcfd3f"},
+    {file = "fastapi-mail-1.0.1.tar.gz", hash = "sha256:81c6bf943f1ba1975cd50c41727bd502f3e8a57748e51fb78932cfd27fdddd17"},
+    {file = "fastapi_mail-1.0.1-py3-none-any.whl", hash = "sha256:5aebb7db9c8a6873a3dcca3631817393fff6bc9a4278ab0c2674afa820c64725"},
 ]
 flake8 = [
     {file = "flake8-3.9.2-py2.py3-none-any.whl", hash = "sha256:bf8fd333346d844f616e8d47905ef3a3384edae6b4e9beb0c5101e25e3110907"},
