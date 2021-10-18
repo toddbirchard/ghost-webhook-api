@@ -37,7 +37,7 @@ class NewComment(BaseModel):
     user_email: str = Field(None, example="person@example.com")
     user_role: Optional[str] = Field(None, example="author")
     body: Optional[str] = Field(None, example="These tutorials is awesome!")
-    created_at: Optional[datetime] = Field(None, example=datetime.now())
+    created_at: datetime = Field(None, example=datetime.now())
 
     class Config:
         schema_extra = {

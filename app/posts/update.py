@@ -8,10 +8,8 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     """
     Update Lynx post with proper embedded links.
 
-    :param post_id: ID of post to be updated.
-    :type post_id: str
-    :param mobiledoc: Mobiledoc encoded as string with escaped characters.
-    :type mobiledoc: str
+    :param str post_id: ID of post to be updated.
+    :param str mobiledoc: Mobiledoc encoded as string with escaped characters.
 
     :returns: Tuple[str, int]
     """
@@ -20,6 +18,7 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
         "posts": [
             {
                 "mobiledoc": mobiledoc,
+                "status": ghost_post.status,
                 "updated_at": ghost_post.updated_at,
             }
         ]
@@ -70,10 +69,9 @@ def update_add_lynx_image(body: dict, slug: str) -> dict:
     """
     Assign random Lynx feature image to Lynx post.
 
-    :param body: JSON body representing Ghost post.
-    :type body: dict
-    :param slug: Unique post identifier for logging purposes.
-    :type slug: str
+    :param dict body: JSON body representing Ghost post.
+    :param str slug: Unique post identifier for logging purposes.
+
     :returns: dict
     """
     feature_image = gcs.fetch_random_lynx_image()
@@ -90,14 +88,12 @@ def update_add_lynx_image(body: dict, slug: str) -> dict:
 
 def update_html_ssl_links(html: str, body: dict, slug: str) -> dict:
     """
-    Replace hyperlinks in post with SSL equivalents
+    Replace hyperlinks in post with SSL equivalents.
 
-    :param html: Raw post html.
-    :type html: str
-    :param body: JSON body representing Ghost post.
-    :type body: dict
-    :param slug: Unique post identifier for logging purposes.
-    :type slug: str
+    :param str html: Raw post html.
+    :param dict body: JSON body representing Ghost post.
+    :param str slug: Unique post identifier for logging purposes.
+
     :returns: dict
     """
     html = html.replace("http://", "https://")
@@ -110,12 +106,10 @@ def update_metadata_images(feature_image: str, body: dict, slug: str) -> dict:
     """
     Update OG and Twitter images to match feature image.
 
-    :param feature_image: Post feature image url.
-    :type feature_image: str
-    :param body: JSON body representing Ghost post.
-    :type body: dict
-    :param slug: Unique post identifier for logging purposes.
-    :type slug: str
+    :param str feature_image: Post feature image url.
+    :param dict body: JSON body representing Ghost post.
+    :param str slug: Unique post identifier.
+
     :returns: dict
     """
     body["posts"][0].update({"og_image": feature_image, "twitter_image": feature_image})

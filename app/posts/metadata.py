@@ -69,6 +69,7 @@ def add_alt_tag(image_card: List) -> List[dict]:
 
     :param image_card: Single image card in Ghost post.
     :type image_card: List[dict]
+
     :returns: List[dict]
     """
     global images_updated
