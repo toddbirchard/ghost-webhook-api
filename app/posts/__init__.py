@@ -36,8 +36,8 @@ async def update_post(post_update: PostUpdate):
     """
     Enrich post metadata upon update.
 
-    :param post_update: Request to update Ghost post.
-    :type post_update: PostUpdate
+    :param PostUpdate post_update: Request to update Ghost post.
+
     """
     previous_update = post_update.post.previous
     if previous_update:
@@ -101,18 +101,18 @@ async def update_post(post_update: PostUpdate):
 )
 async def batch_update_metadata():
     update_queries = collect_sql_queries("posts/updates")
-    update_results, num_updated = rdbms.execute_queries(update_queries, "hackers_prod")
+    update_results = rdbms.execute_queries(update_queries, "hackers_dev")
     insert_posts = rdbms.execute_query_from_file(
         f"{BASE_DIR}/database/queries/posts/selects/missing_all_metadata.sql",
-        "hackers_prod",
+        "hackers_dev",
     )
     insert_results = update_metadata(insert_posts)
     LOGGER.success(
-        f"Inserted metadata for {len(insert_results)} posts, updated {num_updated}."
+        f"Inserted metadata for {len(insert_results)} posts, updated {len(update_results.keys())}."
     )
     return {
         "inserted": {"count": len(insert_results), "posts": insert_results},
-        "updated": {"count": num_updated, "posts": update_results},
+        "updated": {"count": len(update_results.keys()), "posts": update_results},
     }
 
 
@@ -136,8 +136,7 @@ async def post_link_previews(post_update: PostUpdate):
     """
     Render anchor tag link previews.
 
-    :param post_update: Request to update Ghost post.
-    :type post_update: PostUpdate
+    :param PostUpdate post_update: Request to update Ghost post.
     """
     post = post_update.post.current
     post_id = post.id
@@ -150,12 +149,18 @@ async def post_link_previews(post_update: PostUpdate):
             num_embeds, doc = generate_link_previews(post.__dict__)
             result = rdbms.execute_query(
                 f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
-                "hackers_prod",
+                "hackers_dev",
             )
             LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
-            return result
+            return JSONResponse(
+                {
+                    f"Successfully updated lynx post `{slug}` with mobiledoc: {doc}; Result: {result}."
+                },
+                status_code=200,
+                headers={"content-type": "text/plain"},
+            )
         return JSONResponse(
-            {f"Lynx post {slug} already contains previews."},
+            {f"Lynx post `{slug}` already contains previews."},
             status_code=202,
             headers={"content-type": "text/plain"},
         )

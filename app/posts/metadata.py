@@ -59,7 +59,7 @@ def posts_missing_alt_text() -> Optional[List[dict]]:
     sql_query = (
         f"{BASE_DIR}/database/queries/posts/selects/img_alt_missing_mobiledoc.sql"
     )
-    posts = rdbms.execute_query_from_file(sql_query, "hackers_prod")
+    posts = rdbms.execute_query_from_file(sql_query, "hackers_dev")
     return [ghost.get_post(post["id"]) for post in posts]
 
 

@@ -17,10 +17,18 @@ DD_APM_FORMAT = (
 
 
 def json_formatter(record: dict):
-    """Pass raw log to be serialized."""
+    """
+    Pass raw log to be serialized.
+
+    :param dict record: Dictionary containing logged message with metadata.
+    """
 
     def serialize(log: dict):
-        """Parse log message into Datadog JSON format."""
+        """
+        Parse log message into Datadog JSON format.
+
+        :param dict log: Dictionary containing logged message with metadata.
+        """
         subset = {
             "time": log["time"].strftime("%m/%d/%Y, %H:%M:%S"),
             "message": log["message"],
@@ -40,8 +48,8 @@ def log_formatter(record: dict) -> str:
     """
     Formatter for .log records
 
-    :param record: Log object containing log metadata & message.
-    :type record: dict
+    :param dict record: Key/value object containing a single log's message & metadata.
+
     :returns: str
     """
     if record["level"].name == "TRACE":
@@ -71,14 +79,14 @@ def create_logger() -> logger:
         logger.add(
             "/var/log/api/info.json",
             format=json_formatter,
-            rotation="500 MB",
+            rotation="300 MB",
             compression="zip",
         )
         # Datadog APM tracing
         logger.add(
             "/var/log/api/apm.log",
             format=DD_APM_FORMAT,
-            rotation="500 MB",
+            rotation="300 MB",
             compression="zip",
         )
         # Readable logs
@@ -87,7 +95,7 @@ def create_logger() -> logger:
             colorize=True,
             catch=True,
             format=log_formatter,
-            rotation="500 MB",
+            rotation="300 MB",
             compression="zip",
         )
     else:
@@ -96,7 +104,7 @@ def create_logger() -> logger:
             colorize=True,
             catch=True,
             format=log_formatter,
-            rotation="500 MB",
+            rotation="300 MB",
             compression="zip",
             level="ERROR",
         )

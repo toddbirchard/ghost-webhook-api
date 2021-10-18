@@ -7,7 +7,7 @@ from config import settings
 URI = settings.SQLALCHEMY_DATABASE_URI
 ARGS = settings.SQLALCHEMY_ENGINE_OPTIONS
 
-engine = create_engine(f"{URI}/hackers_prod", connect_args=ARGS, echo=False)
+engine = create_engine(f"{URI}/hackers_dev", connect_args=ARGS, echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

@@ -1,4 +1,4 @@
 def test_get_ghost_post(ghost):
-    post = ghost.get_post("5dc42cb812c9ce0d63f5bf92")
+    post = ghost.get_post("61304d8374047afda1c2168b")
     assert post is not None
-    assert post["id"] == "5dc42cb812c9ce0d63f5bf92"
+    assert post["id"] == "61304d8374047afda1c2168b"

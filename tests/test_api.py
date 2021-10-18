@@ -24,7 +24,7 @@ def test_batch_lynx_previews(rdbms):
         f"{BASE_DIR}/database/queries/posts/selects/lynx_bookmarks.sql", "r"
     )
     query = sql_file.read()
-    posts = rdbms.execute_query(query, "hackers_prod").fetchall()
+    posts = rdbms.execute_query(query, "hackers_dev").fetchall()
     assert isinstance(posts, list)
     for post in posts:
         assert "lynx" in post["slug"]

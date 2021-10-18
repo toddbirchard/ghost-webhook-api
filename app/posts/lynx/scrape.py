@@ -20,12 +20,15 @@ def scrape_metadata_from_url(url: str) -> Optional[List[dict]]:
     """
     Fetch metadata for a given URL.
 
-    :param str url:
+    :param str url: Link to third-party content, for which to create a link preview.
 
+    :returns: Optional[List[dict]]
     """
     try:
         # Parse page metadata as dict
-        page = MetadataParser(url=url, url_headers=headers, ssl_verify=True)
+        page = MetadataParser(
+            url=url, url_headers=headers, ssl_verify=True, search_head_only=True
+        )
         page_meta = page.fetch_url()["page"]
         # Return regular bookmark or Twitter card depending on source
         if "twitter.com" in url:

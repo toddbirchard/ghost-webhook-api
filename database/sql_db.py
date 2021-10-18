@@ -17,8 +17,8 @@ class Database:
             "analytics": create_engine(
                 f"{uri}/analytics", connect_args=args, echo=False
             ),
-            "hackers_prod": create_engine(
-                f"{uri}/hackers_prod", connect_args=args, echo=False
+            "hackers_dev": create_engine(
+                f"{uri}/hackers_dev", connect_args=args, echo=False
             ),
         }
 

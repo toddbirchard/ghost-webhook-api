@@ -68,7 +68,7 @@ class Ghost:
             params = {
                 "include": "authors",
                 "key": self.client_id,
-                "formats": "mobiledoc",
+                "formats": "mobiledoc,html",
             }
             endpoint = f"{self.admin_api_url}/posts/{post_id}"
             req = requests.get(endpoint, headers=headers, params=params)

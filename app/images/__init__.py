@@ -90,14 +90,14 @@ async def bulk_transform_images(
 async def bulk_assign_lynx_images():
     """Assign images to any Lynx posts which are missing a feature image."""
     results = rdbms.execute_query_from_file(
-        f"{BASE_DIR}/database/queries/images/lynx_missing_images.sql", "hackers_prod"
+        f"{BASE_DIR}/database/queries/images/lynx_missing_images.sql", "hackers_dev"
     )
     posts = [result.id for result in results]
     for post in posts:
         image = gcs.fetch_random_lynx_image()
         result = rdbms.execute_query(
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
-            "hackers_prod",
+            "hackers_dev",
         )
         if result:
             LOGGER.info(f"Updated Lynx post {post} with image {image}")

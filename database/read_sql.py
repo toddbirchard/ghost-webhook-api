@@ -67,5 +67,5 @@ def fetch_raw_lynx_posts() -> Result:
         f"{BASE_DIR}/database/queries/posts/selects/lynx_bookmarks.sql", "r"
     )
     query = sql_file.read()
-    posts = rdbms.execute_query(query, "hackers_prod").all()
+    posts = rdbms.execute_query(query, "hackers_dev").all()
     return posts
