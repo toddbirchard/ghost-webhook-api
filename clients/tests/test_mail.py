@@ -11,8 +11,8 @@ def comment_body():
         "user_avatar": None,
         "user_id": None,
         "body": "This is a test comment!",
-        "post_id": "5dc42cb812c9ce0d63f5c0c3",
-        "post_slug": "hostile-extraction-of-tableau-server-data",
+        "post_id": "61304d8374047afda1c2168b",
+        "post_slug": "welcome-to-hackers-and-slackers",
         "user_role": None,
         "created_at": None,
     }

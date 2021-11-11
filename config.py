@@ -106,6 +106,7 @@ class Settings(BaseSettings):
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
     GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
     GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/"
+    GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")
     GHOST_CLIENT_ID: str = getenv("GHOST_CLIENT_ID")

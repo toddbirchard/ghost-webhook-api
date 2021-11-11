@@ -29,9 +29,7 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
         "post_id": comment.post_id,
         "post_slug": comment.post_slug,
         "user_role": get_user_role(comment, post),
-        "created_at": comment.created_at.strftime(
-            "%Y-%m-%dT%H:%M:%S.%f"
-        ),
+        "created_at": comment.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f"),
     }
 
 

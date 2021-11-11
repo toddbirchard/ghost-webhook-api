@@ -50,7 +50,7 @@ class Ghost:
         token = jwt.encode(
             payload, bytes.fromhex(self.secret), algorithm="HS256", headers=header
         )
-        return f"Ghost {token}"
+        return token
 
     def get_post(self, post_id: str) -> Optional[dict]:
         """
@@ -62,12 +62,11 @@ class Ghost:
         """
         try:
             headers = {
-                "Authorization": self.session_token,
+                "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
             }
             params = {
                 "include": "authors",
-                "key": self.client_id,
                 "formats": "mobiledoc,html",
             }
             endpoint = f"{self.admin_api_url}/posts/{post_id}"
