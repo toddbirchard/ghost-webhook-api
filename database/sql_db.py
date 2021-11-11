@@ -130,7 +130,7 @@ class Database:
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"
-    ) -> Optional[str]:
+    ) -> DataFrame:
         """
         Insert Pandas DataFrame into SQL table.
 
@@ -139,10 +139,10 @@ class Database:
         :param str database_name: Name of database to connect to.
         :param str action: Method of dealing with duplicate rows.
 
-        :returns: Optional[str]
+        :returns: DataFrame
         """
         df.to_sql(table_name, self.engines[database_name], if_exists=action)
         LOGGER.info(
             f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`."
         )
-        return df.to_json(orient="records")
+        return df

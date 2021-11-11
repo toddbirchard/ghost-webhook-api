@@ -42,10 +42,8 @@ def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
 
     :returns: Optional[str]
     """
-    authors = ghost.get_authors()
-    if post:
-        if post["primary_author"]["email"] == comment.user_email:
-            return "author"
-        elif comment.user_email in authors:
-            return "moderator"
+    if post["primary_author"]["email"] == comment.user_email:
+        return "author"
+    elif [comment.user_email == author["email"] for author in post["authors"]]:
+        return "moderator"
     return None
