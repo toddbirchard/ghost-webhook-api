@@ -76,5 +76,15 @@ def hackers_fetched_post(headers):
 
 def test_scrape_metadata_from_url():
     """Verify JSON-LD content."""
-    test_json_ld = scrape_metadata_from_url("https://hackersandslackers.com/")
-    assert test_json_ld == hackers_fetched_post.json_ld
+    bookmark_card = scrape_metadata_from_url("https://hackersandslackers.com")
+    assert bookmark_card[0] == "bookmark"
+    assert bookmark_card[1]["url"] == "https://hackersandslackers.com"
+    assert bookmark_card[1]["metadata"]["title"] == "Hackers and Slackers"
+    assert (
+        bookmark_card[1]["metadata"]["image"]
+        == "https://hackersandslackers.com/images/share.png"
+    )
+    assert (
+        bookmark_card[1]["metadata"]["icon"]
+        == "https://hackersandslackers.com/images/logo-small@2x.png"
+    )

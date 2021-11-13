@@ -1,4 +1,4 @@
-from sqlalchemy.engine.result import Result
+from sqlalchemy.engine.cursor import LegacyCursorResult
 
 from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
 from log import LOGGER
@@ -23,5 +23,5 @@ def test_select_query(rdbms):
     query_result = rdbms.execute_query(parsed_posts_sql[0], "hackers_dev")
     assert len(posts_sql) > 0
     assert type(parsed_posts_sql[0]) == str
-    assert type(query_result) == Result
+    assert type(query_result) == LegacyCursorResult
     LOGGER.debug(query_result.rowcount)

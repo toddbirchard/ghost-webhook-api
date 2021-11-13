@@ -29,38 +29,46 @@ def scrape_metadata_from_url(url: str) -> Optional[List[dict]]:
         page = MetadataParser(
             url=url, url_headers=headers, ssl_verify=True, search_head_only=True
         )
-        page_meta = page.fetch_url()["page"]
+        page_meta = page.metadata["meta"]
         # Return regular bookmark or Twitter card depending on source
         if "twitter.com" in url:
             return create_twitter_card(url)
-        else:
-            create_bookmark_card(page, page_meta, url)
+        return create_bookmark_card(page, page_meta, url)
     except HTTPError as e:
         LOGGER.warning(f"Failed to fetch metadata for URL `{url}`: {e}")
+    except Exception as e:
+        LOGGER.error(f"Unexpected error while scraping metadata for URL `{url}`: {e}")
 
 
 def create_bookmark_card(page, page_meta: dict, url: str) -> List[dict]:
     try:
-        return [
+        author = page_meta.get("author")
+        publisher = page_meta.get("publisher")
+        icons = page.soup.select("link[rel=icon]")
+        bookmark = [
             "bookmark",
             {
                 "type": "bookmark",
                 "url": url,
                 "metadata": {
                     "url": url,
-                    "title": page_meta.get("title"),
-                    "description": page_meta.get("description"),
-                    "author": page_meta.get("author"),
-                    "publisher": page_meta.get("publisher"),
+                    "title": page_meta.get("og:title"),
+                    "description": page_meta.get("og:description"),
                     "image": page.get_metadata_link(
                         "image", allow_encoded_uri=True, require_public_global=True
                     ),
-                    "icon": page_meta.get("icon"),
                 },
             },
         ]
+        if author:
+            bookmark[1]["metadata"]["author"] = author
+        if publisher:
+            bookmark[1]["metadata"]["publisher"] = publisher
+        if icons:
+            bookmark[1]["metadata"]["icon"] = url + icons[0].attrs["href"]
+        return bookmark
     except Exception as e:
-        LOGGER.error(f"Unexpected Error while generating Bookmark card: {e}")
+        LOGGER.error(f"Unexpected error while generating Bookmark card: {e}")
 
 
 def create_twitter_card(url: str) -> Optional[List[dict]]:
