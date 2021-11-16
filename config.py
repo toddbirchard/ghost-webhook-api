@@ -119,6 +119,7 @@ class Settings(BaseSettings):
     MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")
     MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
     MAILGUN_FROM_SENDER: str = getenv("MAILGUN_FROM_SENDER")
+    MAILGUN_FROM_EMAIL: str = getenv("MAILGUN_FROM_EMAIL")
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
     MAILGUN_LOGIN_PASSWORD: str = getenv("MAILGUN_LOGIN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
@@ -127,8 +128,9 @@ class Settings(BaseSettings):
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_LOGIN_PASSWORD,
         MAIL_FROM=MAILGUN_FROM_SENDER,
+        MAIL_FROM_NAME="Todd Birchard",
         MAIL_PORT=587,
-        MAIL_SERVER=MAILGUN_EMAIL_SERVER,
+        MAIL_SERVER="mail.hackersandslackers.com",
         MAIL_TLS=True,
         MAIL_SSL=False,
         USE_CREDENTIALS=True,
