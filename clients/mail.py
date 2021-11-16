@@ -57,7 +57,7 @@ class Mailgun:
         :returns: Optional[Response]
         """
         body = {
-            "from": "todd@hackersandslackers.com",
+            "from": "Todd Birchard <postmaster@mail.hackersandslackers.com>",
             "to": [post["primary_author"]["email"]],
             "subject": f"Hackers and Slackers: {comment.get('user_name')} commented on your post `{post['title']}`",
             "o:tracking": True,
