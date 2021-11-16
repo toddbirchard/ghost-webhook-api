@@ -124,7 +124,7 @@ class Settings(BaseSettings):
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
 
     MAILGUN_CONF = ConnectionConfig(
-        MAIL_USERNAME="postmaster@hackersandslackers.com",
+        MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_LOGIN_PASSWORD,
         MAIL_FROM=MAILGUN_FROM_SENDER,
         MAIL_PORT=587,
