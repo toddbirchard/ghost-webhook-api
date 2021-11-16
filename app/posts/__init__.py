@@ -175,8 +175,7 @@ async def test_post_link_previews(post_id: str):
     """
     Render anchor tag link previews.
 
-    :param post_id: Request to update Ghost post.
-    :type post_id: PostUpdate
+    :param str post_id: ID of a Ghost post to fetch to test embedding lynx previews.
     """
     if post_id is None:
         raise HTTPException(

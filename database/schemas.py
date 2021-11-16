@@ -158,6 +158,9 @@ class BasePost(BaseModel):
         None,
         example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}',
     )
+    html: Optional[str] = Field(
+        None, example="<!DOCTYPE html><html><head></head><body></body></html>"
+    )
     comment_id: str = Field(None, example="5a0f4699e38d612cc8261306")
     plaintext: Optional[str] = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
     feature_image: Optional[str] = Field(
