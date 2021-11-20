@@ -19,6 +19,7 @@ class Ghost:
         client_id: str,
         client_secret: str,
         netlify_build_url: str,
+        content_api_key: str,
     ):
         """
         Ghost Admin API client constructor.
@@ -33,6 +34,7 @@ class Ghost:
         self.secret = client_secret
         self.admin_api_url = admin_api_url
         self.netlify_build_url = netlify_build_url
+        self.content_api_key = content_api_key
 
     def _https_session(self) -> None:
         """Authorize HTTPS session with Ghost admin."""
@@ -125,10 +127,13 @@ class Ghost:
         :returns: Optional[List[str]]
         """
         try:
+            params = {"key": self.content_api_key}
+            headers = {
+                "Authorization": f"Ghost {self.session_token}",
+                "Content-Type": "application/json",
+            }
             req = requests.get(
-                f"{self.admin_api_url}/users/",
-                headers={"Authorization": self.session_token},
-                params={"key": self.client_id},
+                f"{self.admin_api_url}/users", params=params, headers=headers
             )
             if req.status_code == 200:
                 author_emails = [author.get("email") for author in req.json()["users"]]
