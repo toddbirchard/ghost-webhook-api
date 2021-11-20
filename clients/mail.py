@@ -58,7 +58,7 @@ class Mailgun:
         """
         body = {
             "from": "Todd Birchard <postmaster@mail.hackersandslackers.com>",
-            "to": [post["primary_author"]["email"]],
+            "to": post["primary_author"]["email"],
             "subject": f"Hackers and Slackers: {comment.get('user_name')} commented on your post `{post['title']}`",
             "o:tracking": True,
             "o:tracking-opens": True,
