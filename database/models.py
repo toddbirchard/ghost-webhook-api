@@ -49,7 +49,7 @@ class Account(Base):
     full_name = Column(String(255), unique=False)
     avatar_url = Column(Text, unique=False)
     email = Column(String(255), unique=True)
-    role = Column(String(255), unique=False)
+    role = Column(String(255), unique=False, nullable=True)
     provider = Column(String(255), unique=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())

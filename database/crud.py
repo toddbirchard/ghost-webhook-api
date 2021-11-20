@@ -61,10 +61,9 @@ def get_comment(db: Session, comment_id: int) -> Optional[Result]:
     """
     Fetch BuyMeACoffee donation by ID.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param comment_id: Primary key for user comment record.
-    :type comment_id: int
+    :param Session db: ORM database session.
+    :param int comment_id: Primary key for user comment record.
+
     :returns: Optional[Result]
     """
     return db.query(Comment).filter(Comment.id == comment_id).first()
@@ -74,10 +73,9 @@ def create_comment(db: Session, comment: NewComment) -> Comment:
     """
     Create new user-submitted comment.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param comment: User comment object.
-    :type comment: NewComment
+    :param Session db: ORM database session.
+    :param NewComment comment: User comment object.
+
     :returns: Comment
     """
     try:
@@ -108,14 +106,12 @@ def create_comment(db: Session, comment: NewComment) -> Comment:
 
 def submit_comment_upvote(db: Session, user_id: str, comment_id: int) -> CommentUpvote:
     """
-    Create a record of a user's upvote for a given comment.
+     Create a record of a user's upvote for a given comment.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param user_id: Primary key for account record.
-    :type user_id: str
-    :param comment_id: Unique ID of comment user attempted to upvote.
-    :type comment_id: int
+     :param Session db: ORM database session.
+     :param str user_id: Primary key for account record.
+     :param int comment_id: Unique ID of comment user attempted to upvote.
+
     :returns: CommentUpvote
     """
     try:
@@ -138,12 +134,10 @@ def remove_comment_upvote(db: Session, user_id: str, comment_id: int):
     """
     Delete a record of a user's upvote for a given comment.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param user_id: Primary key for account record.
-    :type user_id: str
-    :param comment_id: Unique ID of comment user attempted to upvote.
-    :type comment_id: int
+    :param Session db: ORM database session.
+    :param str user_id: Primary key for account record.
+    :param int comment_id: Unique ID of comment user attempted to upvote.
+
     :returns: CommentUpvote
     """
     try:
@@ -165,12 +159,10 @@ def get_comment_upvote(db: Session, user_id: str, comment_id: int) -> Optional[R
     """
     Validate whether a user has upvoted a given comment.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param user_id: Primary key for account record.
-    :type user_id: str
-    :param comment_id: Unique ID of comment user attempted to upvote.
-    :type comment_id: int
+    :param Session db: ORM database session.
+    :param str user_id: Primary key for account record.
+    :param int comment_id: Unique ID of comment user attempted to upvote.
+
     :returns: Optional[Result]
     """
     return (
@@ -186,10 +178,9 @@ def get_account(db: Session, account_email: str) -> Optional[Result]:
     """
     Fetch account by email address.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param account_email: Primary key for account record.
-    :type account_email: str
+    :param Session db: ORM database session.
+    :param str account_email: Primary key for account record.
+
     :returns: Optional[Result]
     """
     return db.query(Account).filter(Account.email == account_email).first()
@@ -199,10 +190,10 @@ def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
     """
     Create new account record sourced from Netlify.
 
-    :param db: ORM database session.
-    :type db: Session
+    :param Session db: ORM database session.
     :param account: User comment schema object.
-    :type account: NetlifyAccount
+    :param NetlifyAccount account: User account registered via Netlify.
+
     :returns: NetlifyAccount
     """
     try:

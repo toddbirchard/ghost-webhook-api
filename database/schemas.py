@@ -363,6 +363,7 @@ class NetlifyAccount(BaseModel):
     id: str = Field(None, example="4e7c4f1b-e51a-4abb-8a58-105483724713")
     aud: Optional[str] = Field(None, example=None)
     email: str = Field(None, example="fake@example.com")
+    role: Optional[str] = Field(None, example="Moderator")
     app_metadata: NetlifyUserAppMetadata
     user_metadata: NetlifyUserMetadata
     created_at: datetime = Field(None, example="2020-12-20 10:54:20")
