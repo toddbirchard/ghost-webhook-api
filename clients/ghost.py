@@ -136,8 +136,7 @@ class Ghost:
                 f"{self.admin_api_url}/users", params=params, headers=headers
             )
             if req.status_code == 200:
-                author_emails = [author.get("email") for author in req.json()["users"]]
-                return author_emails
+                return [author.get("email") for author in req.json()["users"]]
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
         except KeyError as e:
