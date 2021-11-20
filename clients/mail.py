@@ -1,5 +1,5 @@
 """Create Mailgun client."""
-from typing import Optional
+from typing import List, Optional
 
 import requests
 from fastapi_mail.email_utils import DefaultChecker
@@ -45,12 +45,13 @@ class Mailgun:
             )
 
     def email_notification_new_comment(
-        self, post: dict, comment: dict, test_mode=False
+        self, post: dict, recipient: List[str], comment: dict, test_mode=False
     ) -> Optional[Response]:
         """
         Notify author when a user comments on a post.
 
         :param dict post: Ghost post body fetched from admin API.
+        :param List[str] recipient: Email recipient.
         :param dict comment: User comment on a post.
         :param bool test_mode: Flag to indicate email is being sent for test purposes.
 
@@ -58,7 +59,7 @@ class Mailgun:
         """
         body = {
             "from": "Todd Birchard <postmaster@mail.hackersandslackers.com>",
-            "to": post["primary_author"]["email"],
+            "to": recipient,
             "subject": f"Hackers and Slackers: {comment.get('user_name')} commented on your post `{post['title']}`",
             "o:tracking": True,
             "o:tracking-opens": True,

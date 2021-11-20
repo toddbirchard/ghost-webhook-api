@@ -20,8 +20,11 @@ def comment_body():
 
 def test_comment_email(comment_body, ghost, mailgun):
     post = ghost.get_post("61304d8374047afda1c2168b")
+    author_name = post["primary_author"]["name"]
+    author_email = post["primary_author"]["email"]
+    recipient = [f"{author_name} <{author_email}>"]
     response = mailgun.email_notification_new_comment(
-        post, comment_body, test_mode=True
+        post, recipient, comment_body, test_mode=True
     )
     LOGGER.debug(response.content)
 
