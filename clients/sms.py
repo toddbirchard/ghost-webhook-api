@@ -2,6 +2,8 @@
 from twilio.rest import Client
 from twilio.rest.api.v2010.account.message import MessageInstance
 
+from log import LOGGER
+
 
 class Twilio:
     """Twilio SMS Client."""
@@ -15,6 +17,7 @@ class Twilio:
 
     def send_message(self, msg: str) -> MessageInstance:
         """Send Twilio message."""
+        LOGGER.info(f"SMS triggered by post edit: {msg}")
         message = self.client.messages.create(
             to=self.recipient, from_=self.sender, body=msg
         )

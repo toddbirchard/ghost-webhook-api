@@ -114,6 +114,9 @@ class Settings(BaseSettings):
     GHOST_API_EXPORT_URL: str = f"{GHOST_BASE_URL}/admin/db/"
     GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
+    GHOST_AUTHOR_TODD_ID: str = "1"
+    GHOST_AUTHOR_MATT_ID: str = "61304d7e74047afda1c21620"
+
     # Mailgun
     MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
     MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")

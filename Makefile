@@ -11,18 +11,14 @@ make update     - Update pip dependencies via Poetry and output requirements.txt
 make format     - Format code with Python's `Black` library.
 make lint       - Check code formatting with flake8.
 make clean      - Remove cached files and lock files.
+
 endef
 export HELP
 
 
 .PHONY: run restart deploy update format lint clean help
 
-requirements: .requirements.txt
 env: ./.venv/bin/activate
-
-
-.requirements.txt: requirements.txt
-	$(shell . .venv/bin/activate && pip install -r requirements.txt)
 
 
 all help:
@@ -36,9 +32,8 @@ run: env
 
 .PHONY: install
 install:
-	make clean
 	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
-	. .venv/bin/activate
+	$(shell . .venv/bin/activate && pip install -r requirements.txt)
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt
 

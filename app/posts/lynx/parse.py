@@ -1,9 +1,9 @@
 """Replace <a> tags in Lynx posts with cards."""
+import json
 import re
 from typing import List, Tuple
 
 import requests
-import simplejson as json
 from requests.exceptions import HTTPError, SSLError
 from sqlalchemy.engine.result import Result
 

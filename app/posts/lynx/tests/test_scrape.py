@@ -1,7 +1,8 @@
 """Parsing individual URLs and verify JSON-LD is returned."""
+import json
+
 import pytest
 import requests
-import simplejson as json
 from bs4 import BeautifulSoup
 from mock import Mock
 

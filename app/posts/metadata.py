@@ -1,6 +1,5 @@
+import json
 from typing import List, Optional
-
-import simplejson as json
 
 from app.posts.update import update_mobiledoc
 from clients import ghost
