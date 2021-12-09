@@ -16,7 +16,7 @@ endef
 export HELP
 
 
-.PHONY: run restart deploy update format lint clean help
+.PHONY: run deploy update format lint clean help
 
 env: ./.venv/bin/activate
 
