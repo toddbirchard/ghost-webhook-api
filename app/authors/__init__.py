@@ -9,8 +9,8 @@ from database.schemas import PostUpdate
 router = APIRouter(prefix="/authors", tags=["authors"])
 
 
-@router.post("/post/created", response_model=JSONResponse)
-async def author_post_created(post_update: PostUpdate):
+@router.post("/post/created")
+async def author_post_created(post_update: PostUpdate) -> JSONResponse:
     """
     Notify admin when new authors create a new post.
 
@@ -40,8 +40,8 @@ async def author_post_created(post_update: PostUpdate):
         )
 
 
-@router.post("/post/updated", response_model=JSONResponse)
-async def author_post_tampered(post_update: PostUpdate):
+@router.post("/post/updated")
+async def author_post_tampered(post_update: PostUpdate) -> JSONResponse:
     """
     Notify admin when new authors edit an admin post.
 
