@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi_mail.email_utils import DefaultChecker
 
-from app.members.mixpanel import create_mixpanel_record
-from app.members.newsletter import newsletter_subscribe
+from app.newsletter.mixpanel import create_mixpanel_record
+from app.newsletter.newsletter import newsletter_subscribe
 from database.schemas import Member, Subscriber
 from log import LOGGER
 
-router = APIRouter(prefix="/members", tags=["members"])
+router = APIRouter(prefix="/newsletter", tags=["newsletter"])
 
 
 @router.post(
@@ -47,7 +47,7 @@ async def member_unsubscribe(subscriber: Subscriber):
     :param Subscriber subscriber: Current Ghost newsletter subscriber.
     """
     subscriber = subscriber.previous
-    LOGGER.info(f"`{subscriber.name}` unsubscribed from members.")
+    LOGGER.info(f"`{subscriber.name}` unsubscribed from newsletter.")
 
 
 async def default_checker():

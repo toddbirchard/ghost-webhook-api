@@ -5,14 +5,14 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class NewDonation(BaseModel):
+    # fmt: off
     name: str = Field(None, example="Fake Todd")
     email: str = Field(None, example="fake@example.com")
     count: int = Field(None, example=5)
-    message: Optional[str] = Field(
-        None, example="Great tutorials but this is a test message."
-    )
+    message: Optional[str] = Field(None, example="Great tutorials but this is a test message.")
     link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
     coffee_id: int = Field(None, example=3453543)
+    # fmt: on
 
     class Config:
         schema_extra = {
@@ -26,18 +26,18 @@ class NewDonation(BaseModel):
 
 
 class NewComment(BaseModel):
+    # fmt: off
     id: int = Field(None, example=1)
     post_id: str = Field(None, example="5dc42cb812c9ce0d63f5bf96")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
     user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
     user_name: str = Field(None, example="Todd Birchard")
-    user_avatar: Optional[str] = Field(
-        None, example="https://avatars3.githubusercontent.com/u/2747442?v=4"
-    )
+    user_avatar: Optional[str] = Field(None, example="https://avatars3.githubusercontent.com/u/2747442?v=4")
     user_email: str = Field(None, example="person@example.com")
     user_role: Optional[str] = Field(None, example="author")
     body: Optional[str] = Field(None, example="These tutorials is awesome!")
     created_at: datetime = Field(None, example=datetime.now())
+    # fmt: on
 
     class Config:
         schema_extra = {
@@ -71,22 +71,14 @@ class Role(BaseModel):
 
 
 class Author(BaseModel):
+    # fmt: off
     id: str = Field(None, example=1)
     name: str = Field(None, example="Todd Birchard")
     slug: str = Field(None, example="todd")
     email: Optional[str] = Field(None, example="fake@example.com")
-    profile_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/authors/todd@2x.jpg",
-    )
-    cover_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2020/03/fantasticmrfox.jpg",
-    )
-    bio: Optional[str] = Field(
-        None,
-        example="Engineer with an ongoing identity crisis. Breaks everything before learning best practices. Completely normal and emotionally stable.",
-    )
+    profile_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/authors/todd@2x.jpg")
+    cover_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2020/03/fantasticmrfox.jpg")
+    bio: Optional[str] = Field(None, example="Engineer with an ongoing identity crisis. Breaks everything before learning best practices. Completely normal and emotionally stable.")
     website: Optional[str] = Field(None, example="https://toddbirchard.com")
     location: Optional[str] = Field(None, example="New York City")
     twitter: Optional[str] = Field(None, example="@ToddRBirchard")
@@ -97,76 +89,44 @@ class Author(BaseModel):
     updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
     roles: List[Role]
     url: Optional[str] = Field(None, example="fake@example.com")
-    accessibility: str = Field(
-        None,
-        example='{"nightShift":true,"views":[{"name":"WIP","route":"posts","color":"green","filter":{"type":"draft","author":"todd"}},{"name":"Series: Lynx Roundup","route":"posts","color":"pink","filter":{"tag":"roundup"}},{"name":"Series: Building Flask Apps","route":"posts","color":"blue","filter":{"tag":"building-flask-apps","author":"todd"}},{"name":"Series: Pandas","route":"posts","color":"purple","filter":{"tag":"data-analysis-pandas"}},{"name":"Series: Code Snippet Corner","route":"posts","color":"teal","filter":{"tag":"code-snippet-corner"}},{"name":"Todds Posts","route":"posts","color":"midgrey","filter":{"author":"todd"}}],"navigation":{"expanded":{"posts":false}},"whatsNew":{"lastSeenDate":"2021-04-05T16:01:11.000+00:00"}}',
-    )
+    accessibility: str = Field(None, example='{"nightShift":true,"views":[{"name":"WIP","route":"posts","color":"green","filter":{"type":"draft","author":"todd"}},{"name":"Series: Lynx Roundup","route":"posts","color":"pink","filter":{"tag":"roundup"}},{"name":"Series: Building Flask Apps","route":"posts","color":"blue","filter":{"tag":"building-flask-apps","author":"todd"}},{"name":"Series: Pandas","route":"posts","color":"purple","filter":{"tag":"data-analysis-pandas"}},{"name":"Series: Code Snippet Corner","route":"posts","color":"teal","filter":{"tag":"code-snippet-corner"}},{"name":"Todds Posts","route":"posts","color":"midgrey","filter":{"author":"todd"}}],"navigation":{"expanded":{"posts":false}},"whatsNew":{"lastSeenDate":"2021-04-05T16:01:11.000+00:00"}}')
+    # fmt: on
 
 
 class Tag(BaseModel):
+    # fmt: off
     id: str = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
     name: str = Field(None, example="Python")
     slug: str = Field(None, example="python")
-    description: Optional[str] = Field(
-        None,
-        example="Let us feed your endless Python addiction!",
-    )
-    feature_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2020/05/python.png",
-    )
+    description: Optional[str] = Field(None, example="Let us feed your endless Python addiction!")
+    feature_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2020/05/python.png")
     visibility: str = Field(None, example="public")
-    meta_title: Optional[str] = Field(
-        None, example="Python Tricks, Hacks, and Snippets"
-    )
-    meta_description: Optional[str] = Field(
-        None,
-        example="Let us feed your endless Python addiction!",
-    )
+    meta_title: Optional[str] = Field(None, example="Python Tricks, Hacks, and Snippets")
+    meta_description: Optional[str] = Field(None, example="Let us feed your endless Python addiction!")
     created_at: datetime = Field(None, example="2017-11-17 20:44:09")
     updated_at: datetime = Field(None, example="2020-08-03 05:21:42")
     og_title: Optional[str] = Field(None, example="Python Tricks, Hacks, and Snippets")
-    og_description: Optional[str] = Field(
-        None,
-        example="Let us feed your endless Python addiction!",
-    )
-    og_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2020/05/python.png",
-    )
-    twitter_title: Optional[str] = Field(
-        None, example="Python Tricks, Hacks, and Snippets"
-    )
-    twitter_description: Optional[str] = Field(
-        None,
-        example="Let us feed your endless Python addiction!",
-    )
-    twitter_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2020/05/python.png",
-    )
+    og_description: Optional[str] = Field(None, example="Let us feed your endless Python addiction!")
+    og_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2020/05/python.png")
+    twitter_title: Optional[str] = Field(None, example="Python Tricks, Hacks, and Snippets")
+    twitter_description: Optional[str] = Field(None, example="Let us feed your endless Python addiction!")
+    twitter_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2020/05/python.png")
     accent_color: Optional[str] = Field(None, example="#4B8BBE")
     canonical_url: Optional[str] = None
+    # fmt: on
 
 
 class BasePost(BaseModel):
+    # fmt: off
     id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
     uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
     title: str = Field(None, example="Welcome to Hackers and Slackers")
     slug: str = Field(None, example="welcome-to-hackers-and-slackers")
-    mobiledoc: str = Field(
-        None,
-        example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}',
-    )
-    html: Optional[str] = Field(
-        None, example="<!DOCTYPE html><html><head></head><body></body></html>"
-    )
+    mobiledoc: str = Field(None, example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}')
+    html: Optional[str] = Field(None, example="<!DOCTYPE html><html><head></head><body></body></html>")
     comment_id: str = Field(None, example="5a0f4699e38d612cc8261306")
     plaintext: Optional[str] = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
-    feature_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",
-    )
+    feature_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",)
     featured: bool = Field(None, example=False)
     status: str = Field(None, example="published")
     visibility: str = Field(None, example="public")
@@ -180,34 +140,23 @@ class BasePost(BaseModel):
     tags: Optional[List[Tag]] = Field(None, example=[Tag.schema()])
     primary_author: Author = Field(None, example=Author.schema())
     primary_tag: Optional[Tag] = Field(None, example=Tag.schema().get("example"))
-    url: Optional[str] = Field(
-        None, example="https://hackersandslackers.com/welcome-to-hackers-and-slackers/"
-    )
+    url: Optional[str] = Field(None, example="https://hackersandslackers.com/welcome-to-hackers-and-slackers/")
     excerpt: Optional[str] = Field(None, example="Technology for badasses.")
     reading_time: int = Field(None, example=1)
     send_email_when_published: bool = Field(None, example=False)
-    og_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",
-    )
+    og_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg")
     og_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
     og_description: Optional[str] = Field(None, example="Technology for badasses")
-    twitter_image: Optional[str] = Field(
-        None,
-        example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg",
-    )
-    twitter_title: Optional[str] = Field(
-        None, example="Welcome to Hackers and Slackers"
-    )
+    twitter_image: Optional[str] = Field(None, example="https://cdn.hackersandslackers.com/2017/11/welcome.jpg")
+    twitter_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
     twitter_description: Optional[str] = Field(None, example="Technology for badasses")
     meta_title: Optional[str] = Field(None, example="Welcome to Hackers and Slackers")
     meta_description: Optional[str] = Field(None, example="Technology for badasses")
-    canonical_url: Optional[str] = Field(
-        None, example="https://hackersandslackers.com/post"
-    )
+    canonical_url: Optional[str] = Field(None, example="https://hackersandslackers.com/post")
     frontmatter: Optional[str] = Field(None)
     custom_template: Optional[str] = Field(None, example="custom-authors")
     type: str = Field(None, example="Post")
+    # fmt: on
 
 
 class Post(BaseModel):
@@ -223,6 +172,7 @@ class PostUpdate(BaseModel):
     post: Post
 
     class Config:
+        # fmt: off
         schema_extra = {
             "current": {
                 "id": "5e5cbed04965476b6cd6f16d",
@@ -347,6 +297,7 @@ class PostUpdate(BaseModel):
             },
             "previous": {},
         }
+        # fmt: on
 
 
 class NetlifyUserMetadata(BaseModel):
@@ -361,7 +312,7 @@ class NetlifyUserAppMetadata(BaseModel):
 
 class NetlifyAccount(BaseModel):
     id: str = Field(None, example="4e7c4f1b-e51a-4abb-8a58-105483724713")
-    aud: Optional[str] = Field(None, example=None)
+    aud: str = Field(None, example="")
     email: str = Field(None, example="fake@example.com")
     role: Optional[str] = Field(None, example="Moderator")
     app_metadata: NetlifyUserAppMetadata
@@ -377,17 +328,19 @@ class NetlifyUserEvent(BaseModel):
 
 
 class Member(BaseModel):
+    # fmt: off
     id: str
     uuid: str
     email: str
     name: Optional[str]
     note: Optional[str] = None
-    subscribed: Optional[bool]
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
-    labels: Optional[List] = None
-    avatar_image: Optional[str] = None
-    comped: Optional[bool]
+    subscribed: bool = Field(None, example=True)
+    created_at: datetime = Field(None, example="2020-12-20 10:54:20")
+    updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
+    labels: List[Optional[str]] = Field([], example=["Label1", "Label2"])
+    avatar_image: Optional[str] = Field(None, example="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank")
+    comped: bool = Field(None, example=True)
+    # fmt: on
 
 
 class NetlifyAccountCreationResponse(BaseModel):
@@ -489,20 +442,10 @@ class PostBulkUpdate(BaseModel):
 
 
 class AnalyticsRowsUpdated(BaseModel):
-    weekly_stats: Dict[str, Any] = Field(
-        None,
-        example={
-            "count": 2,
-            "rows": [{"my-post-1": 2}, {"my-post-2": 3}],
-        },
-    )
-    monthly_stats: Dict[str, Any] = Field(
-        None,
-        example={
-            "count": 2,
-            "rows": [{"my-post-1": 2}, {"my-post-2": 3}],
-        },
-    )
+    # fmt: off
+    weekly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
+    monthly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
+    # fmt: on
 
 
 class AnalyticsResponse(BaseModel):
