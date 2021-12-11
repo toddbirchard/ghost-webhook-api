@@ -57,7 +57,7 @@ async def new_account(
     db_account_created = get_account(db, account.email)
     if db_account_created:
         return NetlifyAccountCreationResponse(
-            succeeded=db_account_created,
+            succeeded=new_account_event,
             failed=None,
         )
     return NetlifyAccountCreationResponse(

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -307,7 +307,7 @@ class NetlifyUserMetadata(BaseModel):
 
 
 class NetlifyUserAppMetadata(BaseModel):
-    provider: Optional[str] = Field(None, example="google")
+    provider: str = Field(None, example="google")
 
 
 class NetlifyAccount(BaseModel):
@@ -320,11 +320,27 @@ class NetlifyAccount(BaseModel):
     created_at: datetime = Field(None, example="2020-12-20 10:54:20")
     updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
 
+    class Config:
+        schema_extra = {
+            "id": "4e7c4f1b-e51a-4abb-8a58-105483724713",
+            "aud": "",
+            "email": "fake@example.com",
+            "role": "Moderator",
+            "app_metadata": {"provider": "google"},
+            "user_metadata": {
+                "avatar_url": "https://example.com/dsfdsf.jpg",
+                "full_name": "Fake Name",
+                "roles": ["admin"],
+            },
+            "created_at": "2020-12-20 10:54:20",
+            "updated_at": "2020-12-20 10:54:20",
+        }
+
 
 class NetlifyUserEvent(BaseModel):
-    event: str = Field(None, example="signup")
-    instance_id: str = Field(None, example="dc76yfi-94b8-4b0f-8d45-gdffg76i")
-    user: NetlifyAccount
+    event: Optional[str] = Field(None, example="signup")
+    instance_id: Optional[str] = Field(None, example="dc76yfi-94b8-4b0f-8d45-gdffg76i")
+    user: Optional[NetlifyAccount]
 
 
 class Member(BaseModel):
@@ -344,8 +360,8 @@ class Member(BaseModel):
 
 
 class NetlifyAccountCreationResponse(BaseModel):
-    succeeded: Optional[NetlifyAccount]
-    failed: Optional[NetlifyUserEvent]
+    succeeded: Union[NetlifyUserEvent, None]
+    failed: Union[NetlifyUserEvent, None]
 
 
 class NewsletterSubscriber(BaseModel):
