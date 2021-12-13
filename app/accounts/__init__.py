@@ -81,6 +81,8 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     """
     LOGGER.info(f"Attempting to create new comment: {comment.__dict__}")
     post = ghost.get_post(comment.post_id)
+    if post is None:
+        LOGGER.error(f"Failed to create new comment; post_id {comment.post_id} does not exist ({comment.post_slug})")
     authors = ghost.get_authors()
     create_comment(db, comment)
     post_author = f"{comment.author_name} <{comment.author_email}>"
