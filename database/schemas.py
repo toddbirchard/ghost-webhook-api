@@ -37,7 +37,6 @@ class NewComment(BaseModel):
     author_name: str = Field(None, example="Todd Birchard")
     author_email: str = Field(None, example="todd@hackersandslackers.com")
     body: Optional[str] = Field(None, example="These tutorials is awesome!")
-    created_at: datetime = Field(None, example=datetime.now())
     # fmt: on
 
     class Config:
@@ -53,7 +52,6 @@ class NewComment(BaseModel):
             "author_name": "Todd Birchard",
             "author_email": "todd@hackersandslackers.com",
             "body": "These tutorials is awesome!",
-            "created_at": "2020-12-12T05:26:14.794Z",
         }
 
 
