@@ -31,7 +31,9 @@ class NewComment(BaseModel):
     post_id: str = Field(None, example="5dc42cb812c9ce0d63f5bf96")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
     user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
-    user_name: str = Field(None, example="Todd Birchard")
+    user_name: str = Field(None, example="User 1")
+    author_name: str = Field(None, example="Todd Birchard")
+    author_email: str = Field(None, example="todd@hackersandslackers.com")
     user_avatar: Optional[str] = Field(None, example="https://avatars3.githubusercontent.com/u/2747442?v=4")
     user_email: str = Field(None, example="person@example.com")
     user_role: Optional[str] = Field(None, example="author")
@@ -49,6 +51,8 @@ class NewComment(BaseModel):
             "user_id": "8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385",
             "user_name": "Todd Birchard",
             "user_role": "author",
+            "author_name": "Todd Birchard",
+            "author_email": "todd@hackersandslackers.com",
             "body": "These tutorials is awesome!",
             "created_at": "2020-12-12T05:26:14.794Z",
         }

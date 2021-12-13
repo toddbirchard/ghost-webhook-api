@@ -93,7 +93,7 @@ def create_comment(db: Session, comment: NewComment) -> Comment:
         db.add(new_comment)
         db.commit()
         LOGGER.success(
-            f"New comment submitted by user `{new_comment.user_name}` on post `{new_comment.post_slug}`"
+            f"New comment created by user `{new_comment.user_name}` on post `{new_comment.post_slug}`"
         )
         return new_comment
     except SQLAlchemyError as e:

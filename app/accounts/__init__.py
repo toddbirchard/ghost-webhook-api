@@ -79,12 +79,14 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param NewComment comment: User-submitted comment.
     :param Session db: ORM Database session.
     """
+    LOGGER.info(f"Attempting to create new comment: {comment.__dict__}")
     post = ghost.get_post(comment.post_id)
     authors = ghost.get_authors()
     create_comment(db, comment)
+    post_author = f"{comment.author_name} <{comment.author_email}>"
+    if comment.user_email not in authors:
+        mailgun.email_notification_new_comment(post, [post_author], comment.__dict__)
     ghost.rebuild_netlify_site()
-    if comment.user_email and comment.user_email not in authors:
-        mailgun.email_notification_new_comment(post, comment.__dict__)
     return comment
 
 
