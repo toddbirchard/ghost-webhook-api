@@ -11,7 +11,7 @@ class Comment(Base):
 
     __tablename__ = "comments"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
     user_name = Column(String(255), unique=False)
     user_avatar = Column(Text, unique=False)
     user_id = Column(String(255), ForeignKey("accounts.id"))

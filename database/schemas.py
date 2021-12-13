@@ -27,16 +27,15 @@ class NewDonation(BaseModel):
 
 class NewComment(BaseModel):
     # fmt: off
-    id: int = Field(None, example=1)
     post_id: str = Field(None, example="5dc42cb812c9ce0d63f5bf96")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
     user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
     user_name: str = Field(None, example="User 1")
-    author_name: str = Field(None, example="Todd Birchard")
-    author_email: str = Field(None, example="todd@hackersandslackers.com")
     user_avatar: Optional[str] = Field(None, example="https://avatars3.githubusercontent.com/u/2747442?v=4")
     user_email: str = Field(None, example="person@example.com")
     user_role: Optional[str] = Field(None, example="author")
+    author_name: str = Field(None, example="Todd Birchard")
+    author_email: str = Field(None, example="todd@hackersandslackers.com")
     body: Optional[str] = Field(None, example="These tutorials is awesome!")
     created_at: datetime = Field(None, example=datetime.now())
     # fmt: on
