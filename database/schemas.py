@@ -339,9 +339,9 @@ class NetlifyAccount(BaseModel):
 
 
 class NetlifyUserEvent(BaseModel):
-    event: Optional[str] = Field(None, example="signup")
-    instance_id: Optional[str] = Field(None, example="dc76yfi-94b8-4b0f-8d45-gdffg76i")
-    user: Optional[NetlifyAccount]
+    event: str = Field(None, example="signup")
+    instance_id: str = Field(None, example="725df7e1-94b8-4b0f-8d45-dc710d8d1a47")
+    user: NetlifyAccount
 
 
 class Member(BaseModel):
