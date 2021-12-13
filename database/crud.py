@@ -204,8 +204,8 @@ def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
             email=account.email,
             role=account.role,
             provider=account.app_metadata.provider,
-            created_at=account.created_at,
-            updated_at=account.updated_at,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
         )
         db.add(new_account)
         db.commit()
