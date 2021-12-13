@@ -318,8 +318,8 @@ class NetlifyAccount(BaseModel):
     role: Optional[str] = Field(None, example="Moderator")
     app_metadata: NetlifyUserAppMetadata
     user_metadata: NetlifyUserMetadata
-    created_at: datetime = Field(None, example="2020-12-20 10:54:20")
-    updated_at: datetime = Field(None, example="2020-12-20 10:54:20")
+    created_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
+    updated_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
 
     class Config:
         schema_extra = {
@@ -333,8 +333,8 @@ class NetlifyAccount(BaseModel):
                 "full_name": "Fake Name",
                 "roles": ["admin"],
             },
-            "created_at": "2020-12-20 10:54:20",
-            "updated_at": "2020-12-20 10:54:20",
+            "created_at": "2021-03-06T14:26:56.991731Z",
+            "updated_at": "2021-03-06T14:26:56.994492Z"
         }
 
 

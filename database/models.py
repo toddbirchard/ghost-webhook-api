@@ -46,9 +46,9 @@ class Account(Base):
     __tablename__ = "accounts"
 
     id = Column(String(255), primary_key=True, index=True)
-    full_name = Column(String(255), unique=False)
+    full_name = Column(String(255))
     avatar_url = Column(Text, unique=False)
-    email = Column(String(255), unique=True)
+    email = Column(String(255), index=True, unique=True)
     role = Column(String(255), unique=False, nullable=True)
     provider = Column(String(255), unique=False)
     created_at = Column(DateTime, server_default=func.now())
