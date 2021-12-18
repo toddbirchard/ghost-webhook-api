@@ -29,7 +29,6 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
         "post_id": comment.post_id,
         "post_slug": comment.post_slug,
         "user_role": get_user_role(comment, post),
-        "created_at": comment.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f"),
     }
 
 
@@ -42,8 +41,10 @@ def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
 
     :returns: Optional[str]
     """
-    if comment.user_email and post["primary_author"]["email"] == comment.user_email:
+    authors = ghost.get_all_authors()
+    author_emails = [author["email"] for author in authors]
+    if comment.user_email == post["primary_author"]["email"]:
         return "author"
-    elif [comment.user_email == author["email"] for author in post["authors"]]:
+    elif comment.user_email in author_emails:
         return "moderator"
     return None

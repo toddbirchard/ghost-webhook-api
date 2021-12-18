@@ -5,5 +5,7 @@ def test_get_ghost_post(ghost):
 
 
 def test_get_ghost_authors(ghost):
-    authors = ghost.get_authors()
-    assert authors is not None
+    authors = ghost.get_all_authors()
+    for author in authors:
+        assert author["id"] is not None
+        assert len(authors) > 1

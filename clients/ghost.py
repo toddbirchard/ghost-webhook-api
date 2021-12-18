@@ -120,7 +120,7 @@ class Ghost:
             LOGGER.error(e.response)
             return e.response.content, e.response.status_code
 
-    def get_authors(self) -> Optional[List[str]]:
+    def get_all_authors(self) -> Optional[List[str]]:
         """
         Fetch all Ghost authors.
 
@@ -136,11 +136,38 @@ class Ghost:
                 f"{self.admin_api_url}/users", params=params, headers=headers
             )
             if req.status_code == 200:
-                return [author.get("email") for author in req.json()["users"]]
+                return req.json()["users"]
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
         except KeyError as e:
             LOGGER.error(f"KeyError while fetching Ghost authors: {e}")
+
+    def get_author(self, author_id: int) -> Optional[List[str]]:
+        """
+        Fetch single Ghost author.
+
+        :param int author_id: ID of Ghost author to fetch.
+
+        :returns: Optional[List[str]]
+        """
+        try:
+            params = {"key": self.content_api_key}
+            headers = {
+                "Content-Type": "application/json",
+            }
+            req = requests.get(
+                f"{self.content_api_url}/content/authors/{author_id}/",
+                params=params,
+                headers=headers,
+            )
+            if req.status_code == 200:
+                return req.json()["authors"]
+        except HTTPError as e:
+            LOGGER.error(
+                f"Failed to fetch Ghost authorID={author_id}: {e.response.content}"
+            )
+        except KeyError as e:
+            LOGGER.error(f"KeyError while fetching Ghost authorID={author_id}: {e}")
 
     def create_member(self, body: dict) -> Tuple[str, int]:
         """

@@ -21,6 +21,7 @@ class Comment(Base):
     post_slug = Column(String(255), unique=False)
     post_id = Column(String(255), unique=False)
     created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now())
 
     # Relationships
     user = relationship("Account", backref="user_id")
@@ -66,5 +67,5 @@ class Donation(Base):
     count = Column(Integer, unique=False)
     message = Column(Text, unique=False)
     link = Column(String(255))
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
     coffee_id = Column(Integer, unique=True, index=True)

@@ -14,10 +14,9 @@ def get_donation(db: Session, donation_id: int) -> Optional[Result]:
     """
     Fetch BuyMeACoffee donation by ID.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param donation_id: Primary key for donation record.
-    :type donation_id: int
+    :param Session db: ORM database session.
+    :param int donation_id: Primary key for donation record.
+
     :returns: Optional[Result]
     """
     return db.query(Donation).filter(Donation.coffee_id == donation_id).first()
@@ -27,10 +26,9 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     """
     Create new BuyMeACoffee donation record.
 
-    :param db: ORM database session.
-    :type db: Session
-    :param donation: Donation schema object.
-    :type donation: NewDonation
+    :param Session db: ORM database session.
+    :param NewDonation donation: Donation schema object.
+
     :returns: Donation
     """
     try:

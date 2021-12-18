@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.accounts.subscriptions import new_ghost_subscription
+from app.accounts.comments import get_user_role
 from clients import ghost, mailgun
 from database.crud import (
     create_account,
@@ -79,15 +80,16 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param NewComment comment: User-submitted comment.
     :param Session db: ORM Database session.
     """
-    LOGGER.info(f"Attempting to create new comment: {comment.__dict__}")
-    post = ghost.get_post(comment.post_id)
-    if post is None:
-        LOGGER.error(f"Failed to create new comment; post_id {comment.post_id} does not exist ({comment.post_slug})")
-    authors = ghost.get_authors()
+    ghost_post = ghost.get_post(NewComment.author_id)
+    post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
+    if comment.user_email != ghost_post["primary_author"]["email"]:
+        mailgun.email_notification_new_comment(
+            ghost_post, [post_author], comment.__dict__
+        )
+    else:
+        comment.user_role = get_user_role(comment, ghost_post)
+    LOGGER.info(f"Creating comment from {comment.user_email} on {comment.post_slug}...")
     create_comment(db, comment)
-    post_author = f"{comment.author_name} <{comment.author_email}>"
-    if comment.user_email not in authors:
-        mailgun.email_notification_new_comment(post, [post_author], comment.__dict__)
     ghost.rebuild_netlify_site()
     return comment
 

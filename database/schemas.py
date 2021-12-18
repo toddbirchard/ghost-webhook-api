@@ -34,8 +34,7 @@ class NewComment(BaseModel):
     user_avatar: Optional[str] = Field(None, example="https://avatars3.githubusercontent.com/u/2747442?v=4")
     user_email: str = Field(None, example="person@example.com")
     user_role: Optional[str] = Field(None, example="author")
-    author_name: str = Field(None, example="Todd Birchard")
-    author_email: str = Field(None, example="todd@hackersandslackers.com")
+    author_id: int = Field(None, example=1)
     body: Optional[str] = Field(None, example="These tutorials is awesome!")
     # fmt: on
 
@@ -318,7 +317,7 @@ class NetlifyAccount(BaseModel):
     role: Optional[str] = Field(None, example="Moderator")
     app_metadata: NetlifyUserAppMetadata
     user_metadata: NetlifyUserMetadata
-    created_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
+    created_at: str = Field(None, example="2021-03-06T13:26:56.991731Z")
     updated_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
 
     class Config:
@@ -334,7 +333,7 @@ class NetlifyAccount(BaseModel):
                 "roles": ["admin"],
             },
             "created_at": "2021-03-06T14:26:56.991731Z",
-            "updated_at": "2021-03-06T14:26:56.994492Z"
+            "updated_at": "2021-03-06T14:26:56.994492Z",
         }
 
 
