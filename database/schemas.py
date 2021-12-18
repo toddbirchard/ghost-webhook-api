@@ -49,7 +49,7 @@ class NewComment(BaseModel):
             "user_name": "Todd Birchard",
             "user_role": "author",
             "author_name": "Todd Birchard",
-            "author_email": "todd@hackersandslackers.com",
+            "author_id": 1,
             "body": "These tutorials is awesome!",
         }
 
