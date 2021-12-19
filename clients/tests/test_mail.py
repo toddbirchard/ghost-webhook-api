@@ -23,12 +23,12 @@ def test_comment_email(comment_body, ghost, mailgun):
     author_name = post["primary_author"]["name"]
     author_email = post["primary_author"]["email"]
     recipient = [f"{author_name} <{author_email}>"]
-    response = mailgun.email_notification_new_comment(
+    email_notification = mailgun.email_notification_new_comment(
         post, recipient, comment_body, test_mode=True
     )
-    LOGGER.debug(f"Mailgun response: {response.content}")
     assert post["primary_author"]["name"] == "Todd Birchard"
     assert post["primary_author"]["email"] is not None
     assert comment_body["user_name"] != post["primary_author"]["name"]
-    assert response.status_code == 200
-    assert response.json() is not None
+    assert email_notification["status"]["sent"] is True
+    assert email_notification["status"]["code"] == 200
+    assert email_notification["status"]["error"] is None

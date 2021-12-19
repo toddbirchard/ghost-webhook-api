@@ -18,7 +18,7 @@ class Mailgun:
         self.api_key = api_key
         self.endpoint = f"https://api.mailgun.net/v3/{self.mail_server}/messages"
 
-    def send_email(self, body: dict, test_mode=False) -> Optional[Response]:
+    def send_email(self, body: dict, test_mode=False) -> Response:
         """
         Send email via Mailgun.
 
@@ -46,7 +46,7 @@ class Mailgun:
 
     def email_notification_new_comment(
         self, post: dict, recipient: List[str], comment: dict, test_mode=False
-    ) -> Optional[Response]:
+    ) -> dict:
         """
         Notify author when a user comments on a post.
 
@@ -55,7 +55,7 @@ class Mailgun:
         :param dict comment: User comment on a post.
         :param bool test_mode: Flag to indicate email is being sent for test purposes.
 
-        :returns: Optional[Response]
+        :returns: dict
         """
         body = {
             "from": "Todd Birchard <postmaster@mail.hackersandslackers.com>",
@@ -66,7 +66,31 @@ class Mailgun:
             "o:tracking-clicks": True,
             "text": f"Your post `{post['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['url'].replace('.app', '.com')}",
         }
-        return self.send_email(body, test_mode)
+        email_response = self.send_email(body, test_mode)
+        if email_response.status_code == 200:
+            LOGGER.success(
+                f"Successfully send comment notification to {recipient}: {body}"
+            )
+            return {
+                "status": {
+                    "sent": True,
+                    "code": email_response.status_code,
+                    "error": None,
+                },
+                "email": body,
+            }
+        else:
+            LOGGER.error(
+                f"Failed to send comment notification to {recipient} with error {email_response.status_code} ({email_response.json()}): {body}"
+            )
+            return {
+                "status": {
+                    "sent": False,
+                    "code": email_response.status_code,
+                    "error": email_response.json(),
+                },
+                "email": body,
+            }
 
 
 async def default_checker():

@@ -83,7 +83,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     ghost_post = ghost.get_post(NewComment.post_id)
     post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
     if comment.user_email != ghost_post["primary_author"]["email"]:
-        mailgun.email_notification_new_comment(
+        email_notification = mailgun.email_notification_new_comment(
             ghost_post, [post_author], comment.__dict__
         )
     else:

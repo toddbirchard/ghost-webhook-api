@@ -4,8 +4,7 @@ from os import getenv, path
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
-from google.oauth2 import service_account
-from pydantic import BaseSettings
+from pydantic import BaseSettings, EmailStr
 
 # Load variables from .env
 BASE_DIR = path.abspath(path.dirname(__file__))
@@ -121,7 +120,7 @@ class Settings(BaseSettings):
     MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
     MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")
     MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
-    MAILGUN_FROM_SENDER: str = getenv("MAILGUN_FROM_SENDER")
+    MAILGUN_FROM_SENDER: EmailStr = getenv("MAILGUN_FROM_SENDER")
     MAILGUN_FROM_EMAIL: str = getenv("MAILGUN_FROM_EMAIL")
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
     MAILGUN_LOGIN_PASSWORD: str = getenv("MAILGUN_LOGIN_PASSWORD")

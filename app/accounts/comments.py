@@ -22,13 +22,13 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
     if avatar == "undefined":
         avatar = None
     return {
+        "post_id": comment.post_id,
+        "post_slug": comment.post_slug,
         "user_name": username,
         "user_avatar": avatar,
         "user_id": comment.user_id,
-        "body": comment.body,
-        "post_id": comment.post_id,
-        "post_slug": comment.post_slug,
         "user_role": get_user_role(comment, post),
+        "body": comment.body,
     }
 
 
