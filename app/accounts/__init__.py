@@ -2,8 +2,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.accounts.subscriptions import new_ghost_subscription
 from app.accounts.comments import get_user_role
+from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from database.crud import (
     create_account,
@@ -80,7 +80,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param NewComment comment: User-submitted comment.
     :param Session db: ORM Database session.
     """
-    ghost_post = ghost.get_post(NewComment.author_id)
+    ghost_post = ghost.get_post(NewComment.post_id)
     post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
     if comment.user_email != ghost_post["primary_author"]["email"]:
         mailgun.email_notification_new_comment(

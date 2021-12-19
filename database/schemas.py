@@ -27,21 +27,20 @@ class NewDonation(BaseModel):
 
 class NewComment(BaseModel):
     # fmt: off
-    post_id: str = Field(None, example="5dc42cb812c9ce0d63f5bf96")
+    post_id: str = Field(None, example="61304d8374047afda1c2168b")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
     user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
     user_name: str = Field(None, example="User 1")
     user_avatar: Optional[str] = Field(None, example="https://avatars3.githubusercontent.com/u/2747442?v=4")
     user_email: str = Field(None, example="person@example.com")
     user_role: Optional[str] = Field(None, example="author")
-    author_id: int = Field(None, example=1)
-    body: Optional[str] = Field(None, example="These tutorials is awesome!")
+    author_id: int = Field(None, example="1")
+    body: Optional[str] = Field(None, example="These tutorials are awesome! 10/10")
     # fmt: on
 
     class Config:
         schema_extra = {
-            "id": 1,
-            "post_id": "5dc42cb812c9ce0d63f5bf96",
+            "post_id": "61304d8374047afda1c2168b",
             "post_slug": "python-virtualenv-virtualenvwrapper",
             "user_avatar": "https://avatars3.githubusercontent.com/u/2747442?v=4",
             "user_email": "todd@fakeemail.com",
@@ -49,8 +48,8 @@ class NewComment(BaseModel):
             "user_name": "Todd Birchard",
             "user_role": "author",
             "author_name": "Todd Birchard",
-            "author_id": 1,
-            "body": "These tutorials is awesome!",
+            "author_id": "1",
+            "body": "These tutorials are awesome! 10/10",
         }
 
 
