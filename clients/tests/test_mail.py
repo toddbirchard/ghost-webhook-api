@@ -6,15 +6,15 @@ from log import LOGGER
 @pytest.fixture
 def comment_body():
     return {
-        "comment_id": "123",
-        "user_name": "Loser",
-        "user_avatar": None,
-        "user_id": None,
-        "body": "This is a test comment!",
         "post_id": "61304d8374047afda1c2168b",
         "post_slug": "welcome-to-hackers-and-slackers",
+        "user_id": "8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385",
+        "user_name": "Fake user 123",
+        "user_avatar": "https://avatars3.githubusercontent.com/u/2747442?v=4",
+        "user_email": "person@example.com",
         "user_role": None,
-        "created_at": None,
+        "author_id": "1",
+        "body": "This is a test comment!",
     }
 
 
@@ -26,8 +26,7 @@ def test_comment_email(comment_body, ghost, mailgun):
     response = mailgun.email_notification_new_comment(
         post, recipient, comment_body, test_mode=True
     )
-    LOGGER.debug(response.content)
-
+    LOGGER.debug(f"Mailgun response: {response.content}")
     assert post["primary_author"]["name"] == "Todd Birchard"
     assert post["primary_author"]["email"] is not None
     assert comment_body["user_name"] != post["primary_author"]["name"]

@@ -71,7 +71,7 @@ class Ghost:
                 "include": "authors",
                 "formats": "mobiledoc,html",
             }
-            endpoint = f"{self.admin_api_url}/posts/{post_id}"
+            endpoint = f"{self.admin_api_url}/posts/{post_id}/"
             req = requests.get(endpoint, headers=headers, params=params)
             if req.json().get("errors") is not None:
                 LOGGER.error(
