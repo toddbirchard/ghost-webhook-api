@@ -67,12 +67,15 @@ def get_comment(db: Session, comment_id: int) -> Optional[Result]:
     return db.query(Comment).filter(Comment.id == comment_id).first()
 
 
-def create_comment(db: Session, comment: NewComment) -> Comment:
+def create_comment(
+    db: Session, comment: NewComment, user_role: Optional[str]
+) -> Comment:
     """
     Create new user-submitted comment.
 
     :param Session db: ORM database session.
     :param NewComment comment: User comment object.
+    :param Optional[str] user_role: Permissions of the comment author, if any.
 
     :returns: Comment
     """
@@ -82,7 +85,7 @@ def create_comment(db: Session, comment: NewComment) -> Comment:
             user_avatar=comment.user_avatar,
             user_id=comment.user_id,
             user_email=comment.user_email,
-            user_role=comment.user_role,
+            user_role=user_role,
             body=comment.body,
             created_at=datetime.now(),
             post_slug=comment.post_slug,
