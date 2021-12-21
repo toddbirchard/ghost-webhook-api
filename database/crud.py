@@ -81,15 +81,15 @@ def create_comment(
     """
     try:
         new_comment = Comment(
+            user_id=comment.user_id,
             user_name=comment.user_name,
             user_avatar=comment.user_avatar,
-            user_id=comment.user_id,
             user_email=comment.user_email,
             user_role=user_role,
             body=comment.body,
-            created_at=datetime.now(),
             post_slug=comment.post_slug,
             post_id=comment.post_id,
+            created_at=datetime.now(),
         )
         db.add(new_comment)
         db.commit()

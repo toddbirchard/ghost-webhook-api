@@ -21,7 +21,6 @@ class Comment(Base):
     post_slug = Column(String(191), unique=False)
     post_id = Column(String(255), unique=False)
     created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now())
 
     # Relationships
     user = relationship("Account", backref="user_id")
