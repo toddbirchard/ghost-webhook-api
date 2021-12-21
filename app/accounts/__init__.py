@@ -81,6 +81,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param Session db: ORM Database session.
     """
     LOGGER.info(f"Creating comment from {comment.user_email} on {comment.post_slug}...")
+    LOGGER.info(NewComment.__dict__)
     ghost_post = ghost.get_post(NewComment.post_id)
     post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
     user_role = get_user_role(comment, ghost_post)
