@@ -30,7 +30,7 @@ class NewComment(BaseModel):
     post_id: str = Field(None, example="61304d8374047afda1c2168b")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
     user_id: str = Field(None, example="677f9417-16ab-4d8e-9bed-1130da250c88")
-    user_name: Optional[str] = Field(None, example="User 1")
+    user_name: Optional[str] = Field(None, example="Todd Birchard")
     user_avatar: Optional[str] = Field(None, example="https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg")
     user_email: str = Field(None, example="todd@hackersandslackers.com")
     author_name: str = Field(None, example="Todd Birchard")
