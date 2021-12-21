@@ -80,6 +80,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param NewComment comment: User-submitted comment.
     :param Session db: ORM Database session.
     """
+    LOGGER.info(f"Creating comment from {comment.user_email} on {comment.post_slug}...")
     ghost_post = ghost.get_post(NewComment.post_id)
     post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
     user_role = get_user_role(comment, ghost_post)
@@ -87,7 +88,6 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
         email_notification = mailgun.email_notification_new_comment(
             ghost_post, [post_author], comment.__dict__
         )
-    LOGGER.info(f"Creating comment from {comment.user_email} on {comment.post_slug}...")
     create_comment(db, comment, user_role)
     ghost.rebuild_netlify_site()
     return comment
