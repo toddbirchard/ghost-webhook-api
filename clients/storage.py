@@ -63,7 +63,7 @@ class GCS:
         return [
             file
             for file in files
-            if "@2x.jpg" not in file.name
+            if "@2x" not in file.name
             and "/_retina" not in file.name
             and "/_mobile" not in file.name
             and "/authors" not in file.name
@@ -74,7 +74,7 @@ class GCS:
         """
         Retrieve retina image blobs from directory in GCS bucket.
 
-        :param str directory: Directory from which to fetch blobs.
+        :param str directory: Relative filepath from which to fetch blobs.
 
         :returns: List[Blob]
         """
@@ -88,7 +88,7 @@ class GCS:
         """
         Delete images which have been compressed or generated multiple times.
 
-        :param str folder: Directory to recursively apply image transformations.
+        :param str folder: Relative filepath to recursively apply image transformations.
 
         :returns: List[str]
         """
@@ -97,7 +97,7 @@ class GCS:
         substrings = [
             "@2x@2x",
             "_o",
-            "psd",
+            ".psd",
             "?",
             "@2x-",
             "-1-1",
@@ -131,8 +131,7 @@ class GCS:
         """
         Move images into their respective folders.
 
-        :param folder: Directory to recursively apply image transformations.
-        :type folder: str
+        :param str folder: Relative filepath to recursively apply image transformations
 
         :returns: List
         """
@@ -178,8 +177,8 @@ class GCS:
         """
         Create retina image variants from featured images.
 
-        :param folder: Directory to recursively apply image transformations,=.
-        :type folder: str
+        :param str folder: Relative filepath to recursively apply image transformations.
+        
         :returns: List[Optional[str]]
         """
         images_transformed = []
@@ -196,7 +195,7 @@ class GCS:
         """
         Generate non-retina variants from retina images missing a standard res counterpart.
 
-        :param str folder: Directory to recursively apply image transformations.
+        :param str folder: Relative filepath to recursively apply image transformations.
 
         :returns: List[Optional[str]]
         """
@@ -217,7 +216,7 @@ class GCS:
         """
         Generate mobile-optimized variants of retina images.
 
-        :param str folder: Directory to recursively apply image transformations.
+        :param str folder: Relative filepath to recursively apply image transformations.
 
         :returns: List[str]
         """
@@ -235,7 +234,7 @@ class GCS:
         """
         Create retina version of single image.
 
-        :param str image_url: Image to apply transformation to.
+        :param str image_url: Url of image to apply transformation to.
 
         :returns: Optional[str]
         """
@@ -261,7 +260,7 @@ class GCS:
         """
         Create retina version of single image.
 
-        :param str image_url: Image to apply transformation to.
+        :param str image_url: Url of image to apply transformation to.
 
         :returns: Optional[str]
         """
@@ -275,7 +274,7 @@ class GCS:
     def _new_image_blob(self, image_blob: Blob, image_type: str) -> Optional[str]:
         """
         :param Blob image_blob: Google storage blob representing an image.
-        :param str image_type: Type of img transformation to apply.
+        :param str image_type: Type of image transformation to apply.
 
         :returns: Optional[str]
         """
