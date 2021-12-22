@@ -74,7 +74,7 @@ async def bulk_transform_images(
         "purged": gcs.purge_unwanted_images(directory),
         "retina": gcs.retina_transformations(directory),
         "mobile": gcs.mobile_transformations(directory),
-        "standard": gcs.standard_transformations(directory),
+        # "standard": gcs.standard_transformations(directory),
     }
     log = []
     for k, v in images.items():
