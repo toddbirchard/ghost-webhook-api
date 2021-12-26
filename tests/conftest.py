@@ -2,10 +2,10 @@ import pytest
 from github import Github
 
 from clients import gbq
+from clients.gcs import GCS
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
-from clients.storage import GCS
 from config import settings
 from database.sql_db import Database
 

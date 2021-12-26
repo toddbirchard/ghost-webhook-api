@@ -1,6 +1,6 @@
 from typing import List, Optional, Tuple
 
-from clients import gcs, ghost
+from clients import ghost, images
 from log import LOGGER
 
 
@@ -74,7 +74,7 @@ def update_add_lynx_image(body: dict, slug: str) -> dict:
 
     :returns: dict
     """
-    feature_image = gcs.fetch_random_lynx_image()
+    feature_image = images.fetch_random_lynx_image()
     body["posts"][0].update(
         {
             "feature_image": feature_image,

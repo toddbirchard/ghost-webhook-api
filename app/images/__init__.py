@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, Query
 from fastapi.responses import PlainTextResponse
 
-from clients import gcs
+from clients import images
 from config import BASE_DIR, settings
 from database import rdbms
 from database.schemas import PostUpdate
@@ -30,8 +30,8 @@ async def optimize_post_image(post_update: PostUpdate):
     feature_image = post.feature_image
     title = post.title
     if feature_image:
-        new_images.append(gcs.create_retina_image(feature_image))
-        new_images.append(gcs.create_mobile_image(feature_image))
+        new_images.append(images.create_retina_image(feature_image))
+        new_images.append(images.create_mobile_image(feature_image))
         new_images = [image for image in new_images if image is not None]
         if bool(new_images):
             LOGGER.info(
@@ -70,20 +70,20 @@ async def bulk_transform_images(
     """
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
-    images = {
-        "purged": gcs.purge_unwanted_images(directory),
-        "retina": gcs.retina_transformations(directory),
-        "mobile": gcs.mobile_transformations(directory),
+    transformed_images = {
+        "purged": images.purge_unwanted_images(directory),
+        "retina": images.retina_transformations(directory),
+        "mobile": images.mobile_transformations(directory),
         # "standard": gcs.standard_transformations(directory),
     }
-    log = []
-    for k, v in images.items():
+    response = []
+    for k, v in transformed_images.items():
         if v is not None:
-            log.append(f"{len(v)} {k}")
+            response.append(f"{len(v)} {k}")
         else:
-            log.append(f"0 {k}")
-    LOGGER.success(f"Transformed {', '.join(log)} images")
-    return images
+            response.append(f"0 {k}")
+    LOGGER.success(f"Transformed {', '.join(response)} images")
+    return transformed_images
 
 
 @router.get("/lynx")
@@ -94,7 +94,7 @@ async def bulk_assign_lynx_images():
     )
     posts = [result.id for result in results]
     for post in posts:
-        image = gcs.fetch_random_lynx_image()
+        image = images.fetch_random_lynx_image()
         result = rdbms.execute_query(
             f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
             "hackers_dev",
@@ -106,7 +106,7 @@ async def bulk_assign_lynx_images():
 
 
 @router.get("/sort")
-async def bulk_organize_images(directory: Optional[str] = None):
+async def bulk_organize_images(directory: Optional[str] = None) -> dict:
     """
     Sort retina and mobile images into their appropriate directories.
 
@@ -115,8 +115,8 @@ async def bulk_organize_images(directory: Optional[str] = None):
     """
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
-    retina_images = gcs.organize_retina_images(directory)
-    image_headers = gcs.image_headers(directory)
+    retina_images = images.organize_retina_images(directory)
+    image_headers = images.image_headers(directory)
     LOGGER.success(
         f"Moved {len(retina_images)} retina images, modified {len(image_headers)} content types."
     )

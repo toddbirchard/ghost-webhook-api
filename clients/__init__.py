@@ -3,13 +3,13 @@ from github import Github
 from google.cloud.bigquery.client import Client as BigQuery
 
 from clients.ghost import Ghost
+from clients.img import ImageTransformer
 from clients.mail import Mailgun
 from clients.sms import Twilio
-from clients.storage import GCS
 from config import BASE_DIR, settings
 
 # Google Cloud Storage
-gcs = GCS(
+images = ImageTransformer(
     bucket_name=settings.GCP_BUCKET_NAME,
     bucket_url=settings.GCP_BUCKET_URL,
     bucket_lynx=settings.GCP_LYNX_DIRECTORY,
