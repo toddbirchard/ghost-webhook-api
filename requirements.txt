@@ -1,9 +1,9 @@
-aioredis==2.0.0; python_full_version >= "3.6.1" and python_full_version < "4.0.0" and python_version >= "3.6"
+aioredis==2.0.1; python_full_version >= "3.6.1" and python_full_version < "4.0.0" and python_version >= "3.6"
 aiosmtplib==1.1.6; python_full_version >= "3.6.1" and python_full_version < "4.0.0"
 anyio==3.4.0; python_version >= "3.6" and python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 asgiref==3.4.1; python_version >= "3.6"
 async-timeout==4.0.2; python_full_version >= "3.6.1" and python_full_version < "4.0.0" and python_version >= "3.6"
-attrs==21.2.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+attrs==21.3.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 beautifulsoup4==4.10.0; python_full_version > "3.0.0"
 blinker==1.4; python_full_version >= "3.6.1" and python_full_version < "4.0.0"
 boto==2.49.0

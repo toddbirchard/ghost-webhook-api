@@ -8,7 +8,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/toddbirchard/jamstack-api/"
 repository = "https://github.com/toddbirchard/jamstack-api/"
-documentation = "https://github.com/toddbirchard/jamstack-api/"
+documentation = "https://github.com/toddbirchard/jamstack-api/blob/master/README.md"
 keywords = [
   "API",
   "Rest API",

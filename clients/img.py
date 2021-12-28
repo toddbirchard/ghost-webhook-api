@@ -147,7 +147,7 @@ class ImageTransformer(GCS):
             LOGGER.success(f"Created retina image `{retina_blob_filepath}`")
             return new_retina_image_blob
         else:
-            LOGGER.success(
+            LOGGER.info(
                 f"Skipping retina image `{retina_blob_filepath}`; already exists."
             )
         return None
@@ -188,7 +188,7 @@ class ImageTransformer(GCS):
             LOGGER.success(f"Created mobile image `{mobile_blob_filepath}`")
             return new_mobile_image_blob
         else:
-            LOGGER.success(
+            LOGGER.info(
                 f"Skipping mobile image `{mobile_blob_filepath}`; already exists."
             )
         return None
