@@ -1,5 +1,14 @@
 """Data models."""
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -29,11 +38,14 @@ class Comment(Base):
 class CommentUpvote(Base):
     """Upvotes for user comments."""
 
-    __tablename__ = "upvotes"
+    __tablename__ = "comment_upvotes"
 
     id = Column(Integer, primary_key=True, index=True)
-    comment_id = Column(Integer, ForeignKey("comments.id"))
-    account_id = Column(String(255), ForeignKey("accounts.id"))
+    comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
+    account_id = Column(String(255), ForeignKey("accounts.id"), nullable=False)
+    upvote = Column(Boolean, nullable=False)
+
+    __table_args__ = (Index("upvote_index", "comment_id", "account_id", unique=True),)
 
     # Relationships
     comment = relationship("Comment", backref="comment_id")
