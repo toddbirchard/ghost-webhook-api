@@ -91,6 +91,10 @@ class Settings(BaseSettings):
     GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
     GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
 
+    # Plausible
+    PLAUSIBLE_BREAKDOWN_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
+    PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
+
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")

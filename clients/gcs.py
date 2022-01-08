@@ -40,7 +40,11 @@ class GCS:
 
     @property
     def bucket_http_url(self) -> str:
-        """Publicly accessible URL for images."""
+        """
+        Publicly accessible HTTP URL for images.
+
+        :returns: str
+        """
         return self.bucket_url
 
     def get(self, prefix: str) -> Iterator:
@@ -67,7 +71,7 @@ class GCS:
         """
         Get relative file path & filename from a given blob.
 
-        :param Blob image_blob: Image stored on GCS
+        :param Blob image_blob: Blob representing an image file stored on GCS.
 
         :returns: Tuple[str, str]
         """

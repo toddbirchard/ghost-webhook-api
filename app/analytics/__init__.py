@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.analytics.algolia import fetch_algolia_searches, import_algolia_search_queries
 from app.analytics.migrate import import_site_analytics
+from app.analytics.plausible import fetch_top_visited_urls
 from database.schemas import AnalyticsResponse
 from log import LOGGER
 
@@ -18,8 +19,8 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 )
 async def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
-    weekly_traffic = import_site_analytics("weekly")
-    monthly_traffic = import_site_analytics("monthly")
+    weekly_traffic = fetch_top_visited_urls("7d", limit=100)
+    monthly_traffic = fetch_top_visited_urls("month", limit=500)
     LOGGER.success(
         f"Inserted {len(weekly_traffic)} rows into `weekly_stats`,  {len(monthly_traffic)}  into `monthly_stats`."
     )
@@ -27,11 +28,11 @@ async def migrate_site_analytics():
         "updated": {
             "weekly_stats": {
                 "count": len(weekly_traffic),
-                "rows": {zip(weekly_traffic["posts"], weekly_traffic["views"])},
+                "rows": weekly_traffic,
             },
             "monthly_stats": {
                 "count": len(monthly_traffic),
-                "rows": {zip(monthly_traffic["posts"], monthly_traffic["views"])},
+                "rows": monthly_traffic,
             },
         }
     }

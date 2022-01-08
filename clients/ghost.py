@@ -90,6 +90,72 @@ class Ghost:
                 f"Unexpected error occurred while fetching post `{post_id}`: {e}"
             )
 
+    def get_post_by_slug(self, post_slug: str) -> Optional[dict]:
+        """
+        Fetch Ghost post by slug.
+
+        :param str post_slug: Unique slug of post to fetch.
+
+        :returns: Optional[dict]
+        """
+        try:
+            headers = {
+                "Authorization": f"Ghost {self.session_token}",
+                "Content-Type": "application/json",
+            }
+            params = {
+                "include": "authors",
+                "formats": "mobiledoc",
+            }
+            endpoint = f"{self.admin_api_url}/posts/slug/{post_slug}/"
+            resp = requests.get(endpoint, headers=headers, params=params)
+            if resp.json().get("errors") is not None:
+                LOGGER.error(
+                    f"Failed to fetch post `{post_slug}`: {resp.json().get('errors')[0]['message']}"
+                )
+                return None
+            post = resp.json()["posts"][0]
+            LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
+            return post
+        except HTTPError as e:
+            LOGGER.error(f"Ghost HTTPError while fetching post `{post_slug}`: {e}")
+        except KeyError as e:
+            LOGGER.error(
+                f"KeyError for `{e}` occurred while fetching post `{post_slug}`"
+            )
+        except Exception as e:
+            LOGGER.error(
+                f"Unexpected error occurred while fetching post `{post_slug}`: {e}"
+            )
+
+    def get_pages(self) -> Optional[dict]:
+        """
+        Fetch Ghost pages.
+
+        :returns: Optional[dict]
+        """
+        try:
+            headers = {
+                "Authorization": f"Ghost {self.session_token}",
+                "Content-Type": "application/json",
+            }
+            endpoint = f"{self.admin_api_url}/pages"
+            req = requests.get(endpoint, headers=headers)
+            if req.json().get("errors") is not None:
+                LOGGER.error(
+                    f"Failed to fetch Ghost pages: {req.json().get('errors')[0]['message']}"
+                )
+                return None
+            post = req.json()["pages"]
+            LOGGER.info(f"Fetched Ghost pages` ({endpoint})")
+            return post
+        except HTTPError as e:
+            LOGGER.error(f"Ghost HTTPError while fetching pages: {e}")
+        except KeyError as e:
+            LOGGER.error(f"KeyError for `{e}` occurred while fetching pages")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error occurred while fetching pages: {e}")
+
     def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
         """
         Update post by ID.
