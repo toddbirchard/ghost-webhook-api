@@ -142,7 +142,9 @@ class ImageTransformer(GCS):
         retina_blob_filepath = f"{image_folder}/_retina/{image_name.replace('.jpg', '@2x.jpg').replace('.png', '@2x.png')}"
         retina_image_blob = self.bucket.blob(retina_blob_filepath)
         if retina_image_blob.exists() is False:
-            self.bucket.copy_blob(retina_image_blob, self.bucket, retina_blob_filepath)
+            self.bucket.copy_blob(
+                image_blob, self.bucket, new_name=retina_blob_filepath
+            )
             new_retina_image_blob = self.bucket.blob(retina_blob_filepath)
             LOGGER.success(f"Created retina image `{retina_blob_filepath}`")
             return new_retina_image_blob
@@ -185,7 +187,6 @@ class ImageTransformer(GCS):
             new_mobile_image_blob = self._transform_mobile_image(
                 image_blob, mobile_image_blob
             )
-            LOGGER.success(f"Created mobile image `{mobile_blob_filepath}`")
             return new_mobile_image_blob
         else:
             LOGGER.info(
