@@ -294,3 +294,33 @@ class Ghost:
         except HTTPError as e:
             LOGGER.error(e.response)
             return e.response
+
+    def get_all_posts(self):
+        try:
+            headers = {
+                "Authorization": f"Ghost {self.session_token}",
+                "Content-Type": "application/json",
+            }
+            params = {
+                "filter": "tag:-roundup",
+                "limit": "200",
+            }
+            endpoint = f"{self.admin_api_url}/posts"
+            resp = requests.get(endpoint, headers=headers, params=params)
+            if resp.json().get("errors") is not None:
+                LOGGER.error(
+                    f"Failed to fetch posts: {resp.json().get('errors')[0]['message']}"
+                )
+                return None
+            posts = resp.json()["posts"]
+            return [
+                post["url"].replace(".app", ".com")
+                for post in posts
+                if post["status"] == "published"
+            ]
+        except HTTPError as e:
+            LOGGER.error(f"Ghost HTTPError while fetching posts: {e}")
+        except KeyError as e:
+            LOGGER.error(f"KeyError for `{e}` occurred while fetching posts")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error occurred while fetching posts: {e}")

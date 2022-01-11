@@ -244,3 +244,17 @@ async def get_single_post(post_id: str):
             status_code=422, detail="Post ID required to test endpoint."
         )
     return ghost.get_post(post_id)
+
+
+@router.get(
+    "/all",
+    summary="Get all post URLs.",
+)
+async def get_all_posts():
+    posts = ghost.get_all_posts()
+    LOGGER.success(posts)
+    return JSONResponse(
+        posts,
+        status_code=200,
+        headers={"content-type": "application/json"},
+    )
