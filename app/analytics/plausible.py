@@ -1,3 +1,4 @@
+"""Fetch site analytics via Plausible API."""
 from typing import List, Optional
 
 import requests
@@ -8,7 +9,7 @@ from config import settings
 from log import LOGGER
 
 
-def fetch_top_visited_urls(time_period, limit=20) -> Optional[List[dict]]:
+def fetch_top_visited_urls(time_period, limit=20) -> List[Optional[dict]]:
     """
     Fetch top visited URLs from Plausible.
 
@@ -49,6 +50,7 @@ def fetch_top_visited_urls(time_period, limit=20) -> Optional[List[dict]]:
                 for result in results_list
                 if result is not None
             ]
+        return []
     except RequestException as e:
         LOGGER.error(f"RequestException when fetching Plausible top URLs: {e}")
     except Exception as e:

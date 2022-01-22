@@ -1,3 +1,4 @@
+"""Ghost Twitter embed card structure."""
 twitter = [
     "embed",
     {

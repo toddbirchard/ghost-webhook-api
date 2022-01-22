@@ -34,10 +34,9 @@ async def author_post_created(post_update: PostUpdate) -> JSONResponse:
         msg = f"{author_name} just updated one of your posts: `{title}`."
         sms.send_message(msg)
         return JSONResponse(msg, 200, {"content-type:": "text/plain"})
-    else:
-        return JSONResponse(
-            f"Author is {author_name}, carry on.", 204, {"content-type:": "text/plain"}
-        )
+    return JSONResponse(
+        f"Author is {author_name}, carry on.", 204, {"content-type:": "text/plain"}
+    )
 
 
 @router.post("/post/updated")
@@ -62,9 +61,8 @@ async def author_post_tampered(post_update: PostUpdate) -> JSONResponse:
         msg = f"{', '.join(other_authors)} updated you post: `{title}`."
         sms.send_message(msg)
         return JSONResponse(msg, 200, {"content-type:": "text/plain"})
-    else:
-        return JSONResponse(
-            f"{data.primary_author.name} edited one of their own posts, carry on.",
-            200,
-            {"content-type:": "text/plain"},
-        )
+    return JSONResponse(
+        f"{data.primary_author.name} edited one of their own posts, carry on.",
+        200,
+        {"content-type:": "text/plain"},
+    )

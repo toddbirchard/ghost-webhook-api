@@ -40,7 +40,16 @@ def scrape_metadata_from_url(url: str) -> Optional[List[dict]]:
         LOGGER.error(f"Unexpected error while scraping metadata for URL `{url}`: {e}")
 
 
-def create_bookmark_card(page, page_meta: dict, url: str) -> List[dict]:
+def create_bookmark_card(page: MetadataParser, page_meta: dict, url: str) -> List[dict]:
+    """
+    Create a preview bookmark card from a URL.
+
+    :param MetadataParser page: Page object create from URL to be parsed.
+    :param dict page_meta: Page metadata parsed from the head of the target URL.
+    :param str url: URL of the linked third-party post/article.
+
+    :returns: Optional[List[dict]]
+    """
     try:
         author = page_meta.get("author")
         publisher = page_meta.get("publisher")
@@ -72,6 +81,13 @@ def create_bookmark_card(page, page_meta: dict, url: str) -> List[dict]:
 
 
 def create_twitter_card(url: str) -> Optional[List[dict]]:
+    """
+    Create a Twitter embed card from dangling Twitter URL.
+
+    :param str url: URL of the linked Twitter post.
+
+    :returns: Optional[List[dict]]
+    """
     try:
         req = requests.get(f"https://publish.twitter.com/oembed?url={url}")
         if req.status_code == 200:

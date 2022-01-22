@@ -14,12 +14,16 @@ def create_mixpanel_record(user: Member) -> Optional[dict]:
 
     :param user: New user account from Netlify auth.
     :type user: Member
+
     :returns: Optional[dict]
     """
     try:
         mp = Mixpanel(settings.MIXPANEL_API_TOKEN)
         body = {"$name": user.name, "$email": user.email}
-        return mp.people_set(user.email, body)
+        new_user = mp.people_set(user.email, body)
+        if new_user:
+            return new_user
+        return None
     except MixpanelException as e:
         LOGGER.warning(f"Mixpanel failed to register user: {e}")
     except Exception as e:

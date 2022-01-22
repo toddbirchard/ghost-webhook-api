@@ -1,5 +1,4 @@
 """Parse new comments from users."""
-from datetime import datetime
 from typing import Optional
 
 from clients import ghost
@@ -45,6 +44,6 @@ def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
     author_emails = [author["email"] for author in authors]
     if comment.user_email == post["primary_author"]["email"]:
         return "author"
-    elif comment.user_email in author_emails:
+    if comment.user_email in author_emails:
         return "moderator"
     return None

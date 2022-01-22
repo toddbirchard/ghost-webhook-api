@@ -40,4 +40,4 @@ api.include_router(authors.router)
 api.include_router(images.router)
 api.include_router(github.router)
 
-LOGGER.success(f"API successfully started.")
+LOGGER.success("API successfully started.")

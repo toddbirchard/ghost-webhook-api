@@ -1,3 +1,4 @@
+"""Ghost bookmark preview card structure."""
 card = [
     "bookmark",
     {

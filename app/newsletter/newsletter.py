@@ -3,7 +3,7 @@ from typing import Optional
 
 from clients import mailgun
 from config import settings
-from database.schemas import EmailSchema, Member, SubscriptionWelcomeEmail
+from database.schemas import Member, SubscriptionWelcomeEmail
 from log import LOGGER
 
 

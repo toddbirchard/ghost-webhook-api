@@ -1,3 +1,4 @@
+"""Methods for updating Ghost post content or metadata."""
 from typing import List, Optional, Tuple
 
 from clients import ghost, images
@@ -32,6 +33,7 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
 
     :param post_dicts: Ghost posts as list of dictionaries.
     :type post_dicts: List[dict]
+
     :returns: List[Optional[dict]]
     """
     updated_posts = []
@@ -50,7 +52,7 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
                 }
             ]
         }
-        response, code = ghost.update_post(post_dict["id"], body, post["slug"])
+        code = ghost.update_post(post_dict["id"], body, post["slug"])
         if code == 200:
             updated_posts.append(
                 {

@@ -85,7 +85,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
     user_role = get_user_role(comment, ghost_post)
     if comment.user_email != ghost_post["primary_author"]["email"]:
-        email_notification = mailgun.email_notification_new_comment(
+        mailgun.email_notification_new_comment(
             ghost_post, [post_author], comment.__dict__
         )
     create_comment(db, comment, user_role)
@@ -123,14 +123,13 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
     elif upvote_request.vote is False and existing_vote:
         remove_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
         return upvote_request
-    elif upvote_request.vote is False and existing_vote is None:
-        LOGGER.warning(
-            f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
-        )
-        raise HTTPException(
-            status_code=400,
-            detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
-        )
+    LOGGER.warning(
+        f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
+    )
+    raise HTTPException(
+        status_code=400,
+        detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
+    )
 
 
 @router.post(

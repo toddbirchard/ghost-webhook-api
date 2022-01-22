@@ -1,3 +1,4 @@
+"""Methods for assigning missing post metadata."""
 import json
 from typing import List, Optional
 
@@ -71,7 +72,6 @@ def add_alt_tag(image_card: List) -> List[dict]:
 
     :returns: List[dict]
     """
-    global images_updated
     if image_card[0] == "image":
         new_card = image_card
         caption = image_card[1].get("caption")

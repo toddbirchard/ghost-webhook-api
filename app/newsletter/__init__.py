@@ -1,3 +1,4 @@
+"""Modify Ghost Newsletter subscriptions."""
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi_mail.email_utils import DefaultChecker
@@ -50,12 +51,17 @@ async def member_unsubscribe(subscriber: Subscriber):
     LOGGER.info(f"`{subscriber.name}` unsubscribed from newsletter.")
 
 
-async def default_checker():
+async def default_checker() -> DefaultChecker:
+    """
+    Return email validator to ensure incoming email is legitimate.
+
+    :returns: DefaultChecker
+    """
     checker = (
         DefaultChecker()
     )  # you can pass source argument for your own email domains
     await checker.fetch_temp_email_domains()  # require to fetch temporary email domains
-    return checker
+    return DefaultChecker
 
 
 @router.get("/email/disposable")

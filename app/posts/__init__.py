@@ -57,22 +57,19 @@ async def update_post(post_update: PostUpdate):
             )
     post = post_update.post.current
     slug = post.slug
-    title = post.title
     feature_image = post.feature_image
-    custom_excerpt = post.custom_excerpt
     primary_tag = post.primary_tag
     html = post.html
-    time = get_current_time()
     body = {
         "posts": [
             {
-                "meta_title": title,
-                "og_title": title,
-                "twitter_title": title,
-                "meta_description": custom_excerpt,
-                "twitter_description": custom_excerpt,
-                "og_description": custom_excerpt,
-                "updated_at": time,
+                "meta_title": post.title,
+                "og_title": post.title,
+                "twitter_title": post.title,
+                "meta_description": post.custom_excerpt,
+                "twitter_description": post.custom_excerpt,
+                "og_description": post.custom_excerpt,
+                "updated_at": get_current_time(),
             }
         ]
     }
@@ -100,6 +97,7 @@ async def update_post(post_update: PostUpdate):
     response_model=PostBulkUpdate,
 )
 async def batch_update_metadata():
+    """Run SQL queries to sanitize metadata for all posts."""
     update_queries = collect_sql_queries("posts/updates")
     update_results = rdbms.execute_queries(update_queries, "hackers_dev")
     insert_posts = rdbms.execute_query_from_file(
@@ -114,17 +112,6 @@ async def batch_update_metadata():
         "inserted": {"count": len(insert_results), "posts": insert_results},
         "updated": {"count": len(update_results.keys()), "posts": update_results},
     }
-
-
-"""@router.get(
-    "/embed",
-    summary="Batch create Lynx embeds.",
-    description="Fetch raw Lynx post and generate embedded link previews.",
-)
-async def batch_lynx_previews():
-    posts = fetch_raw_lynx_posts()
-    result = batch_lynx_embeds(posts)
-    return result"""
 
 
 @router.post(
@@ -151,7 +138,7 @@ async def post_link_previews(post_update: PostUpdate):
                 f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
                 "hackers_dev",
             )
-            LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
+            LOGGER.info(f"Generated {num_embeds} previews for Lynx post {slug}: {doc}")
             return JSONResponse(
                 {
                     f"Successfully updated lynx post `{slug}` with mobiledoc: {doc}; Result: {result}."
@@ -203,7 +190,7 @@ async def test_post_link_previews(post_id: str):
                 ]
             }
             result = ghost.update_post(post_id, body, slug)
-            LOGGER.info(f"Generated Previews for Lynx post {slug}: {doc}")
+            LOGGER.info(f"Generated {num_embeds} previews for Lynx post {slug}: {doc}")
             return result
         return JSONResponse(
             {f"Lynx post {slug} already contains previews."},
@@ -251,8 +238,9 @@ async def get_single_post(post_id: str):
     summary="Get all post URLs.",
 )
 async def get_all_posts():
+    """List all published Ghost posts."""
     posts = ghost.get_all_posts()
-    LOGGER.success(posts)
+    LOGGER.success(f"Fetched all {len(posts)} Ghost posts: {posts}")
     return JSONResponse(
         posts,
         status_code=200,

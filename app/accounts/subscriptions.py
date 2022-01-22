@@ -27,14 +27,14 @@ def new_ghost_subscription(user: NetlifyAccount) -> Optional[Dict[str, List[Dict
         ]
     }
     response, code = ghost.create_member(body)
-    if code == 200:
-        LOGGER.success(
-            f"Created new Ghost member: {user.user_metadata.full_name} <{user.email}>"
-        )
-        return body
-    else:
+    if code != 200:
         error_type = response["errors"][0]["type"]
         if error_type == "ValidationError":
             LOGGER.info(
                 f"Skipped Ghost member creation for existing user: {user.user_metadata.full_name} <{user.email}>"
             )
+    else:
+        LOGGER.success(
+            f"Created new Ghost member: {user.user_metadata.full_name} <{user.email}>"
+        )
+        return body

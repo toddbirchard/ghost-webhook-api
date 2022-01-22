@@ -10,14 +10,14 @@ from database import rdbms
 from log import LOGGER
 
 
-def fetch_algolia_searches(table_name: str, timeframe: int) -> Optional[List[dict]]:
+def fetch_algolia_searches(table_name: str, timeframe: int) -> List[Optional[dict]]:
     """
     Fetch single week of searches from Algolia API.
 
     :param timeframe: Number of days for which to fetch recent search analytics.
     :param str table_name: DB table name
 
-    :returns: Optional[List[dict]]
+    :returns: List[Optional[dict]]
     """
     try:
         endpoint = "https://analytics.algolia.com/2/searches"
@@ -30,17 +30,27 @@ def fetch_algolia_searches(table_name: str, timeframe: int) -> Optional[List[dic
             "limit": 999999,
             "startDate": get_start_date_range(timeframe),
         }
-        req = requests.get(endpoint, headers=headers, params=params)
-        search_queries = req.json()["searches"]
-        search_queries = filter_search_queries(search_queries)
-        import_algolia_search_queries(search_queries, table_name)
-        return search_queries
+        resp = requests.get(endpoint, headers=headers, params=params)
+        if resp.status_code == 200 and resp.json().get("searches") is not None:
+            search_queries = resp.json().get("searches")
+            search_queries = filter_search_queries(search_queries)
+            if search_queries is not None:
+                import_algolia_search_queries(search_queries, table_name)
+                return search_queries
+            return []
+        return []
     except HTTPError as e:
-        LOGGER.error(f"HTTPError while fetching Algolia searches: {e}")
-    except KeyError as e:
-        LOGGER.error(f"KeyError while fetching Algolia searches: {e}")
+        LOGGER.error(
+            f"HTTPError while fetching Algolia searches for `{timeframe}`: {e}"
+        )
+    except ValueError as e:
+        LOGGER.error(
+            f"ValueError while fetching Algolia searches for `{timeframe}`: {e}"
+        )
     except Exception as e:
-        LOGGER.error(f"Unexpected error while fetching Algolia searches: {e}")
+        LOGGER.error(
+            f"Unexpected error while fetching Algolia searches for `{timeframe}`: {e}"
+        )
 
 
 def filter_search_queries(
