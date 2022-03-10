@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from config import BASE_DIR, settings
-from database.schemas import NewsletterSubscriber
+from database.schemas import NewsletterSubscriber, NewDonation
 from log import LOGGER
 
 client = TestClient(api)
@@ -99,3 +99,9 @@ def test_import_site_analytics():
 def test_newsletter_subscriber():
     subscriber = NewsletterSubscriber(name="Test name", email="test@example.com")
     response = client.post("/newsletter", subscriber)
+    assert type(response.json()) == dict
+
+
+def test_get_donation(old_donation: NewDonation):
+    response = client.post("/donations", old_donation)
+    assert response.status_code == 400
