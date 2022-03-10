@@ -10,16 +10,16 @@ from database.schemas import NetlifyAccount, NewComment, NewDonation
 from log import LOGGER
 
 
-def get_donation(db: Session, donation_id: int) -> Optional[Result]:
+def get_donation(db: Session, donation: NewDonation) -> Optional[Result]:
     """
     Fetch BuyMeACoffee donation by ID.
 
     :param Session db: ORM database session.
-    :param int donation_id: Primary key for donation record.
+    :param NewDonation donation: Donation record to be fetched.
 
     :returns: Optional[Result]
     """
-    return db.query(Donation).filter(Donation.coffee_id == donation_id).first()
+    return db.query(Donation).filter(Donation.coffee_id == donation.coffee_id).first()
 
 
 def create_donation(db: Session, donation: NewDonation) -> Donation:

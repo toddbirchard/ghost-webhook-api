@@ -8,10 +8,8 @@ from clients import ghost, mailgun
 from database.crud import (
     create_account,
     create_comment,
-    create_donation,
     get_account,
     get_comment_upvote,
-    get_donation,
     remove_comment_upvote,
     submit_comment_upvote,
 )
@@ -21,7 +19,6 @@ from database.schemas import (
     NetlifyAccountCreationResponse,
     NetlifyUserEvent,
     NewComment,
-    NewDonation,
     UpvoteComment,
 )
 from log import LOGGER
@@ -130,33 +127,6 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
         status_code=400,
         detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
     )
-
-
-@router.post(
-    "/donation",
-    summary="New BuyMeACoffee donation",
-    description="Save record of new donation to persistent ledger.",
-    response_model=NewDonation,
-)
-async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)):
-    """
-    Save BuyMeACoffee donation to database.
-
-    :param NewDonation donation: New donation.
-    :param Session db: ORM Database session.
-    """
-    db_donation = get_donation(db, donation.coffee_id)
-    if db_donation:
-        LOGGER.warning(
-            f"Donation `{donation.coffee_id}` from `{donation.email}` already exists."
-        )
-        raise HTTPException(
-            status_code=400,
-            detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists.",
-        )
-    create_donation(db=db, donation=donation)
-    ghost.rebuild_netlify_site()
-    return donation
 
 
 @router.get("/comments", summary="Test get comments via ORM")

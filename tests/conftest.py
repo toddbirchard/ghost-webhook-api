@@ -7,6 +7,7 @@ from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from config import settings
+from database.schemas import NewDonation
 from database.sql_db import Database
 
 
@@ -1141,3 +1142,15 @@ def github_issue_user():
             "site_admin": False,
         },
     }
+
+
+@pytest.fixture
+def old_donation() -> NewDonation:
+    return NewDonation(
+        name="todd",
+        email="fakeemail@example.com",
+        count=1,
+        message="This is a fake comment.",
+        link="https://www.buymeacoffee.com/hackersslackers/c/12345",
+        coffee_id=12345,
+    )

@@ -73,7 +73,7 @@ class Donation(Base):
     __tablename__ = "donations"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), unique=False)
+    email = Column(String(255), unique=False, index=True)
     name = Column(String(255), unique=False)
     count = Column(Integer, unique=False)
     message = Column(Text, unique=False)
