@@ -103,5 +103,5 @@ def test_newsletter_subscriber():
 
 
 def test_get_donation(old_donation: NewDonation):
-    response = client.post("/donations", old_donation)
+    response = client.post("/donation", old_donation)
     assert response.status_code == 400
