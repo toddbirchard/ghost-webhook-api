@@ -2,6 +2,7 @@
 from typing import List, Optional
 
 from pandas import DataFrame
+from databases import Database
 from sqlalchemy import MetaData, Table, create_engine
 from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -9,7 +10,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from log import LOGGER
 
 
-class Database:
+class SQLDatabase:
     """Database client."""
 
     def __init__(self, uri: str, args: dict):

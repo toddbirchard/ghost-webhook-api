@@ -75,7 +75,10 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_DATABASE_PEM: str = getenv("SQLALCHEMY_DATABASE_PEM")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
-    SQLALCHEMY_ENGINE_OPTIONS: dict = {"ssl": {"key": SQLALCHEMY_DATABASE_PEM}}
+    SQLALCHEMY_ENGINE_OPTIONS: dict = {
+        "ssl": {"key": SQLALCHEMY_DATABASE_PEM},
+        "check_same_thread": False
+    }
 
     # Algolia API
     ALGOLIA_SEARCHES_ENDPOINT: str = "https://analytics.algolia.com/2/searches"

@@ -2,12 +2,14 @@
 from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from databases import Database
 
 from app import accounts, analytics, authors, github, images, newsletter, posts
 from config import settings
 from database.orm import Base, engine
 from log import LOGGER
 
+db = Database(settings
 Base.metadata.create_all(bind=engine)
 
 if settings.ENVIRONMENT == "production":
@@ -31,6 +33,15 @@ api.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@api.on_event("startup")
+async def startup():
+    await database.connect()
+
+
+@api.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 api.include_router(analytics.router)
 api.include_router(newsletter.router)
