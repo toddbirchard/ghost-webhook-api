@@ -1,8 +1,8 @@
 # JAMStack Automation
 
 ![Python](https://img.shields.io/badge/Python-^3.8-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
-![FastAPI](https://img.shields.io/badge/FastAPI-^v0.68.2-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
-![PyDantic](https://img.shields.io/badge/Pydantic-^v1.8.2-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![FastAPI](https://img.shields.io/badge/FastAPI-^v0.73.0-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![PyDantic](https://img.shields.io/badge/Pydantic-^v1.9.0-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Ghost](https://img.shields.io/badge/Ghost-^v4.0.0-lightgrey.svg?longCache=true&style=flat-square&logo=ghost&logoColor=white&colorB=656c82&colorA=4c566a)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/google/skia.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=a3be8c)
 [![GitHub Issues](https://img.shields.io/github/issues/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/issues)
@@ -49,7 +49,10 @@ User-created accounts & actions for community interactions.
   * **POST** `/account`: Create Ghost member from Netlify Auth service (supports auth providers Github, Google, etc.)
   * **POST** `/account/comment`: Accept user-submitted comments for posts. Each submission notifies the post’s author via a Mailgun email.
   * **POST** `/account/comment/upvote`: Increment (or de increment) a comment’s upvote count by 1, with maximum 1 vote per user.
-  * **POST** `/account/donation`: Adds [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers)  donation to a historical ledger.
+
+#### Donate
+
+* **POST** `/donation`: Adds [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers)  donation to a historical ledger.
 
 #### Newsletter
 
