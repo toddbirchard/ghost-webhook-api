@@ -1,6 +1,7 @@
 import pytest
 from fastapi import Depends
 from github import Github
+from sqlalchemy.orm import Session
 
 from clients import gbq
 from clients.gcs import GCS
@@ -69,7 +70,7 @@ def gh():
 
 
 @pytest.fixture
-def db_session():
+def db_session() -> Session:
     return Depends(get_db)
 
 
