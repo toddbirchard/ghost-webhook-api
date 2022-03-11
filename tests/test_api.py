@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from config import BASE_DIR, settings
-from database.schemas import NewsletterSubscriber, NewDonation
+from database.schemas import Member, NewDonation, Subscriber
 from log import LOGGER
 
 client = TestClient(api)
@@ -96,12 +96,21 @@ def test_import_site_analytics():
     assert type(response.json()) == dict
 
 
-def test_newsletter_subscriber():
-    subscriber = NewsletterSubscriber(name="Test name", email="test@example.com")
-    response = client.post("/newsletter", subscriber)
+def test_new_ghost_member():
+    member = Member(
+        id="dfdsgf",
+        uuid="dsfdf-dsfdsfsfdsf-sdfdsfdsfsafd",
+        email="fakeemail@example.com",
+        avatar="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank",
+        note="Member note",
+        labels=["VIP"],
+    )
+    subscriber = Subscriber(current=member)
+    response = client.post("/newsletter/", subscriber)
     assert type(response.json()) == dict
+    assert response.json().get("id") is not None
 
 
-def test_get_donation(old_donation: NewDonation):
-    response = client.post("/donation", old_donation)
+def test_get_donation(old_donation: NewDonation, db_session):
+    response = client.post("/donation/", old_donation, db_session)
     assert response.status_code == 400

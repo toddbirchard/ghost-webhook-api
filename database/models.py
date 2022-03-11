@@ -73,10 +73,10 @@ class Donation(Base):
     __tablename__ = "donations"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), unique=False, index=True)
-    name = Column(String(255), unique=False)
-    count = Column(Integer, unique=False)
-    message = Column(Text, unique=False)
-    link = Column(String(255))
-    created_at = Column(DateTime, server_default=func.now())
     coffee_id = Column(Integer, unique=True, index=True)
+    email = Column(String(255), unique=False, index=True)
+    name = Column(String(255))
+    count = Column(Integer)
+    message = Column(Text)
+    link = Column(Text, unique=True, index=True)
+    created_at = Column(DateTime, server_default=func.now())

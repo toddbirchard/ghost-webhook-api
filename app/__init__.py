@@ -3,7 +3,16 @@ from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import accounts, analytics, authors, github, images, newsletter, posts, donations
+from app import (
+    accounts,
+    analytics,
+    authors,
+    donations,
+    github,
+    images,
+    newsletter,
+    posts,
+)
 from config import settings
 from database.orm import Base, engine
 from log import LOGGER
@@ -37,8 +46,8 @@ api.include_router(newsletter.router)
 api.include_router(posts.router)
 api.include_router(accounts.router)
 api.include_router(authors.router)
+api.include_router(donations.router)
 api.include_router(images.router)
 api.include_router(github.router)
-api.include_router(donations.router)
 
 LOGGER.success("API successfully started.")

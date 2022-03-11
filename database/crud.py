@@ -10,16 +10,24 @@ from database.schemas import NetlifyAccount, NewComment, NewDonation
 from log import LOGGER
 
 
-def get_donation(db: Session, donation: NewDonation) -> Optional[Result]:
+def get_donation(db: Session, donation: NewDonation) -> Optional[NewDonation]:
     """
     Fetch BuyMeACoffee donation by ID.
 
     :param Session db: ORM database session.
     :param NewDonation donation: Donation record to be fetched.
 
-    :returns: Optional[Result]
+    :returns: Optional[NewDonation]
     """
-    return db.query(Donation).filter(Donation.coffee_id == donation.coffee_id).first()
+    existing_donation = (
+        db.query(Donation).filter(Donation.coffee_id == donation.coffee_id).first()
+    )
+    if existing_donation is None:
+        return donation
+    LOGGER.warning(
+        f"Donation `{existing_donation.id}` from `{existing_donation.email}` already exists; skipping."
+    )
+    return None
 
 
 def create_donation(db: Session, donation: NewDonation) -> Donation:
@@ -33,18 +41,18 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
     """
     try:
         db_item = Donation(
+            coffee_id=donation.coffee_id,
             email=donation.email,
             name=donation.name,
             count=donation.count,
             message=donation.message,
             link=donation.link,
-            coffee_id=donation.coffee_id,
             created_at=datetime.now(),
         )
         db.add(db_item)
         db.commit()
         LOGGER.success(
-            f"Received and recorded donation: `{donation.name}` donated `{donation.count}` coffees."
+            f"Successfully received donation: `{donation.count}` coffees from `{donation.name}`."
         )
         return db_item
     except SQLAlchemyError as e:
@@ -80,6 +88,9 @@ def create_comment(
     :returns: Comment
     """
     try:
+        LOGGER.info(
+            f"Creating comment from {comment.user_email} on {comment.post_slug}..."
+        )
         new_comment = Comment(
             user_id=comment.user_id,
             user_name=comment.user_name,

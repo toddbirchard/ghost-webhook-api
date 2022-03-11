@@ -1,4 +1,5 @@
 import pytest
+from fastapi import Depends
 from github import Github
 
 from clients import gbq
@@ -7,6 +8,7 @@ from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
 from config import settings
+from database.orm import get_db
 from database.schemas import NewDonation
 from database.sql_db import Database
 
@@ -64,6 +66,11 @@ def gh():
     return Github(
         settings.GH_API_KEY,
     )
+
+
+@pytest.fixture
+def db_session():
+    return Depends(get_db)
 
 
 @pytest.fixture

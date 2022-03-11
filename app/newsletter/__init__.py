@@ -1,10 +1,13 @@
-"""Modify Ghost Newsletter subscriptions."""
+"""Manage Ghost Newsletter subscriptions."""
+from typing import Type
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi_mail.email_utils import DefaultChecker
 
+from app.newsletter.member import parse_ghost_member_json
 from app.newsletter.mixpanel import create_mixpanel_record
-from app.newsletter.newsletter import newsletter_subscribe
+from app.newsletter.newsletter import welcome_newsletter_subscriber
 from database.schemas import Member, Subscriber
 from log import LOGGER
 
@@ -12,7 +15,7 @@ router = APIRouter(prefix="/newsletter", tags=["newsletter"])
 
 
 @router.post(
-    "/welcome",
+    "/",
     summary="Add new user account to Ghost.",
     description="Create free-tier Ghost membership for Netlify user account upon signup.",
 )
@@ -25,9 +28,15 @@ async def new_ghost_member(subscriber: Subscriber) -> JSONResponse:
     :returns: JSONResponse
     """
     try:
-        subscriber = subscriber.current
-        email = newsletter_subscribe(subscriber)
-        return JSONResponse({"email": email})
+        current_member = subscriber.current
+        welcome_email = welcome_newsletter_subscriber(current_member)
+        member_json = parse_ghost_member_json(current_member)
+        member_json.update({"welcome_email": welcome_email})
+        previous_member = subscriber.previous
+        if previous_member is not None:
+            previous_member_json = parse_ghost_member_json(current_member)
+            member_json.update({"previous": previous_member_json})
+        return JSONResponse(member_json)
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -51,7 +60,7 @@ async def member_unsubscribe(subscriber: Subscriber):
     LOGGER.info(f"`{subscriber.name}` unsubscribed from newsletter.")
 
 
-async def default_checker() -> DefaultChecker:
+async def default_checker() -> Type[DefaultChecker]:
     """
     Return email validator to ensure incoming email is legitimate.
 

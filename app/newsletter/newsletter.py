@@ -7,7 +7,9 @@ from database.schemas import Member, SubscriptionWelcomeEmail
 from log import LOGGER
 
 
-def newsletter_subscribe(subscriber: Member) -> Optional[SubscriptionWelcomeEmail]:
+def welcome_newsletter_subscriber(
+    subscriber: Member,
+) -> Optional[SubscriptionWelcomeEmail]:
     """
     Send welcome email to newsletter subscriber.
 
