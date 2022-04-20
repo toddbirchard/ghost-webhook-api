@@ -102,18 +102,21 @@ def test_new_ghost_member():
     member = Member(
         id="dfdsgf",
         uuid="dsfdf-dsfdsfsfdsf-sdfdsfdsfsafd",
+        name="Example Name",
+        note="This is a test note about a Ghost member.",
+        subscribed=True,
         email="fakeemail@example.com",
-        avatar="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank",
-        note="Member note",
+        avatar_image="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank",
         labels=["VIP"],
+        comped=False,
     )
-    subscriber = Subscriber(current=member)
-    response = client.post("/newsletter", subscriber)
+    subscriber = Subscriber(current=member, previous=None)
+    response = client.post("/newsletter/", subscriber)
     assert type(response.json()) == dict
     # assert response.json().get("id") is not None
 
 
 def test_accept_donation(old_donation: NewDonation, db_session):
-    response = client.post("/donation", old_donation, db_session)
+    response = client.post("/donation/", old_donation, db_session)
     print(response)
     assert response.status_code == 400
