@@ -50,6 +50,7 @@ fastapi-mail = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
+coverage = "*"
 mock = "*"
 mypy = "*"
 black = "*"
