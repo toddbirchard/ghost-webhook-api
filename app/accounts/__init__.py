@@ -135,4 +135,4 @@ async def test_orm(db: Session = Depends(get_db)):
     all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in all_comments:
         LOGGER.info(comment.user)
-    return comments
+    return all_comments

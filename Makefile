@@ -11,7 +11,7 @@ make deploy     - Set up project & run locally.
 make update     - Update dependencies via Poetry and output resulting `requirements.txt`.
 make format     - Run Python code formatter & sort dependencies.
 make lint       - Check code formatting with flake8.
-make clean      - Remove cached files and lock files.
+make clean      - Remove extraneous compiled files, caches, logs, etc.
 
 endef
 export HELP
@@ -72,7 +72,7 @@ format: env
 
 .PHONY: lint
 lint:
-	flake8 . --count \
+	$(LOCAL_PYTHON) -m flake8 . --count \
 			--select=E9,F63,F7,F82 \
 			--exclude .git,.github,__pycache__,.pytest_cache,.venv,logs,creds,.venv,docs,logs,.reports \
 			--show-source \
