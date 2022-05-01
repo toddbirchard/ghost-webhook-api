@@ -1,7 +1,6 @@
 import pytest
 from fastapi import Depends
 from github import Github
-from google.cloud import bigquery
 from sqlalchemy.orm import Session
 
 from clients.ghost import Ghost

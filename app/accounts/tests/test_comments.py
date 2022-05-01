@@ -3,7 +3,6 @@ from random import randint
 import pytest
 
 from app.accounts.comments import parse_comment
-from clients import ghost
 from config import settings
 from database.schemas import NewComment
 
@@ -38,18 +37,18 @@ def comment_no_username() -> NewComment:
     )
 
 
-def test_comment_parser(comment: NewComment):
+def test_comment_parser(ghost, comment: NewComment):
     post = ghost.get_post(comment.post_id)
-    parsed_comment = parse_comment(comment, post)
+    parsed_comment = parse_comment(ghost, comment, post)
     assert parsed_comment is not None
     assert type(parsed_comment) == dict
     assert len(parsed_comment.keys()) == 7
     assert parsed_comment["user_role"] == "author"
 
 
-def test_comment_parser_missing_username(comment_no_username: NewComment):
+def test_comment_parser_missing_username(ghost, comment_no_username: NewComment):
     post = ghost.get_post(comment_no_username.post_id)
-    parsed_comment = parse_comment(comment_no_username, post)
+    parsed_comment = parse_comment(ghost, comment_no_username, post)
     # When empty, username is derived from user's Email
     assert comment_no_username.user_name is None
     assert comment_no_username.user_email is not None
