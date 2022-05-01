@@ -81,14 +81,11 @@ lint:
 
 .PHONY: clean
 clean:
-	find . -name '**/*.pyc' -delete
-	find . -name '__pycache__' -delete
 	find . -name 'poetry.lock' -delete
-	find . -name 'Pipefile.lock' -delete
-	find . -name '*.log' -delete
 	find . -name '.coverage' -delete
-	find . -wholename 'logs/*.json' -delete
-	find . -type d -name '.pytest_cache' -exec rm -rf {} +
-	find . -type d -name '**/.pytest_cache' -exec rm -rf {} +
-	find . -type d -name './logs' -exec rm -rf {} +
-	find . -type d -name './.reports' -exec rm -rf {} +
+	find . -wholename '**/*.pyc' -delete
+	find . -wholename '__pycache__' -delete
+	find . -type d -wholename '.pytest_cache' -exec rm -rf {} +
+	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} +
+	find . -type d -wholename './logs/*' -exec rm -rf {} +
+	find . -type d -wholename './.reports/*' -exec rm -rf {} +
