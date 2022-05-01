@@ -1,8 +1,8 @@
 """Initialize API."""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from ddtrace import tracer
-from ddtrace_asgi.middleware import TraceMiddleware
+# from ddtrace import tracer
+# from ddtrace_asgi.middleware import TraceMiddleware
 
 
 from app import (
@@ -31,12 +31,12 @@ api = FastAPI(
     openapi_tags=settings.API_TAGS,
 )
 
-if settings.ENVIRONMENT == "production":
+'''if settings.ENVIRONMENT == "production":
     api.add_middleware(
         TraceMiddleware,
         service="jamstack-api",
         tracer=tracer
-    )
+    )'''
 
 api.add_middleware(
     CORSMiddleware,
