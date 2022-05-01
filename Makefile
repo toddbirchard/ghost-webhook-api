@@ -34,7 +34,7 @@ run: env
 .PHONY: install
 install:
 	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
-	. .venv/bin/activate
+	$(shell . .venv/bin/activate)
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt
 
@@ -90,3 +90,4 @@ clean:
 	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} +
 	find . -type d -wholename './logs/*' -exec rm -rf {} +
 	find . -type d -wholename './.reports/*' -exec rm -rf {} +
+	find . -type d -wholename './.venv' -exec rm -rf {} +
