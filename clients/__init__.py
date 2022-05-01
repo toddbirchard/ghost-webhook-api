@@ -1,6 +1,6 @@
 """Initialize clients and third-party SDKs."""
 from github import Github
-from google.cloud import bigquery
+from google.cloud.bigquery import Client
 
 from clients.ghost import Ghost
 from clients.img import ImageTransformer
@@ -35,7 +35,7 @@ sms = Twilio(
 )
 
 # Google BigQuery
-gbq = bigquery.Client(
+gbq = Client(
     project=settings.GOOGLE_CLOUD_PROJECT_NAME,
     credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
 )

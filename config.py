@@ -5,6 +5,7 @@ from os import getenv, path
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
+from google.oauth2.service_account import Credentials
 from pydantic import BaseSettings, EmailStr
 
 # Load variables from .env
@@ -86,8 +87,10 @@ class Settings(BaseSettings):
     # Google Cloud Auth
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_KEY: str = getenv("GOOGLE_CLOUD_JSON_KEY")
-    GOOGLE_CLOUD_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
+    GOOGLE_CLOUD_CREDENTIALS: Credentials = (
+        service_account.Credentials.from_service_account_file(
+            f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
+        )
     )
 
     # Google BigQuery
@@ -109,7 +112,7 @@ class Settings(BaseSettings):
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
     GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
-    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/"
+    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/content"
     GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")

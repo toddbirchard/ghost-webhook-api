@@ -185,11 +185,11 @@ class Ghost:
             LOGGER.error(e.response)
             return e.response.content, e.response.status_code
 
-    def get_all_authors(self) -> Optional[List[str]]:
+    def get_all_authors(self) -> Optional[List[dict]]:
         """
         Fetch all Ghost authors.
 
-        :returns: Optional[List[str]]
+        :returns: Optional[List[dict]]
         """
         try:
             params = {"key": self.content_api_key}
@@ -201,7 +201,7 @@ class Ghost:
                 f"{self.admin_api_url}/users", params=params, headers=headers
             )
             if resp.status_code == 200:
-                return resp.json()["users"]
+                return resp.json().get("users")
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
         except KeyError as e:
@@ -221,7 +221,7 @@ class Ghost:
                 "Content-Type": "application/json",
             }
             resp = requests.get(
-                f"{self.content_api_url}/content/authors/{author_id}/",
+                f"{self.content_api_url}/authors/{author_id}/",
                 params=params,
                 headers=headers,
             )
