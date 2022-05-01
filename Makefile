@@ -85,6 +85,7 @@ clean:
 	find . -name '.coverage' -delete
 	find . -wholename '**/*.pyc' -delete
 	find . -wholename '__pycache__' -delete
+	find . -type d -wholename '.venv' -exec rm -rf {} +
 	find . -type d -wholename '.pytest_cache' -exec rm -rf {} +
 	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} +
 	find . -type d -wholename './logs/*' -exec rm -rf {} +
