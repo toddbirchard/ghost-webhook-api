@@ -5,7 +5,6 @@ from fastapi.testclient import TestClient
 from app import api
 from config import settings
 from database.schemas import Member, NewDonation, Subscriber
-from log import LOGGER
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
@@ -48,7 +47,6 @@ def test_github_issue(github_issue_user, gh):
     user_response = client.post("/github/issue", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
-    LOGGER.debug(user_response.json()["issue"]["trigger"]["repo"])
     repo = issue["trigger"]["repo"]
     assert issue["status"] == "queued"
     assert issue["trigger"]["type"] == "github"
@@ -66,13 +64,11 @@ def test_batch_update_metadata():
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
     assert response.json().get("updated") is not None
-    LOGGER.debug("TEST RESULTS FOR BATCH INSERT METADATA")
     pp.pprint(response.json())
 
 
 def assign_img_alt_attr():
     result = client.get("/posts/alt")
-    LOGGER.debug("TEST RESULTS FOR ASSIGNING IMG ALT TAGS")
     pp.pprint(result.json())
 
 

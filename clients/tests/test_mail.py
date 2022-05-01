@@ -1,7 +1,5 @@
 import pytest
 
-from log import LOGGER
-
 
 @pytest.fixture
 def comment_body():

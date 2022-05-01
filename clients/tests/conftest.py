@@ -1,4 +1,5 @@
 import pytest
+from google.cloud import bigquery
 
 from clients.ghost import Ghost
 from clients.mail import Mailgun
@@ -23,4 +24,12 @@ def mailgun():
         settings.MAILGUN_EMAIL_SERVER,
         settings.MAILGUN_FROM_SENDER,
         settings.MAILGUN_SENDER_API_KEY,
+    )
+
+
+@pytest.fixture
+def gbq():
+    return bigquery.Client(
+        project=settings.GOOGLE_CLOUD_PROJECT_NAME,
+        credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
     )

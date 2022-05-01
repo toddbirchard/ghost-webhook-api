@@ -1,9 +1,9 @@
 import pytest
 from fastapi import Depends
 from github import Github
+from google.cloud import bigquery
 from sqlalchemy.orm import Session
 
-from clients import ImageTransformer
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
