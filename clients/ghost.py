@@ -314,7 +314,7 @@ class Ghost:
             return [
                 post["url"].replace(".app", ".com")
                 for post in posts
-                if post["status"] == "published" and post[""]
+                if post["status"] == "published"
             ]
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching posts: {e}")

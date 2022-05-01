@@ -5,8 +5,7 @@ from fastapi import APIRouter, Query
 from fastapi.responses import PlainTextResponse
 
 from clients import images
-from config import BASE_DIR, settings
-from database import rdbms
+from config import settings
 from database.schemas import PostUpdate
 from log import LOGGER
 
