@@ -1,5 +1,5 @@
 """Initialize API."""
-from ddtrace import patch
+from ddtrace_asgi.middleware import TraceMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,10 +19,6 @@ from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
 
-if settings.ENVIRONMENT == "production":
-    patch(fastapi=True)
-
-
 api = FastAPI(
     title="Jamstack API",
     description="API to automate optimizations for JAMStack sites.",
@@ -32,6 +28,12 @@ api = FastAPI(
     openapi_url="/api.json",
     openapi_tags=settings.API_TAGS,
 )
+
+if settings.ENVIRONMENT == "production":
+    api.add_middleware(
+        TraceMiddleware,
+        service=settings.app_name,
+    )
 
 api.add_middleware(
     CORSMiddleware,
