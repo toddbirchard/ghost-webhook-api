@@ -32,7 +32,7 @@ api = FastAPI(
 if settings.ENVIRONMENT == "production":
     api.add_middleware(
         TraceMiddleware,
-        service=settings.app_name,
+        service="jamstack-api",
     )
 
 api.add_middleware(
