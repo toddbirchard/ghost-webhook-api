@@ -36,15 +36,12 @@ pyjwt = ">=2.0"
 mixpanel = "*"
 loguru = "*"
 twilio = "*"
-beautifulsoup4 = "*"
 boto = "*"
 botocore = "*"
 uvicorn = "*"
 PyGithub = "*"
 ddtrace = "*"
-pyarrow = "^6.0.0"
-extraction = "*"
-metadata-parser = "*"
+pyarrow = "*"
 fastapi-mail = "*"
 google-auth = "^2.6.6"
 
@@ -65,7 +62,7 @@ run = "asgi:app"
 issues = "https://github.com/toddbirchard/jamstack-api/issues"
 
 [build-system]
-requires = ["poetry>=1.1.12"]
+requires = ["poetry>=1.1.13"]
 build-backend = "poetry.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']
