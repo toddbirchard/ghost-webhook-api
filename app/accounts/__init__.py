@@ -84,8 +84,8 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
         mailgun.email_notification_new_comment(
             ghost_post, [post_author], comment.__dict__
         )
-    new_comment = create_comment(db, comment, user_role)
-    if new_comment:
+    created_comment = create_comment(db, comment, user_role)
+    if created_comment:
         ghost.rebuild_netlify_site()
     return comment
 

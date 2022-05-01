@@ -3,7 +3,7 @@ from fastapi import Depends
 from github import Github
 from sqlalchemy.orm import Session
 
-from clients.gcs import GCS
+from clients import ImageTransformer
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
@@ -41,16 +41,6 @@ def mailgun():
         settings.MAILGUN_EMAIL_SERVER,
         settings.MAILGUN_FROM_SENDER,
         settings.MAILGUN_SENDER_API_KEY,
-    )
-
-
-@pytest.fixture
-def gcs():
-    return GCS(
-        gcp_project_name=settings.GOOGLE_CLOUD_PROJECT_NAME,
-        gcp_api_credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
-        bucket_name=settings.GCP_BUCKET_NAME,
-        bucket_url=settings.GCP_BUCKET_URL,
     )
 
 
