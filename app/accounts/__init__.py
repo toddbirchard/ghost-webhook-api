@@ -77,13 +77,13 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param NewComment comment: User-submitted comment.
     :param Session db: ORM Database session.
     """
-    ghost_post = ghost.get_post(comment.post_id)
-    post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
-    user_role = get_user_role(ghost, comment, ghost_post)
-    if comment.user_email != ghost_post["primary_author"]["email"]:
-        mailgun.email_notification_new_comment(
-            ghost_post, [post_author], comment.__dict__
-        )
+    post = ghost.get_post(comment.post_id)
+    post_author = (
+        f"{post['primary_author']['name']} <{post['primary_author']['email']}>"
+    )
+    user_role = get_user_role(comment, post)
+    if comment.user_email != post["primary_author"]["email"]:
+        mailgun.email_notification_new_comment(post, [post_author], comment.__dict__)
     created_comment = create_comment(db, comment, user_role)
     if created_comment:
         ghost.rebuild_netlify_site()

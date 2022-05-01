@@ -1,15 +1,14 @@
 """Parse new comments from users."""
 from typing import Optional
 
-from clients import Ghost
+from clients import ghost
 from database.schemas import NewComment
 
 
-def parse_comment(ghost: Ghost, comment: NewComment, post: dict) -> dict:
+def parse_comment(comment: NewComment, post: dict) -> dict:
     """
     Parse incoming user comment.
 
-    :param Ghost ghost: Ghost blog client.
     :param Comment comment: User-submitted comment.
     :param dict post: Post on which comment was published.
 
@@ -17,7 +16,7 @@ def parse_comment(ghost: Ghost, comment: NewComment, post: dict) -> dict:
     """
     username = comment.user_name
     avatar = comment.user_avatar
-    user_role = get_user_role(ghost, comment, post)
+    user_role = get_user_role(comment, post)
     if comment.user_name is None and comment.user_email:
         username = comment.user_email.split("@")[0]
     if avatar == "undefined":
@@ -33,11 +32,10 @@ def parse_comment(ghost: Ghost, comment: NewComment, post: dict) -> dict:
     }
 
 
-def get_user_role(ghost: Ghost, comment: NewComment, post: dict) -> Optional[str]:
+def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
     """
     Determine if a commenter is a post author, site moderator, or regular user.
 
-    :param Ghost ghost: Ghost blog client.
     :param Comment comment: User-submitted comment.
     :param dict post: Post on which comment was published.
 
