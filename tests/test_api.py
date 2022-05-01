@@ -3,7 +3,7 @@ import pprint
 from fastapi.testclient import TestClient
 
 from app import api
-from config import BASE_DIR, settings
+from config import settings
 from database.schemas import Member, NewDonation, Subscriber
 from log import LOGGER
 
@@ -16,22 +16,6 @@ def test_api_docs():
     response = client.get("/")
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "text/html; charset=utf-8"
-
-
-def test_batch_lynx_previews(rdbms):
-    """"""
-    sql_file = open(
-        f"{BASE_DIR}/database/queries/posts/selects/lynx_bookmarks.sql", "r"
-    )
-    query = sql_file.read()
-    posts = rdbms.execute_query(query, "hackers_dev").fetchall()
-    assert isinstance(posts, list)
-    for post in posts:
-        assert "lynx" in post["slug"]
-        assert "Lynx" in post["title"]
-        assert "bookmark" not in post["mobiledoc"]
-        # assert "kg-card" not in post["html"]
-    LOGGER.debug(f"Collected {len(posts)} healthy lynx posts.")
 
 
 def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
@@ -120,3 +104,8 @@ def test_accept_donation(old_donation: NewDonation, db_session):
     response = client.post("/donation/", old_donation, db_session)
     print(response)
     assert response.status_code == 400
+
+
+def test_authors_bulk_update_metadata():
+    response = client.get("/authors/update")
+    assert response.status_code == 200

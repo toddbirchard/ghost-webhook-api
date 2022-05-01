@@ -15,9 +15,13 @@ class ImageTransformer(GCS):
     """Image generator for images stored on GCS."""
 
     def __init__(
-        self, bucket_name: str, bucket_url: str, bucket_lynx: str, basedir: str
+        self,
+        gcp_project_name: str,
+        gcp_api_credentials: str,
+        bucket_name: str,
+        bucket_url: str,
     ):
-        super().__init__(bucket_name, bucket_url, bucket_lynx, basedir)
+        super().__init__(gcp_project_name, gcp_api_credentials, bucket_name, bucket_url)
 
     def get_standard_blobs(self, folder: str) -> List[Optional[Blob]]:
         """
@@ -250,11 +254,3 @@ class ImageTransformer(GCS):
         elif ".png" in image_blob.name and "octet-stream" in image_blob.content_type:
             image_blob.content_type = "image/png"
         return image_blob
-
-    def fetch_random_lynx_image(self) -> str:
-        """Fetch random Lynx image from GCS bucket."""
-        files = self.get_standard_blobs("roundup")
-        images = [f"{self.bucket_http_url}{image.name}" for image in files]
-        rand = randint(0, len(images) - 1)
-        image = images[rand]
-        return image

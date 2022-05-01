@@ -3,6 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-^3.8-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
 ![FastAPI](https://img.shields.io/badge/FastAPI-^v0.75.2-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![PyDantic](https://img.shields.io/badge/Pydantic-^v1.9.0-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![Google Cloud](https://img.shields.io/badge/Google--Cloud-^v0.34.0-lightgrey.svg?longCache=true&style=flat-square&logo=googlecloud&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Ghost](https://img.shields.io/badge/Ghost-^v4.0.0-lightgrey.svg?longCache=true&style=flat-square&logo=ghost&logoColor=white&colorB=656c82&colorA=4c566a)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/google/skia.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=a3be8c)
 [![GitHub Issues](https://img.shields.io/github/issues/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/issues)
@@ -39,7 +40,6 @@ Ensure all posts have retina, mobile, and webp variants.
 
   * **POST** `/images`: Upon post creation, generate optimized retina and mobile variants of post ‘feature_image’ if they do not exist.
   * **GET** `/images`: Generates both **retina** and **mobile** varieties of _all_ images in a remote CDN directory. Defaults to directory containing images uploaded within current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.
-  * **GET** `/images/lynx`: Assign feature images to all Lynx posts which are missing them.
   * **GET** `/images/sort`: Transverses CDN in a given directory (`?directory=`) to organize images into subdirectories based on image type (retina, mobile, etc).
 
 #### Accounts
@@ -67,6 +67,7 @@ Logistics of adding or removing newsletter subscriptions.
 
 Insight to scenarios where Authors likely need assistance.
 
+ * **GET** `/authors/updated`: Update all authors to have correct CDN urls & sanitized metadata.
  * **POST** `/authors/post/created`: Notify site editor when posts are ready for review
  * **POST** `/authors/post/updated`: Notify original post author when a peer edits a post.
 

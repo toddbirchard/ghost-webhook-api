@@ -47,6 +47,7 @@ pyarrow = "^6.0.0"
 extraction = "*"
 metadata-parser = "*"
 fastapi-mail = "*"
+google-auth = "^2.6.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

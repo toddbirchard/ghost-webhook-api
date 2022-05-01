@@ -4,6 +4,7 @@ from os import getenv, path
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
+from google.oauth2 import service_account
 from pydantic import BaseSettings, EmailStr
 
 # Load variables from .env
@@ -82,28 +83,28 @@ class Settings(BaseSettings):
     ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
     ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
 
-    # GCP
-    GCP_PROJECT: str = getenv("GCP_PROJECT")
-    GCP_PROJECT_ID: str = getenv("GCP_PROJECT_ID")
+    # Google Cloud Auth
+    GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
+    GOOGLE_CLOUD_JSON_KEY: str = getenv("GOOGLE_CLOUD_JSON_KEY")
+    GOOGLE_CLOUD_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
+    )
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
     GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
-    GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
-
-    # Plausible
-    PLAUSIBLE_BREAKDOWN_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
-    PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
+    GCP_BIGQUERY_URI: str = (
+        f"bigquery://{GOOGLE_CLOUD_PROJECT_NAME}/{GCP_BIGQUERY_DATASET}"
+    )
 
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
-    GCP_LYNX_DIRECTORY: str = "roundup"
-    # GOOGLE_APPLICATION_CREDENTIALS: str = getenv("GOOGLE_APPLICATION_CREDENTIALS")
-    # GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    #     f"{basedir}/{GOOGLE_APPLICATION_CREDENTIALS}"
-    # )
+
+    # Plausible Analytics
+    PLAUSIBLE_BREAKDOWN_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
+    PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
@@ -157,8 +158,8 @@ class Settings(BaseSettings):
     dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
 
     # Github
-    GH_USERNAME: str = getenv("GH_USERNAME")
-    GH_API_KEY: str = getenv("GH_API_KEY")
+    GITHUB_USERNAME: str = getenv("GITHUB_USERNAME")
+    GITHUB_API_KEY: str = getenv("GITHUB_API_KEY")
 
 
 settings = Settings()

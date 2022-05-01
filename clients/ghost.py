@@ -40,8 +40,8 @@ class Ghost:
         """Authorize HTTPS session with Ghost admin."""
         endpoint = f"{self.admin_api_url}/session/"
         headers = {"Authorization": self.session_token}
-        req = requests.post(endpoint, headers=headers)
-        LOGGER.info(f"Authorization resulted in status code {req.status_code}.")
+        resp = requests.post(endpoint, headers=headers)
+        LOGGER.info(f"Authorization resulted in status code {resp.status_code}.")
 
     @property
     def session_token(self) -> str:
@@ -72,15 +72,17 @@ class Ghost:
                 "formats": "mobiledoc,html",
             }
             endpoint = f"{self.admin_api_url}/posts/{post_id}/"
-            req = requests.get(endpoint, headers=headers, params=params)
-            if req.json().get("errors") is not None:
+            resp = requests.get(endpoint, headers=headers, params=params)
+            if resp.json().get("errors") is not None:
                 LOGGER.error(
-                    f"Failed to fetch post `{post_id}`: {req.json().get('errors')[0]['message']}"
+                    f"Failed to fetch post `{post_id}`: {resp.json().get('errors')[0]['message']}"
                 )
                 return None
-            post = req.json()["posts"][0]
-            LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
-            return post
+            elif resp.json().get("posts"):
+                post = resp.json()["posts"][0]
+                LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
+                return post
+            return None
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching post `{post_id}`: {e}")
         except KeyError as e:
@@ -140,13 +142,13 @@ class Ghost:
                 "Content-Type": "application/json",
             }
             endpoint = f"{self.admin_api_url}/pages"
-            req = requests.get(endpoint, headers=headers)
-            if req.json().get("errors") is not None:
+            resp = requests.get(endpoint, headers=headers)
+            if resp.json().get("errors") is not None:
                 LOGGER.error(
-                    f"Failed to fetch Ghost pages: {req.json().get('errors')[0]['message']}"
+                    f"Failed to fetch Ghost pages: {resp.json().get('errors')[0]['message']}"
                 )
                 return None
-            post = req.json()["pages"]
+            post = resp.json()["pages"]
             LOGGER.info(f"Fetched Ghost pages` ({endpoint})")
             return post
         except HTTPError as e:
@@ -167,7 +169,7 @@ class Ghost:
         :returns: Tuple[str, int]
         """
         try:
-            req = requests.put(
+            resp = requests.put(
                 f"{self.admin_api_url}/posts/{post_id}/",
                 json=body,
                 headers={
@@ -175,10 +177,10 @@ class Ghost:
                     "Content-Type": "application/json",
                 },
             )
-            if req.status_code > 300:
-                LOGGER.warning(f"Failed to update post `{slug}`: {req.text}")
+            if resp.status_code > 300:
+                LOGGER.warning(f"Failed to update post `{slug}`: {resp.text}")
             LOGGER.success(f"Successfully updated post `{slug}`: {body}")
-            return req.status_code
+            return resp.status_code
         except HTTPError as e:
             LOGGER.error(e.response)
             return e.response.content, e.response.status_code
@@ -195,11 +197,11 @@ class Ghost:
                 "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
             }
-            req = requests.get(
+            resp = requests.get(
                 f"{self.admin_api_url}/users", params=params, headers=headers
             )
-            if req.status_code == 200:
-                return req.json()["users"]
+            if resp.status_code == 200:
+                return resp.json()["users"]
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
         except KeyError as e:
@@ -218,13 +220,13 @@ class Ghost:
             headers = {
                 "Content-Type": "application/json",
             }
-            req = requests.get(
+            resp = requests.get(
                 f"{self.content_api_url}/content/authors/{author_id}/",
                 params=params,
                 headers=headers,
             )
-            if req.status_code == 200:
-                return req.json()["authors"]
+            if resp.status_code == 200:
+                return resp.json()["authors"]
         except HTTPError as e:
             LOGGER.error(
                 f"Failed to fetch Ghost authorID={author_id}: {e.response.content}"
@@ -241,14 +243,14 @@ class Ghost:
         :returns: Optional[List[str]]
         """
         try:
-            req = requests.post(
+            resp = requests.post(
                 f"{self.admin_api_url}/members/",
                 json=body,
                 headers={"Authorization": self.session_token},
             )
-            response = f'Successfully created new Ghost member `{body.get("email")}: {req.json()}.'
+            response = f'Successfully created new Ghost member `{body.get("email")}: {resp.json()}.'
             LOGGER.success(response)
-            return response, req.status_code
+            return response, resp.status_code
         except HTTPError as e:
             LOGGER.error(f"Failed to create Ghost member: {e.response.content}")
             return e.response.content, e.response.status_code
@@ -260,13 +262,13 @@ class Ghost:
         :returns: Tuple[str, int]
         """
         try:
-            req = requests.post(
+            resp = requests.post(
                 self.netlify_build_url,
             )
-            LOGGER.info(f"Triggered Netlify build with status code {req.status_code}.")
+            LOGGER.info(f"Triggered Netlify build with status code {resp.status_code}.")
             return (
-                f"Triggered Netlify build with status code {req.status_code}.",
-                req.status_code,
+                f"Triggered Netlify build with status code {resp.status_code}.",
+                resp.status_code,
             )
         except HTTPError as e:
             LOGGER.error(f"Failed to rebuild Netlify site: {e.response.content}")
@@ -286,8 +288,8 @@ class Ghost:
         }
         endpoint = f"{self.admin_api_url}/db/"
         try:
-            req = requests.get(endpoint, headers=headers)
-            return req.json()
+            resp = requests.get(endpoint, headers=headers)
+            return resp.json()
         except HTTPError as e:
             LOGGER.error(e.response)
             return e.response
@@ -299,7 +301,6 @@ class Ghost:
                 "Content-Type": "application/json",
             }
             params = {
-                "filter": "tag:-roundup",
                 "limit": "200",
             }
             endpoint = f"{self.admin_api_url}/posts"
@@ -313,7 +314,7 @@ class Ghost:
             return [
                 post["url"].replace(".app", ".com")
                 for post in posts
-                if post["status"] == "published"
+                if post["status"] == "published" and post[""]
             ]
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching posts: {e}")

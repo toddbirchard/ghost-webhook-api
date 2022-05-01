@@ -3,7 +3,6 @@ from fastapi import Depends
 from github import Github
 from sqlalchemy.orm import Session
 
-from clients import gbq
 from clients.gcs import GCS
 from clients.ghost import Ghost
 from clients.mail import Mailgun
@@ -48,9 +47,10 @@ def mailgun():
 @pytest.fixture
 def gcs():
     return GCS(
+        gcp_project_name=settings.GOOGLE_CLOUD_PROJECT_NAME,
+        gcp_api_credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
         bucket_name=settings.GCP_BUCKET_NAME,
         bucket_url=settings.GCP_BUCKET_URL,
-        bucket_lynx=settings.GCP_LYNX_DIRECTORY,
     )
 
 
@@ -65,7 +65,7 @@ def rdbms():
 @pytest.fixture
 def gh():
     return Github(
-        settings.GH_API_KEY,
+        settings.GITHUB_API_KEY,
     )
 
 

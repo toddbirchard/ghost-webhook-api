@@ -86,25 +86,6 @@ async def bulk_transform_images(
     return transformed_images
 
 
-@router.get("/lynx")
-async def bulk_assign_lynx_images():
-    """Assign images to any Lynx posts which are missing a feature image."""
-    results = rdbms.execute_query_from_file(
-        f"{BASE_DIR}/database/queries/images/lynx_missing_images.sql", "hackers_dev"
-    )
-    posts = [result.id for result in results]
-    for post in posts:
-        image = images.fetch_random_lynx_image()
-        result = rdbms.execute_query(
-            f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
-            "hackers_dev",
-        )
-        if result:
-            LOGGER.info(f"Updated Lynx post {post} with image {image}")
-    LOGGER.success(f"Updated {len(posts)} Lynx posts with image")
-    return {"updated": posts}
-
-
 @router.get("/sort")
 async def bulk_organize_images(directory: Optional[str] = None) -> dict:
     """

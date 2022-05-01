@@ -7,10 +7,8 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.lynx.parse import batch_lynx_embeds, generate_link_previews
 from app.posts.metadata import assign_img_alt, batch_assign_img_alt
 from app.posts.update import (
-    update_add_lynx_image,
     update_html_ssl_links,
     update_metadata,
     update_metadata_images,
@@ -58,7 +56,6 @@ async def update_post(post_update: PostUpdate):
     post = post_update.post.current
     slug = post.slug
     feature_image = post.feature_image
-    primary_tag = post.primary_tag
     html = post.html
     body = {
         "posts": [
@@ -73,8 +70,6 @@ async def update_post(post_update: PostUpdate):
             }
         ]
     }
-    if primary_tag.slug == "roundup" and feature_image is None:
-        body = update_add_lynx_image(body, slug)
     if html and "http://" in html:
         body = update_html_ssl_links(html, body, slug)
     if feature_image is not None:
@@ -112,91 +107,6 @@ async def batch_update_metadata():
         "inserted": {"count": len(insert_results), "posts": insert_results},
         "updated": {"count": len(update_results.keys()), "posts": update_results},
     }
-
-
-@router.post(
-    "/embed",
-    summary="Embed Lynx links.",
-    description="Generate embedded link previews for a single Lynx post.",
-)
-async def post_link_previews(post_update: PostUpdate):
-    """
-    Render anchor tag link previews.
-
-    :param PostUpdate post_update: Request to update Ghost post.
-    """
-    post = post_update.post.current
-    post_id = post.id
-    slug = post.slug
-    html = post.html
-    previous = post_update.post.previous
-    primary_tag = post.primary_tag
-    if primary_tag.slug == "roundup":
-        if html is not None and "kg-card" not in html and previous is None:
-            num_embeds, doc = generate_link_previews(post.__dict__)
-            result = rdbms.execute_query(
-                f"UPDATE posts SET mobiledoc = '{doc}' WHERE id = '{post_id}';",
-                "hackers_dev",
-            )
-            LOGGER.info(f"Generated {num_embeds} previews for Lynx post {slug}: {doc}")
-            return JSONResponse(
-                {
-                    f"Successfully updated lynx post `{slug}` with mobiledoc: {doc}; Result: {result}."
-                },
-                status_code=200,
-                headers={"content-type": "text/plain"},
-            )
-        return JSONResponse(
-            {f"Lynx post `{slug}` already contains previews."},
-            status_code=202,
-            headers={"content-type": "text/plain"},
-        )
-
-
-@router.get(
-    "/embed",
-    summary="Embed Lynx links.",
-    description="Generate embedded link previews for a single Lynx post.",
-)
-async def test_post_link_previews(post_id: str):
-    """
-    Render anchor tag link previews.
-
-    :param str post_id: ID of a Ghost post to fetch to test embedding lynx previews.
-    """
-    if post_id is None:
-        raise HTTPException(
-            status_code=422, detail="Post ID required to test endpoint."
-        )
-    post = ghost.get_post(post_id)
-    slug = post.slug
-    html = post.html
-    time = get_current_time()
-    primary_tag = post.primary_tag
-    if primary_tag.slug == "roundup":
-        if html is not None and "kg-card" not in html:
-            num_embeds, doc = generate_link_previews(post.__dict__)
-            body = {
-                "posts": [
-                    {
-                        "meta_title": post.title,
-                        "og_title": post.title,
-                        "twitter_title": post.title,
-                        "meta_description": post.custom_excerpt,
-                        "twitter_description": post.custom_excerpt,
-                        "og_description": post.custom_excerpt,
-                        "updated_at": time,
-                    }
-                ]
-            }
-            result = ghost.update_post(post_id, body, slug)
-            LOGGER.info(f"Generated {num_embeds} previews for Lynx post {slug}: {doc}")
-            return result
-        return JSONResponse(
-            {f"Lynx post {slug} already contains previews."},
-            status_code=202,
-            headers={"content-type": "text/plain"},
-        )
 
 
 @router.get(

@@ -226,8 +226,8 @@ def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
         )
         return account
     except SQLAlchemyError as e:
-        LOGGER.error(f"SQLAlchemyError while creating Netlify account: {e}")
+        LOGGER.error(f"SQLAlchemyError while creating Netlify user account: {e}")
     except IntegrityError as e:
-        LOGGER.error(f"IntegrityError while creating Netlify account: {e}")
+        LOGGER.error(f"IntegrityError while creating Netlify user account: {e}")
     except Exception as e:
-        LOGGER.error(f"Unexpected error while creating Netlify account: {e}")
+        LOGGER.error(f"Unexpected error while creating Netlify user account: {e}")

@@ -1,5 +1,5 @@
 """Database client."""
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine
@@ -24,6 +24,8 @@ class Database:
 
     def _table(self, table_name: str, database_name: str) -> Table:
         """
+        Build database table object.
+
         :param str table_name: Name of database table to fetch
         :param str database_name: Name of database to connect to.
 
@@ -33,22 +35,30 @@ class Database:
             table_name, MetaData(bind=self.engines[database_name]), autoload=True
         )
 
-    @LOGGER.catch
     def execute_queries(self, queries: dict, database_name: str) -> dict:
-        """Execute collection of SQL analytics.
+        """
+        Execute collection of SQL analytics.
 
         :param dict queries: Map of query names -> SQL analytics.
         :param str database_name: Name of database to connect to.
 
         :returns: dict
         """
-        results = {}
-        for k, v in queries.items():
-            query_result = self.engines[database_name].execute(v)
-            results[k] = f"{query_result.rowcount} rows affected."
-        return results
+        try:
+            results = {}
+            for k, v in queries.items():
+                query_result = self.engines[database_name].execute(v)
+                results[k] = f"{query_result.rowcount} rows affected."
+            return results
+        except SQLAlchemyError as e:
+            LOGGER.error(
+                f"SQLAlchemyError while executing queries `{','.join(queries.keys())}`: {e}"
+            )
+        except Exception as e:
+            LOGGER.error(
+                f"Unexpected exception while executing queries `{','.join(queries.keys())}`: {e}"
+            )
 
-    @LOGGER.catch
     def execute_query(self, query: str, database_name: str) -> Optional[Result]:
         """
         Execute single SQL query.
@@ -59,55 +69,53 @@ class Database:
         :returns: Optional[Result]
         """
         try:
-            result = self.engines[database_name].execute(query)
-            return result
+            return self.engines[database_name].execute(query)
         except SQLAlchemyError as e:
-            LOGGER.error(f"Failed to execute SQL query {query}: {e}")
+            LOGGER.error(f"Failed to execute SQL query `{query}`: {e}")
+        except Exception as e:
+            LOGGER.error(f"Failed to execute SQL query `{query}`: {e}")
 
-    @LOGGER.catch
-    def execute_query_from_file(self, sql_file: str, database_name: str):
-        """Execute single SQL query.
+    def execute_query_from_file(
+        self, sql_file: str, database_name: str
+    ) -> Union[Result, str]:
+        """
+        Execute single SQL query.
 
-        :param sql_file: Filepath of SQL query to run.
-        :type sql_file: str
-        :param database_name: Name of database to connect to.
-        :type database_name: str
+        :param str sql_file: Filepath of SQL query to run.
+        :param str database_name: Name of database to connect to.
+
+        :returns: Union[Result, str]
         """
         try:
             query = open(sql_file, "r").read()
-            result = self.engines[database_name].execute(query)
-            return result
+            return self.engines[database_name].execute(query)
         except SQLAlchemyError as e:
-            LOGGER.error(e)
-            return f"Failed to execute SQL {sql_file}: {e}"
+            LOGGER.error(f"SQLAlchemyError while executing SQL `{sql_file}`: {e}")
+            return f"Failed to execute SQL `{sql_file}`: {e}"
+        except Exception as e:
+            LOGGER.error(f"Unexpected exception while executing SQL `{sql_file}`: {e}")
+            return f"Failed to execute SQL `{sql_file}`: {e}"
 
-    @LOGGER.catch
-    def fetch_records(self, query: str, database_name: str) -> Optional[List[str]]:
-        """
-        Fetch all rows via query.
-
-        :param str query: SQL query to run against database.
-        :param str database_name: Name of database to connect to.
-        """
-        rows = self.engines[database_name].execute(query).fetchall()
-        if bool(rows):
-            return [row.items() for row in rows]
-        return None
-
-    @LOGGER.catch
     def fetch_record(self, query: str, database_name: str) -> Optional[Result]:
         """
         Fetch a single row; typically used to verify whether a
         record already exists (ie: users).
 
-        :param str query: SQL query to run against database.
-        :param str database_name: Name of database to connect to.
+        :param str query: SQL query to execute.
+        :param str database_name: Database to connect to.
+
+        :returns: Optional[Result]
         """
-        return self.engines[database_name].execute(query).first()
+        try:
+            return self.engines[database_name].execute(query).first()
+        except SQLAlchemyError as e:
+            LOGGER.error(f"SQLAlchemyError while fetching records from DB: {e}")
+        except Exception as e:
+            LOGGER.error(f"Unexpected exception while fetching records from DB: {e}")
 
     def insert_records(
         self, rows: List[dict], table_name: str, database_name: str, replace=False
-    ) -> Optional[Result]:
+    ) -> Result:
         """
         Insert rows into SQL table.
 
@@ -116,17 +124,21 @@ class Database:
         :param str database_name: Name of database to connect to.
         :param bool replace: Flag to truncate table prior to insert.
 
-        :returns: Optional[List[dict]]
+        :returns: Result
         """
         try:
             if replace:
                 self.engines[database_name].execute(f"TRUNCATE TABLE {table_name}")
             table = self._table(table_name, database_name)
-            self.engines[database_name].execute(table.insert(), rows)
+            return self.engines[database_name].execute(table.insert(), rows)
         except SQLAlchemyError as e:
-            LOGGER.error(e)
+            LOGGER.error(
+                f"SQLAlchemyError while inserting records into table `{table_name}`: {e}"
+            )
         except IntegrityError as e:
-            LOGGER.error(e)
+            LOGGER.error(
+                f"Unexpected error while inserting records into table `{table_name}`: {e}"
+            )
 
     def insert_dataframe(
         self, df: DataFrame, table_name: str, database_name: str, action="append"
