@@ -90,4 +90,3 @@ clean:
 	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} +
 	find . -type d -wholename './logs/*' -exec rm -rf {} +
 	find . -type d -wholename './.reports/*' -exec rm -rf {} +
-	find . -type d -wholename './.venv' -exec rm -rf {} +

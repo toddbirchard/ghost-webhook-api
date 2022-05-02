@@ -80,9 +80,12 @@ class Settings(BaseSettings):
     SQLALCHEMY_ENGINE_OPTIONS: dict = {"ssl": {"key": SQLALCHEMY_DATABASE_PEM}}
 
     # Algolia API
+
     ALGOLIA_SEARCHES_ENDPOINT: str = "https://analytics.algolia.com/2/searches"
     ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
     ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
+    ALGOLIA_TABLE_WEEKLY: str = "algolia_searches_week"
+    ALGOLIA_TABLE_MONTHLY: str = "algolia_searches_month"
 
     # Google Cloud Auth
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")

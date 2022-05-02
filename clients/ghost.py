@@ -120,10 +120,10 @@ class Ghost:
             LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
             return post
         except HTTPError as e:
-            LOGGER.error(f"Ghost HTTPError while fetching post `{post_slug}`: {e}")
-        except KeyError as e:
+            LOGGER.error(f"HTTPError occurred while fetching post `{post_slug}`: {e}")
+        except LookupError as e:
             LOGGER.error(
-                f"KeyError for `{e}` occurred while fetching post `{post_slug}`"
+                f"LookupError occurred while fetching post `{post_slug}`: `{e}`"
             )
         except Exception as e:
             LOGGER.error(
@@ -158,7 +158,7 @@ class Ghost:
         except Exception as e:
             LOGGER.error(f"Unexpected error occurred while fetching pages: {e}")
 
-    def update_post(self, post_id: str, body: dict, slug: str) -> Tuple[str, int]:
+    def update_post(self, post_id: str, body: dict, slug: str) -> Optional[dict]:
         """
         Update post by ID.
 
@@ -166,7 +166,7 @@ class Ghost:
         :param dict body: Payload containing post updates.
         :param str slug: Human-readable unique identifier.
 
-        :returns: Tuple[str, int]
+        :returns: Optional[dict]
         """
         try:
             resp = requests.put(
@@ -177,13 +177,13 @@ class Ghost:
                     "Content-Type": "application/json",
                 },
             )
-            if resp.status_code > 300:
-                LOGGER.warning(f"Failed to update post `{slug}`: {resp.text}")
-            LOGGER.success(f"Successfully updated post `{slug}`: {body}")
-            return resp.status_code
+            if resp.status_code != 200:
+                LOGGER.success(f"Successfully updated post `{slug}`")
+                return resp.json()
         except HTTPError as e:
-            LOGGER.error(e.response)
-            return e.response.content, e.response.status_code
+            LOGGER.error(f"HTTPError while updating Ghost post: {e}")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error while updating Ghost post: {e}")
 
     def get_all_authors(self) -> Optional[List[dict]]:
         """
@@ -274,27 +274,38 @@ class Ghost:
             LOGGER.error(f"Failed to rebuild Netlify site: {e.response.content}")
             return e.response.content, e.response.status_code
 
-    def get_json_backup(self) -> dict:
-        """Download JSON snapshot of Ghost database."""
+    def get_json_backup(self) -> Optional[dict]:
+        """
+        Download JSON snapshot of Ghost database.
+
+        Optional[dict]
+        """
         self._https_session()
         headers = {
+            "Authorization": self.session_token,
             "accept": "text/html,application/xhtml+xml,application/xml;\
                                 q=0.9,image/webp,image/apng,*/*;\
                                 q=0.8,application/signed-exchange;\
                                 v=b3;q=0.9",
             "accept-encoding": "gzip, deflate, br",
-            "Origin": "hackersandslackers.tools",
-            "Authority": "hackersandslackers.tools",
+            "Origin": "hackersandslackers.com",
+            "Authority": "hackersandslackers.com",
         }
         endpoint = f"{self.admin_api_url}/db/"
         try:
             resp = requests.get(endpoint, headers=headers)
             return resp.json()
         except HTTPError as e:
-            LOGGER.error(e.response)
-            return e.response
+            LOGGER.error(f"HTTPError occurred while fetching JSON backup: {e}")
+        except Exception as e:
+            LOGGER.error(f"Unexpected error occurred while fetching JSON backup: {e}")
 
-    def get_all_posts(self):
+    def get_all_posts(self) -> Optional[List[str]]:
+        """
+        Fetch all Ghost post URLs.
+
+        :returns: Optional[List[str]]
+        """
         try:
             headers = {
                 "Authorization": f"Ghost {self.session_token}",
@@ -305,17 +316,13 @@ class Ghost:
             }
             endpoint = f"{self.admin_api_url}/posts"
             resp = requests.get(endpoint, headers=headers, params=params)
-            if resp.json().get("errors") is not None:
-                LOGGER.error(
-                    f"Failed to fetch posts: {resp.json().get('errors')[0]['message']}"
-                )
-                return None
-            posts = resp.json()["posts"]
-            return [
-                post["url"].replace(".app", ".com")
-                for post in posts
-                if post["status"] == "published"
-            ]
+            if resp.status_code == 200:
+                posts = resp.json()["posts"]
+                return [
+                    post["url"].replace(".app", ".com")
+                    for post in posts
+                    if post["status"] == "published"
+                ]
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching posts: {e}")
         except KeyError as e:

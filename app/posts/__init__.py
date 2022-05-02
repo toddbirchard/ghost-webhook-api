@@ -1,4 +1,4 @@
-"""Ghost post enrichment of data."""
+"""Enrich post metadata."""
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -7,7 +7,6 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.metadata import assign_img_alt, batch_assign_img_alt
 from app.posts.update import (
     update_html_ssl_links,
     update_metadata,
@@ -43,9 +42,6 @@ async def update_post(post_update: PostUpdate):
         previous_update_date = datetime.strptime(
             str(previous_update.updated_at), "%Y-%m-%dT%H:%M:%S.000Z"
         )
-        LOGGER.debug(
-            f"current_time=`{current_time}` previous_update_date=`{previous_update_date}`"
-        )
         if previous_update_date and current_time - previous_update_date < timedelta(
             seconds=5
         ):
@@ -74,9 +70,6 @@ async def update_post(post_update: PostUpdate):
         body = update_html_ssl_links(html, body, slug)
     if feature_image is not None:
         body = update_metadata_images(feature_image, body, slug)
-    if body["posts"][0].get("mobiledoc") is not None:
-        mobiledoc = assign_img_alt(body["posts"][0]["mobiledoc"])
-        body["posts"][0].update({"mobiledoc": mobiledoc})
     sleep(1)
     time = get_current_time()
     body["posts"][0]["updated_at"] = time
@@ -109,16 +102,6 @@ async def batch_update_metadata():
     }
 
 
-@router.get(
-    "/alt",
-    summary="Populate missing alt text for images.",
-    description="Assign missing alt text to embedded images.",
-)
-async def assign_img_alt_attr():
-    """Find <img>s missing alt text and assign `alt`, `title` attributes."""
-    return batch_assign_img_alt()
-
-
 @router.get("/backup")
 async def backup_database():
     """Export JSON backup of database."""
@@ -147,12 +130,15 @@ async def get_single_post(post_id: str):
     "/all",
     summary="Get all post URLs.",
 )
-async def get_all_posts():
-    """List all published Ghost posts."""
+async def get_all_posts() -> JSONResponse:
+    """
+    List all published Ghost posts.
+
+    :returns: JSONResponse
+    """
     posts = ghost.get_all_posts()
     LOGGER.success(f"Fetched all {len(posts)} Ghost posts: {posts}")
     return JSONResponse(
         posts,
         status_code=200,
-        headers={"content-type": "application/json"},
     )
