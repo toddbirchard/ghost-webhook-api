@@ -19,21 +19,32 @@ export HELP
 
 .PHONY: run install deploy update format lint clean help
 
-env: ./.venv/bin/activate
-
 
 all help:
 	@echo "$$HELP"
 
 
+env: $(VIRTUAL_ENVIRONMENT)
+
+
+$(VIRTUAL_ENVIRONMENT):
+	if [ -d $(VIRTUAL_ENVIRONMENT) ]; then \
+		@echo "Creating Python virtual environment..." \
+		python3 -m venv $(VIRTUAL_ENVIRONMENT) \
+	fi
+
+
 .PHONY: run
 run: env
-	if [[ "./asgi.py" ]]; then service $(PROJECT_NAME) start; else $(LOCAL_PYTHON) asgi.py; fi
+	if [[ "./asgi.py" ]]; then \
+		service $(PROJECT_NAME) start; \
+	else \
+	  $(LOCAL_PYTHON) asgi.py; \
+	fi
 
 
 .PHONY: install
-install:
-	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
+install: env
 	$(shell . .venv/bin/activate)
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt
@@ -56,9 +67,8 @@ test: env
 
 
 .PHONY: update
-update:
+update: env
 	export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true
-	if [ ! -d "./.venv" ]; then python3 -m venv $(VIRTUAL_ENVIRONMENT); fi
 	.venv/bin/python3 -m pip install --upgrade pip setuptools wheel
 	poetry update
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
@@ -71,7 +81,7 @@ format: env
 
 
 .PHONY: lint
-lint:
+lint: env
 	$(LOCAL_PYTHON) -m flake8 . --count \
 			--select=E9,F63,F7,F82 \
 			--exclude .git,.github,__pycache__,.pytest_cache,.venv,logs,creds,.venv,docs,logs,.reports \
