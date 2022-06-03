@@ -54,10 +54,16 @@ async def new_account(
     create_account(db, account)
     db_account_created = get_account(db, account.email)
     if db_account_created:
+        LOGGER.success(
+            f"Account created: id={account.id} email={account.email}, name={account.user_metadata.full_name}"
+        )
         return NetlifyAccountCreationResponse(
             succeeded=new_account_event,
             failed=None,
         )
+    LOGGER.warning(
+        f"Account not created: id={account.id} email={account.email}, name={account.user_metadata.full_name}"
+    )
     return NetlifyAccountCreationResponse(
         succeeded=None,
         failed=new_account_event,
