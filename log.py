@@ -24,6 +24,7 @@ def json_formatter(record: dict) -> str:
 
     :returns: str
     """
+
     def serialize(log: dict) -> str:
         """
         Parse log message into Datadog JSON format.

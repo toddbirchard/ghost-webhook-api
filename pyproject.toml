@@ -48,13 +48,13 @@ fastapi-mail = "1.0.8"
 blinker = "1.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "7.1.2"
-coverage = "6.3.2"
-mypy = "0.950"
-black = "22.3.0"
-isort = "5.10.1"
-flake8 = "4.0.1"
-pylint = "2.13.7"
+pytest = "*"
+coverage = "*"
+mypy = "*"
+black = "*"
+isort = "*"
+flake8 = "*"
+pylint = "*"
 
 [tool.poetry.scripts]
 run = "asgi:app"
