@@ -23,7 +23,9 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
     user_name = Column(String(255), unique=False)
     user_avatar = Column(Text)
-    user_id = Column(String(255), ForeignKey("accounts.id"), index=True, unique=False)
+    user_id = Column(
+        String(255), ForeignKey("accounts.netlify_id"), index=True, unique=False
+    )
     user_email = Column(String(255))
     user_role = Column(String(255))
     body = Column(Text)
@@ -64,6 +66,7 @@ class Account(Base):
     __tablename__ = "accounts"
 
     id = Column(String(255), primary_key=True, index=True)
+    netlify_id = Column(String(255), index=True, unique=True, nullable=False)
     full_name = Column(String(255))
     avatar_url = Column(Text, unique=False)
     email = Column(String(255), index=True, unique=True)
@@ -81,7 +84,7 @@ class Donation(Base):
 
     __tablename__ = "donations"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
     coffee_id = Column(Integer, unique=True, index=True)
     email = Column(String(255), unique=False, index=True)
     name = Column(String(255))

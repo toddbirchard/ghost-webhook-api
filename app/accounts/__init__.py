@@ -137,7 +137,11 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
 
 @router.get("/comments", summary="Test get comments via ORM")
 async def test_orm(db: Session = Depends(get_db)):
-    """Test endpoint for fetching comments joined with user info."""
+    """
+    Test endpoint for fetching comments joined with user info.
+
+    :param Session db: ORM Database session.
+    """
     all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in all_comments:
         LOGGER.info(comment.user)
