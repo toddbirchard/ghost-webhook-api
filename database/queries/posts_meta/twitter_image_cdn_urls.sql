@@ -1,6 +1,6 @@
 UPDATE
-	posts_meta
+    posts_meta
 SET
-	twitter_image = REPLACE(twitter_image, 'https://storage.googleapis.com/hackersandslackers-cdn/', 'https://cdn.hackersandslackers.com/')
+    twitter_image = REPLACE(twitter_image, 'https://hackersandslackers-cdn.storage.googleapis.com', 'https://cdn.hackersandslackers.com')
 WHERE
-	twitter_image LIKE '%%https://storage.googleapis.com/hackersandslackers-cdn/%%';
+      twitter_image LIKE 'https://hackersandslackers-cdn.storage.googleapis.com%%';
