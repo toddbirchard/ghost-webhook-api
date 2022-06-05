@@ -70,7 +70,7 @@ class ImageTransformer(GCS):
         for image_blob in image_blobs:
             image_folder, image_name = self._get_folder_and_filename(image_blob)
             if "/_retina/" in image_name:
-                pass
+                continue
             moved_blob = self.bucket.blob(f"{image_folder}/_retina/{image_name}")
             if moved_blob.exists() is False:
                 moved_blob = self.bucket.copy_blob(
