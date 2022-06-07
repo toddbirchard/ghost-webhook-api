@@ -80,7 +80,6 @@ class Settings(BaseSettings):
     SQLALCHEMY_ENGINE_OPTIONS: dict = {"ssl": {"key": SQLALCHEMY_DATABASE_PEM}}
 
     # Algolia API
-
     ALGOLIA_SEARCHES_ENDPOINT: str = "https://analytics.algolia.com/2/searches"
     ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
     ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
@@ -124,14 +123,14 @@ class Settings(BaseSettings):
     GHOST_API_EXPORT_URL: str = f"{GHOST_BASE_URL}/admin/db/"
     GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
-    GHOST_AUTHOR_TODD_ID: str = "1"
-    GHOST_AUTHOR_MATT_ID: str = "61304d7e74047afda1c21620"
+    GHOST_ADMIN_USER_ID: str = "1"
 
     # Mailgun
     MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
     MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")
     MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
-    MAILGUN_FROM_SENDER: EmailStr = getenv("MAILGUN_FROM_SENDER")
+    MAILGUN_FROM_SENDER_EMAIL: EmailStr = getenv("MAILGUN_FROM_SENDER_EMAIL")
+    MAILGUN_FROM_SENDER_NAME: str = getenv("MAILGUN_FROM_SENDER_NAME")
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
@@ -139,8 +138,8 @@ class Settings(BaseSettings):
     MAILGUN_CONF = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
-        MAIL_FROM=MAILGUN_FROM_SENDER,
-        MAIL_FROM_NAME="Todd Birchard",
+        MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
+        MAIL_FROM_NAME=MAILGUN_FROM_SENDER_NAME,
         MAIL_PORT=587,
         MAIL_SERVER=MAILGUN_EMAIL_SERVER,
         MAIL_TLS=True,

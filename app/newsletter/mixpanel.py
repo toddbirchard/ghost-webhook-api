@@ -12,8 +12,7 @@ def create_mixpanel_record(user: Member) -> Optional[dict]:
     """
     Add user record to Mixpanel.
 
-    :param user: New user account from Netlify auth.
-    :type user: Member
+    :param Member user: New user account from Netlify auth.
 
     :returns: Optional[dict]
     """

@@ -33,6 +33,10 @@ $(VIRTUAL_ENVIRONMENT):
 		python3 -m venv $(VIRTUAL_ENVIRONMENT) \
 	fi
 
+.PHONY: dev
+dev: env
+	uvicorn app:api --reload
+
 
 .PHONY: run
 run: env

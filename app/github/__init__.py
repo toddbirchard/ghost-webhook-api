@@ -18,8 +18,9 @@ async def github_pr(request: Request):
     """
     Send SMS and Discord notifications upon PR creation in HackersAndSlackers Github projects.
 
-    :param request: Incoming Github payload for newly opened PR.
-    :type request: Request
+    :param Request request: Incoming Github payload for newly opened PR.
+
+    :returns: dict
     """
     payload = await request.json()
     action = payload.get("action")
@@ -78,8 +79,9 @@ async def github_issue(request: Request) -> dict:
     """
     Send SMS and Discord notifications upon issue creation for HackersAndSlackers Github projects.
 
-    :param request: Incoming Github payload for newly opened issue.
-    :type request: Request
+    :param Request request: Incoming Github payload for newly opened issue.
+
+    :returns: dict
     """
     payload = await request.json()
     action = payload.get("action")

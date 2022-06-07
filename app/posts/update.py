@@ -31,8 +31,7 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
     """
     Update Ghost posts with bad or missing metadata.
 
-    :param post_dicts: Ghost posts as list of dictionaries.
-    :type post_dicts: List[dict]
+    :param List[dict] post_dicts: Ghost posts as list of dictionaries.
 
     :returns: List[Optional[dict]]
     """

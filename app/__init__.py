@@ -17,9 +17,6 @@ from config import settings
 from database.orm import Base, engine
 from log import LOGGER
 
-# from ddtrace import tracer
-# from ddtrace_asgi.middleware import TraceMiddleware
-
 
 Base.metadata.create_all(bind=engine)
 
@@ -32,13 +29,6 @@ api = FastAPI(
     openapi_url="/api.json",
     openapi_tags=settings.API_TAGS,
 )
-
-"""if settings.ENVIRONMENT == "production":
-    api.add_middleware(
-        TraceMiddleware,
-        service="jamstack-api",
-        tracer=tracer
-    )"""
 
 api.add_middleware(
     CORSMiddleware,

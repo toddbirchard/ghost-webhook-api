@@ -47,13 +47,13 @@ async def author_post_created(post_update: PostUpdate) -> JSONResponse:
     primary_author_id = data.primary_author.id
     authors = data.authors
     if primary_author_id not in (
-        settings.GHOST_AUTHOR_TODD_ID,
-        settings.GHOST_AUTHOR_TODD_ID,
+        settings.GHOST_ADMIN_USER_ID,
+        settings.GHOST_ADMIN_USER_ID,
     ):
         msg = f"{author_name} just created a post: `{title}`."
         sms.send_message(msg)
         return JSONResponse(content=msg, status_code=200)
-    elif primary_author_id == settings.GHOST_AUTHOR_TODD_ID and len(authors) > 1:
+    elif primary_author_id == settings.GHOST_ADMIN_USER_ID and len(authors) > 1:
         msg = f"{author_name} just updated one of your posts: `{title}`."
         sms.send_message(msg)
         return JSONResponse(content=msg, status_code=200)
@@ -73,11 +73,11 @@ async def author_post_tampered(post_update: PostUpdate) -> JSONResponse:
     title = data.title
     primary_author_id = data.primary_author.id
     authors = data.authors
-    if primary_author_id == settings.GHOST_AUTHOR_TODD_ID and len(authors) > 1:
+    if primary_author_id == settings.GHOST_ADMIN_USER_ID and len(authors) > 1:
         other_authors = [
             author.name
             for author in authors
-            if author.id != settings.GHOST_AUTHOR_TODD_ID
+            if author.id != settings.GHOST_ADMIN_USER_ID
         ]
         msg = f"{', '.join(other_authors)} updated you post: `{title}`."
         sms.send_message(msg)

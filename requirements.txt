@@ -6,7 +6,7 @@ async-timeout==4.0.2; python_full_version >= "3.6.2" and python_full_version < "
 attrs==21.4.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 blinker==1.4
 boto==2.49.0
-botocore==1.27.2; python_version >= "3.7"
+botocore==1.27.3; python_version >= "3.7"
 cachetools==5.2.0; python_version >= "3.7" and python_version < "4.0" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0") and (python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.7")
 certifi==2022.5.18.1; python_full_version >= "3.6.2" and python_version >= "3.7" and python_full_version < "4.0.0"
 cffi==1.15.0; python_version >= "3.6"
