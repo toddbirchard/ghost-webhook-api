@@ -1,5 +1,6 @@
 """Fetch site traffic & search query analytics."""
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 
 from app.analytics.algolia import (
     import_algolia_search_queries,
@@ -21,7 +22,7 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
     response_model=AnalyticsResponse,
     status_code=200,
 )
-async def migrate_site_analytics() -> dict:
+async def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
     weekly_traffic = fetch_top_visited_urls("7d", limit=100)
     monthly_traffic = fetch_top_visited_urls("month", limit=500)
@@ -49,8 +50,12 @@ async def migrate_site_analytics() -> dict:
     status_code=200,
 )
 @router.get("/searches/")
-async def save_user_search_queries() -> dict:
-    """Save top search analytics for the current week."""
+async def save_user_search_queries() -> JSONResponse:
+    """
+    Save top search analytics for the current week.
+
+    :returns: JSONResponse
+    """
     weekly_searches = persist_algolia_searches(settings.ALGOLIA_TABLE_WEEKLY, 7)
     monthly_searches = persist_algolia_searches(settings.ALGOLIA_TABLE_MONTHLY, 90)
     if weekly_searches is None or monthly_searches is None:
@@ -59,13 +64,15 @@ async def save_user_search_queries() -> dict:
         f"Inserted {len(weekly_searches)} rows into `{settings.ALGOLIA_TABLE_WEEKLY}`, \
             {len(monthly_searches)} into `{settings.ALGOLIA_TABLE_MONTHLY}`"
     )
-    return {
-        "7-Day": {
-            "count": len(weekly_searches),
-            "rows": weekly_searches,
-        },
-        "90-Day": {
-            "count": len(monthly_searches),
-            "rows": monthly_searches,
-        },
-    }
+    return JSONResponse(
+        {
+            "7-Day": {
+                "count": len(weekly_searches),
+                "rows": weekly_searches,
+            },
+            "90-Day": {
+                "count": len(monthly_searches),
+                "rows": monthly_searches,
+            },
+        }
+    )

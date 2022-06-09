@@ -17,7 +17,6 @@ from config import settings
 from database.orm import Base, engine
 from log import LOGGER
 
-
 Base.metadata.create_all(bind=engine)
 
 api = FastAPI(

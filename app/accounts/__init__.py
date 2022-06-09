@@ -1,5 +1,6 @@
 """User account management & functionality."""
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.accounts.comments import get_user_role
@@ -136,13 +137,15 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
 
 
 @router.get("/comments", summary="Test get comments via ORM")
-async def test_orm(db: Session = Depends(get_db)):
+async def test_orm(db: Session = Depends(get_db)) -> JSONResponse:
     """
     Test endpoint for fetching comments joined with user info.
 
     :param Session db: ORM Database session.
+
+    :returns: JSONResponse
     """
     all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in all_comments:
         LOGGER.info(comment.user)
-    return all_comments
+    return JSONResponse(all_comments)

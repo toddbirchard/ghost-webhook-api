@@ -22,7 +22,7 @@ def ghost():
 def mailgun():
     return Mailgun(
         settings.MAILGUN_EMAIL_SERVER,
-        settings.MAILGUN_FROM_SENDER,
+        settings.MAILGUN_FROM_SENDER_EMAIL,
         settings.MAILGUN_SENDER_API_KEY,
     )
 
