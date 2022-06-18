@@ -10,7 +10,7 @@ from database import rdbms
 from log import LOGGER
 
 
-def fetch_algolia_searches(table_name: str, timeframe: int) -> List[Optional[dict]]:
+def persist_algolia_searches(table_name: str, timeframe: int) -> List[Optional[dict]]:
     """
     Fetch single week of searches from Algolia API.
 
@@ -20,7 +20,6 @@ def fetch_algolia_searches(table_name: str, timeframe: int) -> List[Optional[dic
     :returns: List[Optional[dict]]
     """
     try:
-        endpoint = "https://analytics.algolia.com/2/searches"
         headers = {
             "x-algolia-application-id": settings.ALGOLIA_APP_ID,
             "x-algolia-api-key": settings.ALGOLIA_API_KEY,
@@ -28,9 +27,13 @@ def fetch_algolia_searches(table_name: str, timeframe: int) -> List[Optional[dic
         params = {
             "index": "hackers_posts",
             "limit": 999999,
+            "orderBy": "searchCount",
+            "direction": "desc",
             "startDate": get_start_date_range(timeframe),
         }
-        resp = requests.get(endpoint, headers=headers, params=params)
+        resp = requests.get(
+            settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params
+        )
         if resp.status_code == 200 and resp.json().get("searches") is not None:
             search_queries = resp.json().get("searches")
             search_queries = filter_search_queries(search_queries)
@@ -42,10 +45,6 @@ def fetch_algolia_searches(table_name: str, timeframe: int) -> List[Optional[dic
     except HTTPError as e:
         LOGGER.error(
             f"HTTPError while fetching Algolia searches for `{timeframe}`: {e}"
-        )
-    except ValueError as e:
-        LOGGER.error(
-            f"ValueError while fetching Algolia searches for `{timeframe}`: {e}"
         )
     except Exception as e:
         LOGGER.error(
@@ -78,12 +77,9 @@ def import_algolia_search_queries(
 
     :returns: Optional[List[dict]]
     """
-    replace = True
-    if table_name == "algolia_searches_historical":
-        replace = False
     return rdbms.insert_records(
         records,
         table_name,
         "analytics",
-        replace=replace,
+        replace=True,
     )

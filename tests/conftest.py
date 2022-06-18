@@ -3,8 +3,6 @@ from fastapi import Depends
 from github import Github
 from sqlalchemy.orm import Session
 
-from clients import gbq
-from clients.gcs import GCS
 from clients.ghost import Ghost
 from clients.mail import Mailgun
 from clients.sms import Twilio
@@ -46,15 +44,6 @@ def mailgun():
 
 
 @pytest.fixture
-def gcs():
-    return GCS(
-        bucket_name=settings.GCP_BUCKET_NAME,
-        bucket_url=settings.GCP_BUCKET_URL,
-        bucket_lynx=settings.GCP_LYNX_DIRECTORY,
-    )
-
-
-@pytest.fixture
 def rdbms():
     return Database(
         uri=settings.SQLALCHEMY_DATABASE_URI,
@@ -65,7 +54,7 @@ def rdbms():
 @pytest.fixture
 def gh():
     return Github(
-        settings.GH_API_KEY,
+        settings.GITHUB_API_KEY,
     )
 
 

@@ -4,6 +4,8 @@ from os import getenv, path
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
+from google.oauth2 import service_account
+from google.oauth2.service_account import Credentials
 from pydantic import BaseSettings, EmailStr
 
 # Load variables from .env
@@ -81,34 +83,38 @@ class Settings(BaseSettings):
     ALGOLIA_SEARCHES_ENDPOINT: str = "https://analytics.algolia.com/2/searches"
     ALGOLIA_APP_ID: str = getenv("ALGOLIA_APP_ID")
     ALGOLIA_API_KEY: str = getenv("ALGOLIA_API_KEY")
+    ALGOLIA_TABLE_WEEKLY: str = "algolia_searches_week"
+    ALGOLIA_TABLE_MONTHLY: str = "algolia_searches_month"
 
-    # GCP
-    GCP_PROJECT: str = getenv("GCP_PROJECT")
-    GCP_PROJECT_ID: str = getenv("GCP_PROJECT_ID")
+    # Google Cloud Auth
+    GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
+    GOOGLE_CLOUD_JSON_KEY: str = getenv("GOOGLE_CLOUD_JSON_KEY")
+    GOOGLE_CLOUD_CREDENTIALS: Credentials = (
+        service_account.Credentials.from_service_account_file(
+            f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
+        )
+    )
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
     GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
-    GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT}/{GCP_BIGQUERY_DATASET}"
-
-    # Plausible
-    PLAUSIBLE_BREAKDOWN_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
-    PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
+    GCP_BIGQUERY_URI: str = (
+        f"bigquery://{GOOGLE_CLOUD_PROJECT_NAME}/{GCP_BIGQUERY_DATASET}"
+    )
 
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
-    GCP_LYNX_DIRECTORY: str = "roundup"
-    # GOOGLE_APPLICATION_CREDENTIALS: str = getenv("GOOGLE_APPLICATION_CREDENTIALS")
-    # GCP_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    #     f"{basedir}/{GOOGLE_APPLICATION_CREDENTIALS}"
-    # )
+
+    # Plausible Analytics
+    PLAUSIBLE_BREAKDOWN_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
+    PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
     GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
-    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/"
+    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/content"
     GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")
@@ -117,14 +123,14 @@ class Settings(BaseSettings):
     GHOST_API_EXPORT_URL: str = f"{GHOST_BASE_URL}/admin/db/"
     GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
-    GHOST_AUTHOR_TODD_ID: str = "1"
-    GHOST_AUTHOR_MATT_ID: str = "61304d7e74047afda1c21620"
+    GHOST_ADMIN_USER_ID: str = "1"
 
     # Mailgun
     MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
     MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")
     MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
-    MAILGUN_FROM_SENDER: EmailStr = getenv("MAILGUN_FROM_SENDER")
+    MAILGUN_FROM_SENDER_EMAIL: EmailStr = getenv("MAILGUN_FROM_SENDER_EMAIL")
+    MAILGUN_FROM_SENDER_NAME: str = getenv("MAILGUN_FROM_SENDER_NAME")
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
@@ -132,8 +138,8 @@ class Settings(BaseSettings):
     MAILGUN_CONF = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
-        MAIL_FROM=MAILGUN_FROM_SENDER,
-        MAIL_FROM_NAME="Todd Birchard",
+        MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
+        MAIL_FROM_NAME=MAILGUN_FROM_SENDER_NAME,
         MAIL_PORT=587,
         MAIL_SERVER=MAILGUN_EMAIL_SERVER,
         MAIL_TLS=True,
@@ -157,8 +163,8 @@ class Settings(BaseSettings):
     dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
 
     # Github
-    GH_USERNAME: str = getenv("GH_USERNAME")
-    GH_API_KEY: str = getenv("GH_API_KEY")
+    GITHUB_USERNAME: str = getenv("GITHUB_USERNAME")
+    GITHUB_API_KEY: str = getenv("GITHUB_API_KEY")
 
 
 settings = Settings()

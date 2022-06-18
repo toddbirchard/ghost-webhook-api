@@ -2,11 +2,10 @@
 from typing import Optional
 
 from fastapi import APIRouter, Query
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 
 from clients import images
-from config import BASE_DIR, settings
-from database import rdbms
+from config import settings
 from database.schemas import PostUpdate
 from log import LOGGER
 
@@ -18,12 +17,13 @@ router = APIRouter(prefix="/images", tags=["images"])
     summary="Optimize single post image.",
     description="Generate retina and mobile feature_image for a single post upon update.",
 )
-async def optimize_post_image(post_update: PostUpdate):
+async def optimize_post_image(post_update: PostUpdate) -> PlainTextResponse:
     """
     Generate retina version of a post's feature image if one doesn't exist.
 
-    :param post_update: Incoming payload for an updated Ghost post.
-    :type post_update: PostUpdate
+    :param PostUpdate post_update: Incoming payload for an updated Ghost post.
+
+    :returns: PlainTextResponse
     """
     new_images = []
     post = post_update.post.current
@@ -37,7 +37,7 @@ async def optimize_post_image(post_update: PostUpdate):
             LOGGER.info(
                 f"Generated {len(new_images)} images for post `{title}`: {new_images}"
             )
-            return {post.title: new_images}
+            return PlainTextResponse(f"{post.title}: {new_images}")
         return PlainTextResponse(
             content=f"Retina & mobile images already exist for {post.title}."
         )
@@ -60,13 +60,14 @@ async def bulk_transform_images(
         description="Subdirectory of remote CDN to transverse and transform images.",
         max_length=50,
     )
-):
+) -> JSONResponse:
     """
     Apply transformations to images uploaded within the current month.
     Optionally accepts a `directory` parameter to override image directory.
 
-    :param directory: Remote directory to recursively fetch images and apply transformations.
-    :type directory: Optional[str]
+    :param Optional[str] directory: Remote directory to recursively fetch images and apply transformations.
+
+    :returns: JSONResponse
     """
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
@@ -83,35 +84,17 @@ async def bulk_transform_images(
         else:
             response.append(f"0 {k}")
     LOGGER.success(f"Transformed {', '.join(response)} images")
-    return transformed_images
-
-
-@router.get("/lynx")
-async def bulk_assign_lynx_images():
-    """Assign images to any Lynx posts which are missing a feature image."""
-    results = rdbms.execute_query_from_file(
-        f"{BASE_DIR}/database/queries/images/lynx_missing_images.sql", "hackers_dev"
-    )
-    posts = [result.id for result in results]
-    for post in posts:
-        image = images.fetch_random_lynx_image()
-        result = rdbms.execute_query(
-            f"UPDATE posts SET feature_image = '{image}' WHERE id = '{post}';",
-            "hackers_dev",
-        )
-        if result:
-            LOGGER.info(f"Updated Lynx post {post} with image {image}")
-    LOGGER.success(f"Updated {len(posts)} Lynx posts with image")
-    return {"updated": posts}
+    return JSONResponse(transformed_images)
 
 
 @router.get("/sort")
-async def bulk_organize_images(directory: Optional[str] = None) -> dict:
+async def bulk_organize_images(directory: Optional[str] = None) -> JSONResponse:
     """
     Sort retina and mobile images into their appropriate directories.
 
-    :param directory: Remote directory to organize images into subdirectories.
-    :type directory: Optional[str]
+    :param Optional[str] directory: Remote directory to organize images into subdirectories.
+
+    :returns: JSONResponse
     """
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
@@ -120,7 +103,9 @@ async def bulk_organize_images(directory: Optional[str] = None) -> dict:
     LOGGER.success(
         f"Moved {len(retina_images)} retina images, modified {len(image_headers)} content types."
     )
-    return {
-        "retina": retina_images,
-        "headers": image_headers,
-    }
+    return JSONResponse(
+        {
+            "retina": retina_images,
+            "headers": image_headers,
+        }
+    )

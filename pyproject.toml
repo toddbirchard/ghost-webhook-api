@@ -18,17 +18,17 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.9,<3.11"
 fastapi = "*"
 pydantic = "*"
 pandas = "*"
 sqlalchemy = "*"
 pymysql = "*"
 requests = "*"
+google-auth = "^2.6.6"
 google-cloud = "*"
 google-cloud-storage = "*"
-google-cloud-bigquery = "*"
-google-cloud-bigquery-storage = "*"
+google-cloud-bigquery = "3.0.1"
 pillow = "*"
 python-resize-image = "*"
 webp-converter = "*"
@@ -37,20 +37,19 @@ pyjwt = ">=2.0"
 mixpanel = "*"
 loguru = "*"
 twilio = "*"
-beautifulsoup4 = "*"
 boto = "*"
 botocore = "*"
 uvicorn = "*"
 PyGithub = "*"
+ddtrace-asgi = "*"
 ddtrace = "*"
-pyarrow = "^6.0.0"
-extraction = "*"
-metadata-parser = "*"
-fastapi-mail = "*"
+pyarrow = "*"
+fastapi-mail = "1.0.8"
+blinker = "1.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
-mock = "*"
+coverage = "*"
 mypy = "*"
 black = "*"
 isort = "*"
@@ -64,7 +63,7 @@ run = "asgi:app"
 issues = "https://github.com/toddbirchard/jamstack-api/issues"
 
 [build-system]
-requires = ["poetry>=1.1.12"]
+requires = ["poetry>=1.1.13"]
 build-backend = "poetry.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']

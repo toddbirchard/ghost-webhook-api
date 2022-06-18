@@ -46,6 +46,7 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+.reports/
 
 # Translations
 *.mo
@@ -100,10 +101,10 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
+# MyPy
 .mypy_cache/
 
-# misc
+# Misc
 .DS_Store
 docs
 
@@ -116,7 +117,7 @@ ca-certificate.crt
 # Idea
 .idea/
 
-# logs
+# Logs
 logs/*
 nohup.out
 nohup

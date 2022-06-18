@@ -1,5 +1,4 @@
 """Initialize API."""
-from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,16 +11,13 @@ from app import (
     images,
     newsletter,
     posts,
+    tags,
 )
 from config import settings
 from database.orm import Base, engine
 from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
-
-if settings.ENVIRONMENT == "production":
-    patch(fastapi=True)
-
 
 api = FastAPI(
     title="Jamstack API",
@@ -48,6 +44,7 @@ api.include_router(accounts.router)
 api.include_router(authors.router)
 api.include_router(donations.router)
 api.include_router(images.router)
+api.include_router(tags.router)
 api.include_router(github.router)
 
 LOGGER.success("API successfully started.")

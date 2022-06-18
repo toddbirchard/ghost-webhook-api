@@ -3,9 +3,8 @@ import pprint
 from fastapi.testclient import TestClient
 
 from app import api
-from config import BASE_DIR, settings
+from config import settings
 from database.schemas import Member, NewDonation, Subscriber
-from log import LOGGER
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
@@ -16,22 +15,6 @@ def test_api_docs():
     response = client.get("/")
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "text/html; charset=utf-8"
-
-
-def test_batch_lynx_previews(rdbms):
-    """"""
-    sql_file = open(
-        f"{BASE_DIR}/database/queries/posts/selects/lynx_bookmarks.sql", "r"
-    )
-    query = sql_file.read()
-    posts = rdbms.execute_query(query, "hackers_dev").fetchall()
-    assert isinstance(posts, list)
-    for post in posts:
-        assert "lynx" in post["slug"]
-        assert "Lynx" in post["title"]
-        assert "bookmark" not in post["mobiledoc"]
-        # assert "kg-card" not in post["html"]
-    LOGGER.debug(f"Collected {len(posts)} healthy lynx posts.")
 
 
 def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
@@ -64,7 +47,6 @@ def test_github_issue(github_issue_user, gh):
     user_response = client.post("/github/issue", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
-    LOGGER.debug(user_response.json()["issue"]["trigger"]["repo"])
     repo = issue["trigger"]["repo"]
     assert issue["status"] == "queued"
     assert issue["trigger"]["type"] == "github"
@@ -82,13 +64,11 @@ def test_batch_update_metadata():
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
     assert response.json().get("updated") is not None
-    LOGGER.debug("TEST RESULTS FOR BATCH INSERT METADATA")
     pp.pprint(response.json())
 
 
 def assign_img_alt_attr():
     result = client.get("/posts/alt")
-    LOGGER.debug("TEST RESULTS FOR ASSIGNING IMG ALT TAGS")
     pp.pprint(result.json())
 
 
@@ -102,18 +82,26 @@ def test_new_ghost_member():
     member = Member(
         id="dfdsgf",
         uuid="dsfdf-dsfdsfsfdsf-sdfdsfdsfsafd",
+        name="Example Name",
+        note="This is a test note about a Ghost member.",
+        subscribed=True,
         email="fakeemail@example.com",
-        avatar="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank",
-        note="Member note",
+        avatar_image="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank",
         labels=["VIP"],
+        comped=False,
     )
-    subscriber = Subscriber(current=member)
-    response = client.post("/newsletter", subscriber)
+    subscriber = Subscriber(current=member, previous=None)
+    response = client.post("/newsletter/", subscriber)
     assert type(response.json()) == dict
     # assert response.json().get("id") is not None
 
 
 def test_accept_donation(old_donation: NewDonation, db_session):
-    response = client.post("/donation", old_donation, db_session)
+    response = client.post("/donation/", old_donation, db_session)
     print(response)
     assert response.status_code == 400
+
+
+def test_authors_bulk_update_metadata():
+    response = client.get("/authors/update")
+    assert response.status_code == 200

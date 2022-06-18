@@ -16,18 +16,22 @@ DD_APM_FORMAT = (
 )
 
 
-def json_formatter(record: dict):
+def json_formatter(record: dict) -> str:
     """
     Pass raw log to be serialized.
 
     :param dict record: Dictionary containing logged message with metadata.
+
+    :returns: str
     """
 
-    def serialize(log: dict):
+    def serialize(log: dict) -> str:
         """
         Parse log message into Datadog JSON format.
 
         :param dict log: Dictionary containing logged message with metadata.
+
+        :returns: str
         """
         subset = {
             "time": log["time"].strftime("%m/%d/%Y, %H:%M:%S"),
@@ -66,7 +70,11 @@ def log_formatter(record: dict) -> str:
 
 
 def create_logger() -> logger:
-    """Create custom logger."""
+    """
+    Configure custom logger.
+
+    :returns: logger
+    """
     logger.remove()
     logger.add(
         stdout,

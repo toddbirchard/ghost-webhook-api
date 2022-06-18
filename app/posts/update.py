@@ -1,7 +1,7 @@
 """Methods for updating Ghost post content or metadata."""
 from typing import List, Optional, Tuple
 
-from clients import ghost, images
+from clients import ghost
 from log import LOGGER
 
 
@@ -31,8 +31,7 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
     """
     Update Ghost posts with bad or missing metadata.
 
-    :param post_dicts: Ghost posts as list of dictionaries.
-    :type post_dicts: List[dict]
+    :param List[dict] post_dicts: Ghost posts as list of dictionaries.
 
     :returns: List[Optional[dict]]
     """
@@ -65,27 +64,6 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
                 }
             )
     return updated_posts
-
-
-def update_add_lynx_image(body: dict, slug: str) -> dict:
-    """
-    Assign random Lynx feature image to Lynx post.
-
-    :param dict body: JSON body representing Ghost post.
-    :param str slug: Unique post identifier for logging purposes.
-
-    :returns: dict
-    """
-    feature_image = images.fetch_random_lynx_image()
-    body["posts"][0].update(
-        {
-            "feature_image": feature_image,
-            "og_image": feature_image,
-            "twitter_image": feature_image,
-        }
-    )
-    LOGGER.info(f"Fetched random Lynx image `{feature_image}` for `{slug}`")
-    return body
 
 
 def update_html_ssl_links(html: str, body: dict, slug: str) -> dict:

@@ -1,5 +1,6 @@
 """User account management & functionality."""
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.accounts.comments import get_user_role
@@ -54,10 +55,16 @@ async def new_account(
     create_account(db, account)
     db_account_created = get_account(db, account.email)
     if db_account_created:
+        LOGGER.success(
+            f"Account created: id={account.id} email={account.email}, name={account.user_metadata.full_name}"
+        )
         return NetlifyAccountCreationResponse(
             succeeded=new_account_event,
             failed=None,
         )
+    LOGGER.warning(
+        f"Account not created: id={account.id} email={account.email}, name={account.user_metadata.full_name}"
+    )
     return NetlifyAccountCreationResponse(
         succeeded=None,
         failed=new_account_event,
@@ -77,15 +84,15 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param NewComment comment: User-submitted comment.
     :param Session db: ORM Database session.
     """
-    ghost_post = ghost.get_post(comment.post_id)
-    post_author = f"{ghost_post['primary_author']['name']} <{ghost_post['primary_author']['email']}>"
-    user_role = get_user_role(comment, ghost_post)
-    if comment.user_email != ghost_post["primary_author"]["email"]:
-        mailgun.email_notification_new_comment(
-            ghost_post, [post_author], comment.__dict__
-        )
-    new_comment = create_comment(db, comment, user_role)
-    if new_comment:
+    post = ghost.get_post(comment.post_id)
+    post_author = (
+        f"{post['primary_author']['name']} <{post['primary_author']['email']}>"
+    )
+    user_role = get_user_role(comment, post)
+    if comment.user_email != post["primary_author"]["email"]:
+        mailgun.email_notification_new_comment(post, [post_author], comment.__dict__)
+    created_comment = create_comment(db, comment, user_role)
+    if created_comment:
         ghost.rebuild_netlify_site()
     return comment
 
@@ -130,9 +137,15 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
 
 
 @router.get("/comments", summary="Test get comments via ORM")
-async def test_orm(db: Session = Depends(get_db)):
-    """Test endpoint for fetching comments joined with user info."""
+async def test_orm(db: Session = Depends(get_db)) -> JSONResponse:
+    """
+    Test endpoint for fetching comments joined with user info.
+
+    :param Session db: ORM Database session.
+
+    :returns: JSONResponse
+    """
     all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
     for comment in all_comments:
         LOGGER.info(comment.user)
-    return comments
+    return JSONResponse(all_comments)

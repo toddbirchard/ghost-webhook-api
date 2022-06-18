@@ -15,10 +15,16 @@ class Twilio:
         self.sender = sender
         self.client = Client(self.sid, self.token)
 
-    def send_message(self, msg: str) -> MessageInstance:
-        """Send Twilio message."""
-        LOGGER.info(f"SMS triggered by post edit: {msg}")
-        message = self.client.messages.create(
-            to=self.recipient, from_=self.sender, body=msg
+    def send_message(self, message_body: str) -> MessageInstance:
+        """
+        Send Twilio message.
+
+        :param str message_body: Content of SMS message to send.
+
+        :returns: MessageInstance
+        """
+        LOGGER.info(f"SMS triggered by post edit: {message_body}")
+        sms_message = self.client.messages.create(
+            to=self.recipient, from_=self.sender, body=message_body
         )
-        return message
+        return sms_message

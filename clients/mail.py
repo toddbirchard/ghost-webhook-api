@@ -1,16 +1,15 @@
 """Create Mailgun client."""
-from typing import List, Optional
+from typing import List
 
 import requests
 from fastapi_mail.email_utils import DefaultChecker
 from requests import HTTPError, Response
 
-from config import settings
 from log import LOGGER
 
 
 class Mailgun:
-    """Mailgun email Client."""
+    """Mailgun email client."""
 
     def __init__(self, mail_server: str, from_address: str, api_key: str):
         self.mail_server = mail_server

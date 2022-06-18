@@ -13,12 +13,16 @@ class GCS:
     """Google Cloud Storage image CDN."""
 
     def __init__(
-        self, bucket_name: str, bucket_url: str, bucket_lynx: str, basedir: str
+        self,
+        gcp_project_name: str,
+        gcp_api_credentials: str,
+        bucket_name: str,
+        bucket_url: str,
     ):
+        self.gcp_project_name = gcp_project_name
+        self.gcp_api_credentials = gcp_api_credentials
         self.bucket_name = bucket_name
         self.bucket_url = bucket_url
-        self.bucket_lynx = bucket_lynx
-        self.basedir = basedir
 
     @property
     def client(self) -> Client:
@@ -27,7 +31,10 @@ class GCS:
 
         :returns: Client
         """
-        return storage.Client().from_service_account_json(f"{self.basedir}/gcloud.json")
+        return storage.Client(
+            project=self.gcp_project_name,
+            credentials=self.gcp_api_credentials,
+        )
 
     @property
     def bucket(self) -> Bucket:

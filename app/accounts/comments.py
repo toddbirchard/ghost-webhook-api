@@ -16,6 +16,7 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
     """
     username = comment.user_name
     avatar = comment.user_avatar
+    user_role = get_user_role(comment, post)
     if comment.user_name is None and comment.user_email:
         username = comment.user_email.split("@")[0]
     if avatar == "undefined":
@@ -26,7 +27,7 @@ def parse_comment(comment: NewComment, post: dict) -> dict:
         "user_name": username,
         "user_avatar": avatar,
         "user_id": comment.user_id,
-        "user_role": get_user_role(comment, post),
+        "user_role": user_role,
         "body": comment.body,
     }
 
@@ -41,7 +42,7 @@ def get_user_role(comment: NewComment, post: dict) -> Optional[str]:
     :returns: Optional[str]
     """
     authors = ghost.get_all_authors()
-    author_emails = [author["email"] for author in authors]
+    author_emails = [author.get("email") for author in authors]
     if comment.user_email == post["primary_author"]["email"]:
         return "author"
     if comment.user_email in author_emails:
