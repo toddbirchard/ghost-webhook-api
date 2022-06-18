@@ -35,6 +35,7 @@ def test_batch_lynx_previews(rdbms):
 
 
 def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
+    """Create PR in `jamstack-api` repo & send SMS notification."""
     owner_response = client.post("/github/pr", json=github_pr_owner)
     pr = owner_response.json()["pr"]
     repo = pr["trigger"]["repo"]
@@ -59,6 +60,7 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
 
 
 def test_github_issue(github_issue_user, gh):
+    """Create issue in `jamstack-api` repo & send SMS notification."""
     user_response = client.post("/github/issue", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
@@ -106,11 +108,12 @@ def test_new_ghost_member():
         labels=["VIP"],
     )
     subscriber = Subscriber(current=member)
-    response = client.post("/newsletter/", subscriber)
+    response = client.post("/newsletter", subscriber)
     assert type(response.json()) == dict
     # assert response.json().get("id") is not None
 
 
-def test_get_donation(old_donation: NewDonation, db_session):
-    response = client.post("/donation/", old_donation, db_session)
+def test_accept_donation(old_donation: NewDonation, db_session):
+    response = client.post("/donation", old_donation, db_session)
+    print(response)
     assert response.status_code == 400

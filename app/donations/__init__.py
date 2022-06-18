@@ -2,8 +2,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.donations.parse import parse_donation_json
 from clients import ghost
 from database.crud import create_donation, get_donation
+from database.models import Donation
 from database.orm import get_db
 from database.schemas import NewDonation
 
@@ -62,3 +64,13 @@ async def delete_donation(donation: NewDonation, db: Session = Depends(get_db)):
     if new_donation:
         ghost.rebuild_netlify_site()
     return donation
+
+
+@router.get("/", summary="Test get donations via ORM")
+async def get_donations(db: Session = Depends(get_db)):
+    """Test endpoint for fetching comments joined with user info."""
+    response = []
+    all_donations = db.query(Donation).order_by(Donation.created_at).all()
+    for donation in all_donations:
+        response.append(parse_donation_json(donation))
+    return response

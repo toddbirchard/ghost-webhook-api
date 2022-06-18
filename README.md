@@ -52,7 +52,9 @@ User-created accounts & actions for community interactions.
 
 #### Donate
 
-* **POST** `/donation`: Adds [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers)  donation to a historical ledger.
+** `/donation`: Creates record of a [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers) donation in ledger.
+* **DELETE** `/donation`: Delete a [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers) donation from ledger.
+* **GET** `/donation`: Get all [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers) donations.
 
 #### Newsletter
 
