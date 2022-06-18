@@ -1,6 +1,5 @@
 """Accept and persist `BuyMeACoffee` donations."""
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.donations.parse import parse_donation_json
@@ -71,17 +70,18 @@ async def delete_donation(
     return donation
 
 
-@router.get("/", summary="Test get donations via ORM")
-async def get_donations(db: Session = Depends(get_db)) -> JSONResponse:
+@router.get(
+    "/",
+    summary="Get all existing donations.",
+)
+async def get_donations(db: Session = Depends(get_db)):
     """
     Test endpoint for fetching comments joined with user info.
 
     :param Session db: ORM Database session.
-
-    :returns: JSONResponse
     """
     response = []
     all_donations = db.query(Donation).order_by(Donation.created_at).all()
     for donation in all_donations:
         response.append(parse_donation_json(donation))
-    return JSONResponse(response)
+    return response
