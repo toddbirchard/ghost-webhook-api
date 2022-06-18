@@ -53,6 +53,7 @@ Handle user account creation & interactions.
   * **DELETE** `/donation/`: Delete a [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers) donation from historical ledger.
   * **GET** `/donation/`: Get all [BuyMeACoffee](https://www.buymeacoffee.com/hackersslackers) donations.
 
+
 #### Newsletter
 
 Logistics of adding or removing newsletter subscriptions.
