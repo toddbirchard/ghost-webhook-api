@@ -114,6 +114,11 @@ class Tag(BaseModel):
     # fmt: on
 
 
+class TagUpdate(BaseModel):
+    current: Tag
+    previous: Optional[Tag]
+
+
 class BasePost(BaseModel):
     # fmt: off
     id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
