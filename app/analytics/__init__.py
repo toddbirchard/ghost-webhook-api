@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.analytics.algolia import (
     import_algolia_search_queries,
-    persist_algolia_searches,
+    persist_algolia_searches
 )
 from app.analytics.migrate import import_site_analytics
 from app.analytics.plausible import fetch_top_visited_urls

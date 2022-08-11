@@ -12,7 +12,7 @@ from database.crud import (
     get_account,
     get_comment_upvote,
     remove_comment_upvote,
-    submit_comment_upvote,
+    submit_comment_upvote
 )
 from database.models import Account, Comment
 from database.orm import get_db
@@ -20,7 +20,7 @@ from database.schemas import (
     NetlifyAccountCreationResponse,
     NetlifyUserEvent,
     NewComment,
-    UpvoteComment,
+    UpvoteComment
 )
 from log import LOGGER
 

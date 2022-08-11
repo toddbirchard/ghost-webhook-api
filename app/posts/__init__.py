@@ -10,7 +10,7 @@ from app.moment import get_current_datetime, get_current_time
 from app.posts.update import (
     update_html_ssl_links,
     update_metadata,
-    update_metadata_images,
+    update_metadata_images
 )
 from clients import ghost
 from config import BASE_DIR

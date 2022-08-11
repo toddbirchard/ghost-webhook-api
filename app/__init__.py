@@ -11,7 +11,7 @@ from app import (
     images,
     newsletter,
     posts,
-    tags,
+    tags
 )
 from config import settings
 from database.orm import Base, engine

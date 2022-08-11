@@ -74,6 +74,7 @@ class Settings(BaseSettings):
         env_file = ".env"
 
     # Database
+    SQLALCHEMY_DATABASE_NAME: str = getenv("SQLALCHEMY_DATABASE_NAME")
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_DATABASE_PEM: str = getenv("SQLALCHEMY_DATABASE_PEM")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False

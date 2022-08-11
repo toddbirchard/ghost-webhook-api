@@ -28,10 +28,11 @@ env: $(VIRTUAL_ENVIRONMENT)
 
 
 $(VIRTUAL_ENVIRONMENT):
-	if [ -d $(VIRTUAL_ENVIRONMENT) ]; then \
-		@echo "Creating Python virtual environment..." \
-		python3 -m venv $(VIRTUAL_ENVIRONMENT) \
+	if [ ! -d $(VIRTUAL_ENVIRONMENT) ]; then \
+		echo "Creating Python virtual environment..."; \
+		python3 -m venv $(VIRTUAL_ENVIRONMENT); \
 	fi
+
 
 .PHONY: dev
 dev: env
@@ -49,15 +50,15 @@ run: env
 
 .PHONY: install
 install: env
-	$(shell . .venv/bin/activate)
-	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
+	$(shell . .venv/bin/activate) \
+	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt
 
 
 .PHONY: deploy
 deploy:
-	make clean
-	make install
+	make clean \
+	make install \
 	make run
 
 
@@ -72,15 +73,15 @@ test: env
 
 .PHONY: update
 update: env
-	export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true
-	.venv/bin/python3 -m pip install --upgrade pip setuptools wheel
-	poetry update
+	export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true \
+	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
+	poetry update \
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 
 .PHONY: format
 format: env
-	isort --multi-line=3 .
+	isort --multi-line=3 . \
 	black .
 
 
@@ -95,12 +96,12 @@ lint: env
 
 .PHONY: clean
 clean:
-	find . -name 'poetry.lock' -delete
-	find . -name '.coverage' -delete
-	find . -wholename '**/*.pyc' -delete
-	find . -wholename '__pycache__' -delete
-	find . -type d -wholename '.venv' -exec rm -rf {} +
-	find . -type d -wholename '.pytest_cache' -exec rm -rf {} +
-	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} +
-	find . -type d -wholename './logs/*' -exec rm -rf {} +
+	find . -name 'poetry.lock' -delete \
+	find . -name '.coverage' -delete \
+	find . -wholename '**/*.pyc' -delete \
+	find . -wholename '__pycache__' -delete \
+	find . -type d -wholename '.venv' -exec rm -rf {} + \
+	find . -type d -wholename '.pytest_cache' -exec rm -rf {} + \
+	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + \
+	find . -type d -wholename './logs/*' -exec rm -rf {} + \
 	find . -type d -wholename './.reports/*' -exec rm -rf {} +
