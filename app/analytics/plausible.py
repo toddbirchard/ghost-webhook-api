@@ -45,11 +45,7 @@ def fetch_top_visited_urls(time_period, limit=20) -> List[Optional[dict]]:
                 and "/author" not in result["page"]
                 and result["page"] not in ghost_pages
             ]
-            return [
-                enrich_url_with_post_data(result)
-                for result in results_list
-                if result is not None
-            ]
+            return [enrich_url_with_post_data(result) for result in results_list if result is not None]
         return []
     except RequestException as e:
         LOGGER.error(f"RequestException when fetching Plausible top URLs: {e}")

@@ -8,6 +8,7 @@ from config import settings
 def ghost():
     return Ghost(
         admin_api_url=settings.GHOST_ADMIN_API_URL,
+        api_version=settings.GHOST_API_VERSION,
         content_api_url=settings.GHOST_CONTENT_API_URL,
         client_id=settings.GHOST_CLIENT_ID,
         client_secret=settings.GHOST_ADMIN_API_KEY,

@@ -24,7 +24,5 @@ class Twilio:
         :returns: MessageInstance
         """
         LOGGER.info(f"SMS triggered by post edit: {message_body}")
-        sms_message = self.client.messages.create(
-            to=self.recipient, from_=self.sender, body=message_body
-        )
+        sms_message = self.client.messages.create(to=self.recipient, from_=self.sender, body=message_body)
         return sms_message

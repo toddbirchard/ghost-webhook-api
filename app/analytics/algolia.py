@@ -31,9 +31,7 @@ def persist_algolia_searches(table_name: str, timeframe: int) -> List[Optional[d
             "direction": "desc",
             "startDate": get_start_date_range(timeframe),
         }
-        resp = requests.get(
-            settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params
-        )
+        resp = requests.get(settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params)
         if resp.status_code == 200 and resp.json().get("searches") is not None:
             search_queries = resp.json().get("searches")
             search_queries = filter_search_queries(search_queries)
@@ -43,18 +41,12 @@ def persist_algolia_searches(table_name: str, timeframe: int) -> List[Optional[d
             return []
         return []
     except HTTPError as e:
-        LOGGER.error(
-            f"HTTPError while fetching Algolia searches for `{timeframe}`: {e}"
-        )
+        LOGGER.error(f"HTTPError while fetching Algolia searches for `{timeframe}`: {e}")
     except Exception as e:
-        LOGGER.error(
-            f"Unexpected error while fetching Algolia searches for `{timeframe}`: {e}"
-        )
+        LOGGER.error(f"Unexpected error while fetching Algolia searches for `{timeframe}`: {e}")
 
 
-def filter_search_queries(
-    search_queries: List[Dict[str, Any]]
-) -> List[Optional[Dict[str, Any]]]:
+def filter_search_queries(search_queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
     """
     Filter noisy or irrelevant search analytics from results (ie: too short).
 
@@ -66,9 +58,7 @@ def filter_search_queries(
     return [query for query in search_queries if len(query["search"]) > 3]
 
 
-def import_algolia_search_queries(
-    records: List[dict], table_name: str
-) -> Optional[List[dict]]:
+def import_algolia_search_queries(records: List[dict], table_name: str) -> Optional[List[dict]]:
     """
     Save history of search queries executed on the site.
 
@@ -80,6 +70,6 @@ def import_algolia_search_queries(
     return rdbms.insert_records(
         records,
         table_name,
-        "analytics",
+        settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
         replace=True,
     )

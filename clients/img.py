@@ -52,9 +52,7 @@ class ImageTransformer(GCS):
         :returns: List[Blob]
         """
         files = self.get(prefix=directory)
-        return [
-            file for file in files if "@2x" in file.name and "/_retina" in file.name
-        ]
+        return [file for file in files if "@2x" in file.name and "/_retina" in file.name]
 
     @LOGGER.catch
     def organize_retina_images(self, folder: str) -> List:
@@ -73,9 +71,7 @@ class ImageTransformer(GCS):
                 continue
             moved_blob = self.bucket.blob(f"{image_folder}/_retina/{image_name}")
             if moved_blob.exists() is False:
-                moved_blob = self.bucket.copy_blob(
-                    image_blob, self.bucket, new_name=moved_blob.name
-                )
+                moved_blob = self.bucket.copy_blob(image_blob, self.bucket, new_name=moved_blob.name)
                 image_blob.delete()
                 moved_blobs.append(moved_blob.name)
                 LOGGER.info(f"Moved `{image_blob.name}` -> `{moved_blob.name}`")
@@ -143,19 +139,17 @@ class ImageTransformer(GCS):
         :returns: Optional[Blob]
         """
         image_folder, image_name = self._get_folder_and_filename(image_blob)
-        retina_blob_filepath = f"{image_folder}/_retina/{image_name.replace('.jpg', '@2x.jpg').replace('.png', '@2x.png')}"
+        retina_blob_filepath = (
+            f"{image_folder}/_retina/{image_name.replace('.jpg', '@2x.jpg').replace('.png', '@2x.png')}"
+        )
         retina_image_blob = self.bucket.blob(retina_blob_filepath)
         if retina_image_blob.exists() is False:
-            self.bucket.copy_blob(
-                image_blob, self.bucket, new_name=retina_blob_filepath
-            )
+            self.bucket.copy_blob(image_blob, self.bucket, new_name=retina_blob_filepath)
             new_retina_image_blob = self.bucket.blob(retina_blob_filepath)
             LOGGER.success(f"Created retina image `{retina_blob_filepath}`")
             return new_retina_image_blob
         else:
-            LOGGER.info(
-                f"Skipping retina image `{retina_blob_filepath}`; already exists."
-            )
+            LOGGER.info(f"Skipping retina image `{retina_blob_filepath}`; already exists.")
         return None
 
     @LOGGER.catch
@@ -185,17 +179,15 @@ class ImageTransformer(GCS):
         :returns: Optional[Blob]
         """
         image_folder, image_name = self._get_folder_and_filename(image_blob)
-        mobile_blob_filepath = f"{image_folder}/_mobile/{image_name.replace('.jpg', '@2x.jpg').replace('.png', '@2x.png')}"
+        mobile_blob_filepath = (
+            f"{image_folder}/_mobile/{image_name.replace('.jpg', '@2x.jpg').replace('.png', '@2x.png')}"
+        )
         mobile_image_blob = self.bucket.blob(mobile_blob_filepath)
         if mobile_image_blob.exists() is False:
-            new_mobile_image_blob = self._transform_mobile_image(
-                image_blob, mobile_image_blob
-            )
+            new_mobile_image_blob = self._transform_mobile_image(image_blob, mobile_image_blob)
             return new_mobile_image_blob
         else:
-            LOGGER.info(
-                f"Skipping mobile image `{mobile_blob_filepath}`; already exists."
-            )
+            LOGGER.info(f"Skipping mobile image `{mobile_blob_filepath}`; already exists.")
         return None
 
     @staticmethod
@@ -213,9 +205,7 @@ class ImageTransformer(GCS):
             return {"format": "PNG", "content-type": "image/png"}
         return None
 
-    def _transform_mobile_image(
-        self, original_image_blob: Blob, new_image_blob: Blob
-    ) -> Optional[Blob]:
+    def _transform_mobile_image(self, original_image_blob: Blob, new_image_blob: Blob) -> Optional[Blob]:
         """
         Create smaller image size to be served on mobile devices.
 
@@ -233,19 +223,13 @@ class ImageTransformer(GCS):
                 with BytesIO() as output:
                     new_image = im.reduce(2)
                     new_image.save(output, format=img_meta["format"])
-                    new_image_blob.upload_from_string(
-                        output.getvalue(), content_type=img_meta["content-type"]
-                    )
+                    new_image_blob.upload_from_string(output.getvalue(), content_type=img_meta["content-type"])
                     LOGGER.success(f"Created mobile image `{new_image_blob.name}`")
                     return new_image_blob
             except GoogleCloudError as e:
-                LOGGER.error(
-                    f"GoogleCloudError while saving mobile image `{new_image_blob.name}`: {e}"
-                )
+                LOGGER.error(f"GoogleCloudError while saving mobile image `{new_image_blob.name}`: {e}")
             except Exception as e:
-                LOGGER.error(
-                    f"Unexpected exception while saving mobile image `{new_image_blob.name}`: {e}"
-                )
+                LOGGER.error(f"Unexpected exception while saving mobile image `{new_image_blob.name}`: {e}")
 
     @staticmethod
     def _add_image_headers(image_blob: Blob):

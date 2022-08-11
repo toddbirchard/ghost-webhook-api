@@ -26,6 +26,7 @@ def sms():
 def ghost():
     return Ghost(
         admin_api_url=settings.GHOST_ADMIN_API_URL,
+        api_version=settings.GHOST_API_VERSION,
         content_api_url=settings.GHOST_CONTENT_API_URL,
         client_id=settings.GHOST_CLIENT_ID,
         client_secret=settings.GHOST_ADMIN_API_KEY,
@@ -47,6 +48,8 @@ def mailgun():
 def rdbms():
     return Database(
         uri=settings.SQLALCHEMY_DATABASE_URI,
+        hackers_db_name=settings.SQLALCHEMY_GHOST_DATABASE_NAME,
+        features_db_name=settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
         args=settings.SQLALCHEMY_ENGINE_OPTIONS,
     )
 
@@ -366,27 +369,17 @@ def github_pr_owner():
                 },
             },
             "_links": {
-                "self": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198"
-                },
-                "html": {
-                    "href": "https://github.com/toddbirchard/jamstack-api/pull/198"
-                },
-                "issue": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198"
-                },
-                "comments": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198/comments"
-                },
+                "self": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198"},
+                "html": {"href": "https://github.com/toddbirchard/jamstack-api/pull/198"},
+                "issue": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198"},
+                "comments": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198/comments"},
                 "review_comments": {
                     "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198/comments"
                 },
                 "review_comment": {
                     "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/comments{/number}"
                 },
-                "commits": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198/commits"
-                },
+                "commits": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198/commits"},
                 "statuses": {
                     "href": "https://api.github.com/repos/toddbirchard/jamstack-api/statuses/ac32cb13139b8db93459317d8dff2eb0b827afc6"
                 },
@@ -820,27 +813,17 @@ def github_pr_user():
                 },
             },
             "_links": {
-                "self": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198"
-                },
-                "html": {
-                    "href": "https://github.com/toddbirchard/jamstack-api/pull/198"
-                },
-                "issue": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198"
-                },
-                "comments": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198/comments"
-                },
+                "self": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198"},
+                "html": {"href": "https://github.com/toddbirchard/jamstack-api/pull/198"},
+                "issue": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198"},
+                "comments": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/issues/198/comments"},
                 "review_comments": {
                     "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198/comments"
                 },
                 "review_comment": {
                     "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/comments{/number}"
                 },
-                "commits": {
-                    "href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198/commits"
-                },
+                "commits": {"href": "https://api.github.com/repos/toddbirchard/jamstack-api/pulls/198/commits"},
                 "statuses": {
                     "href": "https://api.github.com/repos/toddbirchard/jamstack-api/statuses/ac32cb13139b8db93459317d8dff2eb0b827afc6"
                 },

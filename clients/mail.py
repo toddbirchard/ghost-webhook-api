@@ -35,17 +35,11 @@ class Mailgun:
                 data=body,
             )
         except HTTPError as e:
-            LOGGER.error(
-                f"HTTPError error while sending email to `{body['to']}` subject `{body['subject']}`: {e}"
-            )
+            LOGGER.error(f"HTTPError error while sending email to `{body['to']}` subject `{body['subject']}`: {e}")
         except Exception as e:
-            LOGGER.error(
-                f"Unexpected error while sending email to `{body['to']}` subject `{body['subject']}`: {e}"
-            )
+            LOGGER.error(f"Unexpected error while sending email to `{body['to']}` subject `{body['subject']}`: {e}")
 
-    def email_notification_new_comment(
-        self, post: dict, recipient: List[str], comment: dict, test_mode=False
-    ) -> dict:
+    def email_notification_new_comment(self, post: dict, recipient: List[str], comment: dict, test_mode=False) -> dict:
         """
         Notify author when a user comments on a post.
 
@@ -67,9 +61,7 @@ class Mailgun:
         }
         email_response = self.send_email(body, test_mode)
         if email_response.status_code == 200:
-            LOGGER.success(
-                f"Successfully send comment notification to {recipient}: {body}"
-            )
+            LOGGER.success(f"Successfully send comment notification to {recipient}: {body}")
             return {
                 "status": {
                     "sent": True,
@@ -93,8 +85,6 @@ class Mailgun:
 
 
 async def default_checker():
-    checker = (
-        DefaultChecker()
-    )  # you can pass source argument for your own email domains
+    checker = DefaultChecker()  # you can pass source argument for your own email domains
     await checker.fetch_temp_email_domains()  # require to fetch temporary email domains
     return checker

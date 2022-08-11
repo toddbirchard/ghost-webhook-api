@@ -7,11 +7,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.update import (
-    update_html_ssl_links,
-    update_metadata,
-    update_metadata_images
-)
+from app.posts.update import update_html_ssl_links, update_metadata, update_metadata_images
 from clients import ghost
 from config import BASE_DIR
 from database import rdbms
@@ -40,16 +36,10 @@ async def update_post(post_update: PostUpdate) -> JSONResponse:
     previous_update = post_update.post.previous
     if previous_update:
         current_time = get_current_datetime()
-        previous_update_date = datetime.strptime(
-            str(previous_update.updated_at), "%Y-%m-%dT%H:%M:%S.000Z"
-        )
-        if previous_update_date and current_time - previous_update_date < timedelta(
-            seconds=5
-        ):
+        previous_update_date = datetime.strptime(str(previous_update.updated_at), "%Y-%m-%dT%H:%M:%S.000Z")
+        if previous_update_date and current_time - previous_update_date < timedelta(seconds=5):
             LOGGER.warning("Post update ignored as post was just updated.")
-            raise HTTPException(
-                status_code=422, detail="Post update ignored as post was just updated."
-            )
+            raise HTTPException(status_code=422, detail="Post update ignored as post was just updated.")
     post = post_update.post.current
     slug = post.slug
     feature_image = post.feature_image
@@ -98,9 +88,7 @@ async def batch_update_metadata() -> JSONResponse:
         "hackers_dev",
     )
     insert_results = update_metadata(insert_posts)
-    LOGGER.success(
-        f"Inserted metadata for {len(insert_results)} posts, updated {len(update_results.keys())}."
-    )
+    LOGGER.success(f"Inserted metadata for {len(insert_results)} posts, updated {len(update_results.keys())}.")
     return JSONResponse(
         {
             "inserted": {"count": len(insert_results), "posts": insert_results},
@@ -129,9 +117,7 @@ async def get_single_post(post_id: str) -> JSONResponse:
     :returns: JSONResponse
     """
     if post_id is None:
-        raise HTTPException(
-            status_code=422, detail="Post ID required to test endpoint."
-        )
+        raise HTTPException(status_code=422, detail="Post ID required to test endpoint.")
     return JSONResponse(ghost.get_post(post_id))
 
 

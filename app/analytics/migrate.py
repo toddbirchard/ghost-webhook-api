@@ -2,7 +2,7 @@
 from typing import Any, Dict, List
 
 from clients import gbq
-from config import BASE_DIR
+from config import BASE_DIR, settings
 from database import rdbms
 
 
@@ -19,5 +19,5 @@ def import_site_analytics(timeframe: str) -> Dict[str, List[Any]]:
     query_job = gbq.query(sql_query)
     result = query_job.result()
     df = result.to_dataframe()
-    result = rdbms.insert_dataframe(df, sql_table, "analytics", action="replace")
+    result = rdbms.insert_dataframe(df, sql_table, settings.SQLALCHEMY_FEATURES_DATABASE_NAME, action="replace")
     return {"posts": result["slug"].to_list(), "views": result["views"].to_list()}

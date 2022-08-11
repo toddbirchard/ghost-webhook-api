@@ -1,14 +1,5 @@
 """Data models."""
-from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    ForeignKey,
-    Index,
-    Integer,
-    String,
-    Text
-)
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -23,9 +14,7 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
     user_name = Column(String(255), unique=False)
     user_avatar = Column(Text)
-    user_id = Column(
-        String(255), ForeignKey("accounts.netlify_id"), index=True, unique=False
-    )
+    user_id = Column(String(255), ForeignKey("accounts.netlify_id"), index=True, unique=False)
     user_email = Column(String(255))
     user_role = Column(String(255))
     body = Column(Text)

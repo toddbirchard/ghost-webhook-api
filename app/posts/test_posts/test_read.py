@@ -1,10 +1,6 @@
 from sqlalchemy.engine.cursor import LegacyCursorResult
 
-from database.read_sql import (
-    collect_sql_queries,
-    fetch_sql_files,
-    parse_sql_batch
-)
+from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
 from log import LOGGER
 
 

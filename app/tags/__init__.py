@@ -40,7 +40,5 @@ async def update_tags_metadata(tag_update: TagUpdate) -> JSONResponse:
     """
     tag_update_queries = collect_sql_queries("tags")
     update_results = rdbms.execute_queries(tag_update_queries, "hackers_dev")
-    LOGGER.success(
-        f"Tag `{tag_update.current.slug}` updated; updated tag page metadata: {update_results}"
-    )
+    LOGGER.success(f"Tag `{tag_update.current.slug}` updated; updated tag page metadata: {update_results}")
     return JSONResponse(update_results, status_code=200)

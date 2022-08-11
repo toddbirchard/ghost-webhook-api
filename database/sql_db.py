@@ -12,14 +12,10 @@ from log import LOGGER
 class Database:
     """Database client."""
 
-    def __init__(self, uri: str, args: dict):
+    def __init__(self, uri: str, hackers_db_name: str, features_db_name: str, args: dict):
         self.engines = {
-            "analytics": create_engine(
-                f"{uri}/analytics", connect_args=args, echo=False
-            ),
-            "hackers_dev": create_engine(
-                f"{uri}/hackers_dev", connect_args=args, echo=False
-            ),
+            features_db_name: create_engine(f"{uri}/{features_db_name}", connect_args=args, echo=False),
+            hackers_db_name: create_engine(f"{uri}/{hackers_db_name}", connect_args=args, echo=False),
         }
 
     def _table(self, table_name: str, database_name: str) -> Table:
@@ -31,9 +27,7 @@ class Database:
 
         :returns: Table
         """
-        return Table(
-            table_name, MetaData(bind=self.engines[database_name]), autoload=True
-        )
+        return Table(table_name, MetaData(bind=self.engines[database_name]), autoload=True)
 
     def execute_queries(self, queries: dict, database_name: str) -> dict:
         """
@@ -51,13 +45,9 @@ class Database:
                 results[k] = f"{query_result.rowcount} rows affected."
             return results
         except SQLAlchemyError as e:
-            LOGGER.error(
-                f"SQLAlchemyError while executing queries `{','.join(queries.keys())}`: {e}"
-            )
+            LOGGER.error(f"SQLAlchemyError while executing queries `{','.join(queries.keys())}`: {e}")
         except Exception as e:
-            LOGGER.error(
-                f"Unexpected exception while executing queries `{','.join(queries.keys())}`: {e}"
-            )
+            LOGGER.error(f"Unexpected exception while executing queries `{','.join(queries.keys())}`: {e}")
 
     def execute_query(self, query: str, database_name: str) -> Optional[Result]:
         """
@@ -75,9 +65,7 @@ class Database:
         except Exception as e:
             LOGGER.error(f"Failed to execute SQL query `{query}`: {e}")
 
-    def execute_query_from_file(
-        self, sql_file: str, database_name: str
-    ) -> Union[Result, str]:
+    def execute_query_from_file(self, sql_file: str, database_name: str) -> Union[Result, str]:
         """
         Execute single SQL query.
 
@@ -113,9 +101,7 @@ class Database:
         except Exception as e:
             LOGGER.error(f"Unexpected exception while fetching records from DB: {e}")
 
-    def insert_records(
-        self, rows: List[dict], table_name: str, database_name: str, replace=False
-    ) -> Result:
+    def insert_records(self, rows: List[dict], table_name: str, database_name: str, replace=False) -> Result:
         """
         Insert rows into SQL table.
 
@@ -132,17 +118,11 @@ class Database:
             table = self._table(table_name, database_name)
             return self.engines[database_name].execute(table.insert(), rows)
         except SQLAlchemyError as e:
-            LOGGER.error(
-                f"SQLAlchemyError while inserting records into table `{table_name}`: {e}"
-            )
+            LOGGER.error(f"SQLAlchemyError while inserting records into table `{table_name}`: {e}")
         except IntegrityError as e:
-            LOGGER.error(
-                f"Unexpected error while inserting records into table `{table_name}`: {e}"
-            )
+            LOGGER.error(f"Unexpected error while inserting records into table `{table_name}`: {e}")
 
-    def insert_dataframe(
-        self, df: DataFrame, table_name: str, database_name: str, action="append"
-    ) -> DataFrame:
+    def insert_dataframe(self, df: DataFrame, table_name: str, database_name: str, action="append") -> DataFrame:
         """
         Insert Pandas DataFrame into SQL table.
 
@@ -154,7 +134,5 @@ class Database:
         :returns: DataFrame
         """
         df.to_sql(table_name, self.engines[database_name], if_exists=action)
-        LOGGER.info(
-            f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`."
-        )
+        LOGGER.info(f"Updated {len(df)} rows via {action} into `{database_name}`.`{table_name}`.")
         return df

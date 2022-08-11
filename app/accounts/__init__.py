@@ -12,16 +12,11 @@ from database.crud import (
     get_account,
     get_comment_upvote,
     remove_comment_upvote,
-    submit_comment_upvote
+    submit_comment_upvote,
 )
 from database.models import Account, Comment
 from database.orm import get_db
-from database.schemas import (
-    NetlifyAccountCreationResponse,
-    NetlifyUserEvent,
-    NewComment,
-    UpvoteComment
-)
+from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent, NewComment, UpvoteComment
 from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
@@ -33,9 +28,7 @@ router = APIRouter(prefix="/account", tags=["accounts"])
     description="Create user account sourced from Netlify Identity.",
     response_model=NetlifyAccountCreationResponse,
 )
-async def new_account(
-    new_account_event: NetlifyUserEvent, db: Session = Depends(get_db)
-):
+async def new_account(new_account_event: NetlifyUserEvent, db: Session = Depends(get_db)):
     """
     Create user account from Netlify identity signup.
 
@@ -85,9 +78,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
     :param Session db: ORM Database session.
     """
     post = ghost.get_post(comment.post_id)
-    post_author = (
-        f"{post['primary_author']['name']} <{post['primary_author']['email']}>"
-    )
+    post_author = f"{post['primary_author']['name']} <{post['primary_author']['email']}>"
     user_role = get_user_role(comment, post)
     if comment.user_email != post["primary_author"]["email"]:
         mailgun.email_notification_new_comment(post, [post_author], comment.__dict__)
@@ -110,9 +101,7 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
     :param UpvoteComment upvote_request: User-generated request to upvote a comment.
     :param Session db: ORM Database session.
     """
-    existing_vote = get_comment_upvote(
-        db, upvote_request.user_id, upvote_request.comment_id
-    )
+    existing_vote = get_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
     if upvote_request.vote and existing_vote is None:
         submit_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
         return upvote_request

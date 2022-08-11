@@ -18,9 +18,7 @@ router = APIRouter(prefix="/donation", tags=["donations"])
     description="Save record of new donation to persistent ledger.",
     response_model=NewDonation,
 )
-async def accept_donation(
-    donation: NewDonation, db: Session = Depends(get_db)
-) -> NewDonation:
+async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) -> NewDonation:
     """
     Save BuyMeACoffee donation to database.
 
@@ -47,9 +45,7 @@ async def accept_donation(
     description="Delete BuyMeACoffee donation transaction by ID.",
     response_model=NewDonation,
 )
-async def delete_donation(
-    donation: NewDonation, db: Session = Depends(get_db)
-) -> NewDonation:
+async def delete_donation(donation: NewDonation, db: Session = Depends(get_db)) -> NewDonation:
     """
     Delete BuyMeACoffee donation from database.
 

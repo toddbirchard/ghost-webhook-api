@@ -21,9 +21,7 @@ def test_comment_email(comment_body, ghost, mailgun):
     author_name = post["primary_author"]["name"]
     author_email = post["primary_author"]["email"]
     recipient = [f"{author_name} <{author_email}>"]
-    email_notification = mailgun.email_notification_new_comment(
-        post, recipient, comment_body, test_mode=True
-    )
+    email_notification = mailgun.email_notification_new_comment(post, recipient, comment_body, test_mode=True)
     assert post["primary_author"]["name"] == "Todd Birchard"
     assert post["primary_author"]["email"] is not None
     assert comment_body["user_name"] != post["primary_author"]["name"]

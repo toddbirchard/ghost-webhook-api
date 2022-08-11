@@ -1,6 +1,7 @@
 PROJECT_NAME := $(shell basename $CURDIR)
 VIRTUAL_ENVIRONMENT := $(CURDIR)/.venv
 LOCAL_PYTHON := $(VIRTUAL_ENVIRONMENT)/bin/python3
+LOCAL_PYTHON_ACTIVATE = $(VIRTUAL_ENVIRONMENT)/bin/activate
 
 define HELP
 Manage $(PROJECT_NAME). Usage:
@@ -41,18 +42,14 @@ dev: env
 
 .PHONY: run
 run: env
-	if [[ "./asgi.py" ]]; then \
-		service $(PROJECT_NAME) start; \
-	else \
-	  $(LOCAL_PYTHON) asgi.py; \
-	fi
+	  $(LOCAL_PYTHON) -m asgi
 
 
 .PHONY: install
 install: env
-	$(shell . .venv/bin/activate) \
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
-	$(LOCAL_PYTHON) -m pip install -r requirements.txt
+	&& $(LOCAL_PYTHON) -m pip install -r requirements.txt \
+	&& source $(LOCAL_PYTHON_ACTIVATE) 
 
 
 .PHONY: deploy
@@ -73,16 +70,17 @@ test: env
 
 .PHONY: update
 update: env
-	export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true \
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
-	poetry update \
-	poetry export -f requirements.txt --output requirements.txt --without-hashes
+	&& poetry update \
+	&& poetry export -f requirements.txt --output requirements.txt --without-hashes \
+	&& source $(LOCAL_PYTHON_ACTIVATE) \
+	&& echo "Updated dependencies in virtualenv `$(LOCAL_PYTHON)`"
 
 
 .PHONY: format
 format: env
 	isort --multi-line=3 . \
-	black .
+	&& black .
 
 
 .PHONY: lint
@@ -97,11 +95,11 @@ lint: env
 .PHONY: clean
 clean:
 	find . -name 'poetry.lock' -delete \
-	find . -name '.coverage' -delete \
-	find . -wholename '**/*.pyc' -delete \
-	find . -wholename '__pycache__' -delete \
-	find . -type d -wholename '.venv' -exec rm -rf {} + \
-	find . -type d -wholename '.pytest_cache' -exec rm -rf {} + \
-	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + \
-	find . -type d -wholename './logs/*' -exec rm -rf {} + \
-	find . -type d -wholename './.reports/*' -exec rm -rf {} +
+	&& find . -name '.coverage' -delete \
+	&& find . -wholename '**/*.pyc' -delete \
+	&& find . -wholename '__pycache__' -delete \
+	&& find . -type d -wholename '.venv' -exec rm -rf {} + \
+	&& find . -type d -wholename '.pytest_cache' -exec rm -rf {} + \
+	&& find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + \
+	&& find . -type d -wholename './logs/*' -exec rm -rf {} + \
+	&& find . -type d -wholename './.reports/*' -exec rm -rf {} +

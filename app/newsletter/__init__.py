@@ -66,17 +66,13 @@ async def default_checker() -> Type[DefaultChecker]:
 
     :returns: DefaultChecker
     """
-    checker = (
-        DefaultChecker()
-    )  # you can pass source argument for your own email domains
+    checker = DefaultChecker()  # you can pass source argument for your own email domains
     await checker.fetch_temp_email_domains()  # require to fetch temporary email domains
     return DefaultChecker
 
 
 @router.get("/email/disposable")
-async def simple_send(
-    domain: str = Query(...), checker: DefaultChecker = Depends(default_checker)
-) -> JSONResponse:
+async def simple_send(domain: str = Query(...), checker: DefaultChecker = Depends(default_checker)) -> JSONResponse:
     """
     Check that email recipient is legit.
 
@@ -86,7 +82,5 @@ async def simple_send(
     :returns: JSONResponse
     """
     if await checker.is_dispasoble(domain):
-        return JSONResponse(
-            status_code=400, content={"message": "this is disposable domain"}
-        )
+        return JSONResponse(status_code=400, content={"message": "this is disposable domain"})
     return JSONResponse(status_code=200, content={"message": "email has been sent"})

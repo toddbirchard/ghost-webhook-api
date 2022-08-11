@@ -74,8 +74,9 @@ class Settings(BaseSettings):
         env_file = ".env"
 
     # Database
-    SQLALCHEMY_DATABASE_NAME: str = getenv("SQLALCHEMY_DATABASE_NAME")
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_GHOST_DATABASE_NAME: str = getenv("SQLALCHEMY_GHOST_DATABASE_NAME")
+    SQLALCHEMY_FEATURES_DATABASE_NAME: str = getenv("SQLALCHEMY_FEATURES_DATABASE_NAME")
     SQLALCHEMY_DATABASE_PEM: str = getenv("SQLALCHEMY_DATABASE_PEM")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ENGINE_OPTIONS: dict = {"ssl": {"key": SQLALCHEMY_DATABASE_PEM}}
@@ -90,18 +91,14 @@ class Settings(BaseSettings):
     # Google Cloud Auth
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_KEY: str = getenv("GOOGLE_CLOUD_JSON_KEY")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials = (
-        service_account.Credentials.from_service_account_file(
-            f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
-        )
+    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
+        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
     )
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
     GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
-    GCP_BIGQUERY_URI: str = (
-        f"bigquery://{GOOGLE_CLOUD_PROJECT_NAME}/{GCP_BIGQUERY_DATASET}"
-    )
+    GCP_BIGQUERY_URI: str = f"bigquery://{GOOGLE_CLOUD_PROJECT_NAME}/{GCP_BIGQUERY_DATASET}"
 
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
@@ -114,8 +111,9 @@ class Settings(BaseSettings):
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
-    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/admin"
-    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v3/content"
+    GHOST_API_VERSION: int = 5
+    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/admin"
+    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/content"
     GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")

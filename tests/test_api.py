@@ -25,18 +25,12 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
     assert owner_response.status_code == 200
     assert owner_response.json()["pr"]["status"] == "ignored"
     assert owner_response.json()["pr"]["trigger"]["type"] == "github"
-    assert (
-        owner_response.json()["pr"]["trigger"]["repo"]
-        == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
-    )
+    assert owner_response.json()["pr"]["trigger"]["repo"] == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
 
     user_response = client.post("/github/pr", json=github_pr_user)
     assert user_response.status_code == 200
     assert user_response.json()["pr"]["trigger"]["type"] == "github"
-    assert (
-        user_response.json()["pr"]["trigger"]["repo"]
-        == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
-    )
+    assert user_response.json()["pr"]["trigger"]["repo"] == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
     assert user_response.json()["pr"]["status"] == "queued"
     assert user_response.json()["sms"]["phone_sender"] == settings.TWILIO_SENDER_PHONE
     gh.get_repo(repo).get_pull(pr["id"]).edit(state="closed")

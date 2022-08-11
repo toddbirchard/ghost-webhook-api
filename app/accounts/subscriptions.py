@@ -34,7 +34,5 @@ def new_ghost_subscription(user: NetlifyAccount) -> Optional[Dict[str, List[Dict
                 f"Skipped Ghost member creation for existing user: {user.user_metadata.full_name} <{user.email}>"
             )
     else:
-        LOGGER.success(
-            f"Created new Ghost member: {user.user_metadata.full_name} <{user.email}>"
-        )
+        LOGGER.success(f"Created new Ghost member: {user.user_metadata.full_name} <{user.email}>")
         return body

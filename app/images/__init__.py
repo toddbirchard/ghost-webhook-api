@@ -34,16 +34,10 @@ async def optimize_post_image(post_update: PostUpdate) -> PlainTextResponse:
         new_images.append(images.create_mobile_image(feature_image))
         new_images = [image for image in new_images if image is not None]
         if bool(new_images):
-            LOGGER.info(
-                f"Generated {len(new_images)} images for post `{title}`: {new_images}"
-            )
+            LOGGER.info(f"Generated {len(new_images)} images for post `{title}`: {new_images}")
             return PlainTextResponse(f"{post.title}: {new_images}")
-        return PlainTextResponse(
-            content=f"Retina & mobile images already exist for {post.title}."
-        )
-    return PlainTextResponse(
-        content=f"Post `{post.slug}` ignored; no image exists for optimization."
-    )
+        return PlainTextResponse(content=f"Retina & mobile images already exist for {post.title}.")
+    return PlainTextResponse(content=f"Post `{post.slug}` ignored; no image exists for optimization.")
 
 
 @router.get(
@@ -100,9 +94,7 @@ async def bulk_organize_images(directory: Optional[str] = None) -> JSONResponse:
         directory = settings.GCP_BUCKET_FOLDER
     retina_images = images.organize_retina_images(directory)
     image_headers = images.image_headers(directory)
-    LOGGER.success(
-        f"Moved {len(retina_images)} retina images, modified {len(image_headers)} content types."
-    )
+    LOGGER.success(f"Moved {len(retina_images)} retina images, modified {len(image_headers)} content types.")
     return JSONResponse(
         {
             "retina": retina_images,
