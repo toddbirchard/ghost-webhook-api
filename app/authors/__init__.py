@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 
 from clients import sms
 from config import settings
-from database import rdbms
+from database import ghost_db
 from database.read_sql import collect_sql_queries
 from database.schemas import PostUpdate
 from log import LOGGER
@@ -24,7 +24,7 @@ async def authors_bulk_update_metadata() -> JSONResponse:
     :returns: JSONResponse
     """
     update_author_queries = collect_sql_queries("users")
-    update_author_results = rdbms.execute_queries(update_author_queries, "hackers_dev")
+    update_author_results = ghost_db.execute_queries(update_author_queries)
     LOGGER.success(f"Updated author metadata for {len(update_author_results)} authors.")
     return JSONResponse(
         content={"authors": update_author_results},

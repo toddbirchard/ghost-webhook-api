@@ -2,7 +2,7 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from database import rdbms
+from database import ghost_db
 from database.read_sql import collect_sql_queries
 from database.schemas import TagUpdate
 from log import LOGGER
@@ -22,7 +22,7 @@ async def update_tags_metadata() -> JSONResponse:
     :returns: JSONResponse
     """
     tag_update_queries = collect_sql_queries("tags")
-    update_results = rdbms.execute_queries(tag_update_queries, "hackers_dev")
+    update_results = ghost_db.execute_queries(tag_update_queries)
     LOGGER.success(f"Updated tags metadata: {update_results}")
     return JSONResponse(update_results, status_code=200)
 
@@ -39,6 +39,6 @@ async def update_tags_metadata(tag_update: TagUpdate) -> JSONResponse:
     :returns: JSONResponse
     """
     tag_update_queries = collect_sql_queries("tags")
-    update_results = rdbms.execute_queries(tag_update_queries, "hackers_dev")
+    update_results = ghost_db.execute_queries(tag_update_queries)
     LOGGER.success(f"Tag `{tag_update.current.slug}` updated; updated tag page metadata: {update_results}")
     return JSONResponse(update_results, status_code=200)

@@ -6,7 +6,7 @@ from requests.exceptions import HTTPError
 
 from app.moment import get_start_date_range
 from config import settings
-from database import rdbms
+from database import feature_db
 from log import LOGGER
 
 
@@ -67,9 +67,8 @@ def import_algolia_search_queries(records: List[dict], table_name: str) -> Optio
 
     :returns: Optional[List[dict]]
     """
-    return rdbms.insert_records(
+    return feature_db.insert_records(
         records,
         table_name,
-        settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
         replace=True,
     )

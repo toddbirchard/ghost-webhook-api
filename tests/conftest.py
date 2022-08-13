@@ -45,11 +45,10 @@ def mailgun():
 
 
 @pytest.fixture
-def rdbms():
+def ghost_db():
     return Database(
         uri=settings.SQLALCHEMY_DATABASE_URI,
-        hackers_db_name=settings.SQLALCHEMY_GHOST_DATABASE_NAME,
-        features_db_name=settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
+        db_name=settings.SQLALCHEMY_GHOST_DATABASE_NAME,
         args=settings.SQLALCHEMY_ENGINE_OPTIONS,
     )
 

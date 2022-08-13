@@ -67,7 +67,7 @@ def assign_img_alt_attr():
 
 
 def test_import_site_analytics():
-    response = client.get("/analytics/")
+    response = client.get("/analytics")
     assert response.status_code == 200
     assert type(response.json()) == dict
 
@@ -85,13 +85,13 @@ def test_new_ghost_member():
         comped=False,
     )
     subscriber = Subscriber(current=member, previous=None)
-    response = client.post("/newsletter/", subscriber)
+    response = client.post("/newsletter", subscriber)
     assert type(response.json()) == dict
     # assert response.json().get("id") is not None
 
 
 def test_accept_donation(old_donation: NewDonation, db_session):
-    response = client.post("/donation/", old_donation, db_session)
+    response = client.post("/donation", old_donation, db_session)
     print(response)
     assert response.status_code == 400
 

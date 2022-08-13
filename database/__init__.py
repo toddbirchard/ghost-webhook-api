@@ -2,10 +2,17 @@ from config import Settings
 
 from .sql_db import Database
 
-# Database connection
-rdbms = Database(
+# Ghost database connection
+ghost_db = Database(
     uri=Settings().SQLALCHEMY_DATABASE_URI,
-    hackers_db_name=Settings().SQLALCHEMY_GHOST_DATABASE_NAME,
-    features_db_name=Settings().SQLALCHEMY_FEATURES_DATABASE_NAME,
+    db_name=Settings().SQLALCHEMY_GHOST_DATABASE_NAME,
+    args=Settings().SQLALCHEMY_ENGINE_OPTIONS,
+)
+
+
+# Feature database connection
+feature_db = Database(
+    uri=Settings().SQLALCHEMY_DATABASE_URI,
+    db_name=Settings().SQLALCHEMY_FEATURES_DATABASE_NAME,
     args=Settings().SQLALCHEMY_ENGINE_OPTIONS,
 )

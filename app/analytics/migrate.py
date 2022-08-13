@@ -2,15 +2,15 @@
 from typing import Any, Dict, List
 
 from clients import gbq
-from config import BASE_DIR, settings
-from database import rdbms
+from config import BASE_DIR
+from database import feature_db
 
 
 def import_site_analytics(timeframe: str) -> Dict[str, List[Any]]:
     """
     Migrate raw analytics data from Google BigQuery to application db.
 
-    :param str timeframe: Timeframe to fetch data for (weekly, monthly, yearly).
+    :param str timeframe: Time frame to fetch data for (weekly, monthly, yearly).
 
     :returns: Dict[str, List[Any]]
     """
@@ -19,5 +19,5 @@ def import_site_analytics(timeframe: str) -> Dict[str, List[Any]]:
     query_job = gbq.query(sql_query)
     result = query_job.result()
     df = result.to_dataframe()
-    result = rdbms.insert_dataframe(df, sql_table, settings.SQLALCHEMY_FEATURES_DATABASE_NAME, action="replace")
+    result = feature_db.insert_dataframe(df, sql_table, action="replace")
     return {"posts": result["slug"].to_list(), "views": result["views"].to_list()}
