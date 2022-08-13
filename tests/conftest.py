@@ -54,6 +54,15 @@ def ghost_db():
 
 
 @pytest.fixture
+def features_db():
+    return Database(
+        uri=settings.SQLALCHEMY_DATABASE_URI,
+        db_name=settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
+        args=settings.SQLALCHEMY_ENGINE_OPTIONS,
+    )
+
+
+@pytest.fixture
 def gh():
     return Github(
         settings.GITHUB_API_KEY,

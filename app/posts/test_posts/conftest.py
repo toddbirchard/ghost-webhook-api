@@ -11,3 +11,12 @@ def ghost_db():
         db_name=settings.SQLALCHEMY_GHOST_DATABASE_NAME,
         args=settings.SQLALCHEMY_ENGINE_OPTIONS,
     )
+
+
+@pytest.fixture
+def feature_db():
+    return Database(
+        uri=settings.SQLALCHEMY_DATABASE_URI,
+        db_name=settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
+        args=settings.SQLALCHEMY_ENGINE_OPTIONS,
+    )

@@ -86,7 +86,7 @@ def test_new_ghost_member():
     )
     subscriber = Subscriber(current=member, previous=None)
     response = client.post("/newsletter", subscriber)
-    assert type(response.json()) == dict
+    assert response.json() is not None
     # assert response.json().get("id") is not None
 
 
