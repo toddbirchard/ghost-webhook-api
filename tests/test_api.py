@@ -54,7 +54,7 @@ def test_github_issue(github_issue_user, gh):
 
 
 def test_batch_update_metadata():
-    response = client.get("/posts")
+    response = client.get("/posts/")
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
     assert response.json().get("updated") is not None
@@ -67,7 +67,7 @@ def assign_img_alt_attr():
 
 
 def test_import_site_analytics():
-    response = client.get("/analytics")
+    response = client.get("/analytics/")
     assert response.status_code == 200
     assert type(response.json()) == dict
 
@@ -91,7 +91,7 @@ def test_new_ghost_member():
 
 
 def test_accept_donation(old_donation: NewDonation, db_session):
-    response = client.post("/donation", old_donation, db_session)
+    response = client.post("/donation/", old_donation, db_session)
     print(response)
     assert response.status_code == 400
 

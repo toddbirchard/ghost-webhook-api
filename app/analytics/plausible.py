@@ -9,7 +9,7 @@ from config import settings
 from log import LOGGER
 
 
-def fetch_top_visited_urls(time_period, limit=20) -> List[Optional[dict]]:
+def fetch_top_visited_urls(time_period: str, limit=20) -> List[Optional[dict]]:
     """
     Fetch top visited URLs from Plausible.
 

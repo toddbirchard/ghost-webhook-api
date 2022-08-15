@@ -111,7 +111,7 @@ class Settings(BaseSettings):
 
     # Ghost
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
-    GHOST_API_VERSION: int = 5
+    GHOST_API_VERSION: int = 3
     GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/admin"
     GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/content"
     GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")

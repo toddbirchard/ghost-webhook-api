@@ -17,10 +17,10 @@ def test_collect_sql_queries():
     assert type(queries) == dict
 
 
-def test_select_query(rdbms):
+def test_select_query(ghost_db):
     posts_sql = fetch_sql_files("posts/selects")
     parsed_posts_sql = parse_sql_batch(posts_sql)
-    query_result = rdbms.execute_query(parsed_posts_sql[0], "hackers_dev")
+    query_result = ghost_db.execute_query(parsed_posts_sql[0])
     assert len(posts_sql) > 0
     assert type(parsed_posts_sql[0]) == str
     assert type(query_result) == LegacyCursorResult

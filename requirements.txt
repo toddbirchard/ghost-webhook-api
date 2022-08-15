@@ -44,7 +44,7 @@ jmespath==1.0.1; python_version >= "3.7"
 loguru==0.6.0; python_version >= "3.5"
 markupsafe==2.1.1; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.7"
 mixpanel==4.10.0; (python_version >= "2.7" and python_full_version < "3.4.0") or (python_full_version >= "3.5.0")
-numpy==1.23.1
+numpy==1.23.2
 packaging==21.3; python_version >= "3.7" and python_version < "3.11" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") and python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 pandas==1.4.3; python_version >= "3.8"
 pillow==9.2.0; python_version >= "3.7"

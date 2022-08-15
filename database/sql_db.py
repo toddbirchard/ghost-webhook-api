@@ -44,6 +44,20 @@ class Database:
         except Exception as e:
             LOGGER.error(f"Unexpected exception while executing queries `{','.join(queries.keys())}`: {e}")
 
+    def execute_query(self, query: str) -> Optional[Result]:
+        """
+        Execute single SQL query.
+
+        :param str query: SQL query to run against database.
+
+        :returns: Optional[Result]
+        """
+        try:
+            result = self.db.execute(query)
+            return result
+        except SQLAlchemyError as e:
+            LOGGER.error(f"Failed to execute SQL query {query}: {e}")
+
     def execute_query_from_file(self, sql_file: str) -> Union[Result, str]:
         """
         Execute single SQL query.
