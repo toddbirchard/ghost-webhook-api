@@ -3,12 +3,12 @@ from typing import Optional
 
 from clients import mailgun
 from config import settings
-from database.schemas import Member, SubscriptionWelcomeEmail
+from database.schemas import GhostMember, SubscriptionWelcomeEmail
 from log import LOGGER
 
 
 def welcome_newsletter_subscriber(
-    subscriber: Member,
+    subscriber: GhostMember,
 ) -> Optional[SubscriptionWelcomeEmail]:
     """
     Send welcome email to newsletter subscriber.

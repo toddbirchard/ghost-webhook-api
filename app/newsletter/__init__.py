@@ -5,10 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi_mail.email_utils import DefaultChecker
 
-from app.newsletter.member import parse_ghost_member_json
 from app.newsletter.mixpanel import create_mixpanel_record
 from app.newsletter.newsletter import welcome_newsletter_subscriber
-from database.schemas import Member, Subscriber
+from database.schemas import GhostMember, GhostSubscriber
 from log import LOGGER
 
 router = APIRouter(prefix="/newsletter", tags=["newsletter"])
@@ -18,25 +17,20 @@ router = APIRouter(prefix="/newsletter", tags=["newsletter"])
     "/",
     summary="Add new user account to Ghost.",
     description="Create free-tier Ghost membership for Netlify user account upon signup.",
+    response_model=GhostSubscriber,
 )
-async def new_ghost_member(subscriber: Subscriber) -> JSONResponse:
+async def new_ghost_member(subscriber: GhostSubscriber) -> GhostSubscriber:
     """
     Welcome new Ghost subscriber & add analytics.
 
-    :param Subscriber subscriber: New subscriber to Hackers newsletter.
+    :param GhostSubscriber subscriber: Ghost newsletter subscriber with updated info.
 
-    :returns: JSONResponse
+    :returns: GhostSubscriber
     """
     try:
         current_member = subscriber.current
-        welcome_email = welcome_newsletter_subscriber(current_member)
-        member_json = parse_ghost_member_json(current_member)
-        member_json.update({"welcome_email": welcome_email})
-        previous_member = subscriber.previous
-        if previous_member is not None:
-            previous_member_json = parse_ghost_member_json(current_member)
-            member_json.update({"previous": previous_member_json})
-        return JSONResponse(member_json)
+        welcome_newsletter_subscriber(current_member)
+        return subscriber
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -48,9 +42,9 @@ async def new_ghost_member(subscriber: Subscriber) -> JSONResponse:
     "/",
     summary="Delete Ghost Member.",
     description="Unsubscribe existing Ghost member from newsletters.",
-    response_model=Member,
+    response_model=GhostMember,
 )
-async def member_unsubscribe(subscriber: Subscriber):
+async def member_unsubscribe(subscriber: GhostSubscriber):
     """
     Log user unsubscribe events.
 

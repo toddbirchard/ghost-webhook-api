@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from config import settings
-from database.schemas import Member, NewDonation, Subscriber
+from database.schemas import GhostMember, NewDonation, GhostSubscriber
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
@@ -73,7 +73,7 @@ def test_import_site_analytics():
 
 
 def test_new_ghost_member():
-    member = Member(
+    member = GhostMember(
         id="dfdsgf",
         uuid="dsfdf-dsfdsfsfdsf-sdfdsfdsfsafd",
         name="Example Name",
@@ -84,8 +84,8 @@ def test_new_ghost_member():
         labels=["VIP"],
         comped=False,
     )
-    subscriber = Subscriber(current=member, previous=None)
-    response = client.post("/newsletter", subscriber)
+    subscriber = GhostSubscriber(current=member, previous=None)
+    response = client.post("/newsletter/", subscriber)
     assert response.json() is not None
     # assert response.json().get("id") is not None
 

@@ -4,11 +4,11 @@ from typing import Optional
 from mixpanel import Mixpanel, MixpanelException
 
 from config import settings
-from database.schemas import Member
+from database.schemas import GhostMember
 from log import LOGGER
 
 
-def create_mixpanel_record(user: Member) -> Optional[dict]:
+def create_mixpanel_record(user: GhostMember) -> Optional[dict]:
     """
     Add user record to Mixpanel.
 

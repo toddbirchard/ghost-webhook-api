@@ -346,7 +346,7 @@ class NetlifyUserEvent(BaseModel):
     user: NetlifyAccount
 
 
-class Member(BaseModel):
+class GhostMember(BaseModel):
     # fmt: off
     id: str
     uuid: str
@@ -377,13 +377,13 @@ class EmailSchema(BaseModel):
     body: Dict[str, Any]
 
 
-class Subscriber(BaseModel):
-    current: Optional[Member]
-    previous: Optional[Member]
+class GhostSubscriber(BaseModel):
+    current: Optional[GhostMember]
+    previous: Optional[GhostMember]
 
 
 class Subscription(BaseModel):
-    member: Subscriber
+    member: GhostSubscriber
 
     class Config:
         schema_extra = {

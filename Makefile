@@ -1,7 +1,7 @@
 PROJECT_NAME := $(shell basename $CURDIR)
 VIRTUAL_ENVIRONMENT := $(CURDIR)/.venv
 LOCAL_PYTHON := $(VIRTUAL_ENVIRONMENT)/bin/python3
-LOCAL_PYTHON_ACTIVATE = $(VIRTUAL_ENVIRONMENT)/bin/activate
+LOCAL_PYTHON_ACTIVATE := $(VIRTUAL_ENVIRONMENT)/bin/activate
 
 define HELP
 Manage $(PROJECT_NAME). Usage:
@@ -49,7 +49,7 @@ run: env
 install: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
 	&& $(LOCAL_PYTHON) -m pip install -r requirements.txt \
-	&& source $(LOCAL_PYTHON_ACTIVATE) 
+	&& echo "Installed dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
 
 
 .PHONY: deploy
@@ -73,8 +73,7 @@ update: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
 	&& poetry update \
 	&& poetry export -f requirements.txt --output requirements.txt --without-hashes \
-	&& source $(LOCAL_PYTHON_ACTIVATE) \
-	&& echo "Updated dependencies in virtualenv `$(LOCAL_PYTHON)`"
+	&& echo "Updated dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
 
 
 .PHONY: format
@@ -98,7 +97,7 @@ clean:
 	find . -name 'poetry.lock' -delete \
 	&& find . -name '.coverage' -delete \
 	&& find . -wholename '**/*.pyc' -delete \
-	&& find . -wholename '__pycache__' -delete \
+	&& ffind . -type d -wholename '__pycache__' -exec rm -rf {} + \
 	&& find . -type d -wholename '.venv' -exec rm -rf {} + \
 	&& find . -type d -wholename '.pytest_cache' -exec rm -rf {} + \
 	&& find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + \

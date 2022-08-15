@@ -114,8 +114,9 @@ creds/*
 gcloud.json
 ca-certificate.crt
 
-# Idea
+# IDE files
 .idea/
+.vscode/
 
 # Logs
 logs/*
