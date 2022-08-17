@@ -47,9 +47,9 @@ run: env
 
 .PHONY: install
 install: env
-	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
-	&& $(LOCAL_PYTHON) -m pip install -r requirements.txt \
-	&& echo "Installed dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
+	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
+	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
+	echo "Installed dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
 
 
 .PHONY: deploy
@@ -63,17 +63,17 @@ deploy:
 test: env
 	$(LOCAL_PYTHON) -m \
 		coverage run -m pytest -v \
-		--disable-pytest-warnings \
-		&& coverage html --title='Coverage Report' -d .reports \
-		&& open .reports/index.html
+		--disable-pytest-warnings && \
+		coverage html --title='Coverage Report' -d .reports && \
+		open .reports/index.html
 
 
 .PHONY: update
 update: env
-	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel \
-	&& poetry update \
-	&& poetry export -f requirements.txt --output requirements.txt --without-hashes \
-	&& echo "Updated dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
+	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
+	poetry update && \
+	poetry export -f requirements.txt --output requirements.txt --without-hashes && \
+	echo "Updated dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
 
 
 .PHONY: format
@@ -94,12 +94,12 @@ lint: env
 
 .PHONY: clean
 clean:
-	find . -name 'poetry.lock' -delete \
-	&& find . -name '.coverage' -delete \
-	&& find . -wholename '**/*.pyc' -delete \
-	&& ffind . -type d -wholename '__pycache__' -exec rm -rf {} + \
-	&& find . -type d -wholename '.venv' -exec rm -rf {} + \
-	&& find . -type d -wholename '.pytest_cache' -exec rm -rf {} + \
-	&& find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + \
-	&& find . -type d -wholename './logs/*' -exec rm -rf {} + \
-	&& find . -type d -wholename './.reports/*' -exec rm -rf {} +
+	find . -name 'poetry.lock' -delete && \
+	find . -name '.coverage' -delete && \
+	find . -wholename '**/*.pyc' -delete && \
+	find . -type d -wholename '__pycache__' -exec rm -rf {} + && \
+	find . -type d -wholename '.venv' -exec rm -rf {} + && \
+	find . -type d -wholename '.pytest_cache' -exec rm -rf {} + && \
+	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + && \
+	find . -type d -wholename './logs/*' -exec rm -rf {} + && \
+	find . -type d -wholename './.reports/*' -exec rm -rf {} +
