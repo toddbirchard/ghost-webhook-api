@@ -7,7 +7,11 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.update import update_html_ssl_links, update_metadata, update_metadata_images
+from app.posts.update import (
+    update_html_ssl_links,
+    update_metadata,
+    update_metadata_images
+)
 from clients import ghost
 from config import BASE_DIR
 from database import ghost_db

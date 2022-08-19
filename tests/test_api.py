@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from config import settings
-from database.schemas import GhostMember, NewDonation, GhostSubscriber
+from database.schemas import GhostMember, GhostSubscriber, NewDonation
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)

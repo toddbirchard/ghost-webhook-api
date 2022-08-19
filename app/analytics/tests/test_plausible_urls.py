@@ -1,4 +1,7 @@
-from app.analytics.plausible import enrich_url_with_post_data, fetch_top_visited_urls
+from app.analytics.plausible import (
+    enrich_url_with_post_data,
+    fetch_top_visited_urls
+)
 
 
 def test_fetch_top_visited_urls():

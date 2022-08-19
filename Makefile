@@ -1,7 +1,6 @@
 PROJECT_NAME := $(shell basename $CURDIR)
-VIRTUAL_ENVIRONMENT := $(CURDIR)/.venv
-LOCAL_PYTHON := $(VIRTUAL_ENVIRONMENT)/bin/python3
-LOCAL_PYTHON_ACTIVATE := $(VIRTUAL_ENVIRONMENT)/bin/activate
+VIRTUAL_ENV := $(CURDIR)/.venv
+LOCAL_PYTHON := $(VIRTUAL_ENV)/bin/python3
 
 define HELP
 Manage $(PROJECT_NAME). Usage:
@@ -25,13 +24,13 @@ all help:
 	@echo "$$HELP"
 
 
-env: $(VIRTUAL_ENVIRONMENT)
+env: $(VIRTUAL_ENV)
 
 
-$(VIRTUAL_ENVIRONMENT):
-	if [ ! -d $(VIRTUAL_ENVIRONMENT) ]; then \
-		echo "Creating Python virtual environment..."; \
-		python3 -m venv $(VIRTUAL_ENVIRONMENT); \
+$(VIRTUAL_ENV):
+	if [ ! -d $(VIRTUAL_ENV) ]; then \
+		echo "Creating Python virtual env in \`${VIRTUAL_ENV}\`"; \
+		python3 -m venv $(VIRTUAL_ENV); \
 	fi
 
 
@@ -49,7 +48,7 @@ run: env
 install: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
-	echo "Installed dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
+	echo "Installed dependencies in \`${VIRTUAL_ENV}\`";
 
 
 .PHONY: deploy
@@ -73,14 +72,14 @@ update: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
 	poetry update && \
 	poetry export -f requirements.txt --output requirements.txt --without-hashes && \
-	echo "Updated dependencies in virtualenv \`${VIRTUAL_ENVIRONMENT}\`";
+	echo "Installed dependencies in \`${VIRTUAL_ENV}\`";
 
 
 .PHONY: format
 format: env
-	source $(LOCAL_PYTHON_ACTIVATE) \
+	$(LOCAL_PYTHON) -m  \
 	isort --multi-line=3 . \
-	&& black .
+	black .
 
 
 .PHONY: lint
