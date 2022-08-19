@@ -48,7 +48,7 @@ run: env
 install: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
-	echo "Installed dependencies in \`${VIRTUAL_ENV}\`";
+	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
 
 .PHONY: deploy
@@ -72,7 +72,7 @@ update: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
 	poetry update && \
 	poetry export -f requirements.txt --output requirements.txt --without-hashes && \
-	echo "Installed dependencies in \`${VIRTUAL_ENV}\`";
+	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
 
 .PHONY: format

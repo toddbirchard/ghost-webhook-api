@@ -2,7 +2,7 @@
 from typing import Optional
 
 from fastapi import APIRouter, Query
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse
 
 from clients import images
 from config import settings
@@ -17,13 +17,13 @@ router = APIRouter(prefix="/images", tags=["images"])
     summary="Optimize single post image.",
     description="Generate retina and mobile feature_image for a single post upon update.",
 )
-async def optimize_post_image(post_update: PostUpdate) -> PlainTextResponse:
+async def optimize_post_image(post_update: PostUpdate) -> JSONResponse:
     """
     Generate retina version of a post's feature image if one doesn't exist.
 
     :param PostUpdate post_update: Incoming payload for an updated Ghost post.
 
-    :returns: PlainTextResponse
+    :returns: JSONResponse
     """
     new_images = []
     post = post_update.post.current
@@ -35,9 +35,9 @@ async def optimize_post_image(post_update: PostUpdate) -> PlainTextResponse:
         new_images = [image for image in new_images if image is not None]
         if bool(new_images):
             LOGGER.info(f"Generated {len(new_images)} images for post `{title}`: {new_images}")
-            return PlainTextResponse(f"{post.title}: {new_images}")
-        return PlainTextResponse(content=f"Retina & mobile images already exist for {post.title}.")
-    return PlainTextResponse(content=f"Post `{post.slug}` ignored; no image exists for optimization.")
+            return JSONResponse(new_images)
+        return JSONResponse({post.title: "Retina & mobile images already exist"})
+    return JSONResponse({post.title: "No images exist for optimization"})
 
 
 @router.get(

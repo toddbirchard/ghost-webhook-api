@@ -49,10 +49,10 @@ def create_donation(db: Session, donation: NewDonation) -> Donation:
         db.commit()
         LOGGER.success(f"Successfully received donation: `{donation.count}` coffees from `{donation.name}`.")
         return db_item
+    except IntegrityError as e:
+        LOGGER.error(f"DB IntegrityError while creating donation record: {e}")
     except SQLAlchemyError as e:
         LOGGER.error(f"SQLAlchemyError while creating donation record: {e}")
-    except IntegrityError as e:
-        LOGGER.error(f"IntegrityError while creating donation record: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected error while creating donation record: {e}")
 
@@ -96,10 +96,10 @@ def create_comment(db: Session, comment: NewComment, user_role: Optional[str]) -
         db.commit()
         LOGGER.success(f"New comment created by user `{new_comment.user_name}` on post `{new_comment.post_slug}`")
         return new_comment
+    except IntegrityError as e:
+        LOGGER.error(f"DB IntegrityError while creating comment: {e}")
     except SQLAlchemyError as e:
         LOGGER.error(f"SQLAlchemyError while creating comment: {e}")
-    except IntegrityError as e:
-        LOGGER.error(f"IntegrityError while creating comment: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected error while creating comment: {e}")
 
@@ -120,10 +120,10 @@ def submit_comment_upvote(db: Session, user_id: str, comment_id: int) -> Comment
         db.commit()
         LOGGER.success(f"Upvote submitted for comment `{comment_id}` from user `{user_id}`.")
         return upvote
+    except IntegrityError as e:
+        LOGGER.error(f"DB IntegrityError while registering comment upvote: {e}")
     except SQLAlchemyError as e:
         LOGGER.error(f"SQLAlchemyError while registering comment upvote: {e}")
-    except IntegrityError as e:
-        LOGGER.error(f"IntegrityError while registering comment upvote: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected error while registering comment upvote: {e}")
 
@@ -143,10 +143,10 @@ def remove_comment_upvote(db: Session, user_id: str, comment_id: int):
         db.delete(upvote)
         db.commit()
         LOGGER.success(f"Removed upvote for comment `{comment_id}` from user `{user_id}`.")
+    except IntegrityError as e:
+        LOGGER.error(f"DB IntegrityError while attempting to remove comment upvote: {e}")
     except SQLAlchemyError as e:
         LOGGER.error(f"SQLAlchemyError while attempting to remove comment upvote: {e}")
-    except IntegrityError as e:
-        LOGGER.error(f"IntegrityError while attempting to remove comment upvote: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected error while attempting to remove comment upvote: {e}")
 
@@ -205,9 +205,9 @@ def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
         db.commit()
         LOGGER.success(f"New Netlify account created: `{account.user_metadata.full_name}`")
         return account
+    except IntegrityError as e:
+        LOGGER.error(f"DB IntegrityError while creating Netlify user account: {e}")
     except SQLAlchemyError as e:
         LOGGER.error(f"SQLAlchemyError while creating Netlify user account: {e}")
-    except IntegrityError as e:
-        LOGGER.error(f"IntegrityError while creating Netlify user account: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected error while creating Netlify user account: {e}")

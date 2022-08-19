@@ -16,19 +16,19 @@ from database.orm import Base
 
 
 class Comment(Base):
-    """User-generated comment."""
+    """User-created comment on a post."""
 
-    __tablename__ = "comments"
+    __tablename__ = "comment"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
-    user_name = Column(String(255), unique=False)
+    user_name = Column(String(255))
     user_avatar = Column(Text)
-    user_id = Column(String(255), ForeignKey("accounts.netlify_id"), index=True, unique=False)
+    user_id = Column(String(255), ForeignKey("account.netlify_id"), index=True, unique=False)
     user_email = Column(String(255))
     user_role = Column(String(255))
     body = Column(Text)
-    post_slug = Column(String(191), ForeignKey("posts.slug"), index=True, unique=False)
-    post_id = Column(String(24), ForeignKey("posts.id"), index=True, unique=False)
+    post_slug = Column(String(191), index=True, unique=False)
+    post_id = Column(String(24), index=True, unique=False)
     created_at = Column(DateTime, server_default=func.now())
 
     # Relationships
@@ -41,11 +41,11 @@ class Comment(Base):
 class CommentUpvote(Base):
     """Upvote for user comment."""
 
-    __tablename__ = "comment_upvotes"
+    __tablename__ = "comment_upvote"
 
     id = Column(Integer, primary_key=True, index=True)
-    comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
-    account_id = Column(String(255), ForeignKey("accounts.id"), nullable=False)
+    comment_id = Column(Integer, ForeignKey("comment.id"), nullable=False)
+    account_id = Column(String(255), ForeignKey("account.id"), nullable=False)
     upvote = Column(Boolean, nullable=False)
 
     __table_args__ = (Index("upvote_index", "comment_id", "account_id", unique=True),)
@@ -59,9 +59,9 @@ class CommentUpvote(Base):
 
 
 class Account(Base):
-    """Netlify-managed user account."""
+    """User account."""
 
-    __tablename__ = "accounts"
+    __tablename__ = "account"
 
     id = Column(String(255), primary_key=True, index=True)
     netlify_id = Column(String(255), index=True, unique=True, nullable=False)
@@ -80,15 +80,15 @@ class Account(Base):
 class Donation(Base):
     """BuyMeACoffee donation."""
 
-    __tablename__ = "donations"
+    __tablename__ = "donation"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
-    coffee_id = Column(Integer, unique=True, index=True)
+    coffee_id = Column(Integer, unique=True)
     email = Column(String(255), unique=False, index=True)
     name = Column(String(255))
     count = Column(Integer)
     message = Column(Text)
-    link = Column(Text, unique=True, index=True)
+    url = Column(Text, unique=True, index=True)
     created_at = Column(DateTime, server_default=func.now())
 
     def __repr__(self):
