@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.accounts.comments import get_user_role
+from app.accounts.parse import parse_comment_json
 from app.accounts.subscriptions import new_ghost_subscription
 from clients import ghost, mailgun
 from database.crud import (
@@ -143,6 +144,6 @@ async def get_comments(db: Session = Depends(get_db)) -> JSONResponse:
     :returns: JSONResponse
     """
     all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
-    all_comments = [comment.__dict__ for comment in all_comments]
+    all_comments = [parse_comment_json(comment) for comment in all_comments]
     LOGGER.info(f"Fetched {len(all_comments)} comments.")
     return JSONResponse(all_comments)
