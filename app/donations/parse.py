@@ -17,6 +17,6 @@ def parse_donation_json(donation: Donation) -> dict:
         "name": donation.name,
         "count": donation.count,
         "message": donation.message,
-        "link": donation.link,
+        "url": donation.url,
         "created_at": donation.created_at,
     }

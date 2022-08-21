@@ -36,7 +36,7 @@ $(VIRTUAL_ENV):
 
 .PHONY: dev
 dev: env
-	uvicorn app:api --reload
+	$(LOCAL_PYTHON) -m uvicorn app:api --reload
 
 
 .PHONY: run

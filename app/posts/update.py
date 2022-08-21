@@ -7,7 +7,7 @@ from log import LOGGER
 
 def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     """
-    Update Lynx post with proper embedded links.
+    Update Lynx post with proper embedded URLs.
 
     :param str post_id: ID of post to be updated.
     :param str mobiledoc: Mobiledoc encoded as string with escaped characters.
@@ -66,7 +66,7 @@ def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
     return updated_posts
 
 
-def update_html_ssl_links(html: str, body: dict, slug: str) -> dict:
+def update_html_ssl_urls(html: str, body: dict, slug: str) -> dict:
     """
     Replace hyperlinks in post with SSL equivalents.
 
@@ -78,7 +78,7 @@ def update_html_ssl_links(html: str, body: dict, slug: str) -> dict:
     """
     html = html.replace("http://", "https://")
     body["posts"][0].update({"html": html})
-    LOGGER.info(f"Replaced unsecure links in post `{slug}`")
+    LOGGER.info(f"Replaced unsecure URLs in post `{slug}`")
     return body
 
 

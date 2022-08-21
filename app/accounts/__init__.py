@@ -107,10 +107,19 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
     :param Session db: ORM Database session.
     """
     existing_vote = get_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
-    if upvote_request.vote and existing_vote is None:
-        submit_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
-        return upvote_request
-    elif upvote_request.vote and existing_vote:
+    if upvote_request.vote is False:
+        if existing_vote:
+            remove_comment_upvote(db, existing_vote)
+            ghost.rebuild_netlify_site()
+            return upvote_request
+        LOGGER.warning(
+            f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
+        )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
+        )
+    if upvote_request.vote and existing_vote:
         LOGGER.warning(
             f"Upvote already submitted for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
         )
@@ -118,20 +127,14 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
             status_code=400,
             detail=f"Upvote already submitted for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
         )
-    elif upvote_request.vote is False and existing_vote:
-        remove_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
-        return upvote_request
-    LOGGER.warning(
-        f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
-    )
-    raise HTTPException(
-        status_code=400,
-        detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
-    )
+    submit_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
+    return upvote_request
+        
+    
 
 
-@router.get("/comments", summary="Test get comments via ORM")
-async def test_orm(db: Session = Depends(get_db)) -> JSONResponse:
+@router.get("/comments", summary="Get all user comments")
+async def get_comments(db: Session = Depends(get_db)) -> JSONResponse:
     """
     Test endpoint for fetching comments joined with user info.
 
@@ -140,6 +143,6 @@ async def test_orm(db: Session = Depends(get_db)) -> JSONResponse:
     :returns: JSONResponse
     """
     all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
-    for comment in all_comments:
-        LOGGER.info(comment.user)
+    all_comments = [comment.__dict__ for comment in all_comments]
+    LOGGER.info(f"Fetched {len(all_comments)} comments.")
     return JSONResponse(all_comments)

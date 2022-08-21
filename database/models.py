@@ -92,4 +92,4 @@ class Donation(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     def __repr__(self):
-        return f"<Donation {self.id}, ({self.link}): `{self.message}`>"
+        return f"<Donation {self.id}, ({self.url}): `{self.message}`>"
