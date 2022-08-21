@@ -41,9 +41,12 @@ jobs:
         ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
         SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
         SQLALCHEMY_DATABASE_PEM: ${{ secrets.SQLALCHEMY_DATABASE_PEM }}
-        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        SQLALCHEMY_GHOST_DATABASE_NAME: ${{ secrets.SQLALCHEMY_GHOST_DATABASE_NAME }}
+        SQLALCHEMY_FEATURES_DATABASE_NAME: ${{ secrets.SQLALCHEMY_FEATURES_DATABASE_NAME }}
         ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
         ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+        GOOGLE_CLOUD_JSON_KEY: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
+        GOOGLE_CLOUD_PROJECT_NAME: ${{ secrets.GOOGLE_CLOUD_PROJECT_NAME }}
         GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
         GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
@@ -52,6 +55,7 @@ jobs:
         GCP_BUCKET_URL: ${{ secrets.GCP_BUCKET_URL }}
         GCP_BUCKET_NAME: ${{ secrets.GCP_BUCKET_NAME }}
         GHOST_BASE_URL: ${{ secrets.GHOST_BASE_URL }}
+        GHOST_ADMIN_BASE_URL: ${{ secrets.GHOST_ADMIN_BASE_URL }}
         GHOST_CLIENT_ID: ${{ secrets.GHOST_CLIENT_ID }}
         GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
         GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
