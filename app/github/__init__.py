@@ -11,7 +11,7 @@ router = APIRouter(prefix="/github", tags=["github"])
 
 
 @router.post(
-    "/pr",
+    "/pr/",
     summary="Notify upon Github PR creation.",
     description="Send SMS and Discord notifications upon PR creation in HackersAndSlackers Github projects.",
 )
@@ -76,7 +76,7 @@ async def github_pr(request: Request) -> JSONResponse:
 
 
 @router.post(
-    "/issue",
+    "/issue/",
     summary="Notify upon Github Issue creation.",
     description="Send SMS and Discord notifications upon Issue creation in HackersAndSlackers Github projects.",
 )

@@ -13,7 +13,7 @@ router = APIRouter(prefix="/authors", tags=["authors"])
 
 
 @router.get(
-    "/update",
+    "/update/",
     summary="Sanitize author images & metadata.",
     description="Update all authors to have correct CDN urls & sanitized metadata.",
 )
@@ -32,7 +32,7 @@ async def authors_bulk_update_metadata() -> JSONResponse:
     )
 
 
-@router.post("/post/created")
+@router.post("/post/created/")
 async def author_post_created(post_update: PostUpdate) -> JSONResponse:
     """
     Notify admin when new authors create a new post.
@@ -60,7 +60,7 @@ async def author_post_created(post_update: PostUpdate) -> JSONResponse:
     return JSONResponse(content=f"Author is {author_name}, carry on.", status_code=204)
 
 
-@router.post("/post/updated")
+@router.post("/post/updated/")
 async def author_post_tampered(post_update: PostUpdate) -> JSONResponse:
     """
     Notify admin when new authors edit an admin post.

@@ -71,7 +71,7 @@ async def new_account(new_account_event: NetlifyUserEvent, db: Session = Depends
 
 
 @router.post(
-    "/comment",
+    "/comment/",
     summary="New user comment",
     description="Save user-generated comments submitted on posts.",
     response_model=NewComment,
@@ -95,7 +95,7 @@ async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/comment/upvote",
+    "/comment/upvote/",
     summary="Upvote a comment",
     description="Increment a comment's upvote count, or revoke an existing upvote from a user.",
     response_model=UpvoteComment,
@@ -134,16 +134,16 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
     
 
 
-@router.get("/comments", summary="Get all user comments")
+@router.get("/comments/", summary="Get all user comments")
 async def get_comments(db: Session = Depends(get_db)) -> JSONResponse:
     """
-    Test endpoint for fetching comments joined with user info.
+    Fetching post comments joined with user's info.
 
     :param Session db: ORM Database session.
 
     :returns: JSONResponse
     """
-    all_comments = db.query(Comment).join(Account, Comment.user_id == Account.id).all()
+    all_comments = db.query(Comment).join(Comment.user).all()
     all_comments = [parse_comment_json(comment) for comment in all_comments]
     LOGGER.info(f"Fetched {len(all_comments)} comments.")
     return JSONResponse(all_comments)

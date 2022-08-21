@@ -13,11 +13,13 @@ def parse_comment_json(comment: Comment) -> dict:
     return {
         "id": comment.id,
         "user_id": comment.user_id,
-        "username": comment.user_name,
-        "email": comment.user_email,
-        "role": comment.user_role,
-        "body": comment.body,
+        "user_name": comment.user_name,
+        "user_email": comment.user_email,
+        "user_role": comment.user_role,
+        "user_avatar": comment.user.avatar_url,
+        "user_created_at": str(comment.user.created_at),
         "post_id": comment.post_id,
         "post_slug": comment.post_slug,
-        "created_at": str(comment.created_at),
+        "comment_body": comment.body,
+        "comment_created_at": str(comment.created_at),
     }

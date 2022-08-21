@@ -65,7 +65,7 @@ async def default_checker() -> Type[DefaultChecker]:
     return DefaultChecker
 
 
-@router.get("/email/disposable")
+@router.get("/email/disposable/")
 async def simple_send(domain: str = Query(...), checker: DefaultChecker = Depends(default_checker)) -> JSONResponse:
     """
     Check that email recipient is legit.

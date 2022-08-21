@@ -81,7 +81,7 @@ async def bulk_transform_images(
     return JSONResponse(transformed_images)
 
 
-@router.get("/sort")
+@router.get("/sort/")
 async def bulk_organize_images(directory: Optional[str] = None) -> JSONResponse:
     """
     Sort retina and mobile images into their appropriate directories.

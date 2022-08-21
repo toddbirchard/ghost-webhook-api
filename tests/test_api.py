@@ -19,7 +19,7 @@ def test_api_docs():
 
 def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
     """Create PR in `jamstack-api` repo & send SMS notification."""
-    owner_response = client.post("/github/pr", json=github_pr_owner)
+    owner_response = client.post("/github/pr/", json=github_pr_owner)
     pr = owner_response.json()["pr"]
     repo = pr["trigger"]["repo"]
     assert owner_response.status_code == 200
@@ -27,7 +27,7 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
     assert owner_response.json()["pr"]["trigger"]["type"] == "github"
     assert owner_response.json()["pr"]["trigger"]["repo"] == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
 
-    user_response = client.post("/github/pr", json=github_pr_user)
+    user_response = client.post("/github/pr/", json=github_pr_user)
     assert user_response.status_code == 200
     assert user_response.json()["pr"]["trigger"]["type"] == "github"
     assert user_response.json()["pr"]["trigger"]["repo"] == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
@@ -38,7 +38,7 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
 
 def test_github_issue(github_issue_user, gh):
     """Create issue in `jamstack-api` repo & send SMS notification."""
-    user_response = client.post("/github/issue", json=github_issue_user)
+    user_response = client.post("/github/issue/", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
     repo = issue["trigger"]["repo"]
@@ -62,7 +62,7 @@ def test_batch_update_metadata():
 
 
 def assign_img_alt_attr():
-    result = client.get("/posts/alt")
+    result = client.get("/posts/alt/")
     pp.pprint(result.json())
 
 
@@ -87,7 +87,6 @@ def test_new_ghost_member():
     subscriber = GhostSubscriber(current=member, previous=None)
     response = client.post("/newsletter/", subscriber)
     assert response.json() is not None
-    # assert response.json().get("id") is not None
 
 
 def test_accept_donation(old_donation: NewDonation, db_session):
@@ -97,5 +96,24 @@ def test_accept_donation(old_donation: NewDonation, db_session):
 
 
 def test_authors_bulk_update_metadata():
-    response = client.get("/authors/update")
+    response = client.get("/authors/update/")
     assert response.status_code == 200
+
+
+def test_get_comments():
+    response = client.get("/account/comments/")
+    assert response.status_code == 200
+    assert response.json() is not None
+    assert list(response.json()[0].keys()) == [
+        "id",
+        "user_id",
+        "user_name",
+        "user_email",
+        "user_role",
+        "user_avatar",
+        "user_created_at",
+        "post_id",
+        "post_slug",
+        "comment_body",
+        "comment_created_at"
+    ]

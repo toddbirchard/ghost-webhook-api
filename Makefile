@@ -61,7 +61,7 @@ deploy:
 .PHONY: test
 test: env
 	$(LOCAL_PYTHON) -m \
-		coverage run -m pytest -v \
+		coverage run -m pytest -vv \
 		--disable-pytest-warnings && \
 		coverage html --title='Coverage Report' -d .reports && \
 		open .reports/index.html
