@@ -162,8 +162,8 @@ class Settings(BaseSettings):
     dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
 
     # Github
-    GITHUB_USERNAME: str = getenv("GITHUB_USERNAME")
-    GITHUB_API_KEY: str = getenv("GITHUB_API_KEY")
+    GITHUB_USERNAME: str = getenv("GH_USERNAME")
+    GITHUB_API_KEY: str = getenv("GH_API_KEY")
 
 
 settings = Settings()
