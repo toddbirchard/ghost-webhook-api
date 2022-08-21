@@ -2,17 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import (
-    accounts,
-    analytics,
-    authors,
-    donations,
-    github,
-    images,
-    newsletter,
-    posts,
-    tags
-)
+from app import accounts, analytics, authors, donations, github, images, newsletter, posts, tags
 from config import settings
 from database.orm import Base, engine
 from log import LOGGER

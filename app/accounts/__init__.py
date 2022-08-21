@@ -13,16 +13,11 @@ from database.crud import (
     get_account,
     get_comment_upvote,
     remove_comment_upvote,
-    submit_comment_upvote
+    submit_comment_upvote,
 )
 from database.models import Account, Comment
 from database.orm import get_db
-from database.schemas import (
-    NetlifyAccountCreationResponse,
-    NetlifyUserEvent,
-    NewComment,
-    UpvoteComment
-)
+from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent, NewComment, UpvoteComment
 from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
@@ -130,8 +125,6 @@ async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(ge
         )
     submit_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
     return upvote_request
-        
-    
 
 
 @router.get("/comments/", summary="Get all user comments")

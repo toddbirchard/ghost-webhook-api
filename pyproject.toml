@@ -63,7 +63,7 @@ run = "asgi:app"
 issues = "https://github.com/toddbirchard/jamstack-api/issues"
 
 [build-system]
-requires = ["poetry>=1.1.13"]
+requires = ["poetry>=1.1.14"]
 build-backend = "poetry.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']

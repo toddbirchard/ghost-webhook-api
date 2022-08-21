@@ -115,5 +115,5 @@ def test_get_comments():
         "post_id",
         "post_slug",
         "comment_body",
-        "comment_created_at"
+        "comment_created_at",
     ]

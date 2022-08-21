@@ -77,8 +77,8 @@ update: env
 
 .PHONY: format
 format: env
-	$(LOCAL_PYTHON) -m  \
-	isort --multi-line=3 . \
+	$(LOCAL_PYTHON) -m \
+	isort --multi-line=3 .
 	black .
 
 
