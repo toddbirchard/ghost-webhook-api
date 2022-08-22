@@ -110,15 +110,15 @@ class Settings(BaseSettings):
     PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost
-    GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
     GHOST_API_VERSION: int = 3
+    GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
     GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/admin"
     GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/content"
-    GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")
     GHOST_CLIENT_ID: str = getenv("GHOST_CLIENT_ID")
     GHOST_ADMIN_API_KEY: str = getenv("GHOST_ADMIN_API_KEY")
+    GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_EXPORT_URL: str = f"{GHOST_BASE_URL}/admin/db/"
     GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
@@ -157,9 +157,9 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str = getenv("TWILIO_ACCOUNT_SID")
 
     # Datadog
-    DATADOG_API_KEY: str = getenv("DATADOG_API_KEY")
-    DATADOG_APP_KEY: str = getenv("DATADOG_APP_KEY")
-    dd_trace: bool = getenv("DATADOG_TRACE_ENABLED")
+    DATADOG_API_KEY: str = getenv("DD_API_KEY")
+    DATADOG_APP_KEY: str = getenv("DD_APP_KEY")
+    DATADOG_TRACE_ENABLED: bool = getenv("DD_TRACE_ENABLED")
 
     # Github
     GITHUB_USERNAME: str = getenv("GH_USERNAME")
