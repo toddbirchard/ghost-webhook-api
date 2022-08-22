@@ -28,7 +28,7 @@ jobs:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v0
       with:
-        credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
+        credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_FILENAME }}
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
