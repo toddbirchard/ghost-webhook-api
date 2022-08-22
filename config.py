@@ -90,9 +90,9 @@ class Settings(BaseSettings):
 
     # Google Cloud Auth
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
-    GOOGLE_CLOUD_JSON_KEY: str = getenv("GOOGLE_CLOUD_JSON_KEY")
+    GOOGLE_CLOUD_JSON_FILENAME: str = getenv("GOOGLE_CLOUD_JSON_FILENAME")
     GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
-        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_KEY}"
+        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILENAME}"
     )
 
     # Google BigQuery
