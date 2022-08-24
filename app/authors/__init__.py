@@ -13,8 +13,8 @@ router = APIRouter(prefix="/authors", tags=["authors"])
 
 
 @router.get(
-    "/update/",
-    summary="Sanitize author images & metadata.",
+    "/",
+    summary="Sanitize author profile metadata.",
     description="Update all authors to have correct CDN urls & sanitized metadata.",
 )
 async def authors_bulk_update_metadata() -> JSONResponse:

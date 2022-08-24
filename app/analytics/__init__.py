@@ -45,7 +45,6 @@ async def migrate_site_analytics():
     description="Store user search queries to a SQL database for analysis and suggestive search.",
     status_code=200,
 )
-@router.get("/searches/")
 async def save_user_search_queries() -> JSONResponse:
     """
     Save top search analytics for the current week.

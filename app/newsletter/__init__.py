@@ -48,7 +48,7 @@ async def member_unsubscribe(subscriber: GhostSubscriber):
     """
     Log user unsubscribe events.
 
-    :param Subscriber subscriber: Current Ghost newsletter subscriber.
+    :param GhostSubscriber subscriber: Current Ghost newsletter subscriber.
     """
     subscriber = subscriber.previous
     LOGGER.info(f"`{subscriber.name}` unsubscribed from newsletter.")
