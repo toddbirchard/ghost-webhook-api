@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 
 from database.orm import Base
 
-
+'''
 class Comment(Base):
     """User-created comment on a post."""
 
@@ -47,6 +47,7 @@ class CommentUpvote(Base):
 
     def __repr__(self):
         return f"<CommentUpvote {self.id} for Comment={self.comment_id} from Account={self.account_id}>"
+'''
 
 
 class Account(Base):

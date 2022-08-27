@@ -45,8 +45,8 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
     """
     queries = []
     for file in sql_file_paths:
-        sql_file = open(file, "r")
-        query = sql_file.read()
-        queries.append(query)
-        sql_file.close()
+        with open(file, "r") as f:
+            query = f.read()
+            queries.append(query)
+            f.close()
     return queries
