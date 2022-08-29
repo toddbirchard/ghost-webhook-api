@@ -1,15 +1,13 @@
 """User account management & functionality."""
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.accounts.subscriptions import new_ghost_subscription
 from config import BASE_DIR
 from database import ghost_db
 from database.crud import create_account, get_account
-from database.models import Account
 from database.orm import get_db
-from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent, NewComment, UpvoteComment
+from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent
 from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
