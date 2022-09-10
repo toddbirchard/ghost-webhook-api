@@ -22,13 +22,12 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install flake8 pytest-flask mock
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        python3 -m pip install --upgrade pip setuptools wheel
+        if [ -f requirements.txt ]; then GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true $(LOCAL_PYTHON) -m pip install -r requirements.txt pip install -r requirements.txt; fi
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v0
       with:
-        credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_FILENAME }}
+        credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_FILEPATH }}
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

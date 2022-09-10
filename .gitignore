@@ -109,10 +109,10 @@ venv.bak/
 docs
 
 # Credentials
-creds/
 creds/*
-gcloud.json
+creds/gcloud.json
 ca-certificate.crt
+creds/ca-certificate.crt
 
 # IDE files
 .idea/
