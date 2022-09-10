@@ -18,7 +18,7 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
+python = ">=3.8,<3.10"
 fastapi = "*"
 pydantic = "*"
 pandas = "*"
@@ -63,7 +63,7 @@ run = "asgi:app"
 issues = "https://github.com/toddbirchard/jamstack-api/issues"
 
 [build-system]
-requires = ["poetry>=1.1.14"]
+requires = ["poetry>=1.1.4"]
 build-backend = "poetry.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']

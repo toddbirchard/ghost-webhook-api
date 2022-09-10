@@ -47,7 +47,7 @@ run: env
 .PHONY: install
 install: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
-	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
+	GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true $(LOCAL_PYTHON) -m pip install -r requirements.txt && \
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
 
