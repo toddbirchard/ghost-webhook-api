@@ -80,4 +80,4 @@ jobs:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
           GH_API_KEY: ${{ secrets.GH_API_KEY }}
         run: |
-          pytest
+          python3 -m pytest
