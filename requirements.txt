@@ -23,6 +23,7 @@ email-validator==1.2.1; python_full_version >= "3.6.2" and python_full_version <
 fakeredis==1.9.1; python_version >= "3.7" and python_version < "4.0" and python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 fastapi-mail==1.0.8; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 fastapi==0.75.2; python_full_version >= "3.6.1"
+flake8==5.0.4
 google-api-core==2.10.0; python_version >= "3.7" and python_version < "3.11"
 google-auth==2.11.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
 google-cloud-bigquery-storage==2.15.0; python_version >= "3.7" and python_version < "3.11"
