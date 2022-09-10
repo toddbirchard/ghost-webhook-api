@@ -46,8 +46,6 @@ ddtrace = "*"
 pyarrow = "*"
 fastapi-mail = "1.0.8"
 blinker = "1.4"
-
-[tool.poetry.dev-dependencies]
 pytest = "*"
 coverage = "*"
 mypy = "*"
