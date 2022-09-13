@@ -1,6 +1,7 @@
 """FastAPI configuration."""
 import datetime
 from os import getenv, path
+from os.path import exists
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
@@ -14,6 +15,8 @@ load_dotenv(path.join(BASE_DIR, ".env"))
 
 
 class Settings(BaseSettings):
+    """FastAPI settings & configuration."""
+
     app_name: str = "JAMStack API"
     title: str = "JAMStack API"
     description: str = "API to automate optimizations for JAMStack sites."
@@ -71,6 +74,8 @@ class Settings(BaseSettings):
     )
 
     class Config:
+        """FastAPI configuration."""
+
         env_file = ".env"
 
     # Database
@@ -89,11 +94,16 @@ class Settings(BaseSettings):
     ALGOLIA_TABLE_MONTHLY: str = "algolia_searches_month"
 
     # Google Cloud Auth
+    GOOGLE_CREDENTIALS: str = getenv("GOOGLE_CREDENTIALS")
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
-        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"
-    )
+    GOOGLE_CLOUD_CREDENTIALS: Credentials
+    if exists(f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"):
+        GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
+            f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"
+        )
+    else:
+        GOOGLE_CLOUD_CREDENTIALS = GOOGLE_CREDENTIALS
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
