@@ -53,7 +53,7 @@ class Ghost:
         """Generate session token for Ghost admin API."""
         iat = int(date.now().timestamp())
         header = {"alg": "HS256", "typ": "JWT", "kid": self.client_id}
-        payload = {"iat": iat, "exp": iat + 5 * 60, "aud": f"/v{self.api_version}/admin/"}
+        payload = {"iat": iat, "exp": iat + 5 * 60, "aud": "/admin/"}
         token = jwt.encode(payload, bytes.fromhex(self.secret), algorithm="HS256", headers=header)
         return token
 
@@ -69,6 +69,7 @@ class Ghost:
             headers = {
                 "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
+                "Accept-Version": self.api_version,
             }
             params = {
                 "include": "authors",
@@ -79,7 +80,7 @@ class Ghost:
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch post `{post_id}`: {resp.json().get('errors')[0]['message']}")
                 return None
-            elif resp.json().get("posts"):
+            if resp.json().get("posts"):
                 post = resp.json()["posts"][0]
                 LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
                 return post
@@ -103,6 +104,7 @@ class Ghost:
             headers = {
                 "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
+                "Accept-Version": self.api_version,
             }
             params = {
                 "include": "authors",
@@ -133,8 +135,9 @@ class Ghost:
             headers = {
                 "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
+                "Accept-Version": self.api_version,
             }
-            endpoint = f"{self.admin_api_url}/pages"
+            endpoint = f"{self.admin_api_url}/pages/"
             resp = requests.get(endpoint, headers=headers)
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch Ghost pages: {resp.json().get('errors')[0]['message']}")
@@ -166,11 +169,12 @@ class Ghost:
                 headers={
                     "Authorization": self.session_token,
                     "Content-Type": "application/json",
+                    "Accept-Version": self.api_version,
                 },
             )
             if resp.status_code != 200:
                 LOGGER.success(f"Successfully updated post `{slug}`")
-                return resp.json()
+            return resp.json()
         except HTTPError as e:
             LOGGER.error(f"HTTPError while updating Ghost post: {e}")
         except Exception as e:
@@ -187,10 +191,12 @@ class Ghost:
             headers = {
                 "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
+                "Accept-Version": self.api_version,
             }
             resp = requests.get(f"{self.admin_api_url}/users", params=params, headers=headers)
             if resp.status_code == 200:
                 return resp.json().get("users")
+            return resp.json()
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authors: {e.response.content}")
         except KeyError as e:
@@ -206,9 +212,7 @@ class Ghost:
         """
         try:
             params = {"key": self.content_api_key}
-            headers = {
-                "Content-Type": "application/json",
-            }
+            headers = {"Content-Type": "application/json", "Accept-Version": self.api_version}
             resp = requests.get(
                 f"{self.content_api_url}/authors/{author_id}/",
                 params=params,
@@ -216,6 +220,7 @@ class Ghost:
             )
             if resp.status_code == 200:
                 return resp.json()["authors"]
+            return resp.json()
         except HTTPError as e:
             LOGGER.error(f"Failed to fetch Ghost authorID={author_id}: {e.response.content}")
         except KeyError as e:

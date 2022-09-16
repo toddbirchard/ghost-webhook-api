@@ -120,10 +120,10 @@ class Settings(BaseSettings):
     PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost
-    GHOST_API_VERSION: int = 3
+    GHOST_API_VERSION: str = "v3.0"
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
-    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/admin"
-    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/content"
+    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/admin"
+    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/content"
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")
     GHOST_CLIENT_ID: str = getenv("GHOST_CLIENT_ID")

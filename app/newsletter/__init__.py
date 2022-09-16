@@ -7,7 +7,7 @@ from fastapi_mail.email_utils import DefaultChecker
 
 from app.newsletter.mixpanel import create_mixpanel_record
 from app.newsletter.newsletter import welcome_newsletter_subscriber
-from database.schemas import GhostMember, GhostSubscriber
+from database.schemas import GhostMember, GhostSubscriberRequest
 from log import LOGGER
 
 router = APIRouter(prefix="/newsletter", tags=["newsletter"])
@@ -17,13 +17,13 @@ router = APIRouter(prefix="/newsletter", tags=["newsletter"])
     "/",
     summary="Add new user account to Ghost.",
     description="Create free-tier Ghost membership for Netlify user account upon signup.",
-    response_model=GhostSubscriber,
+    response_model=GhostSubscriberRequest,
 )
-async def new_ghost_member(subscriber: GhostSubscriber) -> GhostSubscriber:
+async def new_ghost_member(subscriber: GhostSubscriberRequest) -> GhostSubscriberRequest:
     """
     Welcome new Ghost subscriber & add analytics.
 
-    :param GhostSubscriber subscriber: Ghost newsletter subscriber with updated info.
+    :param GhostSubscriberRequest subscriber: Ghost newsletter subscriber with updated info.
 
     :returns: GhostSubscriber
     """
@@ -44,11 +44,11 @@ async def new_ghost_member(subscriber: GhostSubscriber) -> GhostSubscriber:
     description="Unsubscribe existing Ghost member from newsletters.",
     response_model=GhostMember,
 )
-async def member_unsubscribe(subscriber: GhostSubscriber):
+async def member_unsubscribe(subscriber: GhostSubscriberRequest):
     """
     Log user unsubscribe events.
 
-    :param GhostSubscriber subscriber: Current Ghost newsletter subscriber.
+    :param GhostSubscriberRequest subscriber: Current Ghost newsletter subscriber.
     """
     subscriber = subscriber.previous
     LOGGER.info(f"`{subscriber.name}` unsubscribed from newsletter.")

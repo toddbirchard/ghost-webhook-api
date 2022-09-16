@@ -36,14 +36,16 @@ def fetch_top_visited_urls(time_period: str, limit=20) -> List[Optional[dict]]:
         )
         if resp.status_code == 200:
             results_list = resp.json().get("results")
-            ghost_pages = [f"/{page['slug']}/" for page in ghost.get_pages()]
+            ghost_posts = [f"/{page['slug']}/" for page in ghost.get_pages()]
             results_list = [
                 result
                 for result in results_list
                 if "/tag" not in result["page"]
                 and "/page" not in result["page"]
                 and "/author" not in result["page"]
-                and result["page"] not in ghost_pages
+                and "/series" not in result["page"]
+                and "/about" not in result["page"]
+                and result["page"] not in ghost_posts
             ]
             return [enrich_url_with_post_data(result) for result in results_list if result is not None]
         return []
@@ -61,11 +63,15 @@ def enrich_url_with_post_data(page_result: dict) -> Optional[dict]:
 
     :returns: Optional[dict]
     """
+    post_json = {}
     slug = page_result["page"].rstrip("/").lstrip("/").split("/")[-1]
-    post = ghost.get_post_by_slug(slug)
-    if post is not None:
-        page_result["slug"] = slug
-        page_result["title"] = post["title"]
-        page_result["url"] = f"https://hackersandslackers.com{post['url']}"
-        return page_result
+    if slug:
+        post = ghost.get_post_by_slug(slug)
+        if post is not None:
+            post_json["slug"] = slug
+            post_json["title"] = post["title"]
+            post_json[
+                "url"
+            ] = f"{post['url'].replace('https://hackersandslackers.app', 'https://hackersandslackers.com')}"
+        return post_json
     return None

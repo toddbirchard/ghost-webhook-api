@@ -5,6 +5,8 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class NewDonation(BaseModel):
+    """Incoming donation from BuyMeACoffee."""
+
     # fmt: off
     name: str = Field(None, example="Fake Todd")
     email: str = Field(None, example="fake@example.com")
@@ -52,13 +54,9 @@ class NewComment(BaseModel):
         }
 
 
-class UpvoteComment(BaseModel):
-    comment_id: int = Field(None, example=1)
-    user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
-    vote: bool = Field(None, example=True)
-
-
 class Role(BaseModel):
+    """Ghost user permissions."""
+
     id: str = Field(None, example="5dc42c6b4b25bc0d13674448")
     name: str = Field(None, example="Administrator")
     description: str = Field(None, example="Administrators")
@@ -115,11 +113,15 @@ class Tag(BaseModel):
 
 
 class TagUpdate(BaseModel):
+    """Request to update a Ghost `tag` page."""
+
     current: Tag
     previous: Optional[Tag]
 
 
 class BasePost(BaseModel):
+    """Ghost post object."""
+
     # fmt: off
     id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
     uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
@@ -167,11 +169,15 @@ class Post(BaseModel):
     previous: Optional[BasePost]
 
 
-class FetchedPost(BaseModel):
+class FetchedPosts(BaseModel):
+    """Collection of fetched Ghost `post`s."""
+
     posts: List[BasePost]
 
 
 class PostUpdate(BaseModel):
+    """Request to update a Ghost `post`."""
+
     post: Post
 
     class Config:
@@ -377,13 +383,17 @@ class EmailSchema(BaseModel):
     body: Dict[str, Any]
 
 
-class GhostSubscriber(BaseModel):
+class GhostSubscriberRequest(BaseModel):
+    """Request to update a Ghost newsletter `subscriber`."""
+
     current: Optional[GhostMember]
     previous: Optional[GhostMember]
 
 
 class Subscription(BaseModel):
-    member: GhostSubscriber
+    """Ghost newsletter `subscriber` info."""
+
+    member: GhostSubscriberRequest
 
     class Config:
         schema_extra = {
@@ -422,6 +432,8 @@ class SubscriptionWelcomeEmail(BaseModel):
 
 
 class SMS:
+    """Text message notification request."""
+
     phone_recipient: str
     phone_sender: str
     date_sent: str
@@ -437,6 +449,8 @@ class SMS:
 
 
 class GithubIssue:
+    """Issue raised in HackersAndSlackers GitHub org."""
+
     issue: Dict[str, Any]
 
     class Config:

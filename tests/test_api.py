@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from config import settings
-from database.schemas import GhostMember, GhostSubscriber, NewDonation
+from database.schemas import GhostMember, GhostSubscriberRequest, NewDonation
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
@@ -84,7 +84,7 @@ def test_new_ghost_member():
         labels=["VIP"],
         comped=False,
     )
-    subscriber = GhostSubscriber(current=member, previous=None)
+    subscriber = GhostSubscriberRequest(current=member, previous=None)
     response = client.post("/newsletter/", subscriber)
     assert response.json() is not None
 
