@@ -27,30 +27,30 @@ class NewDonation(BaseModel):
         }
 
 
-class NewComment(BaseModel):
+class Comment(BaseModel):
+    """User-created Ghost post comment."""
+
     # fmt: off
     post_id: str = Field(None, example="61304d8374047afda1c2168b")
-    post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
-    user_id: str = Field(None, example="677f9417-16ab-4d8e-9bed-1130da250c88")
-    user_name: Optional[str] = Field(None, example="Todd Birchard")
-    user_avatar: Optional[str] = Field(None, example="https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg")
-    user_email: str = Field(None, example="todd@hackersandslackers.com")
-    author_name: str = Field(None, example="Todd Birchard")
-    author_id: str = Field(None, example="1")
-    body: Optional[str] = Field(None, example="These tutorials are awesome! 10/10")
+    member_id: str = Field(None, example="4f78f8caf856d34d98765e1c")
+    parent_id: str = Field(None, example="1")
+    status: Optional[str] = Field(None, example="published")
+    html: Optional[str] = Field(None, example="<p>Amazing post! Thank you so much!</p>")
+    edited_at: datetime = Field(None, example="2020-10-03 15:08:53")
+    created_at: datetime = Field(None, example="2020-10-03 15:08:53")
+    updated_at: datetime = Field(None, example="2020-10-03 15:08:53")
     # fmt: on
 
     class Config:
         schema_extra = {
             "post_id": "61304d8374047afda1c2168b",
-            "post_slug": "python-virtualenv-virtualenvwrapper",
-            "user_avatar": "https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg",
-            "user_email": "todd@fakeemail.com",
-            "user_id": "677f9417-16ab-4d8e-9bed-1130da250c88",
-            "user_name": "Todd Birchard",
-            "author_name": "Todd Birchard",
-            "author_id": "1",
-            "body": "These tutorials are awesome! 10/10",
+            "member_id": "4f78f8caf856d34d98765e1c",
+            "parent_id": None,
+            "status": "published",
+            "html": "<p>Amazing post! Thank you so much!</p>",
+            "edited_at": "2020-10-03 15:08:53",
+            "created_at": "2020-10-03 15:08:53",
+            "updated_at": "2020-10-03 15:08:53",
         }
 
 
@@ -127,7 +127,7 @@ class BasePost(BaseModel):
     uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
     title: str = Field(None, example="Welcome to Hackers and Slackers")
     slug: str = Field(None, example="welcome-to-hackers-and-slackers")
-    mobiledoc: str = Field(None, example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we get to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}')
+    mobiledoc: str = Field(None, example='{"version":"0.3.1","atoms":[],"cards":[],"markups":[["a",["href","http://hackersandslackers.com"]]],"sections":[[1,"p",[[0,[],0,"Welcome to the Hackers and Slackers blog, the official counterpart to "],[0,[0],1,"hackersandslackers.com"],[0,[],0,"."]]],[1,"p",[[0,[],0,"H+S is a tightly knit community of of people who code dope shit as a means to an end. While we may not all be developers per se, we like to blow stuff up and make an impact. If we selects to pick up a few programming languages in the process, so be it."]]],[1,"p",[[0,[],0,"While we keep most of our knowledge tucked into our confluence instance, this blog is intended to be the public facing fruits of our labor. When we manage to stumble upon making things that are actually useful, this will be our medium for communicating that."]]],[1,"p",[[0,[],0,"If you\'re somebody who likes to learn and be casually badass, maybe you should join us."]]]]}')
     html: Optional[str] = Field(None, example="<!DOCTYPE html><html><head></head><body></body></html>")
     comment_id: str = Field(None, example="5a0f4699e38d612cc8261306")
     plaintext: Optional[str] = Field(None, example="5dc42cb712c9ce0d63f5bf4f")

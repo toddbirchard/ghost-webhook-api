@@ -103,18 +103,6 @@ def test_authors_bulk_update_metadata():
 def test_get_comments():
     response = client.get("/account/comments/")
     assert response.status_code == 200
-    # Temporarily disable tests while comments do not exist
-    """assert response.json() is not None
-    assert list(response.json()[0].keys()) == [
-        "id",
-        "user_id",
-        "user_name",
-        "user_email",
-        "user_role",
-        "user_avatar",
-        "user_created_at",
-        "post_id",
-        "post_slug",
-        "comment_body",
-        "comment_created_at",
-    ]"""
+    assert response.json() is not None
+    assert len(response.json()) > 0
+    assert response.json()[0]["html"] is not None

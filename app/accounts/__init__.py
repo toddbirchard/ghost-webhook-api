@@ -1,4 +1,6 @@
 """User account management & functionality."""
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -7,7 +9,7 @@ from config import BASE_DIR
 from database import ghost_db
 from database.crud import create_account, get_account
 from database.orm import get_db
-from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent
+from database.schemas import Comment, NetlifyAccountCreationResponse, NetlifyUserEvent
 from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
@@ -55,9 +57,20 @@ async def new_account(new_account_event: NetlifyUserEvent, db: Session = Depends
     )
 
 
-@router.get("/comments/", summary="Get all user comments")
+@router.get(
+    "/comments/",
+    summary="Get all user comments.",
+    description="Fetch all user-created comments on Ghost posts.",
+    response_model=List[Comment],
+)
 async def get_comments():
-    """Fetching post comments joined with user's info."""
-    comments = ghost_db.execute_query_from_file(f"{BASE_DIR}/database/queries/comments/get/get_comments.sql")
-    LOGGER.info(f"comments = {comments}")
+    """
+    Fetch all user-created comments on Ghost posts.
+
+    :returns: List[Comment]
+    """
+    comments = ghost_db.execute_query_from_file(
+        f"{BASE_DIR}/database/queries/comments/selects/get_comments.sql"
+    ).fetchall()
+    LOGGER.success(f"Successfully fetched {len(comments)} Ghost comments.")
     return comments

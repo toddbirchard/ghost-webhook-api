@@ -88,7 +88,7 @@ class GCS:
 
     """def image_headers(self, folder: str) -> List:
         header_blobs = []
-        image_blobs = [blob for blob in self.get(folder)]
+        image_blobs = [blob for blob in self.selects(folder)]
         for image_blob in image_blobs:
             if ".jpg" in image_blob.name and "octet-stream" in image_blob.content_type:
                 image_blob.content_type = "image/jpg"

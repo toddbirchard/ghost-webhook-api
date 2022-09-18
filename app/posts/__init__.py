@@ -109,7 +109,7 @@ async def backup_database():
 )
 async def get_single_post(post_id: str) -> JSONResponse:
     """
-    Request to get Ghost post.
+    Request to selects Ghost post.
 
     :param str post_id: Post to fetch
 

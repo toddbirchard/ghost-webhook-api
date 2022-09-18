@@ -2,7 +2,7 @@
 from typing import List, Optional, Union
 
 from pandas import DataFrame
-from sqlalchemy import MetaData, Table, create_engine, text
+from sqlalchemy import MetaData, Table, create_engine
 from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -61,7 +61,7 @@ class Database:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
             return None
 
-    def execute_query_from_file(self, sql_file: str) -> Union[List[dict], str]:
+    def execute_query_from_file(self, sql_file: str) -> Union[Result, str]:
         """
         Execute single SQL query.
 
@@ -71,10 +71,8 @@ class Database:
         """
         try:
             with self.db.connect() as conn:
-                query = open(sql_file, "r").read()
-                LOGGER.info(f"query={query}")
-                results = conn.execute(text(query)).fetchall()
-                return [dict(r) for r in results]
+                query = open(sql_file, "r", encoding="utf-8").read()
+                return self.db.execute(query)
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while executing SQL `{sql_file}`: {e}")
             return f"Failed to execute SQL `{sql_file}`: {e}"

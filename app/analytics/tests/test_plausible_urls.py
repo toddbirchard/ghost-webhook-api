@@ -1,13 +1,14 @@
-from app.analytics.plausible import enrich_url_with_post_data, fetch_top_visited_urls
+"""Plausible analytics testing."""
+from app.analytics import fetch_top_visited_urls
+from app.analytics.plausible import enrich_url_with_post_data
 
 
 def test_fetch_top_visited_urls():
     urls = fetch_top_visited_urls("month")
     assert urls is not None
     assert len(urls) > 0
-    assert urls[0]["page"] is not None
-    assert urls[0]["visitors"] is not None
-    assert urls[0]["visitors"] > 0
+    assert urls[0]["url"] is not None
+    assert urls[0]["title"] is not None
 
 
 def test_enrich_url_with_post_data():
