@@ -63,7 +63,7 @@ def features_db():
 
 
 @pytest.fixture
-def gh():
+def gh() -> Github:
     return Github(
         settings.GITHUB_API_KEY,
     )

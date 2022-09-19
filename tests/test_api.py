@@ -1,6 +1,9 @@
+"""Test API endpoints."""
 import pprint
 
 from fastapi.testclient import TestClient
+from github import Github
+from sqlalchemy.orm import Session
 
 from app import api
 from config import settings
@@ -17,8 +20,14 @@ def test_api_docs():
     assert response.headers.get("Content-Type") == "text/html; charset=utf-8"
 
 
-def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
-    """Create PR in `jamstack-api` repo & send SMS notification."""
+def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh: Github):
+    """
+    Create PR in `jamstack-api` repo & send SMS notification.
+
+    :param dict github_pr_owner: GitHub owner of opened PR.
+    :param dict github_pr_user: GitHub user updating a PR.
+    :param Github gh: GitHub client.
+    """
     owner_response = client.post("/github/pr/", json=github_pr_owner)
     pr = owner_response.json()["pr"]
     repo = pr["trigger"]["repo"]
@@ -36,8 +45,13 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
     gh.get_repo(repo).get_pull(pr["id"]).edit(state="closed")
 
 
-def test_github_issue(github_issue_user, gh):
-    """Create issue in `jamstack-api` repo & send SMS notification."""
+def test_github_issue(github_issue_user: dict, gh: Github):
+    """
+    Trigger issue creation in `jamstack-api` repo & send SMS notification.
+
+    :param dict github_issue_user: GitHub user creating an issue.
+    :param Github gh: GitHub client.
+    """
     user_response = client.post("/github/issue/", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
@@ -54,6 +68,7 @@ def test_github_issue(github_issue_user, gh):
 
 
 def test_batch_update_metadata():
+    """Run SQL to update Ghost posts' metadata."""
     response = client.get("/posts/")
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
@@ -61,18 +76,21 @@ def test_batch_update_metadata():
     pp.pprint(response.json())
 
 
-def assign_img_alt_attr():
+def test_assign_img_alt_attr():
+    """Run SQL to update Ghost post image `alt` tags."""
     result = client.get("/posts/alt/")
     pp.pprint(result.json())
 
 
 def test_import_site_analytics():
+    """Fetch and import site analytics data to SQL."""
     response = client.get("/analytics/")
     assert response.status_code == 200
     assert type(response.json()) == dict
 
 
 def test_new_ghost_member():
+    """Verify creation of new Ghost newsletter subscriber."""
     member = GhostMember(
         id="dfdsgf",
         uuid="dsfdf-dsfdsfsfdsf-sdfdsfdsfsafd",
@@ -89,18 +107,26 @@ def test_new_ghost_member():
     assert response.json() is not None
 
 
-def test_accept_donation(old_donation: NewDonation, db_session):
-    response = client.post("/donation/", old_donation, db_session)
+def test_accept_donation(donation: NewDonation, db_session: Session):
+    """
+    Verify persistence of incoming donation to SQL.
+
+    :param NewDonation donation: Newly submitted donation.
+    :param Session db_session: Active database session.
+    """
+    response = client.post("/donation/", donation, db_session)
     print(response)
     assert response.status_code == 400
 
 
 def test_authors_bulk_update_metadata():
+    """Verify SQL to update author page metadata."""
     response = client.get("/authors/")
     assert response.status_code == 200
 
 
 def test_get_comments():
+    """Verify fetching of all Ghost comments."""
     response = client.get("/account/comments/")
     assert response.status_code == 200
     assert response.json() is not None
