@@ -32,8 +32,9 @@ jobs:
       # Install GCloud, `setup-gcloud` automatically picks up authentication from `auth`.
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v0'
+        uses: 'google-github-actions/auth@v1'
         with:
+          service_account: 'hackersandslackers-204807'
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       # Run tests

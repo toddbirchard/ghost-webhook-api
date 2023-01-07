@@ -75,6 +75,6 @@ async def simple_send(domain: str = Query(...), checker: DefaultChecker = Depend
 
     :returns: JSONResponse
     """
-    if await checker.is_dispasoble(domain):
+    if await checker.is_disposable(domain):
         return JSONResponse(status_code=400, content={"message": "this is disposable domain"})
     return JSONResponse(status_code=200, content={"message": "email has been sent"})

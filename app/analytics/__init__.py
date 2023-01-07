@@ -21,7 +21,7 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 async def migrate_site_analytics():
     """Fetch top searches for weekly & monthly timeframes."""
     weekly_traffic = fetch_top_visited_urls("7d", limit=100)
-    monthly_traffic = fetch_top_visited_urls("month", limit=500)
+    monthly_traffic = fetch_top_visited_urls("1mo", limit=500)
     LOGGER.success(
         f"Inserted {len(weekly_traffic)} rows into `weekly_stats`,  {len(monthly_traffic)}  into `monthly_stats`."
     )

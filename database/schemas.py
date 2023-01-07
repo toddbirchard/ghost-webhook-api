@@ -227,7 +227,7 @@ class PostUpdate(BaseModel):
                                 "updated_at": "2019-11-07T14:38:35.000Z",
                             }
                         ],
-                        "url": "https://hackersandslackers.app/author/matt/",
+                        "url": "https://hackersandslackers.com/author/matt/",
                     }
                 ],
                 "tags": [
@@ -274,7 +274,7 @@ class PostUpdate(BaseModel):
                             "updated_at": "2019-11-07T14:38:35.000Z",
                         }
                     ],
-                    "url": "https://hackersandslackers.app/author/matt/",
+                    "url": "https://hackersandslackers.com/author/matt/",
                 },
                 "primary_tag": {
                     "id": "61304d8174047afda1c2164b",

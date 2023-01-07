@@ -9,13 +9,13 @@ from app import api
 from config import settings
 from database.schemas import GhostMember, GhostSubscriberRequest, NewDonation
 
-client = TestClient(api)
+api_test_client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
 
 
 def test_api_docs():
     """API docs health check."""
-    response = client.get("/")
+    response = api_test_client.get("/")
     assert response.status_code == 200
     assert response.headers.get("Content-Type") == "text/html; charset=utf-8"
 
@@ -26,9 +26,9 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh: Github):
 
     :param dict github_pr_owner: GitHub owner of opened PR.
     :param dict github_pr_user: GitHub user updating a PR.
-    :param Github gh: GitHub client.
+    :param Github gh: GitHub api_test_client.
     """
-    owner_response = client.post("/github/pr/", json=github_pr_owner)
+    owner_response = api_test_client.post("/github/pr/", json=github_pr_owner)
     pr = owner_response.json()["pr"]
     repo = pr["trigger"]["repo"]
     assert owner_response.status_code == 200
@@ -36,7 +36,7 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh: Github):
     assert owner_response.json()["pr"]["trigger"]["type"] == "github"
     assert owner_response.json()["pr"]["trigger"]["repo"] == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
 
-    user_response = client.post("/github/pr/", json=github_pr_user)
+    user_response = api_test_client.post("/github/pr/", json=github_pr_user)
     assert user_response.status_code == 200
     assert user_response.json()["pr"]["trigger"]["type"] == "github"
     assert user_response.json()["pr"]["trigger"]["repo"] == github_pr_user["pull_request"]["head"]["repo"]["full_name"]
@@ -50,9 +50,9 @@ def test_github_issue(github_issue_user: dict, gh: Github):
     Trigger issue creation in `jamstack-api` repo & send SMS notification.
 
     :param dict github_issue_user: GitHub user creating an issue.
-    :param Github gh: GitHub client.
+    :param Github gh: GitHub api_test_client.
     """
-    user_response = client.post("/github/issue/", json=github_issue_user)
+    user_response = api_test_client.post("/github/issue/", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
     repo = issue["trigger"]["repo"]
@@ -69,7 +69,7 @@ def test_github_issue(github_issue_user: dict, gh: Github):
 
 def test_batch_update_metadata():
     """Run SQL to update Ghost posts' metadata."""
-    response = client.get("/posts/")
+    response = api_test_client.get("/posts/")
     assert response.status_code == 200
     assert response.json().get("inserted") is not None
     assert response.json().get("updated") is not None
@@ -78,13 +78,13 @@ def test_batch_update_metadata():
 
 def test_assign_img_alt_attr():
     """Run SQL to update Ghost post image `alt` tags."""
-    result = client.get("/posts/alt/")
+    result = api_test_client.get("/posts/alt/")
     pp.pprint(result.json())
 
 
 def test_import_site_analytics():
     """Fetch and import site analytics data to SQL."""
-    response = client.get("/analytics/")
+    response = api_test_client.get("/analytics/")
     assert response.status_code == 200
     assert type(response.json()) == dict
 
@@ -103,7 +103,7 @@ def test_new_ghost_member():
         comped=False,
     )
     subscriber = GhostSubscriberRequest(current=member, previous=None)
-    response = client.post("/newsletter/", subscriber)
+    response = api_test_client.post("/newsletter/", subscriber)
     assert response.json() is not None
 
 
@@ -114,20 +114,20 @@ def test_accept_donation(donation: NewDonation, db_session: Session):
     :param NewDonation donation: Newly submitted donation.
     :param Session db_session: Active database session.
     """
-    response = client.post("/donation/", donation, db_session)
+    response = api_test_client.post("/donation/", donation, db_session)
     print(response)
     assert response.status_code == 400
 
 
 def test_authors_bulk_update_metadata():
     """Verify SQL to update author page metadata."""
-    response = client.get("/authors/")
+    response = api_test_client.get("/authors/")
     assert response.status_code == 200
 
 
 def test_get_comments():
     """Verify fetching of all Ghost comments."""
-    response = client.get("/account/comments/")
+    response = api_test_client.get("/account/comments/")
     assert response.status_code == 200
     assert response.json() is not None
     assert len(response.json()) > 0

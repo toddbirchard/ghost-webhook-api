@@ -29,7 +29,6 @@ class Settings(BaseSettings):
     dt: datetime.datetime = datetime.datetime.today()
     CORS_ORIGINS: list = [
         "http://hackersandslackers.com",
-        "https://hackersandslackers.app",
         "http://localhost",
         "http://localhost:8080",
         "http://api.hackersandslackers.com",
@@ -147,12 +146,11 @@ class Settings(BaseSettings):
     MAILGUN_CONF = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
-        MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
-        MAIL_FROM_NAME=MAILGUN_FROM_SENDER_NAME,
         MAIL_PORT=587,
         MAIL_SERVER=MAILGUN_EMAIL_SERVER,
-        MAIL_TLS=True,
-        MAIL_SSL=False,
+        MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
+        MAIL_STARTTLS=False,
+        MAIL_SSL_TLS=True,
         USE_CREDENTIALS=True,
         VALIDATE_CERTS=True,
     )

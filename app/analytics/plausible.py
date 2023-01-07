@@ -27,32 +27,49 @@ def fetch_top_visited_urls(time_period: str, limit=20) -> List[Optional[dict]]:
             "site_id": "hackersandslackers.com",
             "period": time_period,
             "property": "event:page",
+            "metrics": "visitors,bounce_rate",
             "limit": limit,
         }
         resp = requests.get(
             settings.PLAUSIBLE_BREAKDOWN_ENDPOINT,
+            auth=f"Bearer {settings.PLAUSIBLE_API_TOKEN}",
             params=params,
             headers=headers,
         )
         if resp.status_code == 200:
             results_list = resp.json().get("results")
-            ghost_posts = [f"/{page['slug']}/" for page in ghost.get_pages()]
-            results_list = [
-                result
-                for result in results_list
-                if "/tag" not in result["page"]
-                and "/page" not in result["page"]
-                and "/author" not in result["page"]
-                and "/series" not in result["page"]
-                and "/about" not in result["page"]
-                and result["page"] not in ghost_posts
-            ]
-            return [enrich_url_with_post_data(result) for result in results_list if result is not None]
+            if results_list:
+                return format_top_visited_urls(results_list)
         return []
     except RequestException as e:
         LOGGER.error(f"RequestException when fetching Plausible top URLs: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected Exception when fetching Plausible top URLs: {e}")
+
+
+def format_top_visited_urls(results_list: List[Optional[dict]]) -> List[Optional[dict]]:
+    """
+    Format top visited URLs for Slack message.
+
+    :param List[dict] urls: List of top visited URLs.
+
+    :returns: str
+    """
+    if results_list:
+        ghost_posts = [f"/{page['slug']}/" for page in ghost.get_pages()]
+        results_list = [
+            result
+            for result in results_list
+            if "/tag" not in result["page"]
+            and "/page" not in result["page"]
+            and "/author" not in result["page"]
+            and "/series" not in result["page"]
+            and "/about" not in result["page"]
+            and result["page"] not in ghost_posts
+        ]
+        if results_list:
+            return [enrich_url_with_post_data(result) for result in results_list if result is not None]
+    return []
 
 
 def enrich_url_with_post_data(page_result: dict) -> Optional[dict]:
@@ -70,8 +87,6 @@ def enrich_url_with_post_data(page_result: dict) -> Optional[dict]:
         if post is not None:
             post_json["slug"] = slug
             post_json["title"] = post["title"]
-            post_json[
-                "url"
-            ] = f"{post['url'].replace('https://hackersandslackers.app', 'https://hackersandslackers.com')}"
+            post_json["url"] = f"{post['url']}"
         return post_json
     return None
