@@ -57,7 +57,7 @@ class Mailgun:
             "o:tracking": True,
             "o:tracking-opens": True,
             "o:tracking-clicks": True,
-            "text": f"Your post `{post['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['url'].replace('.app', '.com')}",
+            "text": f"Your post `{post['title']}` received a comment. {comment.get('user_name')} says: \n\n{comment.get('body')} \n\nSee the comment here: {post['url']}",
         }
         email_response = self.send_email(body, test_mode)
         if email_response.status_code == 200:
