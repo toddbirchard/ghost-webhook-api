@@ -1,11 +1,10 @@
 """Data models."""
+from pydantic import BaseModel
 from sqlalchemy import Column, DateTime, Integer, String, Text
 from sqlalchemy.sql import func
 
-from database.orm import Base
 
-
-class Account(Base):
+class Account(BaseModel):
     """User account."""
 
     __tablename__ = "account"
@@ -24,7 +23,7 @@ class Account(Base):
         return f"<Account {self.id}, {self.full_name}, {self.email}>"
 
 
-class Donation(Base):
+class Donation(BaseModel):
     """BuyMeACoffee donation."""
 
     __tablename__ = "donation"

@@ -4,10 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import accounts, analytics, authors, donations, github, images, newsletter, posts, tags
 from config import settings
-from database.orm import Base, engine
+from database.orm import engine, metadata
 from log import LOGGER
 
-Base.metadata.create_all(bind=engine)
+metadata.create_all(bind=engine)
 
 api = FastAPI(
     title="Jamstack API",

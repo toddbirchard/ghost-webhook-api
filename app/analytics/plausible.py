@@ -43,8 +43,10 @@ def fetch_top_visited_urls(time_period: str, limit=20) -> List[Optional[dict]]:
         return []
     except RequestException as e:
         LOGGER.error(f"RequestException when fetching Plausible top URLs: {e}")
+        return []
     except Exception as e:
         LOGGER.error(f"Unexpected Exception when fetching Plausible top URLs: {e}")
+        return []
 
 
 def format_top_visited_urls(results_list: List[Optional[dict]]) -> List[Optional[dict]]:

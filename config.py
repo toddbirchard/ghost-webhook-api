@@ -75,7 +75,7 @@ class Settings(BaseSettings):
     class Config:
         """FastAPI configuration."""
 
-        env_file = ".env"
+        env_file: str = ".env"
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")

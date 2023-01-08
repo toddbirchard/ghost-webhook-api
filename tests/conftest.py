@@ -1133,7 +1133,7 @@ def github_issue_user():
 
 
 @pytest.fixture
-def old_donation() -> NewDonation:
+def donation() -> NewDonation:
     return NewDonation(
         name="todd",
         email="fakeemail@example.com",

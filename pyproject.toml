@@ -54,6 +54,8 @@ isort = "*"
 flake8 = "*"
 pylint = "*"
 httpx = "^0.23.3"
+databases = "^0.7.0"
+aiomysql = "^0.1.1"
 
 [tool.poetry.scripts]
 run = "asgi:app"

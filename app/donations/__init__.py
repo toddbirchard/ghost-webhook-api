@@ -8,6 +8,7 @@ from database.crud import create_donation, get_donation
 from database.models import Donation
 from database.orm import get_db
 from database.schemas import NewDonation
+from log import LOGGER
 
 router = APIRouter(prefix="/donation", tags=["donations"])
 
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/donation", tags=["donations"])
     description="Save record of new donation to persistent ledger.",
     response_model=NewDonation,
 )
-async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) -> NewDonation:
+async def accept_donation(donation: NewDonation, db: Session = Depends(get_db), *args) -> NewDonation:
     """
     Save BuyMeACoffee donation to database.
 
@@ -27,6 +28,7 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) 
 
     :returns: NewDonation
     """
+    LOGGER.info(args)
     existing_donation = get_donation(db, donation)
     if existing_donation:
         raise HTTPException(
@@ -34,9 +36,7 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) 
             detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists; skipping.",
         )
     new_donation = create_donation(db, donation)
-    if new_donation:
-        ghost.rebuild_netlify_site()
-    return donation
+    return new_donation
 
 
 @router.delete(
