@@ -1,18 +1,20 @@
-# JAMStack Automation
+# Blog Webhook API
 
 ![Python](https://img.shields.io/badge/Python-^3.9-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
-![FastAPI](https://img.shields.io/badge/FastAPI-^v0.75.2-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
-![PyDantic](https://img.shields.io/badge/Pydantic-^v1.9.2-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![FastAPI](https://img.shields.io/badge/FastAPI-^v0.87.0-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![Databases](https://img.shields.io/badge/Databases-^0.7.0-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
+![PyDantic](https://img.shields.io/badge/Pydantic-^v1.10.4-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Google Cloud](https://img.shields.io/badge/Google--Cloud-^v0.34.0-lightgrey.svg?longCache=true&style=flat-square&logo=googlecloud&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-^1.4.45-red.svg?longCache=true&style=flat-square&logo=scala&logoColor=white&colorA=4c566a&colorB=bf616a)
 ![Ghost](https://img.shields.io/badge/Ghost-^v5.0.0-lightgrey.svg?longCache=true&style=flat-square&logo=ghost&logoColor=white&colorB=656c82&colorA=4c566a)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/google/skia.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=a3be8c)
-[![GitHub Issues](https://img.shields.io/github/issues/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/issues)
-[![GitHub Stars](https://img.shields.io/github/stars/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/toddbirchard/jamstack-automations.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/jamstack-automations/network)
+[![GitHub Issues](https://img.shields.io/github/issues/toddbirchard/blog-webhook-api.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/blog-webhook-api/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/toddbirchard/blog-webhook-api.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/blog-webhook-api/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/toddbirchard/blog-webhook-api.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/blog-webhook-api/network)
 
-![Jamstack Automation API](./.github/jamstack@2x.png)
+![Jamstack Automation API](./.github/blog-webhook-api@2x.png?raw=true)
 
-API to consume JAMStack webhook actions. Dynamically handles optimizations including image compression, content sanitation, alerting, and feature enablement via data aggregate (suggested searches, trending posts, etc)
+API to consume webhook events emitted by modern blogging platforms. Dynamically handles optimizations including image compression, content sanitation, alerting, and feature enablement via data aggregate (suggested searches, trending posts, etc)
 
 ## Endpoints
 
@@ -81,7 +83,7 @@ Notifications when user activity is made on project repos.
 Get up and running with `make deploy`:
 
 ```shell
-$ git clone https://github.com/toddbirchard/jamstack-api.git
-$ cd jamstack-api
+$ git clone https://github.com/toddbirchard/blog-webhook-api.git
+$ cd blog-webhook-api
 $ make deploy
 ``` 
