@@ -460,8 +460,8 @@ class GithubIssue:
                 "status": "open",
                 "trigger": {
                     "type": "github",
-                    "repo": "toddbirchard/jamstack-api",
-                    "title": "Jamstack API",
+                    "repo": "toddbirchard/blog-webhook-api",
+                    "title": "Blog Webhook API",
                     "user": "fakeuser",
                     "action": "opened",
                 },

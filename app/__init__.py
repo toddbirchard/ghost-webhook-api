@@ -2,10 +2,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import accounts, analytics, authors, donations, github, images, newsletter, posts, tags
 from config import settings
 from database.orm import engine, metadata
 from log import LOGGER
+
+from . import accounts, analytics, authors, donations, github, images, newsletter, posts, tags
 
 metadata.create_all(bind=engine)
 

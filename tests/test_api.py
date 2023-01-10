@@ -22,7 +22,7 @@ def test_api_docs():
 
 def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh: Github):
     """
-    Create PR in `jamstack-api` repo & send SMS notification.
+    Create PR in `blog-webhook-api` repo & send SMS notification.
 
     :param dict github_pr_owner: GitHub owner of opened PR.
     :param dict github_pr_user: GitHub user updating a PR.
@@ -47,7 +47,7 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh: Github):
 
 def test_github_issue(github_issue_user: dict, gh: Github):
     """
-    Trigger issue creation in `jamstack-api` repo & send SMS notification.
+    Trigger issue creation in `blog-webhook-api` repo & send SMS notification.
 
     :param dict github_issue_user: GitHub user creating an issue.
     :param Github gh: GitHub client.

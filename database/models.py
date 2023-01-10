@@ -1,16 +1,17 @@
 """Data models."""
-from pydantic import BaseModel
 from sqlalchemy import Column, DateTime, Integer, String, Text
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 
+Base = declarative_base()
 
-class Account(BaseModel):
+
+class Account(Base):
     """User account."""
 
     __tablename__ = "account"
 
     id = Column(String(255), primary_key=True, index=True)
-    netlify_id = Column(String(255), index=True, unique=True, nullable=False)
     full_name = Column(String(255))
     avatar_url = Column(Text, unique=False)
     email = Column(String(255), index=True, unique=True)
@@ -23,7 +24,7 @@ class Account(BaseModel):
         return f"<Account {self.id}, {self.full_name}, {self.email}>"
 
 
-class Donation(BaseModel):
+class Donation(Base):
     """BuyMeACoffee donation."""
 
     __tablename__ = "donation"

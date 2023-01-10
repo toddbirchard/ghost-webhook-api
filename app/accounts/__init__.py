@@ -4,7 +4,6 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.accounts.subscriptions import new_ghost_subscription
 from config import BASE_DIR
 from database import ghost_db
 from database.crud import create_account, get_account

@@ -2,11 +2,12 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
-from app.analytics.algolia import persist_algolia_searches
-from app.analytics.plausible import fetch_top_visited_urls
 from config import settings
 from database.schemas import AnalyticsResponse
 from log import LOGGER
+
+from .algolia import persist_algolia_searches
+from .plausible import fetch_top_visited_urls
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 

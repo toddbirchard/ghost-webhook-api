@@ -5,9 +5,10 @@ from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from database.models import Account, Donation
-from database.schemas import NetlifyAccount, NewDonation
 from log import LOGGER
+
+from .models import Account, Donation
+from .schemas import NetlifyAccount, NewDonation
 
 
 def get_donation(db: Session, donation: NewDonation) -> Optional[NewDonation]:

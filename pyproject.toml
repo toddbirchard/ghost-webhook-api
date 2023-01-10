@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "jamstack-api"
+name = "blog-webhook-api"
 version = "0.1.0"
 description = "Webhook endpoints to optimize your JAMStack static site."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
 maintainers = ["Todd Birchard <toddbirchard@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/toddbirchard/jamstack-api/"
-repository = "https://github.com/toddbirchard/jamstack-api/"
-documentation = "https://github.com/toddbirchard/jamstack-api/blob/master/README.md"
+homepage = "https://github.com/toddbirchard/blog-webhook-api/"
+repository = "https://github.com/toddbirchard/blog-webhook-api/"
+documentation = "https://github.com/toddbirchard/blog-webhook-api/blob/master/README.md"
 keywords = [
   "API",
   "Rest API",
@@ -58,16 +58,16 @@ databases = "^0.7.0"
 aiomysql = "^0.1.1"
 
 [tool.poetry.scripts]
-run = "asgi:app"
+run = "asgi:script_starter"
 
 [tool.poetry.urls]
-issues = "https://github.com/toddbirchard/jamstack-api/issues"
+issues = "https://github.com/toddbirchard/blog-webhook-api/issues"
 
 [tool.poetry.group.dev.dependencies]
-black = {version = "^23.1a1", allow-prereleases = true}
+black = {version = "^22.12.0", allow-prereleases = true}
 
 [build-system]
-requires = ["poetry>=1.1.4"]
+requires = ["poetry>=1.3.1"]
 build-backend = "poetry.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']

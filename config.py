@@ -17,9 +17,9 @@ load_dotenv(path.join(BASE_DIR, ".env"))
 class Settings(BaseSettings):
     """FastAPI settings & configuration."""
 
-    app_name: str = "JAMStack API"
-    title: str = "JAMStack API"
-    description: str = "API to automate optimizations for JAMStack sites."
+    app_name: str = "Blog Webhook API"
+    title: str = "Blog Webhook API"
+    description: str = "API to automate optimizations for blog sites."
     items_per_user: int = 50
     debug: bool = True
 
