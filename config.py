@@ -1,6 +1,7 @@
 """FastAPI configuration."""
 import datetime
 from os import getenv, path
+from os.path import exists
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
@@ -14,9 +15,11 @@ load_dotenv(path.join(BASE_DIR, ".env"))
 
 
 class Settings(BaseSettings):
-    app_name: str = "JAMStack API"
-    title: str = "JAMStack API"
-    description: str = "API to automate optimizations for JAMStack sites."
+    """FastAPI settings & configuration."""
+
+    app_name: str = "Blog Webhook API"
+    title: str = "Blog Webhook API"
+    description: str = "API to automate optimizations for blog sites."
     items_per_user: int = 50
     debug: bool = True
 
@@ -26,7 +29,6 @@ class Settings(BaseSettings):
     dt: datetime.datetime = datetime.datetime.today()
     CORS_ORIGINS: list = [
         "http://hackersandslackers.com",
-        "https://hackersandslackers.app",
         "http://localhost",
         "http://localhost:8080",
         "http://api.hackersandslackers.com",
@@ -71,7 +73,9 @@ class Settings(BaseSettings):
     )
 
     class Config:
-        env_file = ".env"
+        """FastAPI configuration."""
+
+        env_file: str = ".env"
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
@@ -89,11 +93,16 @@ class Settings(BaseSettings):
     ALGOLIA_TABLE_MONTHLY: str = "algolia_searches_month"
 
     # Google Cloud Auth
+    GOOGLE_CREDENTIALS: str = getenv("GOOGLE_CREDENTIALS")
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
-    GOOGLE_CLOUD_JSON_FILENAME: str = getenv("GOOGLE_CLOUD_JSON_FILENAME")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
-        f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILENAME}"
-    )
+    GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
+    GOOGLE_CLOUD_CREDENTIALS: Credentials
+    if exists(f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"):
+        GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
+            f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"
+        )
+    else:
+        GOOGLE_CLOUD_CREDENTIALS = GOOGLE_CREDENTIALS
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
@@ -110,10 +119,10 @@ class Settings(BaseSettings):
     PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost
-    GHOST_API_VERSION: int = 3
+    GHOST_API_VERSION: str = "v3.0"
     GHOST_BASE_URL: str = getenv("GHOST_BASE_URL")
-    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/admin"
-    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/v{GHOST_API_VERSION}/content"
+    GHOST_ADMIN_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/admin"
+    GHOST_CONTENT_API_URL: str = f"{GHOST_BASE_URL}/ghost/api/content"
     GHOST_API_USERNAME: str = getenv("GHOST_API_USERNAME")
     GHOST_API_PASSWORD: str = getenv("GHOST_API_PASSWORD")
     GHOST_CLIENT_ID: str = getenv("GHOST_CLIENT_ID")
@@ -137,14 +146,9 @@ class Settings(BaseSettings):
     MAILGUN_CONF = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
-        MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
-        MAIL_FROM_NAME=MAILGUN_FROM_SENDER_NAME,
         MAIL_PORT=587,
         MAIL_SERVER=MAILGUN_EMAIL_SERVER,
-        MAIL_TLS=True,
-        MAIL_SSL=False,
-        USE_CREDENTIALS=True,
-        VALIDATE_CERTS=True,
+        MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
     )
 
     # Mixpanel

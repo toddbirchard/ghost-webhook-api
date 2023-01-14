@@ -2,7 +2,6 @@
 from typing import List
 
 import requests
-from fastapi_mail.email_utils import DefaultChecker
 from requests import HTTPError, Response
 
 from log import LOGGER
@@ -82,9 +81,3 @@ class Mailgun:
                 },
                 "email": body,
             }
-
-
-async def default_checker():
-    checker = DefaultChecker()  # you can pass source argument for your own email domains
-    await checker.fetch_temp_email_domains()  # require to fetch temporary email domains
-    return checker

@@ -1,23 +1,12 @@
 """User account management & functionality."""
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from app.accounts.comments import get_user_role
-from app.accounts.parse import parse_comment_json
-from app.accounts.subscriptions import new_ghost_subscription
-from clients import ghost, mailgun
-from database.crud import (
-    create_account,
-    create_comment,
-    get_account,
-    get_comment_upvote,
-    remove_comment_upvote,
-    submit_comment_upvote,
-)
-from database.models import Account, Comment
+from config import BASE_DIR
+from database import ghost_db
+from database.crud import create_account, get_account
 from database.orm import get_db
-from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent, NewComment, UpvoteComment
+from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent
 from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
@@ -65,78 +54,19 @@ async def new_account(new_account_event: NetlifyUserEvent, db: Session = Depends
     )
 
 
-@router.post(
-    "/comment/",
-    summary="New user comment",
-    description="Save user-generated comments submitted on posts.",
-    response_model=NewComment,
+@router.get(
+    "/comments/",
+    summary="Get all user comments.",
+    description="Fetch all user-created comments on Ghost posts.",
 )
-async def new_comment(comment: NewComment, db: Session = Depends(get_db)):
+async def get_comments():
     """
-    Save user comment to database and notify post author.
+    Fetch all user-created comments on Ghost posts.
 
-    :param NewComment comment: User-submitted comment.
-    :param Session db: ORM Database session.
+    :returns: List[Comment]
     """
-    post = ghost.get_post(comment.post_id)
-    post_author = f"{post['primary_author']['name']} <{post['primary_author']['email']}>"
-    user_role = get_user_role(comment, post)
-    if comment.user_email != post["primary_author"]["email"]:
-        mailgun.email_notification_new_comment(post, [post_author], comment.__dict__)
-    created_comment = create_comment(db, comment, user_role)
-    if created_comment:
-        ghost.rebuild_netlify_site()
-    return comment
-
-
-@router.post(
-    "/comment/upvote/",
-    summary="Upvote a comment",
-    description="Increment a comment's upvote count, or revoke an existing upvote from a user.",
-    response_model=UpvoteComment,
-)
-async def upvote_comment(upvote_request: UpvoteComment, db: Session = Depends(get_db)):
-    """
-    Cast a user upvote for another user's comment.
-
-    :param UpvoteComment upvote_request: User-generated request to upvote a comment.
-    :param Session db: ORM Database session.
-    """
-    existing_vote = get_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
-    if upvote_request.vote is False:
-        if existing_vote:
-            remove_comment_upvote(db, existing_vote)
-            ghost.rebuild_netlify_site()
-            return upvote_request
-        LOGGER.warning(
-            f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
-        )
-        raise HTTPException(
-            status_code=400,
-            detail=f"Can't delete non-existent upvote for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
-        )
-    if upvote_request.vote and existing_vote:
-        LOGGER.warning(
-            f"Upvote already submitted for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`."
-        )
-        raise HTTPException(
-            status_code=400,
-            detail=f"Upvote already submitted for comment `{upvote_request.comment_id}` from user `{upvote_request.user_id}`.",
-        )
-    submit_comment_upvote(db, upvote_request.user_id, upvote_request.comment_id)
-    return upvote_request
-
-
-@router.get("/comments/", summary="Get all user comments")
-async def get_comments(db: Session = Depends(get_db)) -> JSONResponse:
-    """
-    Fetching post comments joined with user's info.
-
-    :param Session db: ORM Database session.
-
-    :returns: JSONResponse
-    """
-    all_comments = db.query(Comment).join(Comment.user).all()
-    all_comments = [parse_comment_json(comment) for comment in all_comments]
-    LOGGER.info(f"Fetched {len(all_comments)} comments.")
-    return JSONResponse(all_comments)
+    comments = ghost_db.execute_query_from_file(
+        f"{BASE_DIR}/database/queries/comments/selects/get_comments.sql"
+    ).fetchall()
+    LOGGER.success(f"Successfully fetched {len(comments)} Ghost comments.")
+    return comments

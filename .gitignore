@@ -104,10 +104,6 @@ venv.bak/
 # MyPy
 .mypy_cache/
 
-# Misc
-.DS_Store
-docs
-
 # Credentials
 creds/
 creds/*
@@ -123,4 +119,8 @@ logs/*
 nohup.out
 nohup
 info.json
+
+# Misc
+.DS_Store
+docs
 
