@@ -56,9 +56,6 @@ def test_github_issue(github_issue_user, gh):
 def test_batch_update_metadata():
     response = client.get("/posts/")
     assert response.status_code == 200
-    assert response.json().get("inserted") is not None
-    assert response.json().get("updated") is not None
-    pp.pprint(response.json())
 
 
 def assign_img_alt_attr():

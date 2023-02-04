@@ -7,11 +7,9 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 from app.moment import get_current_datetime, get_current_time
-from app.posts.update import update_html_ssl_urls, update_metadata, update_metadata_images
+from app.posts.metadata import optimize_posts_metadata
+from app.posts.update import update_html_ssl_urls, update_metadata_images
 from clients import ghost
-from config import BASE_DIR
-from database import ghost_db
-from database.read_sql import collect_sql_queries
 from database.schemas import PostBulkUpdate, PostUpdate
 from log import LOGGER
 
@@ -81,18 +79,10 @@ async def batch_update_metadata() -> JSONResponse:
 
     :returns: JSONResponse
     """
-    update_queries = collect_sql_queries("posts/updates")
-    update_results = ghost_db.execute_queries(update_queries)
-    insert_posts = ghost_db.execute_query_from_file(
-        f"{BASE_DIR}/database/queries/posts/selects/missing_all_metadata.sql",
-    )
-    insert_results = update_metadata(insert_posts)
-    LOGGER.success(f"Inserted metadata for {len(insert_results)} posts, updated {len(update_results.keys())}.")
+    posts_metadata_updated, posts_metadata_added = optimize_posts_metadata()
     return JSONResponse(
-        {
-            "inserted": {"count": len(insert_results), "posts": insert_results},
-            "updated": {"count": len(update_results.keys()), "posts": update_results},
-        }
+        content=f"Inserted {posts_metadata_added}; Updated{posts_metadata_updated}",
+        status_code=200,
     )
 
 

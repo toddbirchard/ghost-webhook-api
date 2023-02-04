@@ -14,7 +14,7 @@
 
 ![Blog Webhook API](./.github/blog-webhook-api@2x.png?raw=true)
 
-API to consume webhook events emitted by modern blogging platforms. Dynamically handles optimizations including image compression, content sanitation, alerting, and feature enablement via data aggregate (suggested searches, trending posts, etc)
+Webhook-driven API to make maintaining blogs easier. Dynamically handles optimizations including image compression, content sanitation, alerting, and feature enablement via data aggregate (suggested searches, trending posts, etc)
 
 ## Installation
 

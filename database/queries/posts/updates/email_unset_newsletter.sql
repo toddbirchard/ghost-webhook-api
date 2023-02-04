@@ -1,7 +1,7 @@
 UPDATE
 	posts
 SET
-	email_recipient_filter = 'none'
+	email_recipient_filter = NULL
 WHERE
 	email_recipient_filter != 'none'
-	AND created_by != 1;
+	AND created_by != '1';

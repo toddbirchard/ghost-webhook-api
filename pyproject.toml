@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "blog-webhook-api"
 version = "0.1.0"
-description = "Webhook endpoints to optimize your JAMStack static site."
+description = "Webhook-driven API to make maintaining blogs easier."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
 maintainers = ["Todd Birchard <toddbirchard@gmail.com>"]
 license = "MIT"
