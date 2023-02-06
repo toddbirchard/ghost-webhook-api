@@ -54,6 +54,7 @@ pylint = "*"
 httpx = "*"
 databases = "*"
 aiomysql = "*"
+ddtrace = "^1.7.3"
 
 [tool.poetry.scripts]
 run = "asgi:script_starter"

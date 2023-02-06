@@ -1,4 +1,5 @@
 """Initialize API."""
+from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,9 +10,13 @@ from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
 
+# DataDog APM
+patch(fastapi=True)
+
+# Initialize API
 api = FastAPI(
-    title="Jamstack API",
-    description="API to automate optimizations for JAMStack sites.",
+    title="Blog Webhook API",
+    description="Webhook-driven API to make maintaining blogs easier.",
     version="0.1.0",
     debug=True,
     docs_url="/",
@@ -19,6 +24,7 @@ api = FastAPI(
     openapi_tags=settings.API_TAGS,
 )
 
+# Define Middleware
 api.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -27,6 +33,7 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
+# Include routers
 api.include_router(analytics.router)
 api.include_router(newsletter.router)
 api.include_router(posts.router)
