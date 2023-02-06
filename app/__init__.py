@@ -11,7 +11,8 @@ from log import LOGGER
 Base.metadata.create_all(bind=engine)
 
 # DataDog APM
-patch(fastapi=True)
+if settings.ENVIRONMENT == "production":
+    patch(fastapi=True)
 
 # Initialize API
 api = FastAPI(
