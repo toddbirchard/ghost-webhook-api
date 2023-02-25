@@ -81,7 +81,6 @@ class Ghost:
                 return None
             elif resp.json().get("posts"):
                 post = resp.json()["posts"][0]
-                LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
                 return post
             return None
         except HTTPError as e:
@@ -114,7 +113,6 @@ class Ghost:
                 LOGGER.error(f"Failed to fetch post `{post_slug}`: {resp.json().get('errors')[0]['message']}")
                 return None
             post = resp.json()["posts"][0]
-            LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
             return post
         except HTTPError as e:
             LOGGER.error(f"HTTPError occurred while fetching post `{post_slug}`: {e}")
@@ -240,25 +238,6 @@ class Ghost:
             return response, resp.status_code
         except HTTPError as e:
             LOGGER.error(f"Failed to create Ghost member: {e.response.content}")
-            return e.response.content, e.response.status_code
-
-    def rebuild_netlify_site(self) -> Tuple[str, int]:
-        """
-        Trigger Netlify site rebuild.
-
-        :returns: Tuple[str, int]
-        """
-        try:
-            resp = requests.post(
-                self.netlify_build_url,
-            )
-            LOGGER.info(f"Triggered Netlify build with status code {resp.status_code}.")
-            return (
-                f"Triggered Netlify build with status code {resp.status_code}.",
-                resp.status_code,
-            )
-        except HTTPError as e:
-            LOGGER.error(f"Failed to rebuild Netlify site: {e.response.content}")
             return e.response.content, e.response.status_code
 
     def get_json_backup(self) -> Optional[dict]:

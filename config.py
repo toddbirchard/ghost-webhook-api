@@ -17,11 +17,13 @@ load_dotenv(path.join(BASE_DIR, ".env"))
 class Settings(BaseSettings):
     """FastAPI settings & configuration."""
 
-    app_name: str = "Blog Webhook API"
-    title: str = "Blog Webhook API"
-    description: str = "API to automate optimizations for blog sites."
-    items_per_user: int = 50
-    debug: bool = True
+    APP_NAME: str = "Blog Webhook API"
+    TITLE: str = "Blog Webhook API"
+    DESCRIPTION: str = "API to automate optimizations for blog sites."
+    VERSION: str = "0.1.0"
+    ROOT_PATH: str = "/api/v1"
+    ITEMS_PER_USER: int = 50
+    DEBUG: bool = True
 
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")

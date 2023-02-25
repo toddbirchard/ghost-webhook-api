@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from app.analytics.algolia import persist_algolia_searches
 from app.analytics.plausible import fetch_top_visited_posts
 from config import settings
-from database.schemas import AnalyticsResponse
+from database.schemas import AnalyticsRowsUpdated
 from log import LOGGER
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
@@ -15,26 +15,22 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
     "/",
     summary="Import site analytics.",
     description="Import site performance analytics from a data warehouse to a SQL database.",
-    response_model=AnalyticsResponse,
+    response_model=AnalyticsRowsUpdated,
     status_code=200,
 )
-async def migrate_site_analytics():
-    """Fetch top searches for weekly & monthly time frames."""
+async def migrate_site_analytics() -> AnalyticsRowsUpdated:
+    """
+    Fetch top searches for weekly & monthly time frames.
+
+    :returns: AnalyticsRowsUpdated
+    """
     week_num_hits, week_pages_visited = fetch_top_visited_posts("7d", limit=100)
     month_num_hits, month_pages_visited = fetch_top_visited_posts("month", limit=500)
     LOGGER.success(f"Inserted {week_num_hits} rows into `weekly_stats`, {month_num_hits}  into `monthly_stats`.")
-    return {
-        "updated": {
-            "weekly_stats": {
-                "count": week_num_hits,
-                "rows": week_pages_visited,
-            },
-            "monthly_stats": {
-                "count": month_num_hits,
-                "rows": month_pages_visited,
-            },
-        }
-    }
+    return AnalyticsRowsUpdated(
+        week={"total": week_num_hits, "rows": week_pages_visited},
+        month={"total": month_num_hits, "rows": month_pages_visited},
+    )
 
 
 @router.get(

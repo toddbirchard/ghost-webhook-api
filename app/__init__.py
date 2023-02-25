@@ -1,5 +1,4 @@
 """Initialize API."""
-from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,19 +9,16 @@ from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
 
-# DataDog APM
-if settings.ENVIRONMENT == "production":
-    patch(fastapi=True)
-
 # Initialize API
 api = FastAPI(
-    title="Blog Webhook API",
-    description="Webhook-driven API to make maintaining blogs easier.",
-    version="0.1.0",
-    debug=True,
+    title=settings.TITLE,
+    description=settings.DESCRIPTION,
+    version=settings.VERSION,
+    debug=settings.DEBUG,
     docs_url="/",
     openapi_url="/api.json",
     openapi_tags=settings.API_TAGS,
+    root_path=settings.ROOT_PATH,
 )
 
 # Define Middleware

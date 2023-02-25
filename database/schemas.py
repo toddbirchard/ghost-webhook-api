@@ -462,8 +462,8 @@ class PostBulkUpdate(BaseModel):
 
 class AnalyticsRowsUpdated(BaseModel):
     # fmt: off
-    weekly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
-    monthly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
+    week: Dict[str, Any] = Field(None, example={"total": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
+    month: Dict[str, Any] = Field(None, example={"total": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
     # fmt: on
 
 

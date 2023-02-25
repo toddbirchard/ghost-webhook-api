@@ -36,9 +36,9 @@ def fetch_top_visited_posts(time_period: str, limit=20) -> Tuple[int, List[Optio
         )
         if resp.status_code == 200:
             results_list = resp.json().get("results")
-            results_list = filter_pages_from_results(results_list)
+            results_list = filter_pages_from_post_results(results_list)
             if results_list:
-                visited_posts = [enrich_url_with_post_data(result) for result in results_list if result is not None]
+                visited_posts = enrich_url_with_post_data(results_list)
                 num_visited_posts = aggregate_total_hits(visited_posts)
                 if num_visited_posts > 0:
                     LOGGER.warning(f"num_visited_posts: {num_visited_posts} | visited_posts: {visited_posts}")
@@ -50,33 +50,51 @@ def fetch_top_visited_posts(time_period: str, limit=20) -> Tuple[int, List[Optio
         LOGGER.error(f"Unexpected Exception when fetching Plausible top URLs: {e}")
 
 
-def filter_pages_from_results(results_list: dict) -> List[dict]:
-    ghost_pages = [f"/{page['slug']}/" for page in ghost.get_pages()]
+def filter_pages_from_post_results(results_list: dict) -> List[dict]:
+    """
+    Ensure all analytics results are for posts, not pages.
+
+    :param dict results_list: JSON response of top-visited pages.
+
+    :returns: List[dict]
+    """
+    # NOTE: This is a shit show.
+    page_slugs = [page["slug"] for page in ghost.get_pages()]
+    # for slug in page_slugs:
+        # LOGGER.warning(f"slug: {slug}")
     return [
         result
         for result in results_list
         if "/tag" not in result["page"]
         and "/page" not in result["page"]
         and "/author" not in result["page"]
-        and result["page"] not in ghost_pages
+        and "/series" not in result["page"]
+        and "/about" not in result["page"]
+        and "/build-flask-apps" not in result["page"]
+        and "/python-concurrency-with-asyncio" not in result["page"]
+        and "/hacking-tableau-server" not in result["page"]
+        and "/intro-to-asyncio-concurrency" not in result["page"]
+        and "/" != result["page"]
+        and result["page"] not in page_slugs
+        and result["page"] is not None
     ]
 
 
-def enrich_url_with_post_data(page_result: dict) -> Optional[dict]:
+def enrich_url_with_post_data(results: dict) -> Optional[dict]:
     """
     Determine post slug from URL & fetch Ghost post title.
 
-    :param dict page_result: Top visited URL result returned by Plausible.
+    :param dict page_result: `Top visited URLs` result returned by Plausible.
 
     :returns: Optional[dict]
     """
-    slug = page_result["page"].rstrip("/").lstrip("/").split("/")[-1]
+    slug = [result["page"].rstrip("/").lstrip("/").split("/")[-1] for result in results]
     post = ghost.get_post_by_slug(slug)
     if post is not None:
-        page_result["slug"] = slug
-        page_result["title"] = post["title"]
-        page_result["url"] = post["url"]
-        return page_result
+        post["slug"] = slug
+        post["title"] = post["title"]
+        post["url"] = post["url"]
+        return post
     return None
 
 
