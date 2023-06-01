@@ -1,10 +1,7 @@
 """Fetch site traffic & search query analytics."""
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 
-from app.analytics.algolia import persist_algolia_searches
-from app.analytics.plausible import fetch_top_visited_posts
-from config import settings
+from app.analytics.plausible import top_visited_pages_by_timeframe
 from database.schemas import AnalyticsResponse
 from log import LOGGER
 
@@ -19,27 +16,25 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
     status_code=200,
 )
 async def migrate_site_analytics():
-    """Fetch top searches for weekly & monthly timeframes."""
-    weekly_traffic = fetch_top_visited_posts("7d", limit=100)
-    monthly_traffic = fetch_top_visited_posts("month", limit=500)
+    """Fetch top searches for weekly & monthly time periods."""
+    weekly_traffic = top_visited_pages_by_timeframe("7d", limit=100)
+    monthly_traffic = top_visited_pages_by_timeframe("30d", limit=500)
     LOGGER.success(
         f"Inserted {len(weekly_traffic)} rows into `weekly_stats`,  {len(monthly_traffic)}  into `monthly_stats`."
     )
     return {
-        "updated": {
-            "weekly_stats": {
-                "count": len(weekly_traffic),
-                "rows": weekly_traffic,
-            },
-            "monthly_stats": {
-                "count": len(monthly_traffic),
-                "rows": monthly_traffic,
-            },
-        }
+        "weekly_stats": {
+            "count": len(weekly_traffic),
+            "rows": weekly_traffic,
+        },
+        "monthly_stats": {
+            "count": len(monthly_traffic),
+            "rows": monthly_traffic,
+        },
     }
 
 
-@router.get(
+'''@router.get(
     "/searches/",
     summary="Import user search queries.",
     description="Store user search queries to a SQL database for analysis and suggestive search.",
@@ -51,8 +46,8 @@ async def save_user_search_queries() -> JSONResponse:
 
     :returns: JSONResponse
     """
-    weekly_searches = persist_algolia_searches(settings.ALGOLIA_TABLE_WEEKLY, 7)
-    monthly_searches = persist_algolia_searches(settings.ALGOLIA_TABLE_MONTHLY, 90)
+    weekly_searches = persist_algolia_searches(settings.ALGOLIA_TABLE_WEEKLY, "7d")
+    monthly_searches = persist_algolia_searches(settings.ALGOLIA_TABLE_MONTHLY, "month")
     if weekly_searches is None or monthly_searches is None:
         HTTPException(500, "Unexpected error when saving search query data.")
     LOGGER.success(
@@ -70,4 +65,4 @@ async def save_user_search_queries() -> JSONResponse:
                 "rows": monthly_searches,
             },
         }
-    )
+    )'''

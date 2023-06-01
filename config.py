@@ -115,7 +115,7 @@ class Settings(BaseSettings):
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
 
     # Plausible Analytics
-    PLAUSIBLE_BREAKDOWN_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
+    PLAUSIBLE_STATS_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
     PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost

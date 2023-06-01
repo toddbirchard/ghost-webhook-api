@@ -114,7 +114,7 @@ class Ghost:
                 LOGGER.error(f"Failed to fetch post `{post_slug}`: {resp.json().get('errors')[0]['message']}")
                 return None
             post = resp.json()["posts"][0]
-            LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
+            LOGGER.info(f"Fetched Ghost post `{post['slug']}`")
             return post
         except HTTPError as e:
             LOGGER.error(f"HTTPError occurred while fetching post `{post_slug}`: {e}")
@@ -138,9 +138,8 @@ class Ghost:
             resp = requests.get(endpoint, headers=headers)
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch Ghost pages: {resp.json().get('errors')[0]['message']}")
-                return None
             post = resp.json()["pages"]
-            LOGGER.info(f"Fetched Ghost pages` ({endpoint})")
+            LOGGER.info(f"Fetched {len(post)} Ghost pages")
             return post
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching pages: {e}")

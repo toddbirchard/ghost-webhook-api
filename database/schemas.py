@@ -460,12 +460,8 @@ class PostBulkUpdate(BaseModel):
     updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
 
-class AnalyticsRowsUpdated(BaseModel):
+class AnalyticsResponse(BaseModel):
     # fmt: off
     weekly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
     monthly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
     # fmt: on
-
-
-class AnalyticsResponse(BaseModel):
-    updated: AnalyticsRowsUpdated
