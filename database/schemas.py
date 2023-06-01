@@ -460,8 +460,18 @@ class PostBulkUpdate(BaseModel):
     updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
 
-class AnalyticsResponse(BaseModel):
+class PageInsight(BaseModel):
     # fmt: off
-    weekly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
-    monthly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
+    page_views: int = Field(None, example=1184)
+    unique_visitors: int = Field(None, example=657)
+    avg_visit_duration_secs: int = Field(None, example=29)
+    bounce_rate_pct: int = Field(None, example=34)
+    title: str = Field(None, example="The Art of Routing in Flask")
+    slug: str = Field(None, example="flask-routes")
+    url: str = Field(None, example="/flask-routes/")
     # fmt: on
+
+
+class AnalyticsResponse(BaseModel):
+    count: int = Field(None, example=96)
+    results: List[PageInsight]

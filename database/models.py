@@ -40,3 +40,23 @@ class Donation(Base):
 
     def __repr__(self):
         return f"<Donation {self.id}, ({self.url}): `{self.message}`>"
+
+
+class TrendingPostInsight(Base):
+    """."""
+
+    __tablename__ = "trending_post_insight"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
+    title = Column(Text)
+    slug = Column(String(255))
+    url = Column(String(255))
+    page_views = Column(Integer)
+    unique_visitors = Column(Integer)
+    avg_visit_duration_secs = Column(Integer)
+    bounce_rate_pct = Column(Integer)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
+
+    def __repr__(self):
+        return f"<TrendingPageInsight {self.id}, ({self.url}): `{self.message}`>"

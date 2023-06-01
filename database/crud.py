@@ -100,3 +100,9 @@ def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
         LOGGER.error(f"SQLAlchemyError while creating Netlify user account: {e}")
     except Exception as e:
         LOGGER.error(f"Unexpected error while creating Netlify user account: {e}")
+
+
+def update_trending_insight(db: Session, account_email: str):
+    """
+    """
+    db.expunge_all()

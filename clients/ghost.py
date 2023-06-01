@@ -76,14 +76,12 @@ class Ghost:
             }
             endpoint = f"{self.admin_api_url}/posts/{post_id}/"
             resp = requests.get(endpoint, headers=headers, params=params)
-            if resp.json().get("errors") is not None:
+            if resp.status_code != 200:
                 LOGGER.error(f"Failed to fetch post `{post_id}`: {resp.json().get('errors')[0]['message']}")
                 return None
-            elif resp.json().get("posts"):
-                post = resp.json()["posts"][0]
-                LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
-                return post
-            return None
+            post = resp.json()["posts"][0]
+            LOGGER.info(f"Fetched Ghost post `{post['slug']}`")
+            return post
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching post `{post_id}`: {e}")
         except KeyError as e:
@@ -91,7 +89,7 @@ class Ghost:
         except Exception as e:
             LOGGER.error(f"Unexpected error occurred while fetching post `{post_id}`: {e}")
 
-    def get_post_by_slug(self, post_slug: str) -> Optional[dict]:
+    def get_post_by_slug(self, slug: str) -> Optional[dict]:
         """
         Fetch Ghost post by slug.
 
@@ -108,22 +106,23 @@ class Ghost:
                 "include": "authors",
                 "formats": "mobiledoc",
             }
-            endpoint = f"{self.admin_api_url}/posts/slug/{post_slug}/"
+            endpoint = f"{self.admin_api_url}/posts/slug/{slug}/"
             resp = requests.get(endpoint, headers=headers, params=params)
-            if resp.json().get("errors") is not None:
-                LOGGER.error(f"Failed to fetch post `{post_slug}`: {resp.json().get('errors')[0]['message']}")
+            if resp.status_code != 200:
+                errors = ", ".join(resp.json()["errors"])
+                LOGGER.warning(f"Failed to fetch post `{slug}`: {errors}")
                 return None
             post = resp.json()["posts"][0]
             LOGGER.info(f"Fetched Ghost post `{post['slug']}`")
             return post
         except HTTPError as e:
-            LOGGER.error(f"HTTPError occurred while fetching post `{post_slug}`: {e}")
+            LOGGER.error(f"HTTPError occurred while fetching post `{slug}`: {e}")
         except LookupError as e:
-            LOGGER.error(f"LookupError occurred while fetching post `{post_slug}`: `{e}`")
+            LOGGER.error(f"LookupError occurred while fetching post `{slug}`: `{e}`")
         except Exception as e:
-            LOGGER.error(f"Unexpected error occurred while fetching post `{post_slug}`: {e}")
+            LOGGER.error(f"Unexpected error occurred while fetching post `{slug}`: {e}")
 
-    def get_pages(self) -> Optional[dict]:
+    def get_all_pages(self) -> Optional[dict]:
         """
         Fetch Ghost pages.
 
@@ -136,11 +135,12 @@ class Ghost:
             }
             endpoint = f"{self.admin_api_url}/pages"
             resp = requests.get(endpoint, headers=headers)
-            if resp.json().get("errors") is not None:
-                LOGGER.error(f"Failed to fetch Ghost pages: {resp.json().get('errors')[0]['message']}")
-            post = resp.json()["pages"]
-            LOGGER.info(f"Fetched {len(post)} Ghost pages")
-            return post
+            if resp.status_code != 200:
+                errors = ", ".join(resp.json()["errors"])
+                LOGGER.error(f"Failed to fetch Ghost pages with status code {resp.status_code}: {errors}")
+            pages = resp.json().get("pages")
+            LOGGER.info(f"Fetched {len(pages)} Ghost pages")
+            return pages
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching pages: {e}")
         except KeyError as e:

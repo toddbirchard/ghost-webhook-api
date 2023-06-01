@@ -1,4 +1,4 @@
-from app.analytics.plausible import enrich_url_with_post_data, fetch_top_visited_pages
+from app.analytics.plausible import create_result_object, fetch_top_visited_pages
 
 
 def test_fetch_top_visited_urls():
@@ -12,7 +12,7 @@ def test_fetch_top_visited_urls():
 
 def test_enrich_url_with_post_data():
     page_result = {"page": "/flask-routes/", "visitors": 869}
-    post_dict = enrich_url_with_post_data(page_result)
+    post_dict = create_result_object(page_result)
     assert post_dict["title"] is not None
     assert post_dict["slug"] is not None
     assert post_dict["slug"] == "flask-routes"
