@@ -39,13 +39,13 @@ class Donation(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     def __repr__(self):
-        return f"<Donation {self.id}, ({self.url}): `{self.message}`>"
+        return f"<Donation: {self.id}, ({self.url}): `{self.message}`>"
 
 
 class TrendingPostInsight(Base):
-    """."""
+    """Performance analytics for posts trending recently."""
 
-    __tablename__ = "trending_post_insight"
+    __tablename__ = "insight_trending_post"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement="auto")
     title = Column(Text)
@@ -59,4 +59,4 @@ class TrendingPostInsight(Base):
     updated_at = Column(DateTime, onupdate=func.now())
 
     def __repr__(self):
-        return f"<TrendingPageInsight {self.id}, ({self.url}): `{self.message}`>"
+        return f"<TrendingPageInsight: {self.id}, `{self.slug}`, ({self.page_views} views)>"

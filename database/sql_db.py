@@ -93,7 +93,7 @@ class Database:
             return self.db.execute(table.insert(), rows)
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while inserting records into table `{table_name}`: {e}")
-        except IntegrityError as e:
+        except Exception as e:
             LOGGER.error(f"Unexpected error while inserting records into table `{table_name}`: {e}")
 
     def insert_dataframe(self, df: DataFrame, table_name: str, action="append") -> DataFrame:

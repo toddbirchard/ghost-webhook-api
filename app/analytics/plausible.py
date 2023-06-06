@@ -7,12 +7,13 @@ from requests.exceptions import RequestException
 
 from clients import ghost
 from config import settings
+from database.schemas import PostInsight
 from log import LOGGER
 
 
-def top_visited_pages_by_timeframe(time_period: str, limit=30) -> Optional[List[dict]]:
+def top_visited_pages_by_timeframe(time_period: str, limit=50) -> List[Optional[PostInsight]]:
     """
-    Get top visited URLs & enrich with post metadata.
+    Fetch most-visited URLs from Plausible, filter non-post results, and enrich with metadata.
 
     :param str time_period: Period of time to fetch results for (12mo, 6mo, month, 30d, 7d, or day).
     :param int limit: Maximum number of results to be returned.
@@ -22,14 +23,14 @@ def top_visited_pages_by_timeframe(time_period: str, limit=30) -> Optional[List[
     results = fetch_top_visited_pages(time_period, limit=limit)
     if results:
         results = filter_results(results)
-        results = enrich_results(results)
+        results = build_post_insight_objects(results)
         return results
     return []
 
 
-def fetch_top_visited_pages(time_period: str, limit=30) -> List[Optional[dict]]:
+def fetch_top_visited_pages(time_period: str, limit=50) -> List[Optional[dict]]:
     """
-    Fetch top visited URLs from Plausible.
+    Fetch parent site's top-visited URLs from Plausible API.
 
     :param str time_period: Period of time to fetch results for (12mo, 6mo, month, 30d, 7d, or day).
     :param int limit: Maximum number of results to be returned.
@@ -68,7 +69,7 @@ def fetch_top_visited_pages(time_period: str, limit=30) -> List[Optional[dict]]:
 
 def fetch_all_ghost_page_urls() -> List[dict]:
     """
-    List all slugs for Ghost posts & pages.
+    Fetch all slugs for Ghost static pages; used to filter non-posts.
 
     :returns: List[dict]
     """
@@ -78,7 +79,7 @@ def fetch_all_ghost_page_urls() -> List[dict]:
 
 def filter_results(results_list: List[dict]) -> List[dict]:
     """
-    Filter static Ghost pages & low-performing posts from results.
+    Filter non-posts from results list, as well as low-performing posts.
 
     :param List[dict] results_list: List of top visited URLs.
 
@@ -102,35 +103,27 @@ def filter_results(results_list: List[dict]) -> List[dict]:
     ]
 
 
-def create_result_object(result: dict) -> Optional[dict]:
+def build_post_insight_objects(results: List[dict]) -> List[Optional[PostInsight]]:
     """
-    Determine post slug from URL & fetch Ghost post title.
+    Construct an object to represent post's insight object & enrich record with matching Ghost data.
 
-    :param dict result: Top visited URL result returned by Plausible.
+    :param List[dict] result: Raw Plausible records each representing a "top-visited" URL result.
 
-    :returns: Optional[dict]
+    :returns: List[Optional[PageInsight]]
     """
-    slug = result["page"].rstrip("/").lstrip("/").split("/")[-1]
-    post = ghost.get_post_by_slug(slug)
-    page_insight = {}
-    if post and result["pageviews"] and result["pageviews"] > 2 and post["slug"] == slug:
-        page_insight["page_views"] = result["pageviews"]
-        page_insight["unique_visitors"] = result["visitors"]
-        page_insight["avg_visit_duration_secs"] = result["visit_duration"]
-        page_insight["bounce_rate_pct"] = result["bounce_rate"]
-        page_insight["title"] = post["title"]
-        page_insight["slug"] = post["slug"]
-        page_insight["url"] = f"{post['url']}"
-        return page_insight
-    return None
-
-
-def enrich_results(results: List[dict]):
-    """
-    Add additional Ghost page metadata to Plausible results.
-
-    :param List[dict] results:
-
-    :returns: List[dict]
-    """
-    return [create_result_object(result) for result in results if result is not None]
+    page_insights = []
+    for result in results:
+        slug = result["page"].rstrip("/").lstrip("/").split("/")[-1]
+        post = ghost.get_post_by_slug(slug)
+        if post and result and result["pageviews"] and result["pageviews"] > 2 and post["slug"] == slug:
+            page_insight = PostInsight(
+                page_views=result["pageviews"],
+                unique_visitors=result["visit_duration"],
+                avg_visit_duration_secs=result["visit_duration"],
+                bounce_rate_pct=post["title"],
+                title=post["title"],
+                slug=post["slug"],
+                url=f"{post['url']}",
+            )
+            page_insights += page_insight
+    return page_insights

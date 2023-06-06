@@ -460,7 +460,7 @@ class PostBulkUpdate(BaseModel):
     updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
 
-class PageInsight(BaseModel):
+class PostInsight(BaseModel):
     # fmt: off
     page_views: int = Field(None, example=1184)
     unique_visitors: int = Field(None, example=657)
@@ -474,4 +474,4 @@ class PageInsight(BaseModel):
 
 class AnalyticsResponse(BaseModel):
     count: int = Field(None, example=96)
-    results: List[PageInsight]
+    results: List[PostInsight]

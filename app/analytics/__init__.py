@@ -1,11 +1,12 @@
 """Fetch site traffic & search query analytics."""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.analytics.plausible import top_visited_pages_by_timeframe
-from database.schemas import AnalyticsResponse
-from database.models import TrendingPostInsight
+from database.crud import update_trending_insights
+from database.models import AnalyticsResponse, TrendingPostInsight
 from database.orm import get_db
+from database.schemas import AnalyticsResponse
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
@@ -18,12 +19,21 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
     status_code=200,
 )
 async def trending_site_analytics(db: Session = Depends(get_db)):
-    """Fetch top searches for past 2 weeks."""
-    weekly_traffic = top_visited_pages_by_timeframe("14d", limit=100)
-    return {
-        "count": len(weekly_traffic),
-        "results": weekly_traffic,
-    }
+    """
+    Fetch top performing posts from latest 2 weeks.
+
+    :returns: AnalyticsResponse
+    """
+    trending_posts = top_visited_pages_by_timeframe("14d", limit=100)
+    if not trending_posts:
+        raise HTTPException(500, "Error while fetching Plausible analytics.")
+    trending_posts_inserted = update_trending_insights(trending_posts)
+    if not trending_posts_inserted:
+        raise HTTPException(500, "Unexpected error while fetching Plausible analytics from REST API.")
+    return AnalyticsResponse(
+        count=len(trending_posts),
+        results=trending_posts,
+    )
 
 
 @router.get(
@@ -36,6 +46,8 @@ async def trending_site_analytics(db: Session = Depends(get_db)):
 async def yearly_site_analytics(db: Session = Depends(get_db)):
     """Fetch top searches for past year."""
     yearly_traffic = top_visited_pages_by_timeframe("12mo", limit=5000)
+    if not yearly_traffic:
+        raise HTTPException(500, "Unexpected error while fetching Plausible analytics from REST API.")
     return {
         "count": len(yearly_traffic),
         "results": yearly_traffic,
