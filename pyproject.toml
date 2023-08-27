@@ -48,6 +48,7 @@ pylint = "*"
 httpx = "*"
 databases = "*"
 aiomysql = "*"
+pydantic-settings = "^2.0.3"
 
 [tool.poetry.scripts]
 run = "asgi:api"

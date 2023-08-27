@@ -32,11 +32,11 @@ $(VIRTUAL_ENV):
 
 .PHONY: dev
 dev: env
-	$(LOCAL_PYTHON) -m uvicorn --port=9300 main:api --reload
+	$(LOCAL_PYTHON) -m main --reload
 
 .PHONY: run
 run: env
-	  $(LOCAL_PYTHON) -m uvicorn main
+	  $(LOCAL_PYTHON) -m main
 
 .PHONY: install
 install: env
