@@ -45,7 +45,7 @@ Aggregate data from Google Cloud & Algolia to power “trending” widgets.
   
 ### Image Optimization
 
-Ensure all posts have retina, mobile, and webp variants.
+Ensure all posts have retina, mobile, and .webp variants.
 
 * **POST** `/images/`: Upon post creation, generate optimized retina and mobile variants of post ‘feature_image’ if they do not exist.
 * **GET** `/images/`: Generates both **retina** and **mobile** varieties of _all_ images in a remote CDN directory. Defaults to directory containing images uploaded within current month, or accepts a `?directory=` parameter which accepts a path to recursively optimize images on the given CDN.

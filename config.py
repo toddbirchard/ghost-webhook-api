@@ -1,17 +1,15 @@
 """FastAPI configuration."""
-import datetime
+from datetime import datetime
 from os import getenv, path
 from os.path import exists
 
-from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import BaseSettings, EmailStr
 
-# Load variables from .env
+# Set relative directory path for project root.
 BASE_DIR = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(BASE_DIR, ".env"))
 
 
 class Settings(BaseSettings):
@@ -23,10 +21,14 @@ class Settings(BaseSettings):
     items_per_user: int = 50
     debug: bool = True
 
+    class Config:
+        """Load variables from `.env` file."""
+
+        env_file: str = ".env"
+
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")
     ENVIRONMENT: str = getenv("ENVIRONMENT")
-    dt: datetime.datetime = datetime.datetime.today()
     CORS_ORIGINS: list = [
         "http://hackersandslackers.com",
         "http://localhost",
@@ -72,10 +74,8 @@ class Settings(BaseSettings):
         ],
     )
 
-    class Config:
-        """FastAPI configuration."""
-
-        env_file: str = ".env"
+    # Date
+    TODAY_DATE: datetime = datetime.today()
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
@@ -112,10 +112,10 @@ class Settings(BaseSettings):
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
     GCP_BUCKET_NAME: str = getenv("GCP_BUCKET_NAME")
-    GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
+    GCP_BUCKET_FOLDER: list = [f'{TODAY_DATE.year}/{TODAY_DATE.strftime("%m")}']
 
     # Plausible Analytics
-    PLAUSIBLE_STATS_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
+    PLAUSIBLE_STATS_ENDPOINT: str = "https://plausible.io/api/v1/stats/breakdown"
     PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost

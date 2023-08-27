@@ -13,7 +13,12 @@ from database.sql_db import Database
 
 
 @pytest.fixture
-def sms():
+def sms() -> Twilio:
+    """
+    Twilio SMS client.
+
+    :returns: Twilio
+    """
     return Twilio(
         sid=settings.TWILIO_ACCOUNT_SID,
         token=settings.TWILIO_AUTH_TOKEN,
@@ -23,7 +28,12 @@ def sms():
 
 
 @pytest.fixture
-def ghost():
+def ghost() -> Ghost:
+    """
+    Ghost API client.
+
+    :returns: Ghost
+    """
     return Ghost(
         admin_api_url=settings.GHOST_ADMIN_API_URL,
         api_version=settings.GHOST_API_VERSION,
@@ -36,7 +46,12 @@ def ghost():
 
 
 @pytest.fixture
-def mailgun():
+def mailgun() -> Mailgun:
+    """
+    Email client for sending newsletters & general updates.
+
+    :returns: Mailgun
+    """
     return Mailgun(
         settings.MAILGUN_EMAIL_SERVER,
         settings.MAILGUN_FROM_SENDER,
@@ -45,7 +60,12 @@ def mailgun():
 
 
 @pytest.fixture
-def ghost_db():
+def ghost_db() -> Database:
+    """
+    Database client for target Ghost instance.
+
+    :returns: Database
+    """
     return Database(
         uri=settings.SQLALCHEMY_DATABASE_URI,
         db_name=settings.SQLALCHEMY_GHOST_DATABASE_NAME,
@@ -54,7 +74,12 @@ def ghost_db():
 
 
 @pytest.fixture
-def features_db():
+def features_db() -> Database:
+    """
+    Database client for non-Ghost features.
+
+    :returns: Database
+    """
     return Database(
         uri=settings.SQLALCHEMY_DATABASE_URI,
         db_name=settings.SQLALCHEMY_FEATURES_DATABASE_NAME,
@@ -63,7 +88,12 @@ def features_db():
 
 
 @pytest.fixture
-def gh():
+def gh() -> Github:
+    """
+    Github client.
+
+    :returns: Database
+    """
     return Github(
         settings.GITHUB_API_KEY,
     )
@@ -71,11 +101,21 @@ def gh():
 
 @pytest.fixture
 def db_session() -> Session:
+    """
+    Database session.
+
+    :returns: Session
+    """
     return Depends(get_db)
 
 
 @pytest.fixture
-def github_pr_owner():
+def github_pr_owner() -> dict:
+    """
+    Mocked response from Github API for PR owner.
+
+    :returns: dict
+    """
     return {
         "action": "opened",
         "number": 198,
@@ -519,7 +559,12 @@ def github_pr_owner():
 
 
 @pytest.fixture
-def github_pr_user():
+def github_pr_user() -> dict:
+    """
+    Mocked response for a Github user.
+
+    :returns: dict
+    """
     return {
         "action": "opened",
         "number": 198,
@@ -963,7 +1008,12 @@ def github_pr_user():
 
 
 @pytest.fixture
-def github_issue_user():
+def github_issue_user() -> dict:
+    """
+    Mocked response from Github API for new issue.
+
+    :returns: dict
+    """
     return {
         "action": "opened",
         "issue": {
@@ -1134,6 +1184,11 @@ def github_issue_user():
 
 @pytest.fixture
 def donation() -> NewDonation:
+    """
+    Donation object for a `BuyMeACoffee` donation.
+
+    :returns: NewDonation
+    """
     return NewDonation(
         name="todd",
         email="fakeemail@example.com",

@@ -1,5 +1,4 @@
 """Initialize API."""
-from ddtrace import patch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,8 +9,6 @@ from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
 
-# DataDog APM
-patch(fastapi=True)
 
 # Initialize API
 api = FastAPI(

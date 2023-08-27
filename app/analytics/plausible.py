@@ -44,7 +44,6 @@ def fetch_top_visited_pages(time_period: str, limit=30) -> List[Optional[dict]]:
         params = {
             "site_id": "hackersandslackers.com",
             "period": time_period,
-            "property": "event:page",
             "limit": limit,
             "metrics": "visitors,bounce_rate,visitors,pageviews,visit_duration",
             "property": "event:page",

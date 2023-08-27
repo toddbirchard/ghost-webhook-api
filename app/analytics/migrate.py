@@ -14,7 +14,7 @@ def import_site_analytics(timeframe: str) -> Dict[str, List[Any]]:
 
     :returns: Dict[str, List[Any]]
     """
-    sql_query = open(f"{BASE_DIR}/database/queries/analytics/{timeframe}.sql").read()
+    sql_query = open(f"{BASE_DIR}/database/queries/analytics/{timeframe}.sql", encoding="utf-8").read()
     sql_table = f"{timeframe}_stats"
     query_job = gbq.query(sql_query)
     result = query_job.result()
