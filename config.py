@@ -8,9 +8,6 @@ from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import BaseSettings, EmailStr
 
-# Set relative directory path for project root.
-BASE_DIR = path.abspath(path.dirname(__file__))
-
 
 class Settings(BaseSettings):
     """FastAPI settings & configuration."""
@@ -25,6 +22,9 @@ class Settings(BaseSettings):
         """Load variables from `.env` file."""
 
         env_file: str = ".env"
+
+    # Set relative directory path for project root.
+    BASE_DIR = path.abspath(path.dirname(__file__))
 
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")

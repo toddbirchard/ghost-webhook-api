@@ -50,7 +50,7 @@ databases = "*"
 aiomysql = "*"
 
 [tool.poetry.scripts]
-run = "asgi:script_starter"
+run = "asgi:api"
 
 [tool.poetry.urls]
 issues = "https://github.com/toddbirchard/blog-webhook-api/issues"
