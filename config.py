@@ -2,12 +2,18 @@
 from datetime import datetime
 from os import getenv, path
 from os.path import exists
+from typing import ClassVar, List
 
+from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import EmailStr
 from pydantic_settings import BaseSettings
+
+# Set relative directory path for project root.
+BASE_DIR = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(BASE_DIR, ".env"))
 
 
 class Settings(BaseSettings):
@@ -24,9 +30,6 @@ class Settings(BaseSettings):
 
         env_file: str = ".env"
 
-    # Set relative directory path for project root.
-    BASE_DIR = path.abspath(path.dirname(__file__))
-
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")
     ENVIRONMENT: str = getenv("ENVIRONMENT")
@@ -42,7 +45,8 @@ class Settings(BaseSettings):
         "https://zapier.com/*",
         "*",
     ]
-    API_TAGS = (
+
+    API_TAGS: List[dict] = (
         [
             {
                 "name": "posts",
@@ -144,8 +148,10 @@ class Settings(BaseSettings):
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
 
-    MAILGUN_CONF = ConnectionConfig(
+    MAILGUN_CONF: ClassVar = ConnectionConfig(
         MAIL_USERNAME="api",
+        MAIL_STARTTLS=True,
+        MAIL_SSL_TLS=True,
         MAIL_PASSWORD=MAILGUN_PASSWORD,
         MAIL_PORT=587,
         MAIL_SERVER=MAILGUN_EMAIL_SERVER,
@@ -160,11 +166,6 @@ class Settings(BaseSettings):
     TWILIO_RECIPIENT_PHONE: str = getenv("TWILIO_RECIPIENT_PHONE")
     TWILIO_AUTH_TOKEN: str = getenv("TWILIO_AUTH_TOKEN")
     TWILIO_ACCOUNT_SID: str = getenv("TWILIO_ACCOUNT_SID")
-
-    # Datadog
-    DATADOG_API_KEY: str = getenv("DD_API_KEY")
-    DATADOG_APP_KEY: str = getenv("DD_APP_KEY")
-    DATADOG_TRACE_ENABLED: bool = getenv("DD_TRACE_ENABLED")
 
     # Github
     GITHUB_USERNAME: str = getenv("GH_USERNAME")

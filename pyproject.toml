@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "blog-webhook-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "Webhook-driven API to make maintaining blogs easier."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
 maintainers = ["Todd Birchard <toddbirchard@gmail.com>"]
@@ -57,7 +57,7 @@ run = "asgi:api"
 issues = "https://github.com/toddbirchard/blog-webhook-api/issues"
 
 [tool.poetry.group.dev.dependencies]
-black = { version = "^23.7.0", allow-prereleases = true }
+black = { version = "^23.7.0", allow-prereleases = false }
 
 [build-system]
 requires = ["poetry>=1.5.1"]
