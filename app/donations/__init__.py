@@ -33,9 +33,7 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) 
             status_code=400,
             detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists; skipping.",
         )
-    new_donation = create_donation(db, donation)
-    if new_donation:
-        ghost.rebuild_netlify_site()
+    donation = create_donation(db, donation)
     return donation
 
 

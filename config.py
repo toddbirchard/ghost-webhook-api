@@ -9,7 +9,7 @@ from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import EmailStr
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Set relative directory path for project root.
 BASE_DIR = path.abspath(path.dirname(__file__))
@@ -19,16 +19,13 @@ load_dotenv(path.join(BASE_DIR, ".env"))
 class Settings(BaseSettings):
     """FastAPI settings & configuration."""
 
+    model_config = SettingsConfigDict(env_file=".env")
+
     app_name: str = "Blog Webhook API"
     title: str = "Blog Webhook API"
     description: str = "API to automate optimizations for blog sites."
     items_per_user: int = 50
     debug: bool = True
-
-    class Config:
-        """Load variables from `.env` file."""
-
-        env_file: str = ".env"
 
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")

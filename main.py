@@ -1,5 +1,4 @@
 """Application entry point."""
-import uvicorn
+from app import run
 
-if __name__ == "__main__":
-    uvicorn.run("app:api", host="0.0.0.0", port=9300, workers=1, reload=True)
+api = run()
