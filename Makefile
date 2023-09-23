@@ -32,7 +32,7 @@ $(VIRTUAL_ENV):
 
 .PHONY: run
 run: env
-	$(LOCAL_PYTHON) -m uvicorn main:app --reload
+	  $(LOCAL_PYTHON) -m asgi
 
 .PHONY: install
 install: env

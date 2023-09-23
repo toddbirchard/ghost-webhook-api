@@ -2,11 +2,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from config import settings
 from database import ghost_db
 from database.crud import create_account, get_account
 from database.orm import get_db
 from database.schemas import NetlifyAccountCreationResponse, NetlifyUserEvent
+from config import BASE_DIR
 from log import LOGGER
 
 router = APIRouter(prefix="/account", tags=["accounts"])
@@ -66,7 +66,7 @@ async def get_comments():
     :returns: List[Comment]
     """
     comments = ghost_db.execute_query_from_file(
-        f"{settings.BASE_DIR}/database/queries/comments/selects/get_comments.sql"
+        f"{BASE_DIR}/database/queries/comments/selects/get_comments.sql"
     ).fetchall()
     LOGGER.success(f"Successfully fetched {len(comments)} Ghost comments.")
     return comments
