@@ -7,14 +7,6 @@ from loguru import logger
 
 from config import BASE_DIR, settings
 
-DD_APM_FORMAT = (
-    "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] "
-    "[dd.service=%(dd.service)s dd.env=%(dd.env)s "
-    "dd.version=%(dd.version)s "
-    "dd.trace_id=%(dd.trace_id)s dd.span_id=%(dd.span_id)s]"
-    "- %(message)s"
-)
-
 
 def json_formatter(record: dict) -> str:
     """
@@ -87,13 +79,6 @@ def create_logger() -> logger:
         logger.add(
             "/var/log/api/info.json",
             format=json_formatter,
-            rotation="300 MB",
-            compression="zip",
-        )
-        # Datadog APM tracing
-        logger.add(
-            "/var/log/api/apm.log",
-            format=DD_APM_FORMAT,
             rotation="300 MB",
             compression="zip",
         )

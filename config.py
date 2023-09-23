@@ -160,11 +160,6 @@ class Settings(BaseSettings):
     TWILIO_AUTH_TOKEN: str = getenv("TWILIO_AUTH_TOKEN")
     TWILIO_ACCOUNT_SID: str = getenv("TWILIO_ACCOUNT_SID")
 
-    # Datadog
-    DATADOG_API_KEY: str = getenv("DD_API_KEY")
-    DATADOG_APP_KEY: str = getenv("DD_APP_KEY")
-    DATADOG_TRACE_ENABLED: bool = getenv("DD_TRACE_ENABLED")
-
     # Github
     GITHUB_USERNAME: str = getenv("GH_USERNAME")
     GITHUB_API_KEY: str = getenv("GH_API_KEY")
