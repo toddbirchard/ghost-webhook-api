@@ -40,7 +40,7 @@ google-resumable-media==2.4.1 ; python_version >= "3.9"
 googleapis-common-protos==1.58.0 ; python_version >= "3.9"
 greenlet==2.0.2 ; python_version >= "3.9" and (platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "x86_64" or platform_machine == "amd64" or platform_machine == "AMD64" or platform_machine == "win32" or platform_machine == "WIN32")
 grpcio-status==1.51.3 ; python_version >= "3.9"
-grpcio==1.51.3 ; python_version >= "3.9"
+grpcio==1.53.0 ; python_version >= "3.9"
 h11==0.14.0 ; python_version >= "3.9"
 httpcore==0.16.3 ; python_version >= "3.9"
 httpx==0.23.3 ; python_version >= "3.9"
