@@ -51,12 +51,10 @@ install: env
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
-
 .PHONY: deploy
 deploy:
-	make install \
+	make install && \
 	make run
-
 
 .PHONY: test
 test: env
@@ -66,7 +64,6 @@ test: env
 		coverage html --title='Coverage Report' -d .reports && \
 		open .reports/index.html
 
-
 .PHONY: update
 update: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
@@ -74,12 +71,10 @@ update: env
 	poetry export -f requirements.txt --output requirements.txt --without-hashes && \
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
-
 .PHONY: format
 format: env
-	$(LOCAL_PYTHON) -m isort --multi-line=3 .
+	$(LOCAL_PYTHON) -m isort --multi-line=3 . && \
 	$(LOCAL_PYTHON) -m black .
-
 
 .PHONY: lint
 lint: env
@@ -89,15 +84,14 @@ lint: env
 			--show-source \
 			--statistics
 
-
 .PHONY: clean
 clean:
 	find . -name 'poetry.lock' -delete && \
 	find . -name '.coverage' -delete && \
 	find . -wholename '**/*.pyc' -delete && \
 	find . -type d -wholename '__pycache__' -exec rm -rf {} + && \
-	find . -type d -wholename '.venv' -exec rm -rf {} + && \
+	find . -type d -wholename './.venv' -exec rm -rf {} + && \
 	find . -type d -wholename '.pytest_cache' -exec rm -rf {} + && \
 	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + && \
-	find . -type d -wholename './logs/*' -exec rm -rf {} + && \
+	find . -type d -wholename './logs/*.log' -exec rm -rf {} + && \
 	find . -type d -wholename './.reports/*' -exec rm -rf {} +

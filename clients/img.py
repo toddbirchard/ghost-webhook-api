@@ -1,6 +1,5 @@
 """Image transformer for remote images on GCS."""
 from io import BytesIO
-from random import randint
 from typing import List, Optional
 
 from google.cloud.exceptions import GoogleCloudError

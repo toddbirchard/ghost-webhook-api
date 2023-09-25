@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
-from pydantic import BaseSettings, EmailStr
+from pydantic import EmailStr
+from pydantic_settings import BaseSettings
 
 # Load variables from .env
 BASE_DIR = path.abspath(path.dirname(__file__))

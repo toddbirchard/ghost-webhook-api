@@ -45,7 +45,7 @@ class Ghost:
         """Authorize HTTPS session with Ghost admin."""
         endpoint = f"{self.admin_api_url}/session/"
         headers = {"Authorization": self.session_token}
-        resp = requests.post(endpoint, headers=headers)
+        resp = requests.post(endpoint, headers=headers, timeout=20)
         LOGGER.info(f"Authorization resulted in status code {resp.status_code}.")
 
     @property
@@ -75,7 +75,7 @@ class Ghost:
                 "formats": "mobiledoc,html",
             }
             endpoint = f"{self.admin_api_url}/posts/{post_id}/"
-            resp = requests.get(endpoint, headers=headers, params=params)
+            resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch post `{post_id}`: {resp.json().get('errors')[0]['message']}")
                 return None
@@ -109,7 +109,7 @@ class Ghost:
                 "formats": "mobiledoc",
             }
             endpoint = f"{self.admin_api_url}/posts/slug/{post_slug}/"
-            resp = requests.get(endpoint, headers=headers, params=params)
+            resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch post `{post_slug}`: {resp.json().get('errors')[0]['message']}")
                 return None
@@ -135,7 +135,7 @@ class Ghost:
                 "Content-Type": "application/json",
             }
             endpoint = f"{self.admin_api_url}/pages"
-            resp = requests.get(endpoint, headers=headers)
+            resp = requests.get(endpoint, headers=headers, timeout=20)
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch Ghost pages: {resp.json().get('errors')[0]['message']}")
             post = resp.json()["pages"]
@@ -166,6 +166,7 @@ class Ghost:
                     "Authorization": self.session_token,
                     "Content-Type": "application/json",
                 },
+                timeout=20,
             )
             if resp.status_code != 200:
                 LOGGER.success(f"Successfully updated post `{slug}`")
@@ -187,7 +188,7 @@ class Ghost:
                 "Authorization": f"Ghost {self.session_token}",
                 "Content-Type": "application/json",
             }
-            resp = requests.get(f"{self.admin_api_url}/users", params=params, headers=headers)
+            resp = requests.get(f"{self.admin_api_url}/users", params=params, headers=headers, timeout=20)
             if resp.status_code == 200:
                 return resp.json().get("users")
         except HTTPError as e:
@@ -212,6 +213,7 @@ class Ghost:
                 f"{self.content_api_url}/authors/{author_id}/",
                 params=params,
                 headers=headers,
+                timeout=20,
             )
             if resp.status_code == 200:
                 return resp.json()["authors"]
@@ -233,6 +235,7 @@ class Ghost:
                 f"{self.admin_api_url}/members/",
                 json=body,
                 headers={"Authorization": self.session_token},
+                timeout=20,
             )
             response = f'Successfully created new Ghost member `{body.get("email")}: {resp.json()}.'
             LOGGER.success(response)
@@ -250,6 +253,7 @@ class Ghost:
         try:
             resp = requests.post(
                 self.netlify_build_url,
+                timeout=20,
             )
             LOGGER.info(f"Triggered Netlify build with status code {resp.status_code}.")
             return (
@@ -279,7 +283,7 @@ class Ghost:
         }
         endpoint = f"{self.admin_api_url}/db/"
         try:
-            resp = requests.get(endpoint, headers=headers)
+            resp = requests.get(endpoint, headers=headers, timeout=20)
             return resp.json()
         except HTTPError as e:
             LOGGER.error(f"HTTPError occurred while fetching JSON backup: {e}")
@@ -301,7 +305,7 @@ class Ghost:
                 "limit": "200",
             }
             endpoint = f"{self.admin_api_url}/posts"
-            resp = requests.get(endpoint, headers=headers, params=params)
+            resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
             if resp.status_code == 200:
                 posts = resp.json()["posts"]
                 return [post["url"].replace(".app", ".com") for post in posts if post["status"] == "published"]
