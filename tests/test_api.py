@@ -1,10 +1,13 @@
+"""Integration tests for API client."""
 import pprint
 
 from fastapi.testclient import TestClient
+from github import Github
 
 from app import api
 from config import settings
-from database.schemas import GhostMember, GhostSubscriber, NewDonation
+
+# from database.schemas import GhostMember, GhostSubscriber, NewDonation
 
 client = TestClient(api)
 pp = pprint.PrettyPrinter(indent=4)
@@ -17,8 +20,14 @@ def test_api_docs():
     assert response.headers.get("Content-Type") == "text/html; charset=utf-8"
 
 
-def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
-    """Create PR in `jamstack-api` repo & send SMS notification."""
+def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh: Github):
+    """
+    Create PR in `blog-webhook-api` repo & send SMS notification.
+
+    :param dict github_pr_owner: Github PR event payload for owner.
+    :param dict github_pr_user: Github PR event payload for user.
+    :param Github gh: Github API client.
+    """
     owner_response = client.post("/github/pr/", json=github_pr_owner)
     pr = owner_response.json()["pr"]
     repo = pr["trigger"]["repo"]
@@ -36,8 +45,13 @@ def test_github_pr(github_pr_owner: dict, github_pr_user: dict, gh):
     gh.get_repo(repo).get_pull(pr["id"]).edit(state="closed")
 
 
-def test_github_issue(github_issue_user, gh):
-    """Create issue in `jamstack-api` repo & send SMS notification."""
+def test_github_issue(github_issue_user: dict, gh: Github):
+    """
+    Create issue in `blog-webhook-api` repo & send SMS notification.
+
+    :param dict github_issue_user: Github issue event payload for user.
+    :param Github gh: Github API client.
+    """
     user_response = client.post("/github/issue/", json=github_issue_user)
     assert user_response.status_code == 200
     issue = user_response.json()["issue"]
@@ -54,16 +68,20 @@ def test_github_issue(github_issue_user, gh):
 
 
 def test_batch_update_metadata():
+    """Test updating metadata for all posts."""
     response = client.get("/posts/")
     assert response.status_code == 200
+    # TODO: Add `update` assertions, or remove this test.
 
 
 def assign_img_alt_attr():
+    """Assign `alt` attribute to all images in posts."""
     result = client.get("/posts/alt/")
     pp.pprint(result.json())
 
 
 def test_import_site_analytics():
+    """Fetch site analytics."""
     response = client.get("/analytics/")
     assert response.status_code == 200
     assert type(response.json()) == dict
@@ -92,5 +110,6 @@ def test_accept_donation(donation: NewDonation):
 
 
 def test_authors_bulk_update_metadata():
+    """Fetch all author info."""
     response = client.get("/authors/")
     assert response.status_code == 200

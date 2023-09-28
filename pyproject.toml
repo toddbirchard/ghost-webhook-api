@@ -48,8 +48,8 @@ pylint = "*"
 httpx = "*"
 databases = "*"
 aiomysql = "*"
-pydantic-settings = "^2.0.3"
-email-validator = "^2.0.0.post2"
+pydantic-settings = "*"
+email-validator = "*"
 
 [tool.poetry.scripts]
 run = "app:api"

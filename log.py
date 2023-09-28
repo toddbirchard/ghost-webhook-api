@@ -5,7 +5,7 @@ from sys import stdout
 
 from loguru import logger
 
-from config import BASE_DIR, settings
+from config import settings
 
 
 def json_formatter(record: dict) -> str:
@@ -72,6 +72,7 @@ def create_logger() -> logger:
         stdout,
         colorize=True,
         catch=True,
+        level="TRACE",
         format=log_formatter,
     )
     if settings.ENVIRONMENT == "production" and path.isdir("/var/log/api"):
@@ -79,7 +80,8 @@ def create_logger() -> logger:
         logger.add(
             "/var/log/api/info.json",
             format=json_formatter,
-            rotation="300 MB",
+            rotation="200 MB",
+            level="TRACE",
             compression="zip",
         )
         # Readable logs
@@ -87,18 +89,18 @@ def create_logger() -> logger:
             "/var/log/api/info.log",
             colorize=True,
             catch=True,
+            level="TRACE",
             format=log_formatter,
-            rotation="300 MB",
+            rotation="200 MB",
             compression="zip",
-            level="INFO",
         )
     else:
         logger.add(
-            f"{BASE_DIR}/logs/error.log",
+            f"/logs/error.log",
             colorize=True,
             catch=True,
             format=log_formatter,
-            rotation="300 MB",
+            rotation="200 MB",
             compression="zip",
             level="ERROR",
         )

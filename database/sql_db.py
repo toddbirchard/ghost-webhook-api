@@ -8,6 +8,8 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from log import LOGGER
 
+metadata_obj = MetaData()
+
 
 class Database:
     """Database client."""
@@ -23,7 +25,7 @@ class Database:
 
         :returns: Table
         """
-        return Table(table_name, MetaData(bind=self.db), autoload=True)
+        return Table(table_name, MetaData, autoload=True)
 
     def execute_queries(self, queries: dict) -> dict:
         """
@@ -67,8 +69,8 @@ class Database:
         :returns: Union[Result, str]
         """
         try:
-            query = open(sql_file, "r").read()
-            return self.db.execute(query)
+            with open(sql_file, "r", encoding="utf-8") as query:
+                return self.db.execute(query)
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while executing SQL `{sql_file}`: {e}")
             return f"Failed to execute SQL `{sql_file}`: {e}"
@@ -91,9 +93,11 @@ class Database:
                 self.db.execute(f"TRUNCATE TABLE {table_name}")
             table = self._table(table_name)
             return self.db.execute(table.insert(), rows)
+        except IntegrityError as e:
+            LOGGER.error(f"IntegrityError error while inserting records into table `{table_name}`: {e}")
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while inserting records into table `{table_name}`: {e}")
-        except IntegrityError as e:
+        except Exception as e:
             LOGGER.error(f"Unexpected error while inserting records into table `{table_name}`: {e}")
 
     def insert_dataframe(self, df: DataFrame, table_name: str, action="append") -> DataFrame:

@@ -1,3 +1,4 @@
+"""FastAPI Pydantic Schemas."""
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
@@ -5,6 +6,8 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class NewDonation(BaseModel):
+    """`BuyMeACoffee` donation."""
+
     # fmt: off
     name: str = Field(None, example="Fake Todd")
     email: str = Field(None, example="fake@example.com")
@@ -26,6 +29,8 @@ class NewDonation(BaseModel):
 
 
 class NewComment(BaseModel):
+    """User comment on a post."""
+
     # fmt: off
     post_id: str = Field(None, example="61304d8374047afda1c2168b")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
@@ -53,12 +58,16 @@ class NewComment(BaseModel):
 
 
 class UpvoteComment(BaseModel):
+    """User upvote on a comment."""
+
     comment_id: int = Field(None, example=1)
     user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
     vote: bool = Field(None, example=True)
 
 
 class Role(BaseModel):
+    """User role."""
+
     id: str = Field(None, example="5dc42c6b4b25bc0d13674448")
     name: str = Field(None, example="Administrator")
     description: str = Field(None, example="Administrators")
@@ -69,6 +78,8 @@ class Role(BaseModel):
 
 
 class Author(BaseModel):
+    """Author profile."""
+
     # fmt: off
     id: str = Field(None, example=1)
     name: str = Field(None, example="Todd Birchard")
@@ -92,6 +103,8 @@ class Author(BaseModel):
 
 
 class Tag(BaseModel):
+    """Post tag."""
+
     # fmt: off
     id: str = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
     name: str = Field(None, example="Python")
@@ -115,11 +128,15 @@ class Tag(BaseModel):
 
 
 class TagUpdate(BaseModel):
+    """Incoming tag update request."""
+
     current: Tag
     previous: Optional[Tag]
 
 
 class BasePost(BaseModel):
+    """Ghost post."""
+
     # fmt: off
     id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
     uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
@@ -163,15 +180,21 @@ class BasePost(BaseModel):
 
 
 class Post(BaseModel):
+    """Incoming post update request."""
+
     current: BasePost
     previous: Optional[BasePost]
 
 
 class FetchedPost(BaseModel):
+    """List of posts fetched from Ghost API."""
+
     posts: List[BasePost]
 
 
 class PostUpdate(BaseModel):
+    """Incoming post update request."""
+
     post: Post
 
     class Config:
@@ -347,6 +370,8 @@ class NetlifyUserEvent(BaseModel):
 
 
 class GhostMember(BaseModel):
+    """Ghost Member account."""
+
     # fmt: off
     id: str
     uuid: str
@@ -368,21 +393,29 @@ class NetlifyAccountCreationResponse(BaseModel):
 
 
 class NewsletterSubscriber(BaseModel):
+    """Ghost email subscriber (may not have account)."""
+
     name: Optional[str] = Field(None, example=None)
     email: str = Field(None, example="fake@example.com")
 
 
 class EmailSchema(BaseModel):
+    """Ghost outgoing email."""
+
     email: List[EmailStr]
     body: Dict[str, Any]
 
 
 class GhostSubscriber(BaseModel):
+    """Incoming request to update Ghost subscriber"""
+
     current: Optional[GhostMember]
     previous: Optional[GhostMember]
 
 
 class Subscription(BaseModel):
+    """Ghost email subscription details of a single user."""
+
     member: GhostSubscriber
 
     class Config:
@@ -407,6 +440,8 @@ class Subscription(BaseModel):
 
 
 class SubscriptionWelcomeEmail(BaseModel):
+    """Email sent to new Ghost subscribers."""
+
     from_email: str = Field(None, example="fake@example.com")
     to_email: str = Field(None, example="recipient@example.com")
     subject: str = Field(None, example="Welcome to Hackers & Slackers")
@@ -422,6 +457,8 @@ class SubscriptionWelcomeEmail(BaseModel):
 
 
 class SMS:
+    """Twilio SMS message notification."""
+
     phone_recipient: str
     phone_sender: str
     date_sent: str
@@ -437,6 +474,8 @@ class SMS:
 
 
 class GithubIssue:
+    """Newly created Github issue."""
+
     issue: Dict[str, Any]
 
     class Config:
@@ -456,11 +495,15 @@ class GithubIssue:
 
 
 class PostBulkUpdate(BaseModel):
+    """Request to bulk update Ghost posts."""
+
     inserted: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
     updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
 
 class AnalyticsResponse(BaseModel):
+    """Response to analytics request."""
+
     # fmt: off
     weekly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
     monthly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})

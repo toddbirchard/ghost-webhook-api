@@ -20,25 +20,22 @@ class Ghost:
         content_api_key: str,
         client_id: str,
         client_secret: str,
-        netlify_build_url: str,
     ):
         """
         Ghost Admin API client constructor.
 
         :param str admin_api_url: Admin URL of self-hosted Ghost API.
         :param int content_api_url: Content URL of self-hosted Ghost API.
-        :param str api_version: Netlify webhook to trigger full site rebuild.
+        :param str api_version: Version of Ghost API.
         :param str content_api_key: Content API key for self-hosted Ghost API.
         :param str client_id: Unique ID of Ghost admin client.
         :param str client_secret: Authentication secret of Ghost admin client.
-        :param str netlify_build_url: Netlify webhook to trigger full site rebuild.
         """
         self.admin_api_url = admin_api_url
         self.api_version = api_version
         self.client_id = client_id
         self.content_api_url = content_api_url
         self.secret = client_secret
-        self.netlify_build_url = netlify_build_url
         self.content_api_key = content_api_key
 
     def _https_session(self) -> None:
@@ -76,14 +73,12 @@ class Ghost:
             }
             endpoint = f"{self.admin_api_url}/posts/{post_id}/"
             resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
-            if resp.json().get("errors") is not None:
+            if resp.json().get("errors") is not None and resp.json().get("posts") is not None:
                 LOGGER.error(f"Failed to fetch post `{post_id}`: {resp.json().get('errors')[0]['message']}")
                 return None
-            elif resp.json().get("posts"):
-                post = resp.json()["posts"][0]
-                LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
-                return post
-            return None
+            post = resp.json()["posts"][0]
+            LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
+            return post
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching post `{post_id}`: {e}")
         except KeyError as e:
@@ -138,9 +133,8 @@ class Ghost:
             resp = requests.get(endpoint, headers=headers, timeout=20)
             if resp.json().get("errors") is not None:
                 LOGGER.error(f"Failed to fetch Ghost pages: {resp.json().get('errors')[0]['message']}")
-            post = resp.json()["pages"]
-            LOGGER.info(f"Fetched {len(post)} Ghost pages")
-            return post
+            LOGGER.info(f"Fetched {len(resp.json())} Ghost pages")
+            return resp.json().get("pages")
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching pages: {e}")
         except KeyError as e:
@@ -242,26 +236,6 @@ class Ghost:
             return response, resp.status_code
         except HTTPError as e:
             LOGGER.error(f"Failed to create Ghost member: {e.response.content}")
-            return e.response.content, e.response.status_code
-
-    def rebuild_netlify_site(self) -> Tuple[str, int]:
-        """
-        Trigger Netlify site rebuild.
-
-        :returns: Tuple[str, int]
-        """
-        try:
-            resp = requests.post(
-                self.netlify_build_url,
-                timeout=20,
-            )
-            LOGGER.info(f"Triggered Netlify build with status code {resp.status_code}.")
-            return (
-                f"Triggered Netlify build with status code {resp.status_code}.",
-                resp.status_code,
-            )
-        except HTTPError as e:
-            LOGGER.error(f"Failed to rebuild Netlify site: {e.response.content}")
             return e.response.content, e.response.status_code
 
     def get_json_backup(self) -> Optional[dict]:

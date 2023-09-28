@@ -1,4 +1,5 @@
 """FastAPI configuration."""
+from typing import List, Tuple
 import datetime
 from os import getenv, path
 from os.path import exists
@@ -8,7 +9,7 @@ from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import EmailStr
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Load variables from .env
 BASE_DIR = path.abspath(path.dirname(__file__))
@@ -23,6 +24,8 @@ class Settings(BaseSettings):
     description: str = "API to automate optimizations for blog sites."
     items_per_user: int = 50
     debug: bool = True
+    model_config = SettingsConfigDict(env_file=".env")
+
 
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")
@@ -40,7 +43,7 @@ class Settings(BaseSettings):
         "https://zapier.com/*",
         "*",
     ]
-    API_TAGS = (
+    API_TAGS: Tuple[List[dict]]  = (
         [
             {
                 "name": "posts",
@@ -72,11 +75,6 @@ class Settings(BaseSettings):
             },
         ],
     )
-
-    class Config:
-        """FastAPI configuration."""
-
-        env_file: str = ".env"
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")
@@ -116,7 +114,7 @@ class Settings(BaseSettings):
     GCP_BUCKET_FOLDER: list = [f'{dt.year}/{dt.strftime("%m")}']
 
     # Plausible Analytics
-    PLAUSIBLE_STATS_ENDPOINT = "https://plausible.io/api/v1/stats/breakdown"
+    PLAUSIBLE_STATS_ENDPOINT: str = "https://plausible.io/api/v1/stats/breakdown"
     PLAUSIBLE_API_TOKEN: str = getenv("PLAUSIBLE_API_TOKEN")
 
     # Ghost
@@ -130,7 +128,6 @@ class Settings(BaseSettings):
     GHOST_ADMIN_API_KEY: str = getenv("GHOST_ADMIN_API_KEY")
     GHOST_CONTENT_API_KEY: str = getenv("GHOST_CONTENT_API_KEY")
     GHOST_API_EXPORT_URL: str = f"{GHOST_BASE_URL}/admin/db/"
-    GHOST_NETLIFY_BUILD_HOOK: str = getenv("GHOST_NETLIFY_BUILD_HOOK")
 
     GHOST_ADMIN_USER_ID: str = "1"
 
@@ -144,13 +141,17 @@ class Settings(BaseSettings):
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
 
-    MAILGUN_CONF = ConnectionConfig(
+    '''MAILGUN_CONF = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
         MAIL_PORT=587,
         MAIL_SERVER=MAILGUN_EMAIL_SERVER,
         MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
-    )
+        MAIL_STARTTLS=True,
+        MAIL_SSL_TLS=False,
+        USE_CREDENTIALS = True,
+        VALIDATE_CERTS = True
+    )'''
 
     # Mixpanel
     MIXPANEL_API_TOKEN: str = getenv("MIXPANEL_API_TOKEN")
