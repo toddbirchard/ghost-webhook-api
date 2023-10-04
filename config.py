@@ -1,8 +1,8 @@
 """FastAPI configuration."""
-from typing import List, Tuple
 import datetime
 from os import getenv, path
 from os.path import exists
+from typing import List, Tuple
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
@@ -10,10 +10,6 @@ from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import EmailStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-# Load variables from .env
-BASE_DIR = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(BASE_DIR, ".env"))
 
 
 class Settings(BaseSettings):
@@ -24,8 +20,11 @@ class Settings(BaseSettings):
     description: str = "API to automate optimizations for blog sites."
     items_per_user: int = 50
     debug: bool = True
-    model_config = SettingsConfigDict(env_file=".env")
 
+    # Load variables from .env
+    BASE_DIR: str = path.abspath(path.dirname(__file__))
+    model_config = SettingsConfigDict(env_file=".env")
+    load_dotenv(path.join(BASE_DIR, ".env"))
 
     # General Config
     SECRET_KEY: str = getenv("SECRET_KEY")
@@ -33,7 +32,9 @@ class Settings(BaseSettings):
     dt: datetime.datetime = datetime.datetime.today()
     CORS_ORIGINS: list = [
         "http://hackersandslackers.com",
+        "http://hackersandslackers.app",
         "http://localhost",
+        "http://localhost*",
         "http://localhost:8080",
         "http://api.hackersandslackers.com",
         "https://api.hackersandslackers.com",
@@ -43,7 +44,9 @@ class Settings(BaseSettings):
         "https://zapier.com/*",
         "*",
     ]
-    API_TAGS: Tuple[List[dict]]  = (
+
+    # Application Tags
+    API_TAGS: Tuple[List[dict]] = (
         [
             {
                 "name": "posts",
@@ -95,13 +98,9 @@ class Settings(BaseSettings):
     GOOGLE_CREDENTIALS: str = getenv("GOOGLE_CREDENTIALS")
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials
-    if exists(f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"):
-        GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
-            f"{BASE_DIR}/{GOOGLE_CLOUD_JSON_FILEPATH}"
-        )
-    else:
-        GOOGLE_CLOUD_CREDENTIALS = GOOGLE_CREDENTIALS
+    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
+        GOOGLE_CLOUD_JSON_FILEPATH
+    )
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
@@ -141,7 +140,7 @@ class Settings(BaseSettings):
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
 
-    '''MAILGUN_CONF = ConnectionConfig(
+    """MAILGUN_CONF = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
         MAIL_PORT=587,
@@ -151,7 +150,7 @@ class Settings(BaseSettings):
         MAIL_SSL_TLS=False,
         USE_CREDENTIALS = True,
         VALIDATE_CERTS = True
-    )'''
+    )"""
 
     # Mixpanel
     MIXPANEL_API_TOKEN: str = getenv("MIXPANEL_API_TOKEN")

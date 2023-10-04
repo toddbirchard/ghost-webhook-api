@@ -96,7 +96,7 @@ def create_logger() -> logger:
         )
     else:
         logger.add(
-            f"/logs/error.log",
+            "./logs/error.log",
             colorize=True,
             catch=True,
             format=log_formatter,

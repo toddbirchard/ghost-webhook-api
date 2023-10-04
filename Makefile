@@ -19,13 +19,10 @@ export HELP
 
 .PHONY: run install deploy update format lint clean help
 
-
 all help:
 	@echo "$$HELP"
 
-
 env: $(VIRTUAL_ENV)
-
 
 $(VIRTUAL_ENV):
 	if [ ! -d $(VIRTUAL_ENV) ]; then \
@@ -33,21 +30,24 @@ $(VIRTUAL_ENV):
 		python3 -m venv $(VIRTUAL_ENV); \
 	fi
 
+.PHONY: run
+run: env
+	  $(LOCAL_PYTHON) -m uvicorn asgi:api --port 9300 --workers 4
 
 .PHONY: dev
 dev: env
-	$(LOCAL_PYTHON) -m uvicorn app:api --reload
-
-
-.PHONY: run
-run: env
-	  $(LOCAL_PYTHON) -m asgi
-
+	$(LOCAL_PYTHON) -m uvicorn asgi:api --reload --port 9300
 
 .PHONY: install
 install: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
-	LDFLAGS="-L$(/opt/homebrew/bin/brew --prefix openssl)/lib -L$(/opt/homebrew/bin/brew --prefix re2)/lib" CPPFLAGS="-I$(/opt/homebrew/bin/brew --prefix openssl)/include -I$(/opt/homebrew/bin/brew --prefix re2)/include" GRPC_BUILD_WITH_BORING_SSL_ASM="" GRPC_PYTHON_BUILD_SYSTEM_RE2=true GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true pip install grpcio && \
+	LDFLAGS="-L$(/opt/homebrew/bin/brew --prefix openssl)/lib -L$(/opt/homebrew/bin/brew --prefix re2)/lib" && \
+	CPPFLAGS="-I$(/opt/homebrew/bin/brew --prefix openssl)/include -I$(/opt/homebrew/bin/brew --prefix re2)/include" && \
+	GRPC_BUILD_WITH_BORING_SSL_ASM="" && \
+	GRPC_PYTHON_BUILD_SYSTEM_RE2=true && \
+	GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true && \
+	GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true && \
+	$(LOCAL_PYTHON) -m pip install grpcio && \
 	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
