@@ -1,15 +1,13 @@
 """FastAPI configuration."""
 import datetime
 from os import getenv, path
-from os.path import exists
-from typing import List, Tuple
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 from pydantic import EmailStr
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -23,7 +21,6 @@ class Settings(BaseSettings):
 
     # Load variables from .env
     BASE_DIR: str = path.abspath(path.dirname(__file__))
-    model_config = SettingsConfigDict(env_file=".env")
     load_dotenv(path.join(BASE_DIR, ".env"))
 
     # General Config
@@ -44,40 +41,6 @@ class Settings(BaseSettings):
         "https://zapier.com/*",
         "*",
     ]
-
-    # Application Tags
-    API_TAGS: Tuple[List[dict]] = (
-        [
-            {
-                "name": "posts",
-                "description": "Sanitation and optimization of post metadata.",
-            },
-            {
-                "name": "accounts",
-                "description": "User account signup and actions.",
-            },
-            {
-                "name": "authors",
-                "description": "Author management.",
-            },
-            {
-                "name": "newsletter",
-                "description": "Ghost newsletter subscriptions.",
-            },
-            {
-                "name": "analytics",
-                "description": "Migrate site traffic & search query analytics.",
-            },
-            {
-                "name": "images",
-                "description": "Image optimization for retina and mobile devices.",
-            },
-            {
-                "name": "github",
-                "description": "Github notifications for new issues/PRs.",
-            },
-        ],
-    )
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")

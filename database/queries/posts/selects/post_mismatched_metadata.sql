@@ -15,5 +15,10 @@ SELECT
 FROM
 	posts
 	LEFT JOIN posts_meta ON posts.id = posts_meta.post_id
-	WHERE posts.title != posts_meta.og_title
-    AND type = 'post';
+WHERE
+	posts.type = 'post'
+	AND (posts.title != posts_meta.og_title
+		OR posts.custom_excerpt != posts_meta.og_description
+		OR posts.custom_excerpt != posts_meta.twitter_description
+		OR posts.feature_image IS NOT NULL
+		OR (posts_meta.og_image IS NULL OR posts_meta.twitter_image IS NULL));

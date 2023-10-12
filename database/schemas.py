@@ -37,8 +37,8 @@ class NewComment(BaseModel):
     user_id: str = Field(None, example="677f9417-16ab-4d8e-9bed-1130da250c88")
     user_name: Optional[str] = Field(None, example="Todd Birchard")
     user_avatar: Optional[str] = Field(None, example="https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg")
-    user_email: str = Field(None, example="todd@hackersandslackers.com")
-    author_name: str = Field(None, example="Todd Birchard")
+    user_email: Optional[str] = Field(None, example="todd@hackersandslackers.com")
+    author_name: Optional[str] = Field(None, example="Todd Birchard")
     author_id: str = Field(None, example="1")
     body: Optional[str] = Field(None, example="These tutorials are awesome! 10/10")
     # fmt: on

@@ -33,7 +33,6 @@ def create_app() -> FastAPI:
         debug=True,
         docs_url="/",
         openapi_url="/api.json",
-        openapi_tags=settings.API_TAGS,
     )
 
     # Define Middleware
@@ -55,7 +54,9 @@ def create_app() -> FastAPI:
     api.include_router(images.router)
     api.include_router(tags.router)
     api.include_router(github.router)
-
     LOGGER.success("API successfully started.")
 
     return api
+
+
+api = create_app()

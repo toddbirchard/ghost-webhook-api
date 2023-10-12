@@ -67,7 +67,7 @@ def fetch_algolia_searches(time_period: str) -> List[Optional[dict]]:
             "direction": "desc",
             "startDate": get_start_date_range(time_period),
         }
-        resp = requests.get(settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params)
+        resp = requests.get(settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params, timeout=20)
         if resp.status_code != 200:
             raise HTTPException(
                 status_code=400,

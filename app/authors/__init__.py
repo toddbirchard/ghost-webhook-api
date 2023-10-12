@@ -1,5 +1,5 @@
 """Author management."""
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
 from clients import sms
@@ -25,6 +25,8 @@ async def authors_bulk_update_metadata() -> JSONResponse:
     """
     update_author_queries = collect_sql_queries("users")
     update_author_results = ghost_db.execute_queries(update_author_queries)
+    if update_author_results is None:
+        raise HTTPException(status_code=204, detail="Post update ignored as post was just updated.")
     LOGGER.success(f"Updated author metadata for {len(update_author_results)} authors.")
     return JSONResponse(
         content={"authors": update_author_results},

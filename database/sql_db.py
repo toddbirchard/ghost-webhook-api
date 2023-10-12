@@ -3,6 +3,7 @@ from typing import List, Optional, Union
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine
+from sqlalchemy.engine import CursorResult
 from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -15,7 +16,7 @@ class Database:
     """Database client."""
 
     def __init__(self, uri: str, db_name: str, args: dict):
-        self.db = db_name = create_engine(f"{uri}/{db_name}", connect_args=args, echo=False)
+        self.db = create_engine(f"{uri}/{db_name}", connect_args=args, echo=False)
 
     def _table(self, table_name: str) -> Table:
         """
@@ -37,26 +38,27 @@ class Database:
         """
         try:
             results = {}
-            for k, v in queries.items():
-                query_result = self.db.execute(v)
-                results[k] = f"{query_result.rowcount} rows affected."
-            return results
+            with self.db.begin() as conn:
+                for k, v in queries.items():
+                    query_result = conn.execute(v)
+                    results[k] = f"{query_result.rowcount} rows affected."
+                return results
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while executing queries `{','.join(queries.keys())}`: {e}")
         except Exception as e:
             LOGGER.error(f"Unexpected exception while executing queries `{','.join(queries.keys())}`: {e}")
 
-    def execute_query(self, query: str) -> Optional[Result]:
+    def execute_query(self, query: str) -> Optional[CursorResult]:
         """
         Execute single SQL query.
 
         :param str query: SQL query to run against database.
 
-        :returns: Optional[Result]
+        :returns: Optional[CursorResult]
         """
         try:
-            result = self.db.execute(query)
-            return result
+            with self.db.begin() as conn:
+                return conn.execute(query)
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
 
@@ -69,8 +71,9 @@ class Database:
         :returns: Union[Result, str]
         """
         try:
-            with open(sql_file, "r", encoding="utf-8") as query:
-                return self.db.execute(query)
+            with self.db.begin() as conn:
+                with open(sql_file, "r", encoding="utf-8") as query:
+                    return conn.execute(query)
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while executing SQL `{sql_file}`: {e}")
             return f"Failed to execute SQL `{sql_file}`: {e}"
