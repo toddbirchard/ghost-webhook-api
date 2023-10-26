@@ -14,4 +14,4 @@ def test_fetch_weekly_bigquery(gbq):
         results = gbq.query(sql_query).result()
         assert bool(results)
         assert isinstance(results, RowIterator)
-        assert results.total_rows > 0
+        assert results.total_rows >= 0

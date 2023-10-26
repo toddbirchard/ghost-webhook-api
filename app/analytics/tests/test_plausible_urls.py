@@ -14,7 +14,13 @@ def test_fetch_top_visited_urls():
 
 def test_enrich_url_with_post_data():
     """Test enriching Plausible URL with Ghost post data."""
-    page_result = {"page": "/flask-routes/", "visitors": 869}
+    page_result = {
+        "page": "/flask-routes/",
+        "pageviews": 2932,
+        "visitors": 869,
+        "visit_duration": 33,
+        "bounce_rate": 10,
+    }
     post_dict = enrich_url_with_post_data(page_result)
     assert post_dict["title"] is not None
     assert post_dict["slug"] is not None

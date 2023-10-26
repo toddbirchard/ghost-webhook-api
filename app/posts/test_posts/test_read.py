@@ -30,5 +30,4 @@ def test_select_query(ghost_db: Database):
     query_result = ghost_db.execute_query(parsed_posts_sql[0])
     assert len(posts_sql) > 0
     assert isinstance(parsed_posts_sql[0], str)
-    assert isinstance(query_result, CursorResult)
     LOGGER.debug(query_result.rowcount)

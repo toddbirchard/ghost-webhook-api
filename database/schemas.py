@@ -18,7 +18,7 @@ class NewDonation(BaseModel):
     # fmt: on
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "name": "Fake Todd",
             "email": "fake@example.com",
             "count": 1,
@@ -44,7 +44,7 @@ class NewComment(BaseModel):
     # fmt: on
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "post_id": "61304d8374047afda1c2168b",
             "post_slug": "python-virtualenv-virtualenvwrapper",
             "user_avatar": "https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg",
@@ -199,7 +199,7 @@ class PostUpdate(BaseModel):
 
     class Config:
         # fmt: off
-        schema_extra = {
+        json_schema_extra = {
             "current": {
                 "id": "61304d8374047afda1c218ff",
                 "uuid": "242bc890-4537-453b-a85c-690fabf4b6f2",
@@ -244,7 +244,7 @@ class PostUpdate(BaseModel):
                                 "updated_at": "2019-11-07T14:38:35.000Z",
                             }
                         ],
-                        "url": "https://hackersandslackers.app/author/matt/",
+                        "url": "https://hackersandslackers.com/author/matt/",
                     }
                 ],
                 "tags": [
@@ -291,7 +291,7 @@ class PostUpdate(BaseModel):
                             "updated_at": "2019-11-07T14:38:35.000Z",
                         }
                     ],
-                    "url": "https://hackersandslackers.app/author/matt/",
+                    "url": "https://hackersandslackers.com/author/matt/",
                 },
                 "primary_tag": {
                     "id": "61304d8174047afda1c2164b",
@@ -347,7 +347,7 @@ class NetlifyAccount(BaseModel):
     updated_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "id": "4e7c4f1b-e51a-4abb-8a58-105483724713",
             "aud": "",
             "email": "fake@example.com",
@@ -419,7 +419,7 @@ class Subscription(BaseModel):
     member: GhostSubscriber
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "member": {
                 "current": {
                     "id": "5fc703013448cb765efe3f",
@@ -448,7 +448,7 @@ class SubscriptionWelcomeEmail(BaseModel):
     template: str = Field(None, example="This is an email")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "from_email": "fake@example.com",
             "to_email": "recipient@example.com",
             "subject": "Welcome to Hackers & Slackers",
@@ -465,7 +465,7 @@ class SMS:
     message: str
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "phone_recipient": "5554201738",
             "phone_sender": "5551738420",
             "date_sent": "2020-12-02T02:59:13.642Z",
@@ -479,7 +479,7 @@ class GithubIssue:
     issue: Dict[str, Any]
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "issue": {
                 "time": "2020-12-02T02:59:13.642Z",
                 "status": "open",
