@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -12,20 +11,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
 
-      - name: 'auth'
-        uses: 'google-github-actions/auth@v1'
+      - name: "auth"
+        uses: "google-github-actions/auth@v1"
         with:
           credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
 
       - name: Lint with flake8
         run: |
+          python3 -m pip install flake8
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
@@ -70,4 +70,5 @@ jobs:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
           GH_API_KEY: ${{ secrets.GH_API_KEY }}
         run: |
+          python3 -m pip install pytest coverage
           pytest
