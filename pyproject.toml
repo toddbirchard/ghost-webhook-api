@@ -51,7 +51,7 @@ isort = "*"
 flake8 = "*"
 pylint = "*"
 pytest = "*"
-coverage3 = "*"
+coverage = "*"
 mypy = "*"
 
 [tool.poetry.scripts]
