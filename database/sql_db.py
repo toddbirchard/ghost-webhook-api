@@ -2,7 +2,7 @@
 from typing import List, Optional, Union
 
 from pandas import DataFrame
-from sqlalchemy import MetaData, Table, create_engine
+from sqlalchemy import MetaData, Table, create_engine, text
 from sqlalchemy.engine import CursorResult
 from sqlalchemy.engine.result import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -58,7 +58,7 @@ class Database:
         """
         try:
             with self.db.begin() as conn:
-                return conn.execute(query)
+                return conn.execute(text(query))
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
 

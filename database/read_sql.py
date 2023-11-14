@@ -45,6 +45,7 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
     :returns: List[str]
     """
     queries = []
+    print(f"sql_file_paths = {sql_file_paths}")
     for file in sql_file_paths:
         with open(file, "r", encoding="utf-8") as f:
             query = f.read()

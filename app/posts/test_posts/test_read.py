@@ -26,8 +26,11 @@ def test_select_query(ghost_db: Database):
     :param Database ghost_db: Ghost database client.
     """
     posts_sql = fetch_sql_files("posts/selects")
+    print(f"posts_sql = {posts_sql}")
     parsed_posts_sql = parse_sql_batch(posts_sql)
+    print(f"parsed_posts_sql = {parsed_posts_sql}")
     query_result = ghost_db.execute_query(parsed_posts_sql[0])
+    print(f"query_result = {query_result}")
     assert len(posts_sql) > 0
     assert isinstance(parsed_posts_sql[0], str)
     LOGGER.debug(query_result.rowcount)

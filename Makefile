@@ -29,6 +29,7 @@ $(VIRTUAL_ENV):
 		echo "Creating Python virtual env in \`${VIRTUAL_ENV}\`"; \
 		python3 -m venv $(VIRTUAL_ENV); \
 	fi
+	poetry config virtualenvs.path $(VIRTUAL_ENV)
 
 .PHONY: run
 run: env
@@ -40,6 +41,7 @@ dev: env
 
 .PHONY: install
 install: env
+	$(shell . $(VIRTUAL_ENV)/bin/activate)
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
 	LDFLAGS="-L$(/opt/homebrew/bin/brew --prefix openssl)/lib -L$(/opt/homebrew/bin/brew --prefix re2)/lib" && \
 	CPPFLAGS="-I$(/opt/homebrew/bin/brew --prefix openssl)/include -I$(/opt/homebrew/bin/brew --prefix re2)/include" && \
@@ -47,8 +49,7 @@ install: env
 	GRPC_PYTHON_BUILD_SYSTEM_RE2=true && \
 	GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true && \
 	GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true && \
-	$(LOCAL_PYTHON) -m pip install grpcio && \
-	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
+	poetry install --with dev --sync
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
 .PHONY: deploy
@@ -58,11 +59,11 @@ deploy:
 
 .PHONY: test
 test: env
-	$(LOCAL_PYTHON) -m \
-		coverage run -m pytest -vv \
-		--disable-pytest-warnings && \
-		coverage html --title='Coverage Report' -d .reports && \
-		open .reports/index.html
+	$(shell . $(VIRTUAL_ENV)/bin/activate) && \
+	coverage run -m pytest -vv \
+	--disable-pytest-warnings && \
+	coverage html --title='Coverage Report' -d .reports && \
+	open .reports/index.html
 
 .PHONY: update
 update: env

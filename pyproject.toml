@@ -18,6 +18,7 @@ pydantic = "*"
 pandas = "*"
 sqlalchemy = "*"
 pymysql = "*"
+grpcio = "*"
 requests = "*"
 google-auth = "*"
 google-cloud = "*"
@@ -38,27 +39,26 @@ PyGithub = "*"
 pyarrow = "*"
 fastapi-mail = "*"
 blinker = "*"
-pytest = "*"
-coverage = "*"
-mypy = "*"
-black = "*"
-isort = "*"
-flake8 = "*"
-pylint = "*"
 httpx = "*"
 databases = "*"
 aiomysql = "*"
 pydantic-settings = "*"
 email-validator = "*"
 
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+flake8 = "*"
+pylint = "*"
+pytest = "*"
+coverage3 = "*"
+mypy = "*"
+
 [tool.poetry.scripts]
 run = "app:api"
 
 [tool.poetry.urls]
 issues = "https://github.com/toddbirchard/blog-webhook-api/issues"
-
-[tool.poetry.group.dev.dependencies]
-black = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
