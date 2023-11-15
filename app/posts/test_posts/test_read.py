@@ -1,6 +1,4 @@
 """Test reading data directly form SQL databases."""
-from sqlalchemy.engine.cursor import CursorResult
-
 from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
 from database.sql_db import Database
 from log import LOGGER

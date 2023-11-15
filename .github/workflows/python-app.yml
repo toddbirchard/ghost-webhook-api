@@ -21,7 +21,7 @@ jobs:
       - name: "auth"
         uses: "google-github-actions/auth@v1"
         with:
-          credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Lint with flake8
         run: |

@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from database.models import Account, Donation
-from database.schemas import NetlifyAccount, NewDonation
+from database.schemas import NewDonation
 from log import LOGGER
 
 
@@ -67,36 +67,3 @@ def get_account(db: Session, account_email: str) -> Optional[Result]:
     :returns: Optional[Result]
     """
     return db.query(Account).filter(Account.email == account_email).first()
-
-
-def create_account(db: Session, account: NetlifyAccount) -> NetlifyAccount:
-    """
-    Create new account record sourced from Netlify.
-
-    :param Session db: ORM database session.
-    :param account: User comment schema object.
-    :param NetlifyAccount account: User account registered via Netlify.
-
-    :returns: NetlifyAccount
-    """
-    try:
-        new_account = Account(
-            id=account.id,
-            full_name=account.user_metadata.full_name,
-            avatar_url=account.user_metadata.avatar_url,
-            email=account.email,
-            role=account.role,
-            provider=account.app_metadata.provider,
-            created_at=datetime.now(),
-            updated_at=datetime.now(),
-        )
-        db.add(new_account)
-        db.commit()
-        LOGGER.success(f"New Netlify account created: `{account.user_metadata.full_name}`")
-        return account
-    except IntegrityError as e:
-        LOGGER.error(f"DB IntegrityError while creating Netlify user account: {e}")
-    except SQLAlchemyError as e:
-        LOGGER.error(f"SQLAlchemyError while creating Netlify user account: {e}")
-    except Exception as e:
-        LOGGER.error(f"Unexpected error while creating Netlify user account: {e}")

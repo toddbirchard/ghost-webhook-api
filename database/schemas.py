@@ -326,49 +326,6 @@ class PostUpdate(BaseModel):
         # fmt: on
 
 
-class NetlifyUserMetadata(BaseModel):
-    avatar_url: Optional[str] = Field(None, example="https://example.com/dsfdsf.jpg")
-    full_name: str = Field(None, example="Fake Name")
-    roles: Optional[List[str]] = Field(None, example=["admin"])
-
-
-class NetlifyUserAppMetadata(BaseModel):
-    provider: str = Field(None, example="google")
-
-
-class NetlifyAccount(BaseModel):
-    id: str = Field(None, example="4e7c4f1b-e51a-4abb-8a58-105483724713")
-    aud: str = Field(None, example="")
-    email: str = Field(None, example="fake@example.com")
-    role: Optional[str] = Field(None, example="Moderator")
-    app_metadata: NetlifyUserAppMetadata
-    user_metadata: NetlifyUserMetadata
-    created_at: str = Field(None, example="2021-03-06T13:26:56.991731Z")
-    updated_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
-
-    class Config:
-        json_schema_extra = {
-            "id": "4e7c4f1b-e51a-4abb-8a58-105483724713",
-            "aud": "",
-            "email": "fake@example.com",
-            "role": "Moderator",
-            "app_metadata": {"provider": "google"},
-            "user_metadata": {
-                "avatar_url": "https://example.com/dsfdsf.jpg",
-                "full_name": "Fake Name",
-                "roles": ["admin"],
-            },
-            "created_at": "2021-03-06T14:26:56.991731Z",
-            "updated_at": "2021-03-06T14:26:56.994492Z",
-        }
-
-
-class NetlifyUserEvent(BaseModel):
-    event: str = Field(None, example="signup")
-    instance_id: str = Field(None, example="725df7e1-94b8-4b0f-8d45-dc710d8d1a47")
-    user: NetlifyAccount
-
-
 class GhostMember(BaseModel):
     """Ghost Member account."""
 
@@ -385,11 +342,6 @@ class GhostMember(BaseModel):
     avatar_image: Optional[str] = Field(None, example="https://gravatar.com/avatar/a94833516733d846f03e678a8b4367e9?s=250&d=blank")
     comped: bool = Field(None, example=True)
     # fmt: on
-
-
-class NetlifyAccountCreationResponse(BaseModel):
-    succeeded: Union[NetlifyUserEvent, None]
-    failed: Union[NetlifyUserEvent, None]
 
 
 class NewsletterSubscriber(BaseModel):

@@ -59,8 +59,9 @@ deploy:
 
 .PHONY: test
 test: env
-	$(shell . $(VIRTUAL_ENV)/bin/activate) && \
-	coverage run -m pytest -vv \
+	$(shell . $(VIRTUAL_ENV)/bin/activate)
+	poetry config virtualenvs.path $(VIRTUAL_ENV)
+	$(LOCAL_PYTHON) -m coverage run -m pytest -vv \
 	--disable-pytest-warnings && \
 	coverage html --title='Coverage Report' -d .reports && \
 	open .reports/index.html

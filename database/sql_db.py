@@ -62,18 +62,18 @@ class Database:
         except SQLAlchemyError as e:
             LOGGER.error(f"Failed to execute SQL query {query}: {e}")
 
-    def execute_query_from_file(self, sql_file: str) -> Union[Result, str]:
+    def execute_query_from_file(self, sql_file: str) -> Optional[CursorResult]:
         """
         Execute single SQL query.
 
         :param str sql_file: Filepath of SQL query to run.
 
-        :returns: Union[Result, str]
+        :returns: Optional[CursorResult]
         """
         try:
             with self.db.begin() as conn:
                 with open(sql_file, "r", encoding="utf-8") as query:
-                    return conn.execute(query)
+                    return conn.execute(text(query))
         except SQLAlchemyError as e:
             LOGGER.error(f"SQLAlchemyError while executing SQL `{sql_file}`: {e}")
             return f"Failed to execute SQL `{sql_file}`: {e}"
