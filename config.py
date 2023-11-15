@@ -103,7 +103,7 @@ class Settings(BaseSettings):
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
 
-    """MAILGUN_CONF = ConnectionConfig(
+    MAILGUN_CONF: ConnectionConfig = ConnectionConfig(
         MAIL_USERNAME="api",
         MAIL_PASSWORD=MAILGUN_PASSWORD,
         MAIL_PORT=587,
@@ -113,7 +113,7 @@ class Settings(BaseSettings):
         MAIL_SSL_TLS=False,
         USE_CREDENTIALS = True,
         VALIDATE_CERTS = True
-    )"""
+    )
 
     # Mixpanel
     MIXPANEL_API_TOKEN: str = getenv("MIXPANEL_API_TOKEN")
