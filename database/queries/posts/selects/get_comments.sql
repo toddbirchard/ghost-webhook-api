@@ -9,6 +9,6 @@ SELECT
 FROM
 	comments
 WHERE
-	status = 'published'
+	status = 'created_at'
 ORDER BY
 	edited_at DESC;

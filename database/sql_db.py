@@ -1,5 +1,5 @@
 """Database client."""
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pandas import DataFrame
 from sqlalchemy import MetaData, Table, create_engine, text

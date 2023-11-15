@@ -59,17 +59,16 @@ deploy:
 
 .PHONY: test
 test: env
-	$(shell . $(VIRTUAL_ENV)/bin/activate)
 	poetry config virtualenvs.path $(VIRTUAL_ENV)
 	$(LOCAL_PYTHON) -m coverage run -m pytest -vv \
-	--disable-pytest-warnings && \
-	coverage html --title='Coverage Report' -d .reports && \
-	open .reports/index.html
+		--disable-pytest-warnings
+	$(LOCAL_PYTHON) -m coverage html --title='Coverage Report' -d .reports && \
+		open .reports/index.html
 
 .PHONY: update
 update: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
-	poetry update && \
+	poetry update --with dev && \
 	poetry export -f requirements.txt --output requirements.txt --without-hashes && \
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
