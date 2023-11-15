@@ -4,6 +4,6 @@ SELECT
 FROM
 	posts
 WHERE
-	mobiledoc NOT LIKE '%%alt%%'
-	AND mobiledoc LIKE '%%["image"%%'
+	mobiledoc LIKE '%["image"%'
+	AND mobiledoc NOT LIKE '%"alt":"%'
 	AND status = 'published';

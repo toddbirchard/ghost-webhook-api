@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.donations.parse import parse_donation_json
-from clients import ghost
 from database.crud import create_donation, get_donation
 from database.models import Donation
 from database.orm import get_db
@@ -33,10 +32,7 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) 
             status_code=400,
             detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists; skipping.",
         )
-    new_donation = create_donation(db, donation)
-    if new_donation:
-        ghost.rebuild_netlify_site()
-    return donation
+    return create_donation(db, donation)
 
 
 @router.delete(
@@ -60,10 +56,7 @@ async def delete_donation(donation: NewDonation, db: Session = Depends(get_db)) 
             status_code=400,
             detail=f"Donation `{donation.coffee_id}` from `{donation.email}` already exists; skipping.",
         )
-    new_donation = create_donation(db, donation)
-    if new_donation:
-        ghost.rebuild_netlify_site()
-    return donation
+    return create_donation(db, donation)
 
 
 @router.get(

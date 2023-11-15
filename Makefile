@@ -19,67 +19,63 @@ export HELP
 
 .PHONY: run install deploy update format lint clean help
 
-
 all help:
 	@echo "$$HELP"
 
-
 env: $(VIRTUAL_ENV)
-
 
 $(VIRTUAL_ENV):
 	if [ ! -d $(VIRTUAL_ENV) ]; then \
 		echo "Creating Python virtual env in \`${VIRTUAL_ENV}\`"; \
 		python3 -m venv $(VIRTUAL_ENV); \
 	fi
-
-
-.PHONY: dev
-dev: env
-	$(LOCAL_PYTHON) -m uvicorn app:api --reload
-
+	poetry config virtualenvs.path $(VIRTUAL_ENV)
 
 .PHONY: run
 run: env
-	  $(LOCAL_PYTHON) -m asgi
+	  $(LOCAL_PYTHON) -m uvicorn asgi:api --port 9300 --workers 4
 
+.PHONY: dev
+dev: env
+	$(LOCAL_PYTHON) -m uvicorn asgi:api --reload --port 9300
 
 .PHONY: install
 install: env
+	$(shell . $(VIRTUAL_ENV)/bin/activate)
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
-	LDFLAGS="-L$(/opt/homebrew/bin/brew --prefix openssl)/lib -L$(/opt/homebrew/bin/brew --prefix re2)/lib" CPPFLAGS="-I$(/opt/homebrew/bin/brew --prefix openssl)/include -I$(/opt/homebrew/bin/brew --prefix re2)/include" GRPC_BUILD_WITH_BORING_SSL_ASM="" GRPC_PYTHON_BUILD_SYSTEM_RE2=true GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true pip install grpcio && \
-	$(LOCAL_PYTHON) -m pip install -r requirements.txt && \
+	LDFLAGS="-L$(/opt/homebrew/bin/brew --prefix openssl)/lib -L$(/opt/homebrew/bin/brew --prefix re2)/lib" && \
+	CPPFLAGS="-I$(/opt/homebrew/bin/brew --prefix openssl)/include -I$(/opt/homebrew/bin/brew --prefix re2)/include" && \
+	GRPC_BUILD_WITH_BORING_SSL_ASM="" && \
+	GRPC_PYTHON_BUILD_SYSTEM_RE2=true && \
+	GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true && \
+	GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true && \
+	poetry install --with dev --sync
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
-
 
 .PHONY: deploy
 deploy:
-	make install \
+	make install && \
 	make run
-
 
 .PHONY: test
 test: env
-	$(LOCAL_PYTHON) -m \
-		coverage run -m pytest -vv \
-		--disable-pytest-warnings && \
-		coverage html --title='Coverage Report' -d .reports && \
+	poetry config virtualenvs.path $(VIRTUAL_ENV)
+	$(LOCAL_PYTHON) -m coverage run -m pytest -vv \
+		--disable-pytest-warnings
+	$(LOCAL_PYTHON) -m coverage html --title='Coverage Report' -d .reports && \
 		open .reports/index.html
-
 
 .PHONY: update
 update: env
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
-	poetry update && \
+	poetry update --with dev && \
 	poetry export -f requirements.txt --output requirements.txt --without-hashes && \
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
-
 .PHONY: format
 format: env
-	$(LOCAL_PYTHON) -m isort --multi-line=3 .
+	$(LOCAL_PYTHON) -m isort --multi-line=3 . && \
 	$(LOCAL_PYTHON) -m black .
-
 
 .PHONY: lint
 lint: env
@@ -89,15 +85,14 @@ lint: env
 			--show-source \
 			--statistics
 
-
 .PHONY: clean
 clean:
 	find . -name 'poetry.lock' -delete && \
 	find . -name '.coverage' -delete && \
 	find . -wholename '**/*.pyc' -delete && \
 	find . -type d -wholename '__pycache__' -exec rm -rf {} + && \
-	find . -type d -wholename '.venv' -exec rm -rf {} + && \
+	find . -type d -wholename './.venv' -exec rm -rf {} + && \
 	find . -type d -wholename '.pytest_cache' -exec rm -rf {} + && \
 	find . -type d -wholename '**/.pytest_cache' -exec rm -rf {} + && \
-	find . -type d -wholename './logs/*' -exec rm -rf {} + && \
+	find . -type d -wholename './logs/*.log' -exec rm -rf {} + && \
 	find . -type d -wholename './.reports/*' -exec rm -rf {} +

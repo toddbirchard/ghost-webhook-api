@@ -1,79 +1,74 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
 name: Python application
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install flake8 pytest-flask mock
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
-      with:
-        credentials_json: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
-        SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
-        SQLALCHEMY_DATABASE_PEM: ${{ secrets.SQLALCHEMY_DATABASE_PEM }}
-        SQLALCHEMY_GHOST_DATABASE_NAME: ${{ secrets.SQLALCHEMY_GHOST_DATABASE_NAME }}
-        SQLALCHEMY_FEATURES_DATABASE_NAME: ${{ secrets.SQLALCHEMY_FEATURES_DATABASE_NAME }}
-        ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-        ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
-        GOOGLE_CLOUD_JSON_KEY: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
-        GOOGLE_CLOUD_PROJECT_NAME: ${{ secrets.GOOGLE_CLOUD_PROJECT_NAME }}
-        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        GCP_BIGQUERY_TABLE: ${{ secrets.GCP_BIGQUERY_TABLE }}
-        GCP_BIGQUERY_DATASET: ${{ secrets.GCP_BIGQUERY_DATASET }}
-        GCP_BUCKET_URL: ${{ secrets.GCP_BUCKET_URL }}
-        GCP_BUCKET_NAME: ${{ secrets.GCP_BUCKET_NAME }}
-        GHOST_BASE_URL: ${{ secrets.GHOST_BASE_URL }}
-        GHOST_ADMIN_BASE_URL: ${{ secrets.GHOST_ADMIN_BASE_URL }}
-        GHOST_CLIENT_ID: ${{ secrets.GHOST_CLIENT_ID }}
-        GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
-        GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
-        GHOST_API_USERNAME: ${{ secrets.GHOST_API_USERNAME }}
-        GHOST_API_PASSWORD: ${{ secrets.GHOST_API_PASSWORD }}
-        GHOST_NETLIFY_BUILD_HOOK: ${{ secrets.GHOST_NETLIFY_BUILD_HOOK }}
-        MAILGUN_EMAIL_SERVER: ${{ secrets.MAILGUN_EMAIL_SERVER }}
-        MAILGUN_NEWSLETTER_TEMPLATE: ${{ secrets.MAILGUN_NEWSLETTER_TEMPLATE }}
-        MAILGUN_SENDER_API_KEY: ${{ secrets.MAILGUN_SENDER_API_KEY }}
-        MAILGUN_FROM_SENDER: ${{ secrets.MAILGUN_FROM_SENDER }}
-        MAILGUN_PERSONAL_EMAIL: ${{ secrets.MAILGUN_PERSONAL_EMAIL }}
-        MAILGUN_PASSWORD: ${{ secrets.MAILGUN_PASSWORD }}
-        MIXPANEL_API_TOKEN: ${{ secrets.MIXPANEL_API_TOKEN }}
-        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-        TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_SENDER_PHONE }}
-        TWILIO_RECIPIENT_PHONE: ${{ secrets.TWILIO_RECIPIENT_PHONE }}
-        GH_USERNAME: ${{ secrets.GH_USERNAME }}
-        GH_API_KEY: ${{ secrets.GH_API_KEY }}
-      run: |
-        pytest
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: "auth"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Lint with flake8
+        run: |
+          python3 -m pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Test with pytest
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+          SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+          SQLALCHEMY_DATABASE_PEM: ${{ secrets.SQLALCHEMY_DATABASE_PEM }}
+          SQLALCHEMY_GHOST_DATABASE_NAME: ${{ secrets.SQLALCHEMY_GHOST_DATABASE_NAME }}
+          SQLALCHEMY_FEATURES_DATABASE_NAME: ${{ secrets.SQLALCHEMY_FEATURES_DATABASE_NAME }}
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+          GOOGLE_CLOUD_JSON_KEY: ${{ secrets.GOOGLE_CLOUD_JSON_KEY }}
+          GOOGLE_CLOUD_PROJECT_NAME: ${{ secrets.GOOGLE_CLOUD_PROJECT_NAME }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_BIGQUERY_TABLE: ${{ secrets.GCP_BIGQUERY_TABLE }}
+          GCP_BIGQUERY_DATASET: ${{ secrets.GCP_BIGQUERY_DATASET }}
+          GCP_BUCKET_URL: ${{ secrets.GCP_BUCKET_URL }}
+          GCP_BUCKET_NAME: ${{ secrets.GCP_BUCKET_NAME }}
+          GHOST_BASE_URL: ${{ secrets.GHOST_BASE_URL }}
+          GHOST_ADMIN_BASE_URL: ${{ secrets.GHOST_ADMIN_BASE_URL }}
+          GHOST_CLIENT_ID: ${{ secrets.GHOST_CLIENT_ID }}
+          GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
+          GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
+          GHOST_API_USERNAME: ${{ secrets.GHOST_API_USERNAME }}
+          GHOST_API_PASSWORD: ${{ secrets.GHOST_API_PASSWORD }}
+          GHOST_NETLIFY_BUILD_HOOK: ${{ secrets.GHOST_NETLIFY_BUILD_HOOK }}
+          MAILGUN_EMAIL_SERVER: ${{ secrets.MAILGUN_EMAIL_SERVER }}
+          MAILGUN_NEWSLETTER_TEMPLATE: ${{ secrets.MAILGUN_NEWSLETTER_TEMPLATE }}
+          MAILGUN_SENDER_API_KEY: ${{ secrets.MAILGUN_SENDER_API_KEY }}
+          MAILGUN_FROM_SENDER: ${{ secrets.MAILGUN_FROM_SENDER }}
+          MAILGUN_PERSONAL_EMAIL: ${{ secrets.MAILGUN_PERSONAL_EMAIL }}
+          MAILGUN_PASSWORD: ${{ secrets.MAILGUN_PASSWORD }}
+          MIXPANEL_API_TOKEN: ${{ secrets.MIXPANEL_API_TOKEN }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_SENDER_PHONE }}
+          TWILIO_RECIPIENT_PHONE: ${{ secrets.TWILIO_RECIPIENT_PHONE }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_API_KEY: ${{ secrets.GH_API_KEY }}
+        run: |
+          python3 -m pip install pytest coverage
+          pytest

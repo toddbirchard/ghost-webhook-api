@@ -10,23 +10,6 @@ from log import LOGGER
 router = APIRouter(prefix="/tags", tags=["tags"])
 
 
-@router.get(
-    "/",
-    summary="Optimize metadata for tag pages.",
-    description="Performs multiple actions to optimize tag SEO.",
-)
-async def update_tags_metadata() -> JSONResponse:
-    """
-    Enrich all metadata for tag pages.
-
-    :returns: JSONResponse
-    """
-    tag_update_queries = collect_sql_queries("tags")
-    update_results = ghost_db.execute_queries(tag_update_queries)
-    LOGGER.success(f"Updated tags metadata: {update_results}")
-    return JSONResponse(update_results, status_code=200)
-
-
 @router.post(
     "/",
     summary="Optimize tag metadata.",

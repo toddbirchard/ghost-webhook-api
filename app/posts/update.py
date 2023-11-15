@@ -1,6 +1,8 @@
 """Methods for updating Ghost post content or metadata."""
 from typing import List, Optional, Tuple
 
+from fastapi import HTTPException
+
 from clients import ghost
 from log import LOGGER
 
@@ -27,43 +29,39 @@ def update_mobiledoc(post_id: str, mobiledoc: str) -> Tuple[str, int]:
     return ghost.update_post(ghost_post["id"], body, ghost_post["slug"])
 
 
-def update_metadata(post_dicts: List[dict]) -> List[Optional[dict]]:
+def bulk_update_post_metadata(post_dicts: List[Optional[dict]]) -> List[Optional[dict]]:
     """
-    Update Ghost posts with bad or missing metadata.
+    Update Ghost posts with bad or missing metadata (if applicable).
 
-    :param List[dict] post_dicts: Ghost posts as list of dictionaries.
+    :param List[Optional[dict]] post_dicts: Ghost posts as list of dictionaries.
 
     :returns: List[Optional[dict]]
     """
-    updated_posts = []
-    for post_dict in post_dicts:
-        post = ghost.get_post(post_dict["id"])
-        body = {
-            "posts": [
-                {
-                    "meta_title": post["title"],
-                    "og_title": post["title"],
-                    "twitter_title": post["title"],
-                    "meta_description": post["custom_excerpt"],
-                    "twitter_description": post["custom_excerpt"],
-                    "og_description": post["custom_excerpt"],
-                    "updated_at": post["updated_at"],
+    try:
+        if bool(post_dicts):
+            updated_posts = []
+            for post_dict in post_dicts:
+                post = ghost.get_post(post_dict["id"])
+                body = {
+                    "posts": [
+                        {
+                            "meta_title": post["title"],
+                            "og_title": post["title"],
+                            "twitter_title": post["title"],
+                            "meta_description": post["custom_excerpt"],
+                            "twitter_description": post["custom_excerpt"],
+                            "og_description": post["custom_excerpt"],
+                            "updated_at": post["updated_at"],
+                        }
+                    ]
                 }
-            ]
-        }
-        code = ghost.update_post(post_dict["id"], body, post["slug"])
-        if code == 200:
-            updated_posts.append(
-                {
-                    "meta_title": post["title"],
-                    "og_title": post["title"],
-                    "twitter_title": post["title"],
-                    "meta_description": post["custom_excerpt"],
-                    "twitter_description": post["custom_excerpt"],
-                    "og_description": post["custom_excerpt"],
-                }
-            )
-    return updated_posts
+                post = ghost.update_post(post_dict["id"], body, post["slug"])
+                if post:
+                    updated_posts.append(post)
+            return updated_posts
+        raise HTTPException(status_code=422, detail="No posts found to update metadata.")
+    except Exception as e:
+        LOGGER.error(f"Error updating metadata: {e}")
 
 
 def update_html_ssl_urls(html: str, body: dict, slug: str) -> dict:

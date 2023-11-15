@@ -1,9 +1,10 @@
 """Read analytics from local SQL files."""
 from os import listdir
 from os.path import isfile, join
-from typing import List
+from typing import List, Optional
 
-from config import BASE_DIR
+from config import settings
+from log import LOGGER
 
 
 def collect_sql_queries(subdirectory: str) -> dict:
@@ -21,18 +22,18 @@ def collect_sql_queries(subdirectory: str) -> dict:
     return query_dict
 
 
-def fetch_sql_files(subdirectory: str) -> List[str]:
+def fetch_sql_files(subdirectory: str) -> List[Optional[str]]:
     """
-    Fetch all SQL query files in folder.
+    Fetch all `.sql` files in local folder.
 
     :param str subdirectory: Subdirectory containing SQL files to fetch.
 
-    :returns: List[str]
+    :returns: List[Optional[str]]
     """
-    folder = f"{BASE_DIR}/database/queries/{subdirectory}"
+    folder = f"{settings.BASE_DIR}/database/queries/{subdirectory}"
     directory = listdir(folder)
-    files = [f"{folder}/{f}" for f in directory if isfile(join(folder, f)) if ".sql" in f]
-    return files
+    LOGGER.info(f"Fetching SQL files from {subdirectory}")
+    return [f"{folder}/{f}" for f in directory if isfile(join(folder, f)) if ".sql" in f]
 
 
 def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
@@ -44,9 +45,9 @@ def parse_sql_batch(sql_file_paths: List[str]) -> List[str]:
     :returns: List[str]
     """
     queries = []
+    print(f"sql_file_paths = {sql_file_paths}")
     for file in sql_file_paths:
-        sql_file = open(file, "r")
-        query = sql_file.read()
-        queries.append(query)
-        sql_file.close()
+        with open(file, "r", encoding="utf-8") as f:
+            query = f.read()
+            queries.append(query)
     return queries

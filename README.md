@@ -1,11 +1,11 @@
 # Blog Webhook API
 
 ![Python](https://img.shields.io/badge/Python-^3.9-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
-![FastAPI](https://img.shields.io/badge/FastAPI-^v0.87.0-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![FastAPI](https://img.shields.io/badge/FastAPI-^v0.89.1-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Databases](https://img.shields.io/badge/Databases-^0.7.0-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
-![PyDantic](https://img.shields.io/badge/Pydantic-^v1.10.4-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![PyDantic](https://img.shields.io/badge/Pydantic-^v1.10.6-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Google Cloud](https://img.shields.io/badge/Google--Cloud-^v0.34.0-lightgrey.svg?longCache=true&style=flat-square&logo=googlecloud&logoColor=white&colorB=5e81ac&colorA=4c566a)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-^1.4.45-red.svg?longCache=true&style=flat-square&logo=scala&logoColor=white&colorA=4c566a&colorB=bf616a)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-^2.0.21-red.svg?longCache=true&style=flat-square&logo=scala&logoColor=white&colorA=4c566a&colorB=bf616a)
 ![Ghost](https://img.shields.io/badge/Ghost-^v5.0.0-lightgrey.svg?longCache=true&style=flat-square&logo=ghost&logoColor=white&colorB=656c82&colorA=4c566a)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/google/skia.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=a3be8c)
 [![GitHub Issues](https://img.shields.io/github/issues/toddbirchard/blog-webhook-api.svg?style=flat-square&colorA=4c566a&logo=GitHub&colorB=ebcb8b)](https://github.com/toddbirchard/blog-webhook-api/issues)

@@ -81,7 +81,7 @@ async def batch_update_metadata() -> JSONResponse:
     """
     posts_metadata_updated, posts_metadata_added = optimize_posts_metadata()
     return JSONResponse(
-        content=f"Inserted {posts_metadata_added}; Updated{posts_metadata_updated}",
+        content=f"Inserted {posts_metadata_added}; Updated {posts_metadata_updated}",
         status_code=200,
     )
 

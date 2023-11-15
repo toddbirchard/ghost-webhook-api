@@ -1,8 +1,8 @@
 """Execute SQL to ensure posts have properly optimized metadata."""
 from typing import Tuple
 
-from app.posts.update import update_metadata
-from config import BASE_DIR
+from app.posts.update import bulk_update_post_metadata
+from config import settings
 from database import ghost_db
 from database.read_sql import collect_sql_queries
 from log import LOGGER
@@ -42,9 +42,9 @@ def insert_posts_metadata() -> int:
     :returns: int
     """
     insert_posts = ghost_db.execute_query_from_file(
-        f"{BASE_DIR}/database/queries/posts/selects/missing_all_metadata.sql",
+        f"{settings.BASE_DIR}/database/queries/posts/selects/missing_all_metadata.sql",
     )
-    insert_results = update_metadata(insert_posts)
+    insert_results = bulk_update_post_metadata(insert_posts)
     if insert_results:
         LOGGER.success(f"Inserted metadata for {len(insert_results)} posts.")
         return insert_results

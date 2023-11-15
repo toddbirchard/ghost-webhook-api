@@ -1,3 +1,4 @@
+"""FastAPI Pydantic Schemas."""
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
@@ -5,6 +6,8 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class NewDonation(BaseModel):
+    """`BuyMeACoffee` donation."""
+
     # fmt: off
     name: str = Field(None, example="Fake Todd")
     email: str = Field(None, example="fake@example.com")
@@ -15,7 +18,7 @@ class NewDonation(BaseModel):
     # fmt: on
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "name": "Fake Todd",
             "email": "fake@example.com",
             "count": 1,
@@ -26,20 +29,22 @@ class NewDonation(BaseModel):
 
 
 class NewComment(BaseModel):
+    """User comment on a post."""
+
     # fmt: off
     post_id: str = Field(None, example="61304d8374047afda1c2168b")
     post_slug: str = Field(None, example="python-virtualenv-virtualenvwrapper")
     user_id: str = Field(None, example="677f9417-16ab-4d8e-9bed-1130da250c88")
     user_name: Optional[str] = Field(None, example="Todd Birchard")
     user_avatar: Optional[str] = Field(None, example="https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg")
-    user_email: str = Field(None, example="todd@hackersandslackers.com")
-    author_name: str = Field(None, example="Todd Birchard")
+    user_email: Optional[str] = Field(None, example="todd@hackersandslackers.com")
+    author_name: Optional[str] = Field(None, example="Todd Birchard")
     author_id: str = Field(None, example="1")
     body: Optional[str] = Field(None, example="These tutorials are awesome! 10/10")
     # fmt: on
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "post_id": "61304d8374047afda1c2168b",
             "post_slug": "python-virtualenv-virtualenvwrapper",
             "user_avatar": "https://hackersandslackers-cdn.storage.googleapis.com/2021/09/avimoji.jpg",
@@ -53,12 +58,16 @@ class NewComment(BaseModel):
 
 
 class UpvoteComment(BaseModel):
+    """User upvote on a comment."""
+
     comment_id: int = Field(None, example=1)
     user_id: str = Field(None, example="8c06d6d7-2b02-4f4f-b8df-2ca5d16c0385")
     vote: bool = Field(None, example=True)
 
 
 class Role(BaseModel):
+    """User role."""
+
     id: str = Field(None, example="5dc42c6b4b25bc0d13674448")
     name: str = Field(None, example="Administrator")
     description: str = Field(None, example="Administrators")
@@ -69,6 +78,8 @@ class Role(BaseModel):
 
 
 class Author(BaseModel):
+    """Author profile."""
+
     # fmt: off
     id: str = Field(None, example=1)
     name: str = Field(None, example="Todd Birchard")
@@ -92,6 +103,8 @@ class Author(BaseModel):
 
 
 class Tag(BaseModel):
+    """Post tag."""
+
     # fmt: off
     id: str = Field(None, example="5dc42cb712c9ce0d63f5bf4f")
     name: str = Field(None, example="Python")
@@ -115,11 +128,15 @@ class Tag(BaseModel):
 
 
 class TagUpdate(BaseModel):
+    """Incoming tag update request."""
+
     current: Tag
     previous: Optional[Tag]
 
 
 class BasePost(BaseModel):
+    """Ghost post."""
+
     # fmt: off
     id: str = Field(None, example="5dc42cb812c9ce0d63f5bf8e")
     uuid: str = Field(None, example="84d9b616-db30-44f3-9ef3-cfc035ae71f9")
@@ -163,20 +180,26 @@ class BasePost(BaseModel):
 
 
 class Post(BaseModel):
+    """Incoming post update request."""
+
     current: BasePost
     previous: Optional[BasePost]
 
 
 class FetchedPost(BaseModel):
+    """List of posts fetched from Ghost API."""
+
     posts: List[BasePost]
 
 
 class PostUpdate(BaseModel):
+    """Incoming post update request."""
+
     post: Post
 
     class Config:
         # fmt: off
-        schema_extra = {
+        json_schema_extra = {
             "current": {
                 "id": "61304d8374047afda1c218ff",
                 "uuid": "242bc890-4537-453b-a85c-690fabf4b6f2",
@@ -221,7 +244,7 @@ class PostUpdate(BaseModel):
                                 "updated_at": "2019-11-07T14:38:35.000Z",
                             }
                         ],
-                        "url": "https://hackersandslackers.app/author/matt/",
+                        "url": "https://hackersandslackers.com/author/matt/",
                     }
                 ],
                 "tags": [
@@ -268,7 +291,7 @@ class PostUpdate(BaseModel):
                             "updated_at": "2019-11-07T14:38:35.000Z",
                         }
                     ],
-                    "url": "https://hackersandslackers.app/author/matt/",
+                    "url": "https://hackersandslackers.com/author/matt/",
                 },
                 "primary_tag": {
                     "id": "61304d8174047afda1c2164b",
@@ -303,50 +326,9 @@ class PostUpdate(BaseModel):
         # fmt: on
 
 
-class NetlifyUserMetadata(BaseModel):
-    avatar_url: Optional[str] = Field(None, example="https://example.com/dsfdsf.jpg")
-    full_name: str = Field(None, example="Fake Name")
-    roles: Optional[List[str]] = Field(None, example=["admin"])
-
-
-class NetlifyUserAppMetadata(BaseModel):
-    provider: str = Field(None, example="google")
-
-
-class NetlifyAccount(BaseModel):
-    id: str = Field(None, example="4e7c4f1b-e51a-4abb-8a58-105483724713")
-    aud: str = Field(None, example="")
-    email: str = Field(None, example="fake@example.com")
-    role: Optional[str] = Field(None, example="Moderator")
-    app_metadata: NetlifyUserAppMetadata
-    user_metadata: NetlifyUserMetadata
-    created_at: str = Field(None, example="2021-03-06T13:26:56.991731Z")
-    updated_at: str = Field(None, example="2021-03-06T14:26:56.991731Z")
-
-    class Config:
-        schema_extra = {
-            "id": "4e7c4f1b-e51a-4abb-8a58-105483724713",
-            "aud": "",
-            "email": "fake@example.com",
-            "role": "Moderator",
-            "app_metadata": {"provider": "google"},
-            "user_metadata": {
-                "avatar_url": "https://example.com/dsfdsf.jpg",
-                "full_name": "Fake Name",
-                "roles": ["admin"],
-            },
-            "created_at": "2021-03-06T14:26:56.991731Z",
-            "updated_at": "2021-03-06T14:26:56.994492Z",
-        }
-
-
-class NetlifyUserEvent(BaseModel):
-    event: str = Field(None, example="signup")
-    instance_id: str = Field(None, example="725df7e1-94b8-4b0f-8d45-dc710d8d1a47")
-    user: NetlifyAccount
-
-
 class GhostMember(BaseModel):
+    """Ghost Member account."""
+
     # fmt: off
     id: str
     uuid: str
@@ -362,31 +344,34 @@ class GhostMember(BaseModel):
     # fmt: on
 
 
-class NetlifyAccountCreationResponse(BaseModel):
-    succeeded: Union[NetlifyUserEvent, None]
-    failed: Union[NetlifyUserEvent, None]
-
-
 class NewsletterSubscriber(BaseModel):
+    """Ghost email subscriber (may not have account)."""
+
     name: Optional[str] = Field(None, example=None)
     email: str = Field(None, example="fake@example.com")
 
 
 class EmailSchema(BaseModel):
+    """Ghost outgoing email."""
+
     email: List[EmailStr]
     body: Dict[str, Any]
 
 
 class GhostSubscriber(BaseModel):
+    """Incoming request to update Ghost subscriber"""
+
     current: Optional[GhostMember]
     previous: Optional[GhostMember]
 
 
 class Subscription(BaseModel):
+    """Ghost email subscription details of a single user."""
+
     member: GhostSubscriber
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "member": {
                 "current": {
                     "id": "5fc703013448cb765efe3f",
@@ -407,13 +392,15 @@ class Subscription(BaseModel):
 
 
 class SubscriptionWelcomeEmail(BaseModel):
+    """Email sent to new Ghost subscribers."""
+
     from_email: str = Field(None, example="fake@example.com")
     to_email: str = Field(None, example="recipient@example.com")
     subject: str = Field(None, example="Welcome to Hackers & Slackers")
     template: str = Field(None, example="This is an email")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "from_email": "fake@example.com",
             "to_email": "recipient@example.com",
             "subject": "Welcome to Hackers & Slackers",
@@ -422,13 +409,15 @@ class SubscriptionWelcomeEmail(BaseModel):
 
 
 class SMS:
+    """Twilio SMS message notification."""
+
     phone_recipient: str
     phone_sender: str
     date_sent: str
     message: str
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "phone_recipient": "5554201738",
             "phone_sender": "5551738420",
             "date_sent": "2020-12-02T02:59:13.642Z",
@@ -437,10 +426,12 @@ class SMS:
 
 
 class GithubIssue:
+    """Newly created Github issue."""
+
     issue: Dict[str, Any]
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "issue": {
                 "time": "2020-12-02T02:59:13.642Z",
                 "status": "open",
@@ -456,11 +447,15 @@ class GithubIssue:
 
 
 class PostBulkUpdate(BaseModel):
+    """Request to bulk update Ghost posts."""
+
     inserted: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
     updated: Dict[str, Any] = Field(None, example={"count": 5, "posts": 10})
 
 
 class AnalyticsResponse(BaseModel):
+    """Response to analytics request."""
+
     # fmt: off
     weekly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})
     monthly_stats: Dict[str, Any] = Field(None, example={"count": 2, "rows": [{"my-post-1": 2}, {"my-post-2": 3}]})

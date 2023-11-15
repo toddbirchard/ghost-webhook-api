@@ -47,12 +47,12 @@ def fetch_top_visited_pages(time_period: str, limit=30) -> List[Optional[dict]]:
             "property": "event:page",
             "limit": limit,
             "metrics": "visitors,bounce_rate,visitors,pageviews,visit_duration",
-            "property": "event:page",
         }
         resp = requests.get(
             settings.PLAUSIBLE_STATS_ENDPOINT,
             params=params,
             headers=headers,
+            timeout=20,
         )
         if resp.status_code != 200:
             raise HTTPException(
@@ -104,13 +104,13 @@ def filter_results(results_list: List[dict]) -> List[dict]:
 
 def enrich_url_with_post_data(page_result: dict) -> Optional[dict]:
     """
-    Determine post slug from URL & fetch Ghost post title.
+    Backwards lookup to determine post slug from URL; associated Ghost post title.
 
     :param dict page_result: Top visited URL result returned by Plausible.
 
     :returns: Optional[dict]
     """
-    slug = page_result["page"].rstrip("/").lstrip("/").split("/")[-1]
+    slug = page_result["page"].replace("/", "")
     post = ghost.get_post_by_slug(slug)
     if post and page_result["pageviews"] and page_result["pageviews"] > 2:
         page_result["slug"] = slug

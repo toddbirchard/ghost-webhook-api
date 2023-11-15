@@ -1,6 +1,6 @@
-from sqlalchemy.engine.cursor import LegacyCursorResult
-
+"""Test reading data directly form SQL databases."""
 from database.read_sql import collect_sql_queries, fetch_sql_files, parse_sql_batch
+from database.sql_db import Database
 from log import LOGGER
 
 
@@ -12,16 +12,23 @@ def test_fetch_sql_files():
 
 
 def test_collect_sql_queries():
-    """Create dict of SQL queries to be run where `keys` are filenames and `values` are queries."""
+    """Structure dict of SQL queries to be run (k,v where k is `filename` and v is `query`)."""
     queries = collect_sql_queries("analytics")
-    assert type(queries) == dict
+    assert isinstance(queries, dict)
 
 
-def test_select_query(ghost_db):
+def test_select_query(ghost_db: Database):
+    """
+    Test fetching all posts from Ghost via SQL.
+
+    :param Database ghost_db: Ghost database client.
+    """
     posts_sql = fetch_sql_files("posts/selects")
+    print(f"posts_sql = {posts_sql}")
     parsed_posts_sql = parse_sql_batch(posts_sql)
+    print(f"parsed_posts_sql = {parsed_posts_sql}")
     query_result = ghost_db.execute_query(parsed_posts_sql[0])
+    print(f"query_result = {query_result}")
     assert len(posts_sql) > 0
-    assert type(parsed_posts_sql[0]) == str
-    assert type(query_result) == LegacyCursorResult
+    assert isinstance(parsed_posts_sql[0], str)
     LOGGER.debug(query_result.rowcount)
