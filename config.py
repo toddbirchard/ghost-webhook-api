@@ -61,9 +61,11 @@ class Settings(BaseSettings):
     GOOGLE_CREDENTIALS: str = getenv("GOOGLE_CREDENTIALS")
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
-        GOOGLE_CLOUD_JSON_FILEPATH
-    )
+    GOOGLE_CLOUD_CREDENTIALS: Credentials = None
+    if ENVIRONMENT == "production":
+        GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
+            GOOGLE_CLOUD_JSON_FILEPATH
+        )
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
@@ -111,8 +113,8 @@ class Settings(BaseSettings):
         MAIL_FROM=MAILGUN_FROM_SENDER_EMAIL,
         MAIL_STARTTLS=True,
         MAIL_SSL_TLS=False,
-        USE_CREDENTIALS = True,
-        VALIDATE_CERTS = True
+        USE_CREDENTIALS=True,
+        VALIDATE_CERTS=True,
     )
 
     # Mixpanel
