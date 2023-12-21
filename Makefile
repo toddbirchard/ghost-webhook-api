@@ -89,6 +89,7 @@ lint: env
 clean:
 	find . -name 'poetry.lock' -delete && \
 	find . -name '.coverage' -delete && \
+	find . -name '.Pipfile.lock' -delete && \
 	find . -wholename '**/*.pyc' -delete && \
 	find . -type d -wholename '__pycache__' -exec rm -rf {} + && \
 	find . -type d -wholename './.venv' -exec rm -rf {} + && \

@@ -75,7 +75,6 @@ class Ghost:
             resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
             if resp.json().get("errors") is not None and resp.json().get("posts") is not None:
                 LOGGER.error(f"Failed to fetch post `{post_id}`: {resp.json().get('errors')[0]['message']}")
-                return None
             post = resp.json()["posts"][0]
             LOGGER.info(f"Fetched Ghost post `{post['slug']}` ({endpoint})")
             return post
@@ -105,16 +104,13 @@ class Ghost:
             }
             endpoint = f"{self.admin_api_url}/posts/slug/{post_slug}/"
             resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
-            if resp.json().get("errors") is not None:
-                LOGGER.error(f"Failed to fetch post `{post_slug}`: {resp.json().get('errors')[0]['message']}")
-                return None
             post = resp.json()["posts"][0]
             LOGGER.info(f"Fetched Ghost post `{post['slug']}`")
             return post
         except HTTPError as e:
             LOGGER.error(f"HTTPError occurred while fetching post `{post_slug}`: {e}")
         except LookupError as e:
-            LOGGER.error(f"LookupError occurred while fetching post `{post_slug}`: `{e}`")
+            LOGGER.warning(f"LookupError occurred while fetching post `{post_slug}`: `{e}`")
         except Exception as e:
             LOGGER.error(f"Unexpected error occurred while fetching post `{post_slug}`: {e}")
 
@@ -276,13 +272,13 @@ class Ghost:
                 "Content-Type": "application/json",
             }
             params = {
-                "limit": "200",
+                "filter": "type:post",
             }
             endpoint = f"{self.admin_api_url}/posts"
             resp = requests.get(endpoint, headers=headers, params=params, timeout=20)
             if resp.status_code == 200:
                 posts = resp.json()["posts"]
-                return [post["url"].replace(".app", ".com") for post in posts if post["status"] == "published"]
+                return [post["url"] for post in posts if post["status"] == "published"]
         except HTTPError as e:
             LOGGER.error(f"Ghost HTTPError while fetching posts: {e}")
         except KeyError as e:

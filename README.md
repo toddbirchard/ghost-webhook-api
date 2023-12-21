@@ -1,6 +1,6 @@
 # Blog Webhook API
 
-![Python](https://img.shields.io/badge/Python-^3.9-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
+![Python](https://img.shields.io/badge/Python-^3.10-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
 ![FastAPI](https://img.shields.io/badge/FastAPI-^v0.89.1-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Databases](https://img.shields.io/badge/Databases-^0.7.0-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
 ![PyDantic](https://img.shields.io/badge/Pydantic-^v1.10.6-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
