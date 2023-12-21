@@ -55,7 +55,7 @@ coverage = "*"
 mypy = "*"
 
 [tool.poetry.scripts]
-run = "app:api"
+run = "asgi:api"
 
 [tool.poetry.urls]
 issues = "https://github.com/toddbirchard/blog-webhook-api/issues"
