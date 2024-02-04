@@ -1,4 +1,5 @@
 """Welcome newsletter subscribers ."""
+
 from typing import Optional
 
 from clients import mailgun

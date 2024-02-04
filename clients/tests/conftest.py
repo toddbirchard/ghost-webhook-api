@@ -1,4 +1,5 @@
 """Pytest fixtures for clients."""
+
 import pytest
 from google.cloud.bigquery import Client as gbqClient
 

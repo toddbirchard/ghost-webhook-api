@@ -1,4 +1,5 @@
 """Helper functions to fetch search query activity from Algolia."""
+
 from typing import Any, Dict, List, Optional
 
 import requests
@@ -32,7 +33,7 @@ def persist_algolia_searches(time_period: str) -> List[Optional[dict]]:
             "direction": "desc",
             "startDate": get_start_date_range(time_period),
         }
-        resp = requests.get(settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params)
+        resp = requests.get(settings.ALGOLIA_SEARCHES_ENDPOINT, headers=headers, params=params, timeout=30)
         if resp.status_code == 200 and resp.json().get("searches") is not None:
             search_queries = resp.json().get("searches")
             search_queries = filter_search_queries(search_queries)

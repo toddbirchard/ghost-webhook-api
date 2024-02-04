@@ -1,4 +1,5 @@
 """Notify upon Github activity."""
+
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 

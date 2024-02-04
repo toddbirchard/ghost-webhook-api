@@ -1,4 +1,5 @@
 """Set up integration tests for Ghost post modifications directly via SQL."""
+
 import pytest
 
 from config import settings

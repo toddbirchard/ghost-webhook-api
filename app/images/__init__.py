@@ -1,4 +1,5 @@
 """Generate optimized images to be served from Google Cloud CDN."""
+
 from typing import Optional
 
 from fastapi import APIRouter, Query

@@ -1,4 +1,5 @@
 """Create Mailgun client."""
+
 from typing import List
 
 import requests

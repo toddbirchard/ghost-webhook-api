@@ -1,4 +1,5 @@
 """Author management."""
+
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
@@ -55,7 +56,7 @@ async def author_post_created(post_update: PostUpdate) -> JSONResponse:
         msg = f"{author_name} just created a post: `{title}`."
         sms.send_message(msg)
         return JSONResponse(content=msg, status_code=200)
-    elif primary_author_id == settings.GHOST_ADMIN_USER_ID and len(authors) > 1:
+    if primary_author_id == settings.GHOST_ADMIN_USER_ID and len(authors) > 1:
         msg = f"{author_name} just updated one of your posts: `{title}`."
         sms.send_message(msg)
         return JSONResponse(content=msg, status_code=200)

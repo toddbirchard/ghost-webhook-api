@@ -1,4 +1,5 @@
 """Test Plausible API's integration to associate views per page"""
+
 from app.analytics.plausible import enrich_url_with_post_data, fetch_top_visited_pages
 
 

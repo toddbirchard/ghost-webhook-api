@@ -1,4 +1,5 @@
 """Test BigQuery client."""
+
 from google.cloud import bigquery
 from google.cloud.bigquery.table import RowIterator
 
