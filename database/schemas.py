@@ -1,6 +1,7 @@
 """FastAPI Pydantic Schemas."""
+
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -443,6 +444,582 @@ class GithubIssue:
                     "action": "opened",
                 },
             },
+        }
+
+
+class GithubUser(BaseModel):
+    """Github user account."""
+
+    login: str = Field(None, example="dependabot[bot]")
+    id: int = Field(None, example=49699333)
+    node_id: str = Field(None, example="MDM6Qm90NDk2OTkzMzM=")
+    avatar_url: str = Field(None, example="https://avatars.githubusercontent.com/in/29110?v=4")
+    gravatar_id: str = Field(None, example="")
+    url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D")
+    html_url: str = Field(None, example="https://github.com/apps/dependabot")
+    followers_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/followers")
+    following_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}")
+    gists_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}")
+    starred_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}")
+    subscriptions_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/subscriptions")
+    organizations_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/orgs")
+    repos_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/repos")
+    events_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}")
+    received_events_url: str = Field(None, example="https://api.github.com/users/dependabot%5Bbot%5D/received_events")
+    type: str = Field(None, example="Bot")
+    site_admin: bool = Field(None, example=False)
+
+    class Config:
+        json_schema_extra = {
+            "login": "dependabot[bot]",
+            "id": 49699333,
+            "node_id": "MDM6Qm90NDk2OTkzMzM=",
+            "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+            "html_url": "https://github.com/apps/dependabot",
+            "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+            "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+            "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+            "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+            "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+            "type": "Bot",
+            "site_admin": False,
+        }
+
+
+class GithubRepository(BaseModel):
+    """Github repository."""
+
+    # fmt: off
+    id: int = Field(None, example=245327108)
+    node_id: str = Field(None, example="MDEwOlJlcG9zaXRvcnkyNDUzMjcxMDg=")
+    name: str = Field(None, example="repository")
+    full_name: str = Field(None, example="username/repository")
+    private: bool = Field(None, example=False)
+    html_url: str = Field(None, example="https://github.com/username/repository")
+    description: str = Field(None, example="📑 🎛️ API to automate optimizations for self-hosted blogging platforms.")
+    fork: bool = Field(None, example=False)
+    url: str = Field(None, example="https://api.github.com/repos/username/repository")
+    forks_url: str = Field(None, example="https://api.github.com/repos/username/repository/forks")
+    keys_url: str = Field(None, example="https://api.github.com/repos/username/repository/keys{/key_id}")
+    collaborators_url: str  = Field(None, example="https://api.github.com/repos/username/repository/collaborators{/collaborator}")
+    teams_url: str = Field(None, example="https://api.github.com/repos/username/repository/teams")
+    hooks_url: str = Field(None, example="https://api.github.com/repos/username/repository/hooks")
+    issue_events_url: str = Field(None, example="https://api.github.com/repos/username/repository/issues/events{/number}")
+    events_url: str = Field(None, example="https://api.github.com/repos/username/repository/events")
+    assignees_url: str = Field(None, example="https://api.github.com/repos/username/repository/assignees{/user}")
+    branches_url: str = Field(None, example="https://api.github.com/repos/username/repository/branches{/branch}")
+    tags_url: str = Field(None, example="https://api.github.com/repos/username/repository/tags")
+    blobs_url: str = Field(None, example="https://api.github.com/repos/username/repository/git/blobs{/sha}")
+    git_tags_url: str = Field(None, example="https://api.github.com/repos/username/repository/git/tags{/sha}")
+    git_refs_url: str = Field(None, example="https://api.github.com/repos/username/repository/git/refs{/sha}")
+    trees_url: str = Field(None, example="https://api.github.com/repos/username/repository/git/trees{/sha}")
+    statuses_url: str = Field(None, example="https://api.github.com/repos/username/repository/statuses/{sha}")
+    languages_url: str = Field(None, example="https://api.github.com/repos/username/repository/languages")
+    stargazers_url: str = Field(None, example="https://api.github.com/repos/username/repository/stargazers")
+    contributors_url: str = Field(None, example="https://api.github.com/repos/username/repository/contributors")
+    subscribers_url: str = Field(None, example="https://api.github.com/repos/username/repository/subscribers")
+    subscription_url: str = Field(None, example="https://api.github.com/repos/username/repository/subscription")
+    commits_url: str = Field(None, example="https://api.github.com/repos/username/repository/commits{/sha}")
+    git_commits_url: str = Field(None, example="https://api.github.com/repos/username/repository/git/commits{/sha}")
+    comments_url: str = Field(None, example="https://api.github.com/repos/username/repository/comments{/number}")
+    issue_comment_url: str = Field(None, example="https://api.github.com/repos/username/repository/issues/comments{/number}")
+    contents_url: str = Field(None, example="https://api.github.com/repos/username/repository/contents/{+path}")
+    compare_url: str = Field(None, example="https://api.github.com/repos/username/repository/compare/{base}...{head}")
+    merges_url: str = Field(None, example="https://api.github.com/repos/username/repository/merges")
+    archive_url: str = Field(None, example="https://api.github.com/repos/username/repository/{archive_format}{/ref}")
+    downloads_url: str = Field(None, example="https://api.github.com/repos/username/repository/downloads")
+    issues_url: str = Field(None, example="https://api.github.com/repos/username/repository/issues{/number}")
+    pulls_url: str = Field(None, example="https://api.github.com/repos/username/repository/pulls{/number}")
+    milestones_url: str = Field(None, example="https://api.github.com/repos/username/repository/milestones{/number}")
+    notifications_url: str = Field(None, example="https://api.github.com/repos/username/repository/notifications{?since,all,participating}")
+    labels_url: str = Field(None, example="https://api.github.com/repos/username/repository/labels{/name}")
+    releases_url: str = Field(None, example="https://api.github.com/repos/username/repository/releases{/id}")
+    deployments_url: str = Field(None, example="https://api.github.com/repos/username/repository/deployments")
+    created_at: str = Field(None, example="2020-03-06T04:07:25Z")
+    updated_at: str = Field(None, example="2024-01-14T00:01:00Z")
+    pushed_at: str = Field(None, example="2024-01-30T00:26:27Z")
+    git_url: str = Field(None, example="git://github.com/username/repository.git")
+    ssh_url: str = Field(None, example="git@github.com:username/repository.git")
+    clone_url: str = Field(None, example="https://github.com/username/repository.git")
+    svn_url: str = Field(None, example="https://github.com/username/repository")
+    homepage: str = Field(None, example="")
+    size: int = Field(None, example=3358)
+    stargazers_count: int = Field(None, example=9)
+    watchers_count: int = Field(None, example=9)
+    language: str = Field(None, example="Python")
+    has_issues: bool = Field(None, example=True)
+    has_projects: bool = Field(None, example=True)
+    has_downloads: bool = Field(None, example=True)
+    has_wiki: bool = Field(None, example=True)
+    has_pages: bool = Field(None, example=False)
+    has_discussions: bool = Field(None, example=False)
+    forks_count: int = Field(None, example=1)
+    mirror_url: Optional[str]= Field(None, example=None)
+    archived: bool = Field(None, example=False)
+    disabled: bool = Field(None, example=False)
+    open_issues_count: int = Field(None, example=17)
+    license: Optional[str]= Field(None, example=None)
+    allow_forking: bool = Field(None, example=True)
+    is_template: bool = Field(None, example=False)
+    web_commit_signoff_required: bool = Field(None, example=False)
+    topics: List[Optional[str]] = Field(None, example=["api", "automation", "python"])
+    visibility: str = Field(None, example="public")
+    forks: int = Field(None, example=1)
+    open_issues:int = Field(None, example=17)
+    watchers: int = Field(None, example=9)
+    default_branch: str = Field(None, example="master")
+    # fmt: on
+
+
+class GithubBranch(BaseModel):
+    """Github branch."""
+
+    # fmt: off
+    label: str = Field(None, example="toddbirchard:master")
+    ref: str = Field(None, example="master")
+    sha: str = Field(None, example="67a1fad6e3edba3b581e54c67b42de837ab53726")
+    user: GithubUser
+    repo: GithubRepository
+    # fmt: on
+
+
+class GithubPrLinks(BaseModel):
+    """Github pull request link associations."""
+
+    # fmt: off
+    self: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/pulls/320"})
+    html: dict = Field(None, example={"href": "https://github.com/username/repository/pull/320"})
+    issue: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/issues/320"})
+    comments: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/issues/320/comments"})
+    review_comments: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/pulls/320/comments"})
+    review_comment: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/pulls/comments{/number}"})
+    commits: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/pulls/320/commits"})
+    statuses: dict = Field(None, example={"href": "https://api.github.com/repos/username/repository/statuses/56e8fc41369d8f6b95c6ab7a206c69cd12bab916"})
+    # fmt: on
+
+
+class GithubPr(BaseModel):
+    """Github pull request."""
+
+    # fmt: off
+    id: int = Field(None, example=1701068295)
+    url: str = Field(None, example="https://api.github.com/repos/username/repository/pulls/320")
+    node_id: str = Field(None, example="PR_kwDODp9lBM5lZD4H")
+    html_url: str = Field(None, example="https://github.com/username/repository/pull/320")
+    diff_url: str = Field(None, example="https://github.com/username/repository/pull/320.diff")
+    patch_url: str = Field(None, example="https://github.com/username/repository/pull/320.patch")
+    issue_url: str = Field(None, example="https://api.github.com/repos/username/repository/issues/320")
+    number: int = Field(None, example=320)
+    state: str = Field(None, example="open")
+    locked: bool = Field(None, example=False)
+    title: str = Field(None, example="Bump aiohttp from 3.9.1 to 3.9.2")
+    head: GithubBranch
+    user: GithubUser
+    base: GithubBranch
+    repo: GithubRepository
+    body: str = Field(None, example="Bumps [aiohttp](https://github.com/aio-libs/aiohttp) from 3.9.1 to 3.9.2.")
+    created_at: str = Field(None, example="2024-01-30T00:26:26Z")
+    updated_at: str  = Field(None, example="2024-01-30T00:26:49Z")
+    closed_at: Optional[str] = Field(None, example=None)
+    merged_at: Optional[str] = Field(None, example=None)
+    merge_commit_sha: str = Field(None, example="d5da67d43a36c981d9159007d91c371506b08ca8")
+    assignee: Optional[str] = Field(None, example=None)
+    assignees: List[Optional[str]] = Field(None, example=[])
+    requested_reviewers: List[Optional[str]] = Field(None, example=[])
+    requested_teams: List[Optional[str]] = Field(None, example=[])
+    labels: dict = Field(None, example={"id": 3075826725, "node_id": "MDU6TGF", "url": "https://api.github.com/repos/username/repository/labels/dependencies", "name": "dependencies", "color": "0366d6", "default": False, "description": "Pull requests that update a dependency file"})
+    milestone: Optional[bool] = Field(None, example=None)
+    draft: bool = Field(None, example=False)
+    commits_url: str = Field(None, example="https://api.github.com/repos/username/repository/pulls/320/commits")
+    review_comments_url: str = Field(None, example="https://api.github.com/repos/username/repository/pulls/320/comments")
+    review_comment_url: str = Field(None, example="https://api.github.com/repos/username/repository/pulls/comments{/number}")
+    comments_url: str = Field(None, example="https://api.github.com/repos/username/repository/issues/320/comments")
+    statuses_url: str = Field(None, example="https://api.github.com/repos/username/repository/statuses/56e8fc41369d8f6b95c6ab7a206c69cd12bab916")
+    repo: GithubRepository
+    _links: GithubPrLinks
+    author_association: str = Field(None, example="CONTRIBUTOR")
+    auto_merge: Optional[bool] = Field(None, example=None)
+    active_lock_reason: Optional[str] = Field(None, example=None)
+    merged: bool = Field(None, example=False)
+    mergeable: bool = Field(None, example=True)
+    rebaseable: bool = Field(None, example=True)
+    mergeable_state: str = Field(None, example="unstable")
+    merged_by: Optional[str] = Field(None, example=None)
+    comments: int = Field(None, example=0)
+    review_comments: int = Field(None, example=0)
+    maintainer_can_modify: bool = Field(None, example=False)
+    commits: int = Field(None, example=1)
+    additions: int = Field(None, example=78)
+    deletions: int = Field(None, example=78)
+    changed_files: int = Field(None, example=1)
+    # fmt: on
+
+    class Config:
+        """JSON schema example for Github pull request."""
+
+        json_schema_extra = {
+            "url": "https://api.github.com/repos/username/repository/pulls/320",
+            "id": 1701068295,
+            "node_id": "PR_kwDODp9lBM5lZD4H",
+            "html_url": "https://github.com/username/repository/pull/320",
+            "diff_url": "https://github.com/username/repository/pull/320.diff",
+            "patch_url": "https://github.com/username/repository/pull/320.patch",
+            "issue_url": "https://api.github.com/repos/username/repository/issues/320",
+            "number": 320,
+            "state": "open",
+            "locked": False,
+            "title": "Bump aiohttp from 3.9.1 to 3.9.2",
+            "user": {
+                "login": "dependabot[bot]",
+                "id": 49699333,
+                "node_id": "MDM6Qm90NDk2OTkzMzM=",
+                "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+                "html_url": "https://github.com/apps/dependabot",
+                "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+                "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+                "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+                "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+                "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+                "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+                "type": "Bot",
+                "site_admin": False,
+            },
+            "body": 'Bumps [aiohttp](https://github.com/aio-libs/aiohttp) from 3.9.1 to 3.9.2.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href="https://github.com/aio-libs/aiohttp/releases">aiohttp\'s releases</a>.</em></p>\n<blockquote>\n<h2>3.9.2</h2>\n<h2>Bug fixes</h2>\n<ul>\n<li>\n<p>Fixed server-side websocket connection leak.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n<a href="https://redirect.github.com/aio-libs/aiohttp/issues/7978">#7978</a>.</p>\n</li>\n<li>\n<p>Fixed <code>web.FileResponse</code> doing blocking I/O in the event loop.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8012">#8012</a>.</p>\n</li>\n<li>\n<p>Fixed double compress when compression enabled and compressed file exists in server file responses.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8014">#8014</a>.</p>\n</li>\n<li>\n<p>Added runtime type check for <code>ClientSession</code> <code>timeout</code> parameter.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8021">#8021</a>.</p>\n</li>\n<li>\n<p>Fixed an unhandled exception in the Python HTTP parser on header lines starting with a colon -- by :user:<code>pajod</code>.</p>\n<p>Invalid request lines with anything but a dot between the HTTP major and minor version are now rejected.\nInvalid header field names containing question mark or slash are now rejected.\nSuch requests are incompatible with :rfc:<code>9110#section-5.6.2</code> and are not known to be of any legitimate use.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8074">#8074</a>.</p>\n</li>\n<li>\n<p>Improved validation of paths for static resources requests to the server -- by :user:<code>bdraco</code>.</p>\n</li>\n</ul>\n<!-- raw HTML omitted -->\n</blockquote>\n<p>... (truncated)</p>\n</details>\n<details>\n<summary>Changelog</summary>\n<p><em>Sourced from <a href="https://github.com/aio-libs/aiohttp/blob/master/CHANGES.rst">aiohttp\'s changelog</a>.</em></p>\n<blockquote>\n<h1>3.9.2 (2024-01-28)</h1>\n<h2>Bug fixes</h2>\n<ul>\n<li>\n<p>Fixed server-side websocket connection leak.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n:issue:<code>7978</code>.</p>\n</li>\n<li>\n<p>Fixed <code>web.FileResponse</code> doing blocking I/O in the event loop.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n:issue:<code>8012</code>.</p>\n</li>\n<li>\n<p>Fixed double compress when compression enabled and compressed file exists in server file responses.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n:issue:<code>8014</code>.</p>\n</li>\n<li>\n<p>Added runtime type check for <code>ClientSession</code> <code>timeout</code> parameter.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n:issue:<code>8021</code>.</p>\n</li>\n<li>\n<p>Fixed an unhandled exception in the Python HTTP parser on header lines starting with a colon -- by :user:<code>pajod</code>.</p>\n<p>Invalid request lines with anything but a dot between the HTTP major and minor version are now rejected.\nInvalid header field names containing question mark or slash are now rejected.\nSuch requests are incompatible with :rfc:<code>9110#section-5.6.2</code> and are not known to be of any legitimate use.</p>\n<p><em>Related issues and pull requests on GitHub:</em>\n:issue:<code>8074</code>.</p>\n</li>\n</ul>\n<!-- raw HTML omitted -->\n</blockquote>\n<p>... (truncated)</p>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/24a6d64966d99182e95f5d3a29541ef2fec397ad"><code>24a6d64</code></a> Release v3.9.2 (<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8082">#8082</a>)</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/9118a5831e8a65b8c839eb7e4ac983e040ff41df"><code>9118a58</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/8079">#8079</a>/1c335944 backport][3.9] Validate static paths (<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8080">#8080</a>)</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/435ad46e6c26cbf6ed9a38764e9ba8e7441a0e3b"><code>435ad46</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/3955">#3955</a>/8960063e backport][3.9] Replace all tmpdir fixtures with tmp_path (...</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/d33bc21414e283c9e6fe7f6caf69e2ed60d66c82"><code>d33bc21</code></a> Improve validation in HTTP parser (<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8074">#8074</a>) (<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8078">#8078</a>)</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/0d945d1be08f2ba8475513216a66411f053c3217"><code>0d945d1</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/7916">#7916</a>/822fbc74 backport][3.9] Add more information to contributing page (...</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/3ec4fa1f0e0a0dad218c75dbe5ed09e22d5cc284"><code>3ec4fa1</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/8069">#8069</a>/69bbe874 backport][3.9] 📝 Only show changelog draft for non-release...</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/419d715c42c46daf1a59e0aff61c1f6d10236982"><code>419d715</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/8066">#8066</a>/cba34699 backport][3.9] 💅📝 Restructure the changelog for clarity (#...</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/a54dab3b36bcf0d815b9244f52ae7bc5da08f387"><code>a54dab3</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/8049">#8049</a>/a379e634 backport][3.9] Set cause for ClientPayloadError (<a href="https://redirect.github.com/aio-libs/aiohttp/issues/8050">#8050</a>)</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/437ac47fe332106a07a2d5335bb89619f1bc23f7"><code>437ac47</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/7995">#7995</a>/43a5bc50 backport][3.9] Fix examples of <code>fallback_charset_resolver</code>...</li>\n<li><a href="https://github.com/aio-libs/aiohttp/commit/034e5e34ee11c6138c773d85123490e691e1b708"><code>034e5e3</code></a> [PR <a href="https://redirect.github.com/aio-libs/aiohttp/issues/8042">#8042</a>/4b91b530 backport][3.9] Tightening the runtime type check for ssl (...</li>\n<li>Additional commits viewable in <a href="https://github.com/aio-libs/aiohttp/compare/v3.9.1...v3.9.2">compare view</a></li>\n</ul>\n</details>\n<br />\n\n\n[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=aiohttp&package-manager=pip&previous-version=3.9.1&new-version=3.9.2)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)\n\nDependabot will resolve any conflicts with this PR as long as you don\'t alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it\n- `@dependabot merge` will merge this PR after your CI passes on it\n- `@dependabot squash and merge` will squash and merge this PR after your CI passes on it\n- `@dependabot cancel merge` will cancel a previously requested merge and block automerging\n- `@dependabot reopen` will reopen this PR if it is closed\n- `@dependabot close` will close this PR and stop Dependabot recreating it. You can achieve the same result by closing it manually\n- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency\n- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)\nYou can disable automated security fix PRs for this repo from the [Security Alerts page](https://github.com/username/repository/network/alerts).\n\n</details>\n\n┆Issue is synchronized with this [Jira Pull Request](https://hackersandslackers.atlassian.net/browse/API-160)\n',
+            "created_at": "2024-01-30T00:26:26Z",
+            "updated_at": "2024-01-30T00:26:49Z",
+            "closed_at": None,
+            "merged_at": None,
+            "merge_commit_sha": "d5da67d43a36c981d9159007d91c371506b08ca8",
+            "assignee": None,
+            "assignees": [],
+            "requested_reviewers": [],
+            "requested_teams": [],
+            "labels": [
+                {
+                    "id": 3075826725,
+                    "node_id": "MDU6TGFiZWwzMDc1ODI2NzI1",
+                    "url": "https://api.github.com/repos/username/repository/labels/dependencies",
+                    "name": "dependencies",
+                    "color": "0366d6",
+                    "default": False,
+                    "description": "Pull requests that update a dependency file",
+                }
+            ],
+            "milestone": None,
+            "draft": False,
+            "commits_url": "https://api.github.com/repos/username/repository/pulls/320/commits",
+            "review_comments_url": "https://api.github.com/repos/username/repository/pulls/320/comments",
+            "review_comment_url": "https://api.github.com/repos/username/repository/pulls/comments{/number}",
+            "comments_url": "https://api.github.com/repos/username/repository/issues/320/comments",
+            "statuses_url": "https://api.github.com/repos/username/repository/statuses/56e8fc41369d8f6b95c6ab7a206c69cd12bab916",
+            "head": {
+                "label": "toddbirchard:dependabot/pip/aiohttp-3.9.2",
+                "ref": "dependabot/pip/aiohttp-3.9.2",
+                "sha": "56e8fc41369d8f6b95c6ab7a206c69cd12bab916",
+                "user": {
+                    "login": "toddbirchard",
+                    "id": 2747442,
+                    "node_id": "MDQ6VXNlcjI3NDc0NDI=",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/2747442?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/username",
+                    "html_url": "https://github.com/toddbirchard",
+                    "followers_url": "https://api.github.com/users/username/followers",
+                    "following_url": "https://api.github.com/users/username/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/username/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/username/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/username/subscriptions",
+                    "organizations_url": "https://api.github.com/users/username/orgs",
+                    "repos_url": "https://api.github.com/users/username/repos",
+                    "events_url": "https://api.github.com/users/username/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/username/received_events",
+                    "type": "User",
+                    "site_admin": False,
+                },
+                "repo": {
+                    "id": 245327108,
+                    "node_id": "MDEwOlJlcG9zaXRvcnkyNDUzMjcxMDg=",
+                    "name": "blog-webhook-api",
+                    "full_name": "username/repository",
+                    "private": False,
+                    "owner": {
+                        "login": "toddbirchard",
+                        "id": 2747442,
+                        "node_id": "MDQ6VXNlcjI3NDc0NDI=",
+                        "avatar_url": "https://avatars.githubusercontent.com/u/2747442?v=4",
+                        "gravatar_id": "",
+                        "url": "https://api.github.com/users/username",
+                        "html_url": "https://github.com/toddbirchard",
+                        "followers_url": "https://api.github.com/users/username/followers",
+                        "following_url": "https://api.github.com/users/username/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/username/gists{/gist_id}",
+                        "starred_url": "https://api.github.com/users/username/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/username/subscriptions",
+                        "organizations_url": "https://api.github.com/users/username/orgs",
+                        "repos_url": "https://api.github.com/users/username/repos",
+                        "events_url": "https://api.github.com/users/username/events{/privacy}",
+                        "received_events_url": "https://api.github.com/users/username/received_events",
+                        "type": "User",
+                        "site_admin": False,
+                    },
+                    "html_url": "https://github.com/username/repository",
+                    "description": "📑 🎛️ API to automate optimizations for self-hosted blogging platforms.",
+                    "fork": False,
+                    "url": "https://api.github.com/repos/username/repository",
+                    "forks_url": "https://api.github.com/repos/username/repository/forks",
+                    "keys_url": "https://api.github.com/repos/username/repository/keys{/key_id}",
+                    "collaborators_url": "https://api.github.com/repos/username/repository/collaborators{/collaborator}",
+                    "teams_url": "https://api.github.com/repos/username/repository/teams",
+                    "hooks_url": "https://api.github.com/repos/username/repository/hooks",
+                    "issue_events_url": "https://api.github.com/repos/username/repository/issues/events{/number}",
+                    "events_url": "https://api.github.com/repos/username/repository/events",
+                    "assignees_url": "https://api.github.com/repos/username/repository/assignees{/user}",
+                    "branches_url": "https://api.github.com/repos/username/repository/branches{/branch}",
+                    "tags_url": "https://api.github.com/repos/username/repository/tags",
+                    "blobs_url": "https://api.github.com/repos/username/repository/git/blobs{/sha}",
+                    "git_tags_url": "https://api.github.com/repos/username/repository/git/tags{/sha}",
+                    "git_refs_url": "https://api.github.com/repos/username/repository/git/refs{/sha}",
+                    "trees_url": "https://api.github.com/repos/username/repository/git/trees{/sha}",
+                    "statuses_url": "https://api.github.com/repos/username/repository/statuses/{sha}",
+                    "languages_url": "https://api.github.com/repos/username/repository/languages",
+                    "stargazers_url": "https://api.github.com/repos/username/repository/stargazers",
+                    "contributors_url": "https://api.github.com/repos/username/repository/contributors",
+                    "subscribers_url": "https://api.github.com/repos/username/repository/subscribers",
+                    "subscription_url": "https://api.github.com/repos/username/repository/subscription",
+                    "commits_url": "https://api.github.com/repos/username/repository/commits{/sha}",
+                    "git_commits_url": "https://api.github.com/repos/username/repository/git/commits{/sha}",
+                    "comments_url": "https://api.github.com/repos/username/repository/comments{/number}",
+                    "issue_comment_url": "https://api.github.com/repos/username/repository/issues/comments{/number}",
+                    "contents_url": "https://api.github.com/repos/username/repository/contents/{+path}",
+                    "compare_url": "https://api.github.com/repos/username/repository/compare/{base}...{head}",
+                    "merges_url": "https://api.github.com/repos/username/repository/merges",
+                    "archive_url": "https://api.github.com/repos/username/repository/{archive_format}{/ref}",
+                    "downloads_url": "https://api.github.com/repos/username/repository/downloads",
+                    "issues_url": "https://api.github.com/repos/username/repository/issues{/number}",
+                    "pulls_url": "https://api.github.com/repos/username/repository/pulls{/number}",
+                    "milestones_url": "https://api.github.com/repos/username/repository/milestones{/number}",
+                    "notifications_url": "https://api.github.com/repos/username/repository/notifications{?since,all,participating}",
+                    "labels_url": "https://api.github.com/repos/username/repository/labels{/name}",
+                    "releases_url": "https://api.github.com/repos/username/repository/releases{/id}",
+                    "deployments_url": "https://api.github.com/repos/username/repository/deployments",
+                    "created_at": "2020-03-06T04:07:25Z",
+                    "updated_at": "2024-01-14T00:01:00Z",
+                    "pushed_at": "2024-01-30T00:26:27Z",
+                    "git_url": "git://github.com/username/repository.git",
+                    "ssh_url": "git@github.com:username/repository.git",
+                    "clone_url": "https://github.com/username/repository.git",
+                    "svn_url": "https://github.com/username/repository",
+                    "homepage": "",
+                    "size": 3358,
+                    "stargazers_count": 9,
+                    "watchers_count": 9,
+                    "language": "Python",
+                    "has_issues": True,
+                    "has_projects": True,
+                    "has_downloads": True,
+                    "has_wiki": True,
+                    "has_pages": False,
+                    "has_discussions": False,
+                    "forks_count": 1,
+                    "mirror_url": None,
+                    "archived": False,
+                    "disabled": False,
+                    "open_issues_count": 17,
+                    "license": None,
+                    "allow_forking": True,
+                    "is_template": False,
+                    "web_commit_signoff_required": False,
+                    "topics": [
+                        "api",
+                        "automation",
+                        "bigquery",
+                        "blogging",
+                        "ghost",
+                        "github-api",
+                        "google-cloud-storage",
+                        "python",
+                        "webhook-api",
+                    ],
+                    "visibility": "public",
+                    "forks": 1,
+                    "open_issues": 17,
+                    "watchers": 9,
+                    "default_branch": "master",
+                },
+            },
+            "base": {
+                "label": "toddbirchard:master",
+                "ref": "master",
+                "sha": "67a1fad6e3edba3b581e54c67b42de837ab53726",
+                "user": {
+                    "login": "toddbirchard",
+                    "id": 2747442,
+                    "node_id": "MDQ6VXNlcjI3NDc0NDI=",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/2747442?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/username",
+                    "html_url": "https://github.com/toddbirchard",
+                    "followers_url": "https://api.github.com/users/username/followers",
+                    "following_url": "https://api.github.com/users/username/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/username/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/username/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/username/subscriptions",
+                    "organizations_url": "https://api.github.com/users/username/orgs",
+                    "repos_url": "https://api.github.com/users/username/repos",
+                    "events_url": "https://api.github.com/users/username/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/username/received_events",
+                    "type": "User",
+                    "site_admin": False,
+                },
+                "repo": {
+                    "id": 245327108,
+                    "node_id": "MDEwOlJlcG9zaXRvcnkyNDUzMjcxMDg=",
+                    "name": "blog-webhook-api",
+                    "full_name": "username/repository",
+                    "private": False,
+                    "owner": {
+                        "login": "toddbirchard",
+                        "id": 2747442,
+                        "node_id": "MDQ6VXNlcjI3NDc0NDI=",
+                        "avatar_url": "https://avatars.githubusercontent.com/u/2747442?v=4",
+                        "gravatar_id": "",
+                        "url": "https://api.github.com/users/username",
+                        "html_url": "https://github.com/toddbirchard",
+                        "followers_url": "https://api.github.com/users/username/followers",
+                        "following_url": "https://api.github.com/users/username/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/username/gists{/gist_id}",
+                        "starred_url": "https://api.github.com/users/username/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/username/subscriptions",
+                        "organizations_url": "https://api.github.com/users/username/orgs",
+                        "repos_url": "https://api.github.com/users/username/repos",
+                        "events_url": "https://api.github.com/users/username/events{/privacy}",
+                        "received_events_url": "https://api.github.com/users/username/received_events",
+                        "type": "User",
+                        "site_admin": False,
+                    },
+                    "html_url": "https://github.com/username/repository",
+                    "description": "📑 🎛️ API to automate optimizations for self-hosted blogging platforms.",
+                    "fork": False,
+                    "url": "https://api.github.com/repos/username/repository",
+                    "forks_url": "https://api.github.com/repos/username/repository/forks",
+                    "keys_url": "https://api.github.com/repos/username/repository/keys{/key_id}",
+                    "collaborators_url": "https://api.github.com/repos/username/repository/collaborators{/collaborator}",
+                    "teams_url": "https://api.github.com/repos/username/repository/teams",
+                    "hooks_url": "https://api.github.com/repos/username/repository/hooks",
+                    "issue_events_url": "https://api.github.com/repos/username/repository/issues/events{/number}",
+                    "events_url": "https://api.github.com/repos/username/repository/events",
+                    "assignees_url": "https://api.github.com/repos/username/repository/assignees{/user}",
+                    "branches_url": "https://api.github.com/repos/username/repository/branches{/branch}",
+                    "tags_url": "https://api.github.com/repos/username/repository/tags",
+                    "blobs_url": "https://api.github.com/repos/username/repository/git/blobs{/sha}",
+                    "git_tags_url": "https://api.github.com/repos/username/repository/git/tags{/sha}",
+                    "git_refs_url": "https://api.github.com/repos/username/repository/git/refs{/sha}",
+                    "trees_url": "https://api.github.com/repos/username/repository/git/trees{/sha}",
+                    "statuses_url": "https://api.github.com/repos/username/repository/statuses/{sha}",
+                    "languages_url": "https://api.github.com/repos/username/repository/languages",
+                    "stargazers_url": "https://api.github.com/repos/username/repository/stargazers",
+                    "contributors_url": "https://api.github.com/repos/username/repository/contributors",
+                    "subscribers_url": "https://api.github.com/repos/username/repository/subscribers",
+                    "subscription_url": "https://api.github.com/repos/username/repository/subscription",
+                    "commits_url": "https://api.github.com/repos/username/repository/commits{/sha}",
+                    "git_commits_url": "https://api.github.com/repos/username/repository/git/commits{/sha}",
+                    "comments_url": "https://api.github.com/repos/username/repository/comments{/number}",
+                    "issue_comment_url": "https://api.github.com/repos/username/repository/issues/comments{/number}",
+                    "contents_url": "https://api.github.com/repos/username/repository/contents/{+path}",
+                    "compare_url": "https://api.github.com/repos/username/repository/compare/{base}...{head}",
+                    "merges_url": "https://api.github.com/repos/username/repository/merges",
+                    "archive_url": "https://api.github.com/repos/username/repository/{archive_format}{/ref}",
+                    "downloads_url": "https://api.github.com/repos/username/repository/downloads",
+                    "issues_url": "https://api.github.com/repos/username/repository/issues{/number}",
+                    "pulls_url": "https://api.github.com/repos/username/repository/pulls{/number}",
+                    "milestones_url": "https://api.github.com/repos/username/repository/milestones{/number}",
+                    "notifications_url": "https://api.github.com/repos/username/repository/notifications{?since,all,participating}",
+                    "labels_url": "https://api.github.com/repos/username/repository/labels{/name}",
+                    "releases_url": "https://api.github.com/repos/username/repository/releases{/id}",
+                    "deployments_url": "https://api.github.com/repos/username/repository/deployments",
+                    "created_at": "2020-03-06T04:07:25Z",
+                    "updated_at": "2024-01-14T00:01:00Z",
+                    "pushed_at": "2024-01-30T00:26:27Z",
+                    "git_url": "git://github.com/username/repository.git",
+                    "ssh_url": "git@github.com:username/repository.git",
+                    "clone_url": "https://github.com/username/repository.git",
+                    "svn_url": "https://github.com/username/repository",
+                    "homepage": "",
+                    "size": 3358,
+                    "stargazers_count": 9,
+                    "watchers_count": 9,
+                    "language": "Python",
+                    "has_issues": True,
+                    "has_projects": True,
+                    "has_downloads": True,
+                    "has_wiki": True,
+                    "has_pages": False,
+                    "has_discussions": False,
+                    "forks_count": 1,
+                    "mirror_url": None,
+                    "archived": False,
+                    "disabled": False,
+                    "open_issues_count": 17,
+                    "license": None,
+                    "allow_forking": True,
+                    "is_template": False,
+                    "web_commit_signoff_required": False,
+                    "topics": [
+                        "api",
+                        "automation",
+                        "bigquery",
+                        "blogging",
+                        "ghost",
+                        "github-api",
+                        "google-cloud-storage",
+                        "python",
+                        "webhook-api",
+                    ],
+                    "visibility": "public",
+                    "forks": 1,
+                    "open_issues": 17,
+                    "watchers": 9,
+                    "default_branch": "master",
+                },
+            },
+            "_links": {
+                "self": {"href": "https://api.github.com/repos/username/repository/pulls/320"},
+                "html": {"href": "https://github.com/username/repository/pull/320"},
+                "issue": {"href": "https://api.github.com/repos/username/repository/issues/320"},
+                "comments": {"href": "https://api.github.com/repos/username/repository/issues/320/comments"},
+                "review_comments": {"href": "https://api.github.com/repos/username/repository/pulls/320/comments"},
+                "review_comment": {"href": "https://api.github.com/repos/username/repository/pulls/comments{/number}"},
+                "commits": {"href": "https://api.github.com/repos/username/repository/pulls/320/commits"},
+                "statuses": {
+                    "href": "https://api.github.com/repos/username/repository/statuses/56e8fc41369d8f6b95c6ab7a206c69cd12bab916"
+                },
+            },
+            "author_association": "CONTRIBUTOR",
+            "auto_merge": None,
+            "active_lock_reason": None,
+            "merged": False,
+            "mergeable": True,
+            "rebaseable": True,
+            "mergeable_state": "unstable",
+            "merged_by": None,
+            "comments": 0,
+            "review_comments": 0,
+            "maintainer_can_modify": False,
+            "commits": 1,
+            "additions": 78,
+            "deletions": 78,
+            "changed_files": 1,
         }
 
 

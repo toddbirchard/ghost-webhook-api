@@ -1,4 +1,5 @@
 """Database client."""
+
 from typing import List, Optional
 
 from pandas import DataFrame

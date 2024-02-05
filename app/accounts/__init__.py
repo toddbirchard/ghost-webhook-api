@@ -1,4 +1,5 @@
 """User account management & functionality."""
+
 from fastapi import APIRouter, HTTPException
 
 from config import settings

@@ -1,4 +1,5 @@
 """FastAPI configuration."""
+
 import datetime
 from os import getenv, path
 

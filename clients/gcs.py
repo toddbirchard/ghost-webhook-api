@@ -1,4 +1,5 @@
 """Google Cloud Storage client and image transformer."""
+
 import re
 from typing import Iterator, Tuple
 

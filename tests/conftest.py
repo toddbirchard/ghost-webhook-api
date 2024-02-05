@@ -1,4 +1,5 @@
 """Client dependency initialization for testing."""
+
 import pytest
 from fastapi.params import Depends
 from github import Github

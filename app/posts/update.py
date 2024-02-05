@@ -1,4 +1,5 @@
 """Methods for updating Ghost post content or metadata."""
+
 from typing import List, Optional, Tuple
 
 from fastapi import HTTPException

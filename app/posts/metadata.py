@@ -1,4 +1,5 @@
 """Execute SQL to ensure posts have properly optimized metadata."""
+
 from typing import Tuple
 
 from app.posts.update import bulk_update_post_metadata

@@ -1,4 +1,5 @@
 """Image transformer for remote images on GCS."""
+
 from io import BytesIO
 from typing import List, Optional
 

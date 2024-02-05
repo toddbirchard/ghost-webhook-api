@@ -1,4 +1,5 @@
 """Fetch site traffic & search query analytics."""
+
 from fastapi import APIRouter
 
 from app.analytics.plausible import top_visited_pages_by_timeframe

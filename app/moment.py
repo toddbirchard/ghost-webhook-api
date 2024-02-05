@@ -1,4 +1,5 @@
 """Calculate situational time or dates."""
+
 from datetime import datetime, timedelta
 
 import pytz

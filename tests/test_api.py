@@ -1,4 +1,5 @@
 """Integration tests for API client."""
+
 import pprint
 
 from fastapi.testclient import TestClient

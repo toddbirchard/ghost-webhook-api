@@ -1,4 +1,5 @@
 """Custom logger."""
+
 import json
 from os import path
 from sys import stdout

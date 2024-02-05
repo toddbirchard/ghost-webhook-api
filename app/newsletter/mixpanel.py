@@ -1,4 +1,5 @@
 """Mixpanel user analytics."""
+
 from typing import Optional
 
 from mixpanel import Mixpanel, MixpanelException

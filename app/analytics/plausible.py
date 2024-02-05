@@ -1,4 +1,5 @@
 """Fetch site analytics via Plausible API."""
+
 from typing import List, Optional
 
 import requests

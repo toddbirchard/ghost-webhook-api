@@ -1,4 +1,5 @@
 """Parse Donation into JSON response."""
+
 from database.models import Donation
 
 

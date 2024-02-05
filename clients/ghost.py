@@ -1,4 +1,5 @@
 """Ghost admin client."""
+
 from datetime import datetime as date
 from typing import List, Optional, Tuple
 
