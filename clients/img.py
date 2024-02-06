@@ -148,9 +148,7 @@ class ImageTransformer(GCS):
             new_retina_image_blob = self.bucket.blob(retina_blob_filepath)
             LOGGER.success(f"Created retina image `{retina_blob_filepath}`")
             return new_retina_image_blob
-        else:
-            LOGGER.info(f"Skipping retina image `{retina_blob_filepath}`; already exists.")
-        return None
+        LOGGER.info(f"Skipping retina image `{retina_blob_filepath}`; already exists.")
 
     @LOGGER.catch
     def mobile_transformations(self, folder: str) -> List[Optional[str]]:
@@ -186,12 +184,10 @@ class ImageTransformer(GCS):
         if mobile_image_blob.exists() is False:
             new_mobile_image_blob = self._transform_mobile_image(image_blob, mobile_image_blob)
             return new_mobile_image_blob
-        else:
-            LOGGER.info(f"Skipping mobile image `{mobile_blob_filepath}`; already exists.")
-        return None
+        LOGGER.info(f"Skipping mobile image `{mobile_blob_filepath}`; already exists.")
 
     @staticmethod
-    def _get_image_meta(blob: Blob) -> Optional[dict]:
+    def _set_image_metadata(blob: Blob) -> Optional[dict]:
         """
         Generate metadata for a given image Blob.
 
@@ -199,10 +195,12 @@ class ImageTransformer(GCS):
 
         :returns: Optional[dict]
         """
-        if ".jpg" in blob.name:
-            return {"format": "JPEG", "content-type": "image/jpg"}
-        elif ".png" in blob.name:
+        if ".jpg" in blob.name and "octet-stream" in blob.content_type:
+            return {"format": "JPG", "content-type": "image/jpg"}
+        if ".png" in blob.name:
             return {"format": "PNG", "content-type": "image/png"}
+        if ".webp" in blob.name:
+            return {"format": "WEBP", "content-type": "image/webp"}
         return None
 
     def _transform_mobile_image(self, original_image_blob: Blob, new_image_blob: Blob) -> Optional[Blob]:
@@ -214,7 +212,7 @@ class ImageTransformer(GCS):
 
         :returns: Optional[Blob]
         """
-        img_meta = self._get_image_meta(original_image_blob)
+        img_meta = self._set_image_metadata(original_image_blob)
         img_bytes = original_image_blob.download_as_bytes()
         if img_bytes:
             stream = BytesIO(img_bytes)
@@ -230,11 +228,3 @@ class ImageTransformer(GCS):
                 LOGGER.error(f"GoogleCloudError while saving mobile image `{new_image_blob.name}`: {e}")
             except Exception as e:
                 LOGGER.error(f"Unexpected exception while saving mobile image `{new_image_blob.name}`: {e}")
-
-    @staticmethod
-    def _add_image_headers(image_blob: Blob):
-        if ".jpg" in image_blob.name and "octet-stream" in image_blob.content_type:
-            image_blob.content_type = "image/jpg"
-        elif ".png" in image_blob.name and "octet-stream" in image_blob.content_type:
-            image_blob.content_type = "image/png"
-        return image_blob

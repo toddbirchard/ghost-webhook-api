@@ -37,8 +37,8 @@ async def update_post(post_update: PostUpdate) -> JSONResponse:
         current_time = get_current_datetime()
         previous_update_date = datetime.strptime(str(previous_update.updated_at), "%Y-%m-%dT%H:%M:%S.000Z")
         if previous_update_date and current_time - previous_update_date < timedelta(seconds=5):
-            LOGGER.warning("Post update ignored as post was just updated.")
-            raise HTTPException(status_code=422, detail="Post update ignored as post was just updated.")
+            LOGGER.warning("Post update ignored (post was recently updated).")
+            raise HTTPException(status_code=422, detail="Post update ignored (post was recently updated).")
     post = post_update.post.current
     slug = post.slug
     feature_image = post.feature_image

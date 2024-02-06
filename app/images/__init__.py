@@ -64,22 +64,26 @@ async def bulk_transform_images(
 
     :returns: JSONResponse
     """
-    if directory is None:
-        directory = settings.GCP_BUCKET_FOLDER
-    transformed_images = {
-        "purged": images.purge_unwanted_images(directory),
-        "retina": images.retina_transformations(directory),
-        "mobile": images.mobile_transformations(directory),
-        # "standard": gcs.standard_transformations(directory),
-    }
-    response = []
-    for k, v in transformed_images.items():
-        if v is not None:
-            response.append(f"{len(v)} {k}")
-        else:
-            response.append(f"0 {k}")
-    LOGGER.success(f"Transformed {', '.join(response)} images")
-    return JSONResponse(transformed_images)
+    try:
+        if directory is None:
+            directory = settings.GCP_BUCKET_FOLDER
+        transformed_images = {
+            "purged": images.purge_unwanted_images(directory),
+            "retina": images.retina_transformations(directory),
+            "mobile": images.mobile_transformations(directory),
+            # "standard": gcs.standard_transformations(directory),
+        }
+        response = []
+        for k, v in transformed_images.items():
+            if v is not None:
+                response.append(f"{len(v)} {k}")
+            else:
+                response.append(f"0 {k}")
+        LOGGER.success(f"Transformed {', '.join(response)} images")
+        return JSONResponse(transformed_images)
+    except Exception as e:
+        LOGGER.error(f"Unexpected exception raised when transforming images: {e}")
+        return JSONResponse(e, status_code=500)
 
 
 @router.get("/sort/")
@@ -94,11 +98,8 @@ async def bulk_organize_images(directory: Optional[str] = None) -> JSONResponse:
     if directory is None:
         directory = settings.GCP_BUCKET_FOLDER
     retina_images = images.organize_retina_images(directory)
-    image_headers = images.image_headers(directory)
-    LOGGER.success(f"Moved {len(retina_images)} retina images, modified {len(image_headers)} content types.")
+    LOGGER.success(f"Moved {len(retina_images)} retina images.")
     return JSONResponse(
-        {
-            "retina": retina_images,
-            "headers": image_headers,
-        }
+        {"retina": retina_images},
+        status_code=200,
     )
