@@ -61,7 +61,7 @@ class Settings(BaseSettings):
     # Google Cloud Auth
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
-    GOOGLE_CLOUD_CREDENTIALS_JSON: str = getenv("GOOGLE_CLOUD_CREDENTIALS")
+    GOOGLE_CLOUD_CREDENTIALS_JSON: str = getenv("GOOGLE_CLOUD_CREDENTIALS_JSON")
     GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
         json.loads(GOOGLE_CLOUD_CREDENTIALS_JSON)
     )
