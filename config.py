@@ -99,8 +99,8 @@ class Settings(BaseSettings):
     MAILGUN_EMAIL_SERVER: str = getenv("MAILGUN_EMAIL_SERVER")
     MAILGUN_NEWSLETTER_TEMPLATE: str = getenv("MAILGUN_NEWSLETTER_TEMPLATE")
     MAILGUN_SENDER_API_KEY: str = getenv("MAILGUN_SENDER_API_KEY")
-    MAILGUN_FROM_SENDER_EMAIL: str = getenv("MAILGUN_FROM_SENDER_EMAIL")
-    MAILGUN_FROM_SENDER_NAME: str = getenv("MAILGUN_FROM_SENDER_NAME")
+    MAILGUN_FROM_SENDER_EMAIL: str = getenv("MAILGUN_FROM_SENDER_EMAIL", "noreply@hackersandslackers.com")
+    MAILGUN_FROM_SENDER_NAME: str = getenv("MAILGUN_FROM_SENDER_NAME", "Hackers and Slackers")
     MAILGUN_PERSONAL_EMAIL: str = getenv("MAILGUN_PERSONAL_EMAIL")
     MAILGUN_PASSWORD: str = getenv("MAILGUN_PASSWORD")
     MAILGUN_SUBJECT_LINE: str = "To Hack or to Slack; That is the Question."
