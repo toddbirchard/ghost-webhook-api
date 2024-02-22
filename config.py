@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
     GOOGLE_CLOUD_CREDENTIALS_JSON: str = getenv("GOOGLE_CLOUD_CREDENTIALS")
     GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
-        json.load(GOOGLE_CLOUD_CREDENTIALS_JSON)
+        json.loads(GOOGLE_CLOUD_CREDENTIALS_JSON)
     )
     if ENVIRONMENT == "production":
         GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
