@@ -58,10 +58,11 @@ class Settings(BaseSettings):
     ALGOLIA_TABLE_MONTHLY: str = "algolia_searches_month"
 
     # Google Cloud Auth
-    GOOGLE_CREDENTIALS: str = getenv("GOOGLE_CREDENTIALS")
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials = None
+    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
+        getenv("GOOGLE_CLOUD_CREDENTIALS")
+    )
     if ENVIRONMENT == "production":
         GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
             GOOGLE_CLOUD_JSON_FILEPATH
