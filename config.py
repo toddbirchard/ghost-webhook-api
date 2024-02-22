@@ -1,6 +1,7 @@
 """FastAPI configuration."""
 
 import datetime
+import json
 from os import getenv, path
 
 from dotenv import load_dotenv
@@ -60,8 +61,9 @@ class Settings(BaseSettings):
     # Google Cloud Auth
     GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
     GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
+    GOOGLE_CLOUD_CREDENTIALS_JSON: str = getenv("GOOGLE_CLOUD_CREDENTIALS")
     GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
-        getenv("GOOGLE_CLOUD_CREDENTIALS")
+        json.load(GOOGLE_CLOUD_CREDENTIALS_JSON)
     )
     if ENVIRONMENT == "production":
         GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
