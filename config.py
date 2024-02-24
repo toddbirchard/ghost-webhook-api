@@ -59,21 +59,16 @@ class Settings(BaseSettings):
     ALGOLIA_TABLE_MONTHLY: str = "algolia_searches_month"
 
     # Google Cloud Auth
-    GOOGLE_CLOUD_PROJECT_NAME: str = getenv("GOOGLE_CLOUD_PROJECT_NAME")
-    GOOGLE_CLOUD_JSON_FILEPATH: str = getenv("GOOGLE_CLOUD_JSON_FILEPATH")
-    GOOGLE_CLOUD_CREDENTIALS_JSON: str = getenv("GOOGLE_CLOUD_CREDENTIALS_JSON")
-    GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
-        json.loads(GOOGLE_CLOUD_CREDENTIALS_JSON)
+    GCP_PROJECT_NAME: str = getenv("GCP_PROJECT_NAME")
+    GCP_CREDENTIALS_JSON: str = getenv("GCP_CREDENTIALS_JSON")
+    GCP_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
+        json.loads(GCP_CREDENTIALS_JSON)
     )
-    if ENVIRONMENT == "production":
-        GOOGLE_CLOUD_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_file(
-            GOOGLE_CLOUD_JSON_FILEPATH
-        )
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
     GCP_BIGQUERY_DATASET: str = getenv("GCP_BIGQUERY_DATASET")
-    GCP_BIGQUERY_URI: str = f"bigquery://{GOOGLE_CLOUD_PROJECT_NAME}/{GCP_BIGQUERY_DATASET}"
+    GCP_BIGQUERY_URI: str = f"bigquery://{GCP_PROJECT_NAME}/{GCP_BIGQUERY_DATASET}"
 
     # Google Cloud storage
     GCP_BUCKET_URL: str = getenv("GCP_BUCKET_URL")
