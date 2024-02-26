@@ -42,7 +42,6 @@ jobs:
           ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
           GCP_JSON_CREDENTIALS: ${{ secrets.GCP_JSON_CREDENTIALS }}
-          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           GCP_PROJECT_NAME: ${{ secrets.GCP_PROJECT_NAME }}
           GCP_BIGQUERY_TABLE: ${{ secrets.GCP_BIGQUERY_TABLE }}
           GCP_BIGQUERY_DATASET: ${{ secrets.GCP_BIGQUERY_DATASET }}
