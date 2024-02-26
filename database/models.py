@@ -1,10 +1,9 @@
 """Data models."""
 
 from sqlalchemy import Column, DateTime, Integer, String, Text
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 
-Base = declarative_base()
+from database import Base
 
 
 class Account(Base):

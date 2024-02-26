@@ -15,7 +15,7 @@ from app import (
     tags,
 )
 from config import settings
-from database.orm import Base, engine
+from database import Base, engine
 from log import LOGGER
 
 Base.metadata.create_all(bind=engine)
