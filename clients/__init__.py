@@ -11,8 +11,8 @@ from config import settings
 
 # Google Cloud Storage
 images = ImageTransformer(
-    gcp_project_name=settings.GOOGLE_CLOUD_PROJECT_NAME,
-    gcp_api_credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
+    gcp_project_name=settings.GCP_PROJECT_NAME,
+    gcp_api_credentials=settings.GCP_CREDENTIALS,
     bucket_name=settings.GCP_BUCKET_NAME,
     bucket_url=settings.GCP_BUCKET_URL,
 )
@@ -37,8 +37,8 @@ sms = Twilio(
 
 # Google BigQuery
 gbq = bigquery.Client(
-    project=settings.GOOGLE_CLOUD_PROJECT_NAME,
-    credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
+    project=settings.GCP_PROJECT_NAME,
+    credentials=settings.GCP_CREDENTIALS,
 )
 
 # Mailgun SMTP
@@ -49,4 +49,4 @@ mailgun = Mailgun(
 )
 
 # Github
-gh = Github(settings.GITHUB_API_KEY)
+gh = Github(settings.GH_API_KEY)

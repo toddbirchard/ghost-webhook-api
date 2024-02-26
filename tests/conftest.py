@@ -96,7 +96,7 @@ def gh() -> Github:
     :returns: Github
     """
     return Github(
-        settings.GITHUB_API_KEY,
+        settings.GH_API_KEY,
     )
 
 

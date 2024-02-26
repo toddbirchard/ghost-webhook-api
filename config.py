@@ -60,9 +60,9 @@ class Settings(BaseSettings):
 
     # Google Cloud Auth
     GCP_PROJECT_NAME: str = getenv("GCP_PROJECT_NAME")
-    GCP_CREDENTIALS_JSON: str = getenv("GCP_CREDENTIALS_JSON")
+    GCP_JSON_CREDENTIALS: str = getenv("GCP_JSON_CREDENTIALS")
     GCP_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
-        json.loads(GCP_CREDENTIALS_JSON)
+        json.loads(GCP_JSON_CREDENTIALS)
     )
 
     # Google BigQuery
@@ -125,8 +125,8 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str = getenv("TWILIO_ACCOUNT_SID")
 
     # Github
-    GITHUB_USERNAME: str = getenv("GH_USERNAME")
-    GITHUB_API_KEY: str = getenv("GH_API_KEY")
+    GH_USERNAME: str = getenv("GH_USERNAME")
+    GH_API_KEY: str = getenv("GH_API_KEY")
 
 
 settings = Settings()

@@ -235,32 +235,6 @@ class Ghost:
             LOGGER.error(f"Failed to create Ghost member: {e.response.content}")
             return e.response.content, e.response.status_code
 
-    def get_json_backup(self) -> Optional[dict]:
-        """
-        Download JSON snapshot of Ghost database.
-
-        Optional[dict]
-        """
-        self._https_session()
-        headers = {
-            "Authorization": self.session_token,
-            "accept": "text/html,application/xhtml+xml,application/xml;\
-                                q=0.9,image/webp,image/apng,*/*;\
-                                q=0.8,application/signed-exchange;\
-                                v=b3;q=0.9",
-            "accept-encoding": "gzip, deflate, br",
-            "Origin": "hackersandslackers.com",
-            "Authority": "hackersandslackers.com",
-        }
-        endpoint = f"{self.admin_api_url}/db/"
-        try:
-            resp = requests.get(endpoint, headers=headers, timeout=20)
-            return resp.json()
-        except HTTPError as e:
-            LOGGER.error(f"HTTPError occurred while fetching JSON backup: {e}")
-        except Exception as e:
-            LOGGER.error(f"Unexpected error occurred while fetching JSON backup: {e}")
-
     def get_all_posts(self) -> Optional[List[str]]:
         """
         Fetch all Ghost post URLs.

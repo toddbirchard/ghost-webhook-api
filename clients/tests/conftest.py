@@ -32,6 +32,6 @@ def mailgun() -> Mailgun:
 @pytest.fixture
 def gbq() -> gbqClient:
     return gbqClient(
-        project=settings.GOOGLE_CLOUD_PROJECT_NAME,
-        credentials=settings.GOOGLE_CLOUD_CREDENTIALS,
+        project=settings.GCP_PROJECT_NAME,
+        credentials=settings.GCP_CREDENTIALS,
     )

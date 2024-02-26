@@ -41,21 +41,21 @@ jobs:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
-          GCP_CREDENTIALS_JSON: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          GCP_JSON_CREDENTIALS: ${{ secrets.GCP_JSON_CREDENTIALS }}
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           GCP_PROJECT_NAME: ${{ secrets.GCP_PROJECT_NAME }}
-          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           GCP_BIGQUERY_TABLE: ${{ secrets.GCP_BIGQUERY_TABLE }}
           GCP_BIGQUERY_DATASET: ${{ secrets.GCP_BIGQUERY_DATASET }}
           GCP_BUCKET_URL: ${{ secrets.GCP_BUCKET_URL }}
           GCP_BUCKET_NAME: ${{ secrets.GCP_BUCKET_NAME }}
           GHOST_BASE_URL: ${{ secrets.GHOST_BASE_URL }}
-          GHOST_ADMIN_BASE_URL: ${{ secrets.GHOST_ADMIN_BASE_URL }}
+          GHOST_ADMIN_API_URL: ${{ secrets.GHOST_ADMIN_API_URL }}
+          GHOST_CONTENT_API_URL: ${{ secrets.GHOST_CONTENT_API_URL }}
           GHOST_CLIENT_ID: ${{ secrets.GHOST_CLIENT_ID }}
-          GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
-          GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
           GHOST_API_USERNAME: ${{ secrets.GHOST_API_USERNAME }}
           GHOST_API_PASSWORD: ${{ secrets.GHOST_API_PASSWORD }}
+          GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
+          GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
           MAILGUN_EMAIL_SERVER: ${{ secrets.MAILGUN_EMAIL_SERVER }}
           MAILGUN_NEWSLETTER_TEMPLATE: ${{ secrets.MAILGUN_NEWSLETTER_TEMPLATE }}
           MAILGUN_SENDER_API_KEY: ${{ secrets.MAILGUN_SENDER_API_KEY }}

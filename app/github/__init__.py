@@ -29,7 +29,7 @@ async def github_pr(request: Request) -> JSONResponse:
     user = payload["sender"].get("login")
     pull_request = payload["pull_request"]
     repo = payload["repository"]
-    if user in (settings.GITHUB_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
+    if user in (settings.GH_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
         return JSONResponse(
             {
                 "pr": {
@@ -94,7 +94,7 @@ async def github_issue(request: Request) -> JSONResponse:
     user = payload["sender"].get("login")
     issue = payload["issue"]
     repo = payload["repository"]
-    if user in (settings.GITHUB_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
+    if user in (settings.GH_USERNAME, "dependabot-preview[bot]", "renovate[bot]"):
         return JSONResponse(
             {
                 "issue": {

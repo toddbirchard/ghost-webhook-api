@@ -87,15 +87,8 @@ async def batch_update_metadata() -> JSONResponse:
     )
 
 
-@router.get("/backup/")
-async def backup_database():
-    """Export JSON backup of database."""
-    json = ghost.get_json_backup()
-    return json
-
-
 @router.get(
-    "/post/",
+    "/{post_id}/",
     summary="Get a post.",
 )
 async def get_single_post(post_id: str) -> JSONResponse:
