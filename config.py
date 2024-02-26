@@ -60,10 +60,8 @@ class Settings(BaseSettings):
 
     # Google Cloud Auth
     GCP_PROJECT_NAME: str = getenv("GCP_PROJECT_NAME")
-    GCP_JSON_CREDENTIALS: dict = getenv("GCP_JSON_CREDENTIALS")
-    GCP_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(
-        json.loads(GCP_JSON_CREDENTIALS)
-    )
+    GCP_JSON_CREDENTIALS: dict = json.loads(getenv("GCP_JSON_CREDENTIALS"))
+    GCP_CREDENTIALS: Credentials = service_account.Credentials.from_service_account_info(GCP_JSON_CREDENTIALS)
 
     # Google BigQuery
     GCP_BIGQUERY_TABLE: str = getenv("GCP_BIGQUERY_TABLE")
