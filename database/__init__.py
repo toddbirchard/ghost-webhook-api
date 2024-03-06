@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from config import Settings, settings
+
 from .sql_db import Database
 
 # Create SQL Engine
