@@ -11,7 +11,7 @@ from config import settings
 from log import LOGGER
 
 
-def top_visited_pages_by_timeframe(time_period: str, limit=30) -> Optional[List[dict]]:
+def top_visited_pages_by_timeframe(time_period: str, limit=100) -> Optional[List[dict]]:
     """
     Get top visited URLs & enrich with post metadata.
 
@@ -47,7 +47,7 @@ def fetch_top_visited_pages(time_period: str, limit=30) -> List[Optional[dict]]:
             "period": time_period,
             "property": "event:page",
             "limit": limit,
-            "metrics": "visitors,bounce_rate,visitors,pageviews,visit_duration",
+            "metrics": "visitors,visits,bounce_rate,pageviews,visit_duration",
         }
         resp = requests.get(
             settings.PLAUSIBLE_STATS_ENDPOINT,
@@ -91,7 +91,7 @@ def filter_results(results_list: List[dict]) -> List[dict]:
         for result in results_list
         if result is not None
         and result.get("pageviews") is not None
-        and result["pageviews"] > 6
+        and result["pageviews"] > 4
         and "/tag" not in result["page"]
         and "/page" not in result["page"]
         and "/author" not in result["page"]

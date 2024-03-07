@@ -5,7 +5,7 @@ from app.analytics.plausible import enrich_url_with_post_data, fetch_top_visited
 
 def test_fetch_top_visited_urls():
     """Test fetching top visited URLs in current month."""
-    urls = fetch_top_visited_pages("month")
+    urls = fetch_top_visited_pages("30d")
     assert urls is not None
     assert len(urls) > 0
     assert urls[0]["page"] is not None
