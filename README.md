@@ -1,4 +1,4 @@
-# Blog Webhook API
+# Ghost Webhook API
 
 ![Python](https://img.shields.io/badge/Python-^3.10-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
 ![FastAPI](https://img.shields.io/badge/FastAPI-^v0.89.1-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
@@ -14,15 +14,15 @@
 
 ![Blog Webhook API](./.github/blog-webhook-api@2x.png?raw=true)
 
-Webhook-driven API to make maintaining blogs easier. Dynamically handles optimizations including image compression, content sanitation, alerting, and feature enablement via data aggregate (suggested searches, trending posts, etc)
+Standalone API to compliment Ghost blogs. Accepts Ghost webhook events tiggers & executes task to optimize content and serve new features. Handles optimizations including image compression, content sanitation, alerting, and feature enablement via data aggregate (suggested searches, trending posts, etc)
 
 ## Installation
 
 Get up and running with `make deploy`:
 
 ```shell
-git clone https://github.com/toddbirchard/blog-webhook-api.git
-cd blog-webhook-api
+git clone https://github.com/toddbirchard/ghost-webhook-api.git
+cd ghost-webhook-api
 make deploy
 ```
 
