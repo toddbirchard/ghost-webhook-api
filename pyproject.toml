@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "blog-webhook-api"
+name = "ghost-webhook-api"
 version = "0.1.1"
 description = "Webhook-driven API to make maintaining blogs easier."
 authors = ["Todd Birchard <toddbirchard@gmail.com>"]
 maintainers = ["Todd Birchard <toddbirchard@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/toddbirchard/blog-webhook-api/"
-repository = "https://github.com/toddbirchard/blog-webhook-api/"
-documentation = "https://github.com/toddbirchard/blog-webhook-api/blob/master/README.md"
+homepage = "https://github.com/toddbirchard/ghost-webhook-api/"
+repository = "https://github.com/toddbirchard/ghost-webhook-api/"
+documentation = "https://github.com/toddbirchard/ghost-webhook-api/blob/master/README.md"
 keywords = ["API", "Rest API", "Automation", "FastAPI", "Webhooks"]
 
 [tool.poetry.dependencies]
@@ -59,7 +59,7 @@ mypy = "*"
 run = "asgi:api"
 
 [tool.poetry.urls]
-issues = "https://github.com/toddbirchard/blog-webhook-api/issues"
+issues = "https://github.com/toddbirchard/ghost-webhook-api/issues"
 
 [build-system]
 requires = ["poetry-core>=1.5.0"]

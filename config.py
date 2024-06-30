@@ -14,8 +14,8 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """FastAPI settings & configuration."""
 
-    app_name: str = "Blog Webhook API"
-    title: str = "Blog Webhook API"
+    app_name: str = "Ghost Webhook API"
+    title: str = "Ghost Webhook API"
     description: str = "API to automate optimizations for blog sites."
     items_per_user: int = 50
     debug: bool = True
