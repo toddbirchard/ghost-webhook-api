@@ -10,6 +10,7 @@ homepage = "https://github.com/toddbirchard/ghost-webhook-api/"
 repository = "https://github.com/toddbirchard/ghost-webhook-api/"
 documentation = "https://github.com/toddbirchard/ghost-webhook-api/blob/master/README.md"
 keywords = ["API", "Rest API", "Automation", "FastAPI", "Webhooks"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
