@@ -7,7 +7,7 @@ from app.donations.parse import parse_donation_json
 from database import get_db
 from database.crud import create_donation, get_donation
 from database.models import Donation
-from database.schemas import NewDonation
+from database.schemas import CoffeeDonation, AllCoffeeDonations
 
 router = APIRouter(prefix="/donation", tags=["donations"])
 
@@ -16,9 +16,9 @@ router = APIRouter(prefix="/donation", tags=["donations"])
     "/",
     summary="New BuyMeACoffee donation",
     description="Save record of new donation to persistent ledger.",
-    response_model=NewDonation,
+    response_model=CoffeeDonation,
 )
-async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) -> NewDonation:
+async def accept_donation(donation: CoffeeDonation, db: Session = Depends(get_db)) -> CoffeeDonation:
     """
     Save BuyMeACoffee donation to database.
 
@@ -40,9 +40,9 @@ async def accept_donation(donation: NewDonation, db: Session = Depends(get_db)) 
     "/",
     summary="Delete BuyMeACoffee donation record",
     description="Delete BuyMeACoffee donation transaction by ID.",
-    response_model=NewDonation,
+    response_model=CoffeeDonation,
 )
-async def delete_donation(donation: NewDonation, db: Session = Depends(get_db)) -> NewDonation:
+async def delete_donation(donation: CoffeeDonation, db: Session = Depends(get_db)) -> CoffeeDonation:
     """
     Delete BuyMeACoffee donation from database.
 
@@ -60,10 +60,7 @@ async def delete_donation(donation: NewDonation, db: Session = Depends(get_db)) 
     return create_donation(db, donation)
 
 
-@router.get(
-    "/",
-    summary="Get all existing donations.",
-)
+@router.get("/", summary="Get all existing donations.", response_model=AllCoffeeDonations)
 async def get_donations(db: Session = Depends(get_db)):
     """
     Test endpoint for fetching comments joined with user info.

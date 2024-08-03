@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
-class NewDonation(BaseModel):
+class CoffeeDonation(BaseModel):
     """`BuyMeACoffee` donation."""
 
     # fmt: off
@@ -24,9 +24,37 @@ class NewDonation(BaseModel):
             "email": "fake@example.com",
             "count": 1,
             "message": "Great tutorials but this is a test message.",
-            "link": "https://buymeacoffee.com/hackersslackers",
+            "link": "https://buymeacoffee.com/hackersslackers/c/405127",
             "coffee_id": 405127,
         }
+
+
+class AllCoffeeDonations(BaseModel):
+    """All `BuyMeACoffee` donations."""
+
+    # fmt: off
+    all_donations: List[CoffeeDonation]
+    # fmt: on
+
+    class Config:
+        json_schema_extra = [
+            {
+                "name": "Fake Todd",
+                "email": "fake@example.com",
+                "count": 1,
+                "message": "Great tutorials but this is a test message.",
+                "link": "https://buymeacoffee.com/hackersslackers/c/100000",
+                "coffee_id": 100000,
+            },
+            {
+                "name": "Firstname Lastname",
+                "email": "firstname.lastname@example.com",
+                "count": 2,
+                "message": "Thank you for the tutorials!",
+                "link": "https://buymeacoffee.com/hackersslackers/c/100001",
+                "coffee_id": 100001,
+            },
+        ]
 
 
 class NewComment(BaseModel):

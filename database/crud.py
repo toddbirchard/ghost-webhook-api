@@ -6,11 +6,11 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from database.models import Account, Donation
-from database.schemas import NewDonation
+from database.schemas import CoffeeDonation
 from log import LOGGER
 
 
-def get_donation(db: Session, donation: NewDonation) -> Optional[NewDonation]:
+def get_donation(db: Session, donation: CoffeeDonation) -> Optional[CoffeeDonation]:
     """
     Fetch BuyMeACoffee donation by ID.
 
@@ -26,7 +26,7 @@ def get_donation(db: Session, donation: NewDonation) -> Optional[NewDonation]:
     return None
 
 
-def create_donation(db: Session, donation: NewDonation) -> Donation:
+def create_donation(db: Session, donation: CoffeeDonation) -> Donation:
     """
     Create new BuyMeACoffee donation record.
 

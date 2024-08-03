@@ -10,7 +10,7 @@ from clients.mail import Mailgun
 from clients.sms import Twilio
 from config import settings
 from database import get_db
-from database.schemas import NewDonation
+from database.schemas import CoffeeDonation
 from database.sql_db import Database
 
 
@@ -1179,13 +1179,13 @@ def github_issue_user():
 
 
 @pytest.fixture
-def donation() -> NewDonation:
+def donation() -> CoffeeDonation:
     """
     Example response of a `BuyMeACoffee Donation` object.
 
     :returns: dict
     """
-    return NewDonation(
+    return CoffeeDonation(
         name="todd",
         email="fakeemail@example.com",
         count=1,
