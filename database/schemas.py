@@ -16,6 +16,7 @@ class CoffeeDonation(BaseModel):
     message: Optional[str] = Field(None, example="Great tutorials but this is a test message.")
     link: str = Field(None, example="https://buymeacoffee.com/hackersslackers/c/fake")
     coffee_id: int = Field(None, example=3453543)
+    created_at: datetime = Field(None, example="2019-11-07 14:38:35")
     # fmt: on
 
 

@@ -71,4 +71,4 @@ async def get_donations(db: Session = Depends(get_db)):
     all_donations = db.query(Donation).order_by(Donation.created_at).all()
     for donation in all_donations:
         response.append(parse_donation_json(donation))
-    return response
+    return {"all_donations": response}
