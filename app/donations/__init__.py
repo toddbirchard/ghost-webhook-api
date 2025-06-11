@@ -7,7 +7,7 @@ from app.donations.parse import parse_donation_json
 from database import get_db
 from database.crud import create_donation, get_donation
 from database.models import Donation
-from database.schemas import CoffeeDonation, AllCoffeeDonations
+from database.schemas import AllCoffeeDonations, CoffeeDonation
 
 router = APIRouter(prefix="/donation", tags=["donations"])
 
