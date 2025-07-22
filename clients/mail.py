@@ -33,6 +33,7 @@ class Mailgun:
                 self.endpoint,
                 auth=("api", self.api_key),
                 data=body,
+                timeout=20
             )
         except HTTPError as e:
             LOGGER.error(f"HTTPError error while sending email to `{body['to']}` subject `{body['subject']}`: {e}")
@@ -70,15 +71,14 @@ class Mailgun:
                 },
                 "email": body,
             }
-        else:
-            LOGGER.error(
-                f"Failed to send comment notification to {recipient} with error {email_response.status_code} ({email_response.json()}): {body}"
+        LOGGER.error(
+            f"Failed to send comment notification to {recipient} with error {email_response.status_code} ({email_response.json()}): {body}"
             )
-            return {
-                "status": {
-                    "sent": False,
-                    "code": email_response.status_code,
-                    "error": email_response.json(),
-                },
-                "email": body,
-            }
+        return {
+            "status": {
+                "sent": False,
+                "code": email_response.status_code,
+                "error": email_response.json(),
+            },
+            "email": body,
+        }

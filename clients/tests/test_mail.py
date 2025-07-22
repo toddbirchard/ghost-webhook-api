@@ -1,8 +1,14 @@
+"""Test cases for email notifications related to user-generated comments on posts."""
 import pytest
 
 
 @pytest.fixture
-def comment_body():
+def comment_body() -> dict:
+    """
+    Sample payload for a user-generated comment.
+    
+    :returns: dict
+    """
     return {
         "post_id": "61304d8374047afda1c2168b",
         "post_slug": "welcome-to-hackers-and-slackers",
@@ -16,7 +22,16 @@ def comment_body():
     }
 
 
-def test_comment_email(comment_body, ghost, mailgun):
+def test_comment_email(comment_body: dict, ghost, mailgun):
+    """
+    Send test email notification for new comment on post.
+    
+    :param dict comment_body: Comment body to be used in the test.
+    :param ghost: Ghost client fixture.
+    :param mailgun: Mailgun client fixture.
+    
+    :returns: None
+    """
     post = ghost.get_post("61304d8374047afda1c2168b")
     author_name = post["primary_author"]["name"]
     author_email = post["primary_author"]["email"]
