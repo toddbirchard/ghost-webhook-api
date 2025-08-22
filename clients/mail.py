@@ -29,12 +29,7 @@ class Mailgun:
         try:
             if test_mode is True:
                 body.update({"o:testmode": True})
-            return requests.post(
-                self.endpoint,
-                auth=("api", self.api_key),
-                data=body,
-                timeout=20
-            )
+            return requests.post(self.endpoint, auth=("api", self.api_key), data=body, timeout=20)
         except HTTPError as e:
             LOGGER.error(f"HTTPError error while sending email to `{body['to']}` subject `{body['subject']}`: {e}")
         except Exception as e:
@@ -73,7 +68,7 @@ class Mailgun:
             }
         LOGGER.error(
             f"Failed to send comment notification to {recipient} with error {email_response.status_code} ({email_response.json()}): {body}"
-            )
+        )
         return {
             "status": {
                 "sent": False,
