@@ -83,7 +83,7 @@ def create_logger() -> logger:
         logger.add(
             "/var/log/api/info.json",
             format=json_formatter,
-            rotation="200 MB",
+            rotation="20 MB",
             level="TRACE",
             compression="zip",
         )
@@ -94,7 +94,7 @@ def create_logger() -> logger:
             catch=True,
             level="TRACE",
             format=log_formatter,
-            rotation="200 MB",
+            rotation="20 MB",
             compression="zip",
         )
     else:
@@ -103,7 +103,7 @@ def create_logger() -> logger:
             colorize=True,
             catch=True,
             format=log_formatter,
-            rotation="200 MB",
+            rotation="20 MB",
             compression="zip",
             level="ERROR",
         )
