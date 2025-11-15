@@ -1,11 +1,15 @@
+include .env
 PROJECT_NAME := $(shell basename $CURDIR)
+ENVIRONMENT := ${ENVIRONMENT}
 VIRTUAL_ENV := $(CURDIR)/.venv
 LOCAL_PYTHON := $(VIRTUAL_ENV)/bin/python3
+
 
 define HELP
 Manage $(PROJECT_NAME). Usage:
 
 make run        - Run $(PROJECT_NAME) locally.
+make devinstall - Create local virtualenv & install dependencies for dev environments.
 make install    - Create local virtualenv & install dependencies.
 make deploy     - Set up project & run locally.
 make update     - Update dependencies via Poetry and output resulting `requirements.txt`.
@@ -29,7 +33,6 @@ $(VIRTUAL_ENV):
 		echo "Creating Python virtual env in \`${VIRTUAL_ENV}\`"; \
 		python3 -m venv $(VIRTUAL_ENV); \
 	fi
-	poetry config virtualenvs.path $(VIRTUAL_ENV)
 
 .PHONY: run
 run: env
@@ -39,8 +42,8 @@ run: env
 dev: env
 	$(LOCAL_PYTHON) -m uvicorn asgi:api --reload --port 9300
 
-.PHONY: install
-install: env
+.PHONY: devinstall
+devinstall: env
 	$(shell . $(VIRTUAL_ENV)/bin/activate)
 	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel && \
 	LDFLAGS="-L$(/opt/homebrew/bin/brew --prefix openssl)/lib -L$(/opt/homebrew/bin/brew --prefix re2)/lib" && \
@@ -50,6 +53,13 @@ install: env
 	GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=true && \
 	GRPC_PYTHON_BUILD_SYSTEM_ZLIB=true && \
 	poetry install --with dev --sync
+	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
+
+.PHONY: install
+install: env
+	$(shell . $(VIRTUAL_ENV)/bin/activate)
+	$(LOCAL_PYTHON) -m pip install --upgrade pip setuptools wheel
+	$(LOCAL_PYTHON) -m pip install -r requirements.txt
 	echo Installed dependencies in \`${VIRTUAL_ENV}\`;
 
 .PHONY: deploy
