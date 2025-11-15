@@ -75,7 +75,7 @@ def create_logger() -> logger:
         stdout,
         colorize=True,
         catch=True,
-        level="TRACE",
+        level="INFO",
         format=log_formatter,
     )
     if settings.ENVIRONMENT == "production" and path.isdir("/var/log/api"):
@@ -106,6 +106,15 @@ def create_logger() -> logger:
             rotation="20 MB",
             compression="zip",
             level="ERROR",
+        )
+        logger.add(
+            "./logs/info.log",
+            colorize=True,
+            catch=True,
+            format=log_formatter,
+            rotation="20 MB",
+            compression="zip",
+            level="INFO",
         )
     return logger
 

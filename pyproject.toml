@@ -45,7 +45,6 @@ databases = "*"
 aiomysql = "*"
 pydantic-settings = "*"
 email-validator = "*"
-poetry-plugin-export = "^1.8.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"

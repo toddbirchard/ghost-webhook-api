@@ -1,7 +1,7 @@
 """Ghost admin client."""
 
 from datetime import datetime as date
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Any
 
 import jwt
 import requests
@@ -213,7 +213,7 @@ class Ghost:
         except KeyError as e:
             LOGGER.error(f"KeyError while fetching Ghost authorID={author_id}: {e}")
 
-    def create_member(self, body: dict) -> Tuple[str, int]:
+    def create_member(self, body: dict) -> Tuple[Any, int]:
         """
         Create new Ghost member account used to receive newsletters.
 
