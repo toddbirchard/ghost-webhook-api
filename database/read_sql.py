@@ -2,7 +2,7 @@
 
 from os import listdir
 from os.path import isfile, join
-from typing import List, Optional
+from typing import List
 
 from config import settings
 from log import LOGGER
@@ -23,7 +23,7 @@ def collect_sql_queries(subdirectory: str) -> dict:
     return query_dict
 
 
-def fetch_sql_files(subdirectory: str) -> List[Optional[str]]:
+def fetch_sql_files(subdirectory: str) -> List[str]:
     """
     Fetch all `.sql` files in local folder.
 

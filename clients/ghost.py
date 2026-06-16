@@ -1,7 +1,7 @@
 """Ghost admin client."""
 
 from datetime import datetime as date
-from typing import List, Optional, Tuple, Any
+from typing import Any, List, Optional, Tuple
 
 import jwt
 import requests

@@ -3,6 +3,7 @@
 import datetime
 import json
 from os import getenv, path
+from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi_mail import ConnectionConfig
@@ -14,11 +15,11 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """FastAPI settings & configuration."""
 
-    app_name: str = "Ghost Webhook API"
-    title: str = "Ghost Webhook API"
-    description: str = "API to automate optimizations for blog sites."
-    items_per_user: int = 50
-    debug: bool = True
+    APP_NAME: str = "Ghost Webhook API"
+    TITLE: str = "Ghost Webhook API"
+    DESCRIPTION: str = "API to automate optimizations for blog sites."
+    ITEMS_PER_USER: int = 50
+    DEBUG: bool = True
 
     # Load variables from .env
     BASE_DIR: str = path.abspath(path.dirname(__file__))
@@ -42,6 +43,11 @@ class Settings(BaseSettings):
         "https://zapier.com/*",
         "*",
     ]
+
+    # Swagger endpoints
+    DOCS_URL: Optional[str] = None if ENVIRONMENT == "production" else "/"
+    REDOC_URL: Optional[str] = None if ENVIRONMENT == "production" else "/redoc"
+    OPENAPI_URL: Optional[str] = None if ENVIRONMENT == "production" else "/openapi.json"
 
     # Database
     SQLALCHEMY_DATABASE_URI: str = getenv("SQLALCHEMY_DATABASE_URI")

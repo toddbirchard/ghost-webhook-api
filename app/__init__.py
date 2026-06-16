@@ -28,12 +28,13 @@ def create_app() -> FastAPI:
     :returns: FastAPI
     """
     api = FastAPI(
-        title="Blog Webhook API",
-        description="Webhook-driven API to make maintaining blogs easier.",
+        title=settings.TITLE,
+        description=settings.DESCRIPTION,
         version="0.1.0",
-        debug=True,
-        docs_url="/",
-        openapi_url="/api.json",
+        debug=settings.DEBUG,
+        docs_url=settings.DOCS_URL,
+        redoc_url=settings.REDOC_URL,
+        openapi_url=settings.OPENAPI_URL,
     )
 
     # Define Middleware

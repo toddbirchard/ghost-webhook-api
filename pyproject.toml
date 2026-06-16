@@ -45,6 +45,8 @@ databases = "*"
 aiomysql = "*"
 pydantic-settings = "*"
 email-validator = "*"
+coverage = "^7.14.1"
+pytz = "^2026.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"

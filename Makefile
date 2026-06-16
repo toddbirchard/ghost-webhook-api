@@ -97,6 +97,7 @@ lint: env
 
 .PHONY: clean
 clean:
+	find . -name 'uv.lock' -delete && \
 	find . -name 'poetry.lock' -delete && \
 	find . -name '.coverage' -delete && \
 	find . -name '.Pipfile.lock' -delete && \

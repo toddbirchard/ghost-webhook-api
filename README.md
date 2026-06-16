@@ -1,7 +1,7 @@
 # Ghost Webhook API
 
 ![Python](https://img.shields.io/badge/Python-^3.12-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
-![FastAPI](https://img.shields.io/badge/FastAPI-^v0.121.2-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
+![FastAPI](https://img.shields.io/badge/FastAPI-^v0.137.0-blue.svg?longCache=true&logo=fastapi&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Databases](https://img.shields.io/badge/Databases-^0.9.0-blue.svg?logo=python&longCache=true&logoColor=white&colorB=5e81ac&style=flat-square&colorA=4c566a)
 ![PyDantic](https://img.shields.io/badge/Pydantic-^v2.11.7-blue.svg?longCache=true&logo=python&style=flat-square&logoColor=white&colorB=5e81ac&colorA=4c566a)
 ![Google Cloud](https://img.shields.io/badge/Google--Cloud-^v0.34.0-lightgrey.svg?longCache=true&style=flat-square&logo=googlecloud&logoColor=white&colorB=5e81ac&colorA=4c566a)
